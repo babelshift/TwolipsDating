@@ -14,6 +14,8 @@ namespace TwolipsDating.Controllers
             if(User.Identity.IsAuthenticated)
             {
                 // dashboard
+                DashboardViewModel viewModel = new DashboardViewModel();
+                return View("dashboard", viewModel);
             }
             else
             {

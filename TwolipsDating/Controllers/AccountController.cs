@@ -75,18 +75,19 @@ namespace TwolipsDating.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: true);
             switch (result)
             {
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
-                    return View("Lockout");
+                    ModelState.AddModelError("", "The account is locked. Please try again later or contact support for assistance.");
+                    return View(model);
                 case SignInStatus.RequiresVerification:
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    ModelState.AddModelError("", "The entered username or password is incorrect.");
                     return View(model);
             }
         }
@@ -276,9 +277,16 @@ namespace TwolipsDating.Controllers
         //
         // GET: /Account/ResetPassword
         [AllowAnonymous]
-        public ActionResult ResetPassword(string code)
+        public async Task<ActionResult> ResetPassword(string userId, string code)
         {
-            return code == null ? View("Error") : View();
+            ApplicationUser user = await UserManager.FindByIdAsync(userId);
+
+            ResetPasswordViewModel viewModel = new ResetPasswordViewModel()
+            {
+                UserName = user.UserName
+            };
+
+            return code == null ? View("Error") : View(viewModel);
         }
 
         //
@@ -292,7 +300,7 @@ namespace TwolipsDating.Controllers
             {
                 return View(model);
             }
-            var user = await UserManager.FindByNameAsync(model.Email);
+            var user = await UserManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist
@@ -411,7 +419,16 @@ namespace TwolipsDating.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser
+                {
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    //DateCreated = DateTime.Now,
+                    //DateLastLogin = DateTime.Now,
+                    //EmailConfirmed = true,
+                    //IsActive = true,
+                    //DisplayName = model.UserName
+                };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -435,7 +452,7 @@ namespace TwolipsDating.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            AuthenticationManager.SignOut();
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
 

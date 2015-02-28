@@ -170,3 +170,7 @@ input[type="checkbox"].input-validation-error {
     position: relative;
     color: #008cba;
 }
+
+.navbar-right {
+    margin-right: 0;
+}

@@ -6,20 +6,28 @@
         @Html.AntiForgeryToken()
 
         <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a href="@Url.Action("profile", "account", new { id = User.Identity.GetUserId() })" title="View your community profile">
-                    <i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;@User.Identity.GetUserName()
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;@User.Identity.GetUserName()<span class="caret"></span>
                 </a>
-            </li>
-            <li>
-                <a href="@Url.Action("index", "manage")" title="Manage your account settings">
-                    <i class="glyphicon glyphicon-cog"></i>
-                </a>
-            </li>
-            <li>
-                <a href="#" title="Sign out" onclick="document.getElementById('logoutForm').submit()">
-                    <i class="glyphicon glyphicon-log-out"></i>
-                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a href="@Url.Action("profile", "account", new { id = User.Identity.GetUserId() })">
+                            View your profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("index", "manage")">
+                            Manage your settings
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#" title="Sign out" onclick="document.getElementById('logoutForm').submit()">
+                            Sign out
+                        </a>
+                    </li>
+                </ul>
             </li>
         </ul>
     }
@@ -28,12 +36,12 @@ else
 {
     <ul class="nav navbar-nav navbar-right">
         <li>
-            <a href="@Url.Action("register", "account")" id="registerLink" class="navbar-btn" title="You know you want to">
+            <a href="@Url.Action("register", "account")" id="registerLink" title="You know you want to">
                 <i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;Sign up
             </a>
         </li>
         <li>
-            <a href="@Url.Action("login", "account")" id="loginLink" class="navbar-btn" title="Your friends are waiting for you">
+            <a href="@Url.Action("login", "account")" id="loginLink" title="Your friends are waiting for you">
                 <i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;Log in
             </a>
         </li>
