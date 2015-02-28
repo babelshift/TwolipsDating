@@ -1,0 +1,149 @@
+﻿@model TwolipsDating.ViewModels.HomeViewModel
+
+@{
+    ViewBag.Title = "Free Online Dating Entertainment";
+}
+
+<div class="jumbotron">
+    <div class="row" style="background-color: #fff; border-radius: 10px; padding: 15px;">
+        <div class="col-md-6">
+            <div class="text-center">
+                <h1>twolips dating</h1>
+                <img src="~/Content/twolipsicon-white.png" width="125" height="125" />
+                <h2>It's time to make dating fun.</h2>
+                <p>Find someone for who they are instead of what they are.</p>
+            </div>
+        </div>
+        <div class="col-md-5 col-md-offset-1">
+            @using (Html.BeginForm("register", "account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
+                <div class="text-center">
+                    <p>Sign up quickly</p>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <button style="width: 100%;" type="submit" class="btn btn-default" id="Twitter" name="provider" value="Twitter" title="Log in using your Twitter account">
+                                <img src="~/Content/bird_blue_16.png" />&nbsp;&nbsp;Twitter
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button style="width: 100%;" type="submit" class="btn btn-default" id="Facebook" name="provider" value="Facebook" title="Log in using your Facebook account">
+                                <img src="~/Content/fb_16.png" />&nbsp;&nbsp;Facebook
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button style="width: 100%;" type="submit" class="btn btn-default" id="Google" name="provider" value="Twitter" title="Log in using your Google account">
+                                <img src="~/Content/gplus-16.png" />&nbsp;&nbsp;Google
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <p>Or create an account</p>
+                </div>
+                <div class="form-group">
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Choose a username" })
+                </div>
+                <div class="form-group">
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Enter a password" })
+                </div>
+                <div class="form-group">
+                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", @placeholder = "Re-enter the password" })
+                </div>
+                <div class="form-group">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Your email address" })
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-block">
+                        Sign up for twolips dating
+                    </button>
+                </div>
+                <small>By clicking "Sign up for Twolips Dating", you are agreeing to the @Html.ActionLink("Terms of Service", "terms", "about") and @Html.ActionLink("Privacy Policy", "privacy", "about").</small>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-body text-center">
+                <div class="marketing-panel">
+                    <span class="marketing-icon"><i class="glyphicon glyphicon-link"></i></span>
+                </div>
+                <h3>Link your profiles</h3>
+                <p>
+                    We give you the option of linking to all your various profiles across Facebook, Twitter, Google+, OkCupid, Plenty of Fish, Zoosk, and more!
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-body text-center">
+                <div class="marketing-panel">
+                    <span class="marketing-icon"><i class="glyphicon glyphicon-log-in"></i></span>
+                </div>
+                <h3>Get in free</h3>
+                <p>
+                    Tired of having to pay just to communicate with people? Sick of being nagged to purchase the privilege just to respond? You've come to the right place.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-body text-center">
+                <div class="marketing-panel">
+                    <span class="marketing-icon"><i class="glyphicon glyphicon-comment"></i></span>
+                </div>
+                <h3>Review each other</h3>
+                <p>
+                    Engage other users by requesting a review of your profile or take the first step by offering a review of a potential date. Earn points, gifts, and badges!
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-body text-center">
+                <div class="marketing-panel">
+                    <span class="marketing-icon"><i class="glyphicon glyphicon-tags"></i></span>
+                </div>
+                <h3>Friendly tagging</h3>
+                <p>
+                    Tag your own profile and offer tag suggestions to other user profiles to help with matching by interests. Earn special tags through challenges and engagements.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-body text-center">
+                <div class="marketing-panel">
+                    <span class="marketing-icon"><i class="glyphicon glyphicon-bookmark"></i></span>
+                </div>
+                <h3>Collect badges</h3>
+                <p>
+                    Participating in certain activities with other users can earn you badges to decorate your profile. Trade badges with others to win over your friends!
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-body text-center">
+                <div class="marketing-panel">
+                    <span class="marketing-icon"><i class="glyphicon glyphicon-stats"></i></span>
+                </div>
+                <h3>Show off your stats</h3>
+                <p>
+                    Your profile is the perfect place to show off how awesome you are, what you've accomplished, and who you want to attract around the community.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,78 @@
+﻿@using TwolipsDating.Models;
+@model TwolipsDating.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Register, Sign Up, and Join the Dating Community for Free!";
+    ViewBag.Description = "Twolips Dating allows you to register a new custom account or login through various external services like Google+, Twitter, and Facebook.";
+}
+
+<div style="margin-top:25px" class="center-block">
+    <div class="row">
+        <div class="col-lg-5 col-lg-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2>Join the community for free</h2>
+                    <h4>Find better dates. Have a better time.</h4>
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary()
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.UserName, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                            <p><small>Choose a unique user name to display</small></p>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                            <p><small>A strong password greater than 7 characters</small></p>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "control-label" })
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            <p><small>You will sometimes receive communication related to your account. According to our privacy policy, we will not share your information with anyone.</small></p>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-sm btn-block">
+                                <span style="font-size: 15px;"><strong>Sign up for Twolips Dating</strong></span>
+                            </button>
+                        </div>
+                        <small>By clicking "Sign up for Twolips Dating", you are agreeing to the @Html.ActionLink("Terms of Service", "terms", "about") and @Html.ActionLink("Privacy Policy", "privacy", "about").</small>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>Features for you</strong></h3>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;Find your match based on real user-driven reviews</li>
+                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;Get warned before meeting a conflicting personality</li>
+                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;Contribute to improving online dating</li>
+                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;Get the latest in dating tips</li>
+                </ul>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Social Logins</h4>
+                </div>
+                <div class="panel-body">
+                    <section id="socialloginform">
+                        @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

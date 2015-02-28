@@ -1,0 +1,172 @@
+﻿html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 217px;
+    padding-bottom: 25px;
+    background-color: #E9EAED;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* styles for validation helpers */
+.field-validation-error {
+    background-color: #f2dede;
+    border-color: #eed3d7;
+    color: #b94a48;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+    .field-validation-error > p,
+    .field-validation-error > ul {
+        margin-bottom: 0;
+    }
+
+        .field-validation-error > p + p {
+            margin-top: 5px;
+        }
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+textarea.input-validation-error {
+    outline: none !important;
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    background-color: #f2dede;
+    border-color: #eed3d7;
+    color: #b94a48;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+    .validation-summary-errors > p,
+    .validation-summary-errors > ul {
+        margin-bottom: 0;
+    }
+
+        .validation-summary-errors > p + p {
+            margin-top: 5px;
+        }
+
+.validation-summary-valid {
+    display: none;
+}
+
+.radio input[type="radio"],
+.radio-inline input[type="radio"],
+.checkbox input[type="checkbox"],
+.checkbox-inline input[type="checkbox"] {
+    margin-left: 0;
+}
+
+.jumbotron {
+    padding: 10px;
+    background-color: transparent;
+}
+
+.footer p {
+    color: #fff;
+}
+
+.footer hr {
+    border-top: 1px dotted #292929;
+    color: #fff;
+    background-color: #fff;
+}
+
+.footer-bottom {
+    padding-top: 15px;
+    padding-bottom: 5px;
+    background-color: #222;
+}
+
+.footer-top {
+    padding-top: 10px;
+    background-color: #292929;
+    padding-bottom: 15px;
+}
+
+    .footer-top h1,
+    .footer-top h2,
+    .footer-top h3,
+    .footer-top h4,
+    .footer-top h5 {
+        color: #fff;
+    }
+
+    .footer-top p a { 
+        color: #c44d40;
+    }
+
+    .footer-top a {
+        padding: 10px 0;
+        display: inline-block;
+        font-size: 12px;
+        color: #fff;
+    }
+
+        .footer-top a:hover {
+            text-decoration: underline;
+        }
+
+    .footer-top li:last-child {
+        border-bottom: none;
+    }
+
+    .footer-top li {
+        border-bottom: 1px solid #444;
+    }
+
+    .footer-top li i {
+        margin-top: 10px;
+        float: right;
+        font-size: 11px;
+        color: #fff;
+    }
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 217px;
+}
+
+.marketing-panel {
+    width: 76px; 
+    height: 76px; 
+    border-radius: 38px; 
+    border: 1px solid #d5d5d5; 
+    margin: 0 auto 15px;
+}
+
+.marketing-panel .marketing-icon {
+    font-size: 32px; 
+    line-height: 76px; 
+    position: relative;
+    color: #008cba;
+}

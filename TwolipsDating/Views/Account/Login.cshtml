@@ -1,0 +1,65 @@
+﻿@using TwolipsDating.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Login and Find Your Match";
+    ViewBag.Description = "Twolips Dating allows you to login with your specific user account or several external services such as Google+, Twitter, and Facebook.";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div style="margin-top: 25px" class="center-block">
+            <div class="col-lg-5 col-lg-offset-2">
+                <section id="loginForm">
+                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary()
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">Log in</h4>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.UserName, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                                </div>
+                                <div class="checkbox">
+                                    @Html.CheckBoxFor(m => m.RememberMe)
+                                    @Html.LabelFor(m => m.RememberMe)
+                                </div>
+                                <button type="submit" class="btn btn-default btn-sm">Log in</button>
+                                <p>@Html.ActionLink("I forgot my password", "forgotpassword", "account")</p>
+                            </div>
+                        </div>
+                    }
+                </section>
+            </div>
+            <div class="col-lg-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">Social Logins</h4>
+                    </div>
+                    <div class="panel-body">
+                        <section id="socialloginform">
+                            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+                        </section>
+                    </div>
+                </div>
+                <div class="panel panel-primary text-center">
+                    <div class="panel-body">
+                        <h5><strong>Not part of the community yet?</strong></h5>
+                        <p>Change that and contribute!</p>
+                        @Html.ActionLink("Sign up now", "register", "account", null, new { @class = "btn btn-primary btn-sm" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
