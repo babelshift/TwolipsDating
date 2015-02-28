@@ -5,68 +5,64 @@
     ViewBag.Description = "Twolips Dating allows you to register a new custom account or login through various external services like Google+, Twitter, and Facebook.";
 }
 
-<div style="margin-top:25px" class="center-block">
+<div class="center-block">
     <div class="row">
-        <div class="col-lg-5 col-lg-offset-2">
+        <div class="col-lg-5 col-lg-offset-4">
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h2>Join the community for free</h2>
-                    <h4>Find better dates. Have a better time.</h4>
-                </div>
                 <div class="panel-body">
+                    @using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = "" }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="text-center">
+                            <h4>Sign up quickly</h4>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <button style="width: 100%;" type="submit" class="btn btn-default" id="Twitter" name="provider" value="Twitter" title="Log in using your Twitter account">
+                                        <img src="~/Content/bird_blue_16.png" />&nbsp;&nbsp;Twitter
+                                    </button>
+                                </div>
+                                <div class="col-md-4">
+                                    <button style="width: 100%;" type="submit" class="btn btn-default" id="Facebook" name="provider" value="Facebook" title="Log in using your Facebook account">
+                                        <img src="~/Content/fb_16.png" />&nbsp;&nbsp;Facebook
+                                    </button>
+                                </div>
+                                <div class="col-md-4">
+                                    <button style="width: 100%;" type="submit" class="btn btn-default" id="Google" name="provider" value="Google" title="Log in using your Google account">
+                                        <img src="~/Content/gplus-16.png" />&nbsp;&nbsp;Google
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="text-center">
+                        <h4>Or create a twolips account</h4>
+                    </div>
                     @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary()
                         <div class="form-group">
-                            @Html.LabelFor(m => m.UserName, new { @class = "control-label" })
-                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
-                            <p><small>Choose a unique user name to display</small></p>
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Choose a username" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(m => m.Password, new { @class = "control-label" })
-                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                            <p><small>A strong password greater than 7 characters</small></p>
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Enter a password" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "control-label" })
-                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", @placeholder = "Re-enter the password" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(m => m.Email, new { @class = "control-label" })
-                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Your email address" })
                             <p><small>You will sometimes receive communication related to your account. According to our privacy policy, we will not share your information with anyone.</small></p>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success btn-sm btn-block">
-                                <span style="font-size: 15px;"><strong>Sign up for Twolips Dating</strong></span>
+                            <button type="submit" class="btn btn-success btn-block">
+                                Sign up for twolips dating
                             </button>
                         </div>
                         <small>By clicking "Sign up for Twolips Dating", you are agreeing to the @Html.ActionLink("Terms of Service", "terms", "about") and @Html.ActionLink("Privacy Policy", "privacy", "about").</small>
                     }
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title"><strong>Features for you</strong></h3>
-                </div>
-                <ul class="list-group">
-                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;Find your match based on real user-driven reviews</li>
-                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;Get warned before meeting a conflicting personality</li>
-                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;Contribute to improving online dating</li>
-                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;Get the latest in dating tips</li>
-                </ul>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">Social Logins</h4>
-                </div>
-                <div class="panel-body">
-                    <section id="socialloginform">
-                        @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-                    </section>
                 </div>
             </div>
         </div>

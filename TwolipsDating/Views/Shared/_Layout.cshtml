@@ -28,7 +28,10 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("twolips dating", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <a class="navbar-brand" href="@Url.Action("index", "home")">
+                    <img alt="twolips dating" src="~/Content/twolipsicon-white.png" width="32" height="32" />
+                </a>
+                @Html.ActionLink("twolips dating", "index", "home", null, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav"></ul>
