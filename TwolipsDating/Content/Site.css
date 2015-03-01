@@ -174,3 +174,7 @@ input[type="checkbox"].input-validation-error {
 .navbar-right {
     margin-right: 0;
 }
+
+.tags a {
+    margin-bottom: 4px;
+}

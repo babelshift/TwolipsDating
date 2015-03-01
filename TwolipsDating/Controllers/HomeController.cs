@@ -23,8 +23,6 @@ namespace TwolipsDating.Controllers
                 HomeViewModel viewModel = new HomeViewModel();
                 return View(String.Empty, "~/Views/Shared/_LayoutSplash.cshtml", viewModel);
             }
-
-            return View();
         }
 
         public ActionResult About()
