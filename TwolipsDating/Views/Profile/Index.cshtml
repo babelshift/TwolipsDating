@@ -1,9 +1,56 @@
-﻿@model TwolipsDating.ViewModels.DashboardViewModel
+﻿@model TwolipsDating.ViewModels.ProfileViewModel
 
 @{
     ViewBag.Title = "twolips - your profile";
 }
-
+<div class="modal fade" id="modalReview" tabindex="-1" role="dialog" aria-labelledby="modalReviewLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modalReviewLabel">New review</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="control-label">Title:</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Content:</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Submit review</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalMessage" tabindex="-1" role="dialog" aria-labelledby="modalMessageLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modalMessageLabel">New message</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Message:</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="btn-group">
@@ -11,8 +58,8 @@
                 <i class="glyphicon glyphicon-user"></i>&nbsp;Profile&nbsp;<span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="#"><i class="glyphicon glyphicon-home"></i>&nbsp;Dashboard</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
+                <li><a href="@Url.Action("index", "home")"><i class="glyphicon glyphicon-home"></i>&nbsp;Dashboard</a></li>
+                <li><a href="@Url.Action("index", "profile")"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
                 <li><a href="#"><i class="glyphicon glyphicon-search"></i>&nbsp;Search</a></li>
                 <li><a href="#"><i class="glyphicon glyphicon-tower"></i>&nbsp;Challenges</a></li>
                 <li class="divider"></li>
@@ -21,8 +68,9 @@
         </div>
         <div class="pull-right">
             <ul class="nav nav-pills">
+                <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message"><i class="glyphicon glyphicon-envelope"></i></a></li>
+                <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review"><i class="glyphicon glyphicon-edit"></i></a></li>
                 <li role="presentation"><a href="#" title="Send a gift"><i class="glyphicon glyphicon-gift"></i></a></li>
-                <li role="presentation"><a href="#" title="Write a review"><i class="glyphicon glyphicon-edit"></i></a></li>
                 <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
                 <li role="presentation"><a href="#" title="Add to ignore"><i class="glyphicon glyphicon-volume-off"></i></a></li>
             </ul>
@@ -30,98 +78,240 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="text-center">
-                    <img src="http://placehold.it/128x128">
-                    <h3>jskiles1</h3>
-                    <h5>30&nbsp;&bull;&nbsp;Man&nbsp;&bull;&nbsp;Orlando, FL</h5>
+    @if (Model != null && !String.IsNullOrEmpty(Model.UserName))
+    {
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="text-center">
+                        <img src="http://placehold.it/128x128">
+                        <h3>@Model.UserName</h3>
+                        <h5>@Model.Age&nbsp;&bull;&nbsp;@Model.Gender&nbsp;&bull;&nbsp;@Model.Location</h5>
+                    </div>
+                    <div class="text-center" style="margin-top: 20px;">
+                        <p>
+                            <span style="margin-right: 10px;">
+                                <button class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-heart"></i></button>&nbsp;3472
+                            </span>
+                            <span style="margin-right: 10px;"><button class="btn btn-success btn-xs"><i class="glyphicon glyphicon-thumbs-up"></i></button>&nbsp;51</span>
+                            <button class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-thumbs-down"></i></button>&nbsp;7
+                        </p>
+                    </div>
+                    <hr />
+                    <h4><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tagged himself</h4>
+                    <div class="tags">
+                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                            intellectual
+                        </a>
+                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                            wizard
+                        </a>
+                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                            challenge master
+                        </a>
+                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                            pro gamer
+                        </a>
+                    </div>
+                    <h4><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Others tagged him</h4>
+                    <div class="tags">
+                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                            intellectual
+                        </a>
+                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                            bookworm
+                        </a>
+                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                            responsive
+                        </a>
+                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                            pro gamer
+                        </a>
+                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                            nerdy
+                        </a>
+                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                            reliable
+                        </a>
+                    </div>
+                    <hr />
+                    <h4><i class="glyphicon glyphicon-book"></i>&nbsp;&nbsp;Badges</h4>
+                    <span class="label label-danger"><i class="glyphicon glyphicon-apple"></i></span>
+                    <span class="label label-success"><i class="glyphicon glyphicon-music"></i></span>
+                    <span class="label label-info"><i class="glyphicon glyphicon-knight"></i></span>
+                    <span class="label label-info"><i class="glyphicon glyphicon-king"></i></span>
+                    <span class="label label-warning"><i class="glyphicon glyphicon-baby-formula"></i></span>
                 </div>
-                <div class="text-center" style="margin-top: 20px;">
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <ul class="nav nav-pills">
+                        <li role="presentation" class="active"><a href="#">Feed</a></li>
+                        <li role="presentation"><a href="#">Pictures</a></li>
+                        <li role="presentation"><a href="#">Reviews</a></li>
+                        <li role="presentation"><a href="#">Achievements</a></li>
+                        <li role="presentation"><a href="#">Stats</a></li>
+                        <li role="presentation"><a href="#">Trophy Room</a></li>
+                    </ul>
+                    <hr />
                     <p>
-                        <span style="margin-right: 10px;">
-                            <button class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-heart"></i></button>&nbsp;3472
-                        </span>
-                        <span style="margin-right: 10px;"><button class="btn btn-success btn-xs"><i class="glyphicon glyphicon-thumbs-up"></i></button>&nbsp;51</span>
-                        <button class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-thumbs-down"></i></button>&nbsp;7
+                        <a href="#">jskiles1</a> completed the challenge <a href="#" class="label label-primary">Bring Out Your Dead</a>
+                        <br />
+                        <small>3 minutes ago</small>
+                    </p>
+                    <p>
+                        <a href="#">jskiles1</a> defeated <a href="#">joanne123</a> in a game of <a href="#" class="label label-primary">Chicken</a>
+                        <br />
+                        <small>5 hours ago</small>
+                    </p>
+                    <p>
+                        <a href="#">jskiles1</a> made an announcement: <strong>all I do is win!</strong>
+                        <br />
+                        <small>7 hours ago</small>
                     </p>
                 </div>
-                <hr />
-                <h4><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Self tagged as</h4>
-                <div class="tags">
-                    <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                        intellectual
-                    </a>
-                    <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                        wizard
-                    </a>
-                    <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                        challenge master
-                    </a>
-                    <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                        pro gamer
-                    </a>
-                </div>
-                <h4><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Others tagged as</h4>
-                <div class="tags">
-                    <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                        intellectual
-                    </a>
-                    <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                        bookworm
-                    </a>
-                    <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                        responsive
-                    </a>
-                    <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                        pro gamer
-                    </a>
-                    <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                        nerdy
-                    </a>
-                    <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                        reliable
-                    </a>
-                </div>
-                <hr />
-                <h4><i class="glyphicon glyphicon-book"></i>&nbsp;&nbsp;Badges</h4>
-                <span class="label label-danger"><i class="glyphicon glyphicon-apple"></i></span>
-                <span class="label label-success"><i class="glyphicon glyphicon-music"></i></span>
-                <span class="label label-info"><i class="glyphicon glyphicon-knight"></i></span>
-                <span class="label label-info"><i class="glyphicon glyphicon-king"></i></span>
-                <span class="label label-warning"><i class="glyphicon glyphicon-baby-formula"></i></span>
             </div>
         </div>
-    </div>
-    <div class="col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <ul class="nav nav-pills">
-                    <li role="presentation" class="active"><a href="#">Feed</a></li>
-                    <li role="presentation"><a href="#">Pictures</a></li>
-                    <li role="presentation"><a href="#">Reviews</a></li>
-                    <li role="presentation"><a href="#">Reviews</a></li>
-                    <li role="presentation"><a href="#">Stats</a></li>
-                    <li role="presentation"><a href="#">Trophy Room</a></li>
-                </ul>
-                <hr />
-                <p>
-                    <a href="#">jskiles1</a> completed the challenge <a href="#">Bring Out Your Dead</a>
+    }
+    else
+    {
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="text-center">
+                        <h2>Your profile will be here soon</h2>
+                        <h4>Fill out some info below to finalize it</h4>
+                    </div>
                     <br />
-                    <small>3 minutes ago</small>
-                </p>
-                <p>
-                    <a href="#">jskiles1</a> defeated <a href="#">joanne123</a> in a game of <a href="#">Chicken</a>
-                    <br />
-                    <small>5 hours ago</small>
-                </p>
-                <p>
-                    <a href="#">jskiles1</a> made an announcement: <strong>all I do is win!</strong>
-                    <br />
-                    <small>7 hours ago</small>
-                </p>
+                    <div class="row">
+                        <div class="col-md-4 col-md-offset-4">
+                            @using (Html.BeginForm("create", "profile", FormMethod.Post, new { role = "form" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary()
+
+                                <div class="form-group">
+                                    <p class="control-label">What are you?</p>
+                                    @Html.DropDownListFor(m => m.SelectedGenderId,
+                                    new SelectList(Model.Genders, "Key", "Value"),
+                                    new { @class = "form-control", data_placeholder = "What are you?" })
+                                </div>
+                                <div class="form-group">
+                                    <p class="control-label">When were you born?</p>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            @Html.TextBoxFor(m => m.BirthMonth, new { @class = "form-control", @placeholder = "MM", maxlength = "2" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            @Html.TextBoxFor(m => m.BirthDayOfMonth, new { @class = "form-control", @placeholder = "DD", maxlength = "2" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            @Html.TextBoxFor(m => m.BirthYear, new { @class = "form-control", @placeholder = "YYYY", maxlength = "4" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <p class="control-label">Where are you?</p>
+                                    @Html.DropDownListFor(m => m.SelectedCountryId,
+                                    new SelectList(Model.Countries, "Key", "Value"),
+                                    new { @class = "form-control", data_placeholder = "What country are you in?", onchange = "onCountrySelected(event, this)" })
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="textBoxZipCode" class="form-control" placeholder="Zip Code (ex. 33777)" onblur="onZipCodeBlur(event, this)" maxlength="5" />
+                                    @Html.HiddenFor(m => m.SelectedZipCodeId)
+                                    <p id="zipCodeLocationText"></p>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="textBoxCity" class="form-control" placeholder="City (ex. London)" onblur="onCityBlur(event, this)" />
+                                    @Html.HiddenFor(m => m.SelectedCityId)
+                                    <p id="cityLocationText"></p>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary pull-right">OK</button>
+                                    <div class="clearfix"></div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    }
 </div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var countrySelect = $("#SelectedCountryId");
+            countrySelect.val(215); // united stats
+            countrySelect.change();
+        });
+
+        function onCountrySelected(e, obj) {
+
+            var countryId = $(obj).val();
+
+            if (countryId == 215) { // united states
+                $("#textBoxCity").hide();
+                var zipCodeSelect = $("#textBoxZipCode");
+                zipCodeSelect.show();
+                zipCodeSelect.val('');
+            } else {
+                var citySelect = $("#textBoxCity");
+                citySelect.show();
+                citySelect.val('');
+                $("#textBoxZipCode").hide();
+            }
+
+            $("#zipCodeLocationText").html('');
+            $("#cityLocationText").html('');
+            $("#SelectedCityId").val('');
+            $("#SelectedZipCodeId").val('');
+        }
+
+        function onCityBlur(e, obj) {
+
+            var city = $(obj).val();
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("city", "location")' + '/' + city,
+                success: function (data) {
+                    if (data.CityName === '' || data.CityName === null) {
+                        $("#cityLocationText").html("<small>Are you sure that's a real city?</small>");
+                        $("#SelectedCityId").val('');
+                    } else {
+                        $("#cityLocationText").html("<small>Cool, you're in " + data.CityName + "</small>");
+                        $("#SelectedCityId").val(data.CityId);
+                    }
+                }
+            });
+        }
+
+        function onZipCodeBlur(e, obj) {
+
+            var zipCode = $(obj).val();
+
+            if (zipCode.length === 5) {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("zip", "location")' + '/' + zipCode,
+                    success: function (data) {
+                        if (data.CityName === '' || data.CityName === null) {
+                            $("#zipCodeLocationText").html("<small>That's a bad zip code.</small>");
+                            $("#SelectedZipCodeId").val('');
+                        } else {
+                            $("#zipCodeLocationText").html("<small>Cool, you're in " + data.CityName + "</small>");
+                            $("#SelectedZipCodeId").val(zipCode);
+                            $("#SelectedCityId").val(data.CityId);
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+}

@@ -11,8 +11,8 @@
                 <i class="glyphicon glyphicon-home"></i>&nbsp;Dashboard&nbsp;<span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="#"><i class="glyphicon glyphicon-home"></i>&nbsp;Dashboard</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
+                <li><a href="@Url.Action("index", "home")"><i class="glyphicon glyphicon-home"></i>&nbsp;Dashboard</a></li>
+                <li><a href="@Url.Action("index", "profile")"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
                 <li><a href="#"><i class="glyphicon glyphicon-search"></i>&nbsp;Search</a></li>
                 <li><a href="#"><i class="glyphicon glyphicon-tower"></i>&nbsp;Challenges</a></li>
                 <li class="divider"></li>
@@ -29,4 +29,23 @@
         </div>
     </div>
 </div>
-<p>You're logged in. This is your dashboard. Say hi, dashboard. Hi!</p>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <p>
+            <a href="#">jskiles1</a> completed the challenge <a href="#" class="label label-primary">Bring Out Your Dead</a>
+            <br />
+            <small>3 minutes ago</small>
+        </p>
+        <p>
+            <a href="#">jskiles1</a> defeated <a href="#">joanne123</a> in a game of <a href="#" class="label label-primary">Chicken</a>
+            <br />
+            <small>5 hours ago</small>
+        </p>
+        <p>
+            <a href="#">jskiles1</a> made an announcement: <strong>all I do is win!</strong>
+            <br />
+            <small>7 hours ago</small>
+        </p>
+    </div>
+</div>

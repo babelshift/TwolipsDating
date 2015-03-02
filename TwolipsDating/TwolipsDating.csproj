@@ -196,26 +196,83 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Business\BaseService.cs" />
+    <Compile Include="Business\ProfileService.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LocationController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502282019595_InitialCreate.cs" />
+    <Compile Include="Migrations\201502282019595_InitialCreate.Designer.cs">
+      <DependentUpon>201502282019595_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503011609066_InitialCreate2.cs" />
+    <Compile Include="Migrations\201503011609066_InitialCreate2.Designer.cs">
+      <DependentUpon>201503011609066_InitialCreate2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503011754346_AddStateAndCityChanges.cs" />
+    <Compile Include="Migrations\201503011754346_AddStateAndCityChanges.Designer.cs">
+      <DependentUpon>201503011754346_AddStateAndCityChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503011838028_FixedZipCodeCity.cs" />
+    <Compile Include="Migrations\201503011838028_FixedZipCodeCity.Designer.cs">
+      <DependentUpon>201503011838028_FixedZipCodeCity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503011929313_RemovedCityNameUniqueIndex.cs" />
+    <Compile Include="Migrations\201503011929313_RemovedCityNameUniqueIndex.Designer.cs">
+      <DependentUpon>201503011929313_RemovedCityNameUniqueIndex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503012030057_FixScrewedUpUserToProfile.cs" />
+    <Compile Include="Migrations\201503012030057_FixScrewedUpUserToProfile.Designer.cs">
+      <DependentUpon>201503012030057_FixScrewedUpUserToProfile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503012047311_TryToFixItAgain.cs" />
+    <Compile Include="Migrations\201503012047311_TryToFixItAgain.Designer.cs">
+      <DependentUpon>201503012047311_TryToFixItAgain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503012059107_ReAddProfile.cs" />
+    <Compile Include="Migrations\201503012059107_ReAddProfile.Designer.cs">
+      <DependentUpon>201503012059107_ReAddProfile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503012153162_AddBirthdayRemoveAge.cs" />
+    <Compile Include="Migrations\201503012153162_AddBirthdayRemoveAge.Designer.cs">
+      <DependentUpon>201503012153162_AddBirthdayRemoveAge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503012251352_NullableZipCodeOnProfile.cs" />
+    <Compile Include="Migrations\201503012251352_NullableZipCodeOnProfile.Designer.cs">
+      <DependentUpon>201503012251352_NullableZipCodeOnProfile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503020229516_BlankForProfileUniqueUser.cs" />
+    <Compile Include="Migrations\201503020229516_BlankForProfileUniqueUser.Designer.cs">
+      <DependentUpon>201503020229516_BlankForProfileUniqueUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ApplicationUser.cs" />
+    <Compile Include="Models\City.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\Gender.cs" />
+    <Compile Include="Models\Profile.cs" />
+    <Compile Include="Models\USState.cs" />
+    <Compile Include="Models\ZipCode.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\HtmlHelperExtensions.cs" />
+    <Compile Include="ViewModels\ProfileViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bird_blue_16.png" />
@@ -296,6 +353,41 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201502282019595_InitialCreate.resx">
+      <DependentUpon>201502282019595_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503011609066_InitialCreate2.resx">
+      <DependentUpon>201503011609066_InitialCreate2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503011754346_AddStateAndCityChanges.resx">
+      <DependentUpon>201503011754346_AddStateAndCityChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503011838028_FixedZipCodeCity.resx">
+      <DependentUpon>201503011838028_FixedZipCodeCity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503011929313_RemovedCityNameUniqueIndex.resx">
+      <DependentUpon>201503011929313_RemovedCityNameUniqueIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503012030057_FixScrewedUpUserToProfile.resx">
+      <DependentUpon>201503012030057_FixScrewedUpUserToProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503012047311_TryToFixItAgain.resx">
+      <DependentUpon>201503012047311_TryToFixItAgain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503012059107_ReAddProfile.resx">
+      <DependentUpon>201503012059107_ReAddProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503012153162_AddBirthdayRemoveAge.resx">
+      <DependentUpon>201503012153162_AddBirthdayRemoveAge.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503012251352_NullableZipCodeOnProfile.resx">
+      <DependentUpon>201503012251352_NullableZipCodeOnProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503020229516_BlankForProfileUniqueUser.resx">
+      <DependentUpon>201503020229516_BlankForProfileUniqueUser.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
