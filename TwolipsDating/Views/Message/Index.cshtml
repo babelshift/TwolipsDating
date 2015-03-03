@@ -1,0 +1,41 @@
+﻿@model TwolipsDating.ViewModels.MessageViewModel
+
+@{
+    ViewBag.Title = "twolips - your profile";
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Messages" })
+        <div class="pull-right">
+            <ul class="nav nav-pills">
+                <li role="presentation" class="active"><a href="#" title="Your received messages">Received</a></li>
+                <li role="presentation"><a href="#" title="Your sent messages">Sent</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <table class="table table-striped">
+            <tr>
+                <th>Sender</th>
+                <th>Date Sent</th>
+                <th>Subject</th>
+                <th>Body</th>
+            </tr>
+            @foreach (var message in Model.ReceivedMessages)
+            {
+                <tr>
+                    <td>@message.SenderName</td>
+                    <td>@message.DateSent</td>
+                    <td>@message.Subject</td>
+                    <td>@message.Body</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

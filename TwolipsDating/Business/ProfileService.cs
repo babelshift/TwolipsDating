@@ -110,5 +110,14 @@ namespace TwolipsDating.Business
                                       select messages).Count();
             return unreadMessageCount;
         }
+
+        public IReadOnlyCollection<Message> GetMessagesByUser(string userId)
+        {
+            var userMessages = from messages in db.Messages
+                               where messages.ReceiverApplicationUserId == userId
+                               || messages.SenderApplicationUserId == userId
+                               select messages;
+            return userMessages.ToList().AsReadOnly();
+        }
     }
 }

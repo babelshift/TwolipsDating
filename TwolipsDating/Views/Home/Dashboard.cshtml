@@ -6,19 +6,7 @@
 
 <div class="panel panel-default">
     <div class="panel-body">
-        <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <i class="glyphicon glyphicon-home"></i>&nbsp;Dashboard&nbsp;<span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-                <li><a href="@Url.Action("index", "home")"><i class="glyphicon glyphicon-home"></i>&nbsp;Dashboard</a></li>
-                <li><a href="@Url.Action("index", "profile")"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-search"></i>&nbsp;Search</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-tower"></i>&nbsp;Challenges</a></li>
-                <li class="divider"></li>
-                <li><a href="#"><i class="glyphicon glyphicon-cog"></i>&nbsp;Settings</a></li>
-            </ul>
-        </div>
+        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Dashboard" })
         <div class="pull-right">
             <ul class="nav nav-pills">
                 <li role="presentation" class="active"><a href="#">Feed</a></li>
