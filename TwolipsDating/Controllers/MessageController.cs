@@ -14,7 +14,7 @@ namespace TwolipsDating.Controllers
     {
         ProfileService p = new ProfileService();
 
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Received()
         {
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
             SetUnreadCountsInViewBag(p, user);
@@ -23,9 +23,9 @@ namespace TwolipsDating.Controllers
 
             List<ReceivedMessageViewModel> receivedMessages = new List<ReceivedMessageViewModel>();
             List<SentMessageViewModel> sentMessages = new List<SentMessageViewModel>();
-            foreach(var message in messages)
+            foreach (var message in messages)
             {
-                if(message.ReceiverApplicationUserId == user.Id)
+                if (message.ReceiverApplicationUserId == user.Id)
                 {
                     receivedMessages.Add(new ReceivedMessageViewModel()
                     {
@@ -36,8 +36,29 @@ namespace TwolipsDating.Controllers
                         Subject = message.Subject
                     });
                 }
-                
-                if(message.SenderApplicationUserId == user.Id)
+            }
+
+            MessageViewModel viewModel = new MessageViewModel()
+            {
+                ReceivedMessages = receivedMessages,
+                MessageViewMode = MessageViewMode.Received
+            };
+
+            return View("index", viewModel);
+        }
+
+        public async Task<ActionResult> Sent()
+        {
+
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            SetUnreadCountsInViewBag(p, user);
+
+            var messages = p.GetMessagesByUser(user.Id);
+
+            List<SentMessageViewModel> sentMessages = new List<SentMessageViewModel>();
+            foreach (var message in messages)
+            {
+                if (message.SenderApplicationUserId == user.Id)
                 {
                     sentMessages.Add(new SentMessageViewModel()
                     {
@@ -52,11 +73,11 @@ namespace TwolipsDating.Controllers
 
             MessageViewModel viewModel = new MessageViewModel()
             {
-                ReceivedMessages = receivedMessages,
-                SentMessages = sentMessages
+                SentMessages = sentMessages,
+                MessageViewMode = MessageViewMode.Sent
             };
 
-            return View(viewModel);
+            return View("index", viewModel);
         }
     }
 }

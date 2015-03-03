@@ -1,4 +1,5 @@
 ﻿@model TwolipsDating.ViewModels.MessageViewModel
+@using TwolipsDating.ViewModels
 
 @{
     ViewBag.Title = "twolips - your profile";
@@ -9,9 +10,26 @@
         @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Messages" })
         <div class="pull-right">
             <ul class="nav nav-pills">
-                <li role="presentation" class="active"><a href="#" title="Your received messages">Received</a></li>
-                <li role="presentation"><a href="#" title="Your sent messages">Sent</a></li>
+                @if (Model.MessageViewMode == MessageViewMode.Received)
+                {
+                    <li role="presentation" class="active">
+                        @Html.ActionLink("Received", "received", null, new { title = "Your received messages" })
+                    </li>
+                    <li role="presentation">
+                        @Html.ActionLink("Sent", "sent", null, new { title = "Your sent messages" })
+                    </li>
+                }
+                else
+                {
+                    <li role="presentation">
+                        @Html.ActionLink("Received", "received", null, new { title = "Your received messages" })
+                    </li>
+                    <li role="presentation" class="active">
+                        @Html.ActionLink("Sent", "sent", null, new { title = "Your sent messages" })
+                    </li>
+                }
             </ul>
+
         </div>
     </div>
 </div>
@@ -19,19 +37,42 @@
     <div class="panel-body">
         <table class="table table-striped">
             <tr>
-                <th>Sender</th>
+                @if (Model.MessageViewMode == MessageViewMode.Received)
+                {
+                    <th>Sent from</th>
+                }
+                else
+                {
+                    <th>Sent to</th>
+                }
                 <th>Date Sent</th>
                 <th>Subject</th>
                 <th>Body</th>
             </tr>
-            @foreach (var message in Model.ReceivedMessages)
+
+            @if (Model.MessageViewMode == MessageViewMode.Received)
             {
-                <tr>
-                    <td>@message.SenderName</td>
-                    <td>@message.DateSent</td>
-                    <td>@message.Subject</td>
-                    <td>@message.Body</td>
-                </tr>
+                foreach (var message in Model.ReceivedMessages)
+                {
+                    <tr>
+                        <td>@message.SenderName</td>
+                        <td>@message.DateSent</td>
+                        <td>@message.Subject</td>
+                        <td>@message.Body</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                foreach (var message in Model.SentMessages)
+                {
+                    <tr>
+                        <td>@message.ReceiverName</td>
+                        <td>@message.DateSent</td>
+                        <td>@message.Subject</td>
+                        <td>@message.Body</td>
+                    </tr>
+                }
             }
         </table>
     </div>

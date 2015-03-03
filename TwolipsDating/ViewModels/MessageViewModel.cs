@@ -5,8 +5,15 @@ using System.Web;
 
 namespace TwolipsDating.ViewModels
 {
+    public enum MessageViewMode
+    {
+        Received,
+        Sent
+    }
+
     public class MessageViewModel
     {
+        public MessageViewMode MessageViewMode { get; set; }
         public IReadOnlyCollection<ReceivedMessageViewModel> ReceivedMessages { get; set; }
         public IReadOnlyCollection<SentMessageViewModel> SentMessages { get; set; }
     }
