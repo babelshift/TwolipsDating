@@ -205,6 +205,7 @@
     <Compile Include="Business\BaseService.cs" />
     <Compile Include="Business\ProfileService.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LocationController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -256,11 +257,28 @@
     <Compile Include="Migrations\201503020229516_BlankForProfileUniqueUser.Designer.cs">
       <DependentUpon>201503020229516_BlankForProfileUniqueUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503022238189_AddMessageSystem.cs" />
+    <Compile Include="Migrations\201503022238189_AddMessageSystem.Designer.cs">
+      <DependentUpon>201503022238189_AddMessageSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503022301071_RemoveWrongIdentityColumns.cs" />
+    <Compile Include="Migrations\201503022301071_RemoveWrongIdentityColumns.Designer.cs">
+      <DependentUpon>201503022301071_RemoveWrongIdentityColumns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503022308388_RunSeed.cs" />
+    <Compile Include="Migrations\201503022308388_RunSeed.Designer.cs">
+      <DependentUpon>201503022308388_RunSeed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ChangeIdentityOperation.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\CustomSqlServerMigrationSqlGenerator.cs" />
+    <Compile Include="Migrations\MigrationExtensions.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\City.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\Gender.cs" />
+    <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\MessageStatus.cs" />
     <Compile Include="Models\Profile.cs" />
     <Compile Include="Models\USState.cs" />
     <Compile Include="Models\ZipCode.cs" />
@@ -387,6 +405,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503020229516_BlankForProfileUniqueUser.resx">
       <DependentUpon>201503020229516_BlankForProfileUniqueUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503022238189_AddMessageSystem.resx">
+      <DependentUpon>201503022238189_AddMessageSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503022301071_RemoveWrongIdentityColumns.resx">
+      <DependentUpon>201503022301071_RemoveWrongIdentityColumns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503022308388_RunSeed.resx">
+      <DependentUpon>201503022308388_RunSeed.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

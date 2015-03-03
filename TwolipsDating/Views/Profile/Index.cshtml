@@ -36,18 +36,26 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="modalMessageLabel">New message</h4>
             </div>
-            <div class="modal-body">
-                <form>
+            @using (Html.BeginForm("sendmessage", "profile", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Subject:</label>
+                        @Html.TextBoxFor(m => m.MessageSubject, new { @class = "form-control" })
+                    </div>
                     <div class="form-group">
                         <label for="message-text" class="control-label">Message:</label>
-                        <textarea class="form-control" id="message-text"></textarea>
+                        @Html.TextAreaFor(m => m.MessageBody, new { @class = "form-control" })
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Send message</button>
-            </div>
+                    @Html.HiddenFor(m => m.ProfileUserId)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Send message</button>
+                </div>
+            }
         </div>
     </div>
 </div>

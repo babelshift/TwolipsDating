@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TwolipsDating;
 using TwolipsDating.Controllers;
+using System.Threading.Tasks;
 
 namespace TwolipsDating.Tests.Controllers
 {
@@ -19,7 +20,7 @@ namespace TwolipsDating.Tests.Controllers
             HomeController controller = new HomeController();
 
             // Act
-            ViewResult result = controller.Index() as ViewResult;
+            ActionResult result = (controller.Index() as Task<ActionResult>).Result;
 
             // Assert
             Assert.IsNotNull(result);

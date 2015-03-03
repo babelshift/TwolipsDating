@@ -9,6 +9,41 @@ namespace TwolipsDating.Business
 {
     public class ProfileService : BaseService
     {
+        public int SendMessage(string senderUserId, string receiverUserId, string subject, string body)
+        {
+            // don't allow us to send messages to our self
+            //if(senderUserId == receiverUserId)
+            //{
+            //    return 0;
+            //}
+
+            Message message = db.Messages.Create();
+
+            ApplicationUser senderUser = new ApplicationUser() { Id = senderUserId };
+            db.Users.Attach(senderUser);
+            message.SenderApplicationUser = senderUser;
+
+            // if 
+            if (senderUserId != receiverUserId)
+            {
+                ApplicationUser receiverUser = new ApplicationUser() { Id = receiverUserId };
+                db.Users.Attach(receiverUser);
+                message.ReceiverApplicationUser = receiverUser;
+            }
+            else
+            {
+                message.ReceiverApplicationUser = senderUser;
+            }
+
+            message.Body = body;
+            message.Subject = subject;
+            message.DateSent = DateTime.Now;
+            message.MessageStatusId = (int)MessageStatusValue.Unread;
+
+            db.Messages.Add(message);
+            return db.SaveChanges();
+        }
+
         public Profile GetProfile(string userId)
         {
             var profile = from user in db.Users
@@ -65,6 +100,15 @@ namespace TwolipsDating.Business
 
             db.Profiles.Add(p);
             db.SaveChanges();
+        }
+
+        public int GetUnreadMessageCount(string userId)
+        {
+            int unreadMessageCount = (from messages in db.Messages
+                                      where messages.ReceiverApplicationUserId == userId
+                                      where messages.MessageStatusId == (int)MessageStatusValue.Unread
+                                      select messages).Count();
+            return unreadMessageCount;
         }
     }
 }

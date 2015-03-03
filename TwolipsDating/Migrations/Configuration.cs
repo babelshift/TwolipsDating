@@ -12,6 +12,7 @@ namespace TwolipsDating.Migrations
         {
             AutomaticMigrationsEnabled = false;
             ContextKey = "TwolipsDating.Models.ApplicationDbContext";
+            SetSqlGenerator("System.Data.SqlClient", new MySqlServerMigrationSqlGenerator());
         }
 
         protected override void Seed(TwolipsDating.Models.ApplicationDbContext context)
@@ -20,6 +21,12 @@ namespace TwolipsDating.Migrations
                 new Gender() { Id = 1, Name = "Unknown" },
                 new Gender() { Id = 2, Name = "Man" },
                 new Gender() { Id = 3, Name = "Woman" }
+            );
+
+            context.MessageStatuses.AddOrUpdate(m => m.Id,
+                new MessageStatus() { Id = 1, Name = "Unread" },
+                new MessageStatus() { Id = 2, Name = "Read" },
+                new MessageStatus() { Id = 3, Name = "Deleted" }
             );
         }
     }

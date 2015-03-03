@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TwolipsDating.Models
 {
@@ -20,6 +21,8 @@ namespace TwolipsDating.Models
         public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<ZipCode> ZipCodes { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<MessageStatus> MessageStatuses { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -39,6 +42,67 @@ namespace TwolipsDating.Models
             SetupCityEntity(modelBuilder);
             SetupUSStateEntity(modelBuilder);
             SetupZipCodeEntity(modelBuilder);
+            SetupMessageStatusEntity(modelBuilder);
+            SetupMessageEntity(modelBuilder);
+        }
+
+        private void SetupMessageEntity(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Message>()
+                .HasKey(m => m.Id);
+
+            modelBuilder.Entity<Message>()
+                .HasRequired(m => m.SenderApplicationUser)
+                .WithMany(m => m.SentMessages)
+                .HasForeignKey(m => m.SenderApplicationUserId);
+
+            modelBuilder.Entity<Message>()
+                .HasRequired(m => m.ReceiverApplicationUser)
+                .WithMany(m => m.ReceivedMessages)
+                .HasForeignKey(m => m.ReceiverApplicationUserId);
+
+            modelBuilder.Entity<Message>()
+                .HasRequired(m => m.MessageStatus)
+                .WithMany(m => m.Messages)
+                .HasForeignKey(m => m.MessageStatusId);
+
+            modelBuilder.Entity<Message>()
+                .Property(m => m.DateSent)
+                .IsRequired();
+
+            modelBuilder.Entity<Message>()
+                .Property(m => m.Subject)
+                .IsRequired();
+
+            modelBuilder.Entity<Message>()
+                .Property(m => m.Body)
+                .IsRequired();
+
+            modelBuilder.Entity<Message>()
+                .Property(m => m.Subject)
+                .HasMaxLength(255);
+
+            modelBuilder.Entity<Message>()
+                .Property(m => m.Body)
+                .HasMaxLength(2000);
+        }
+
+        private void SetupMessageStatusEntity(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<MessageStatus>()
+                .HasKey(ms => ms.Id);
+
+            modelBuilder.Entity<MessageStatus>()
+                .Property(ms => ms.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+            modelBuilder.Entity<MessageStatus>()
+                .Property(ms => ms.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<MessageStatus>()
+                .Property(ms => ms.Name)
+                .HasMaxLength(50);
         }
 
         private void SetupZipCodeEntity(DbModelBuilder modelBuilder)
@@ -139,6 +203,10 @@ namespace TwolipsDating.Models
         {
             modelBuilder.Entity<Gender>()
                 .HasKey(g => g.Id);
+
+            modelBuilder.Entity<Gender>()
+                .Property(g => g.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
             modelBuilder.Entity<Gender>()
                 .Property(g => g.Name)

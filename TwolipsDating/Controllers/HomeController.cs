@@ -1,20 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using TwolipsDating.Business;
 using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        public ActionResult Index()
+        private ProfileService profileService = new ProfileService();
+
+        public async Task<ActionResult> Index()
         {
             if(User.Identity.IsAuthenticated)
             {
                 // dashboard
+                var user = await UserManager.FindByNameAsync(User.Identity.Name);
                 DashboardViewModel viewModel = new DashboardViewModel();
+                SetUnreadCountsInViewBag(profileService, user);
                 return View("dashboard", viewModel);
             }
             else

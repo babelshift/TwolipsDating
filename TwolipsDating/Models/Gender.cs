@@ -6,6 +6,13 @@ using System.Web;
 
 namespace TwolipsDating.Models
 {
+    public enum GenderValue
+    {
+        Unknown = 1,
+        Male = 2,
+        Woman = 3
+    }
+
     public class Gender
     {
         public Gender()
