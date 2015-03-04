@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using TwolipsDating.Models;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.Controllers
 {
@@ -50,6 +51,37 @@ namespace TwolipsDating.Controllers
             {
                 _userManager = value;
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete(string id)
+        {
+            if (String.IsNullOrEmpty(id))
+            {
+                return RedirectToAction("index", "home");
+            }
+
+            string currentUserId = User.Identity.GetUserId();
+
+            // only allow people to delete their own accounts
+            if (currentUserId != id)
+            {
+                return RedirectToAction("index", "home");
+            }
+
+            var user = await UserManager.FindByIdAsync(id);
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            user.EmailConfirmed = false;
+            user.Logins.Clear();
+            user.PhoneNumber = null;
+            user.PhoneNumberConfirmed = false;
+            user.Roles.Clear();
+            user.UserName = GuidEncoder.Encode(user.Id);
+            user.Email = String.Format("{0}@disabled.com", user.UserName);
+            user.IsActive = false;
+            IdentityResult updateUserResult = await UserManager.UpdateAsync(user);
+            return RedirectToAction("index", "home");
         }
 
         //

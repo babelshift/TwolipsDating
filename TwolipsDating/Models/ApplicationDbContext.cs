@@ -23,6 +23,8 @@ namespace TwolipsDating.Models
         public DbSet<ZipCode> ZipCodes { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<MessageStatus> MessageStatuses { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<ReviewRating> ReviewRatings { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -44,6 +46,51 @@ namespace TwolipsDating.Models
             SetupZipCodeEntity(modelBuilder);
             SetupMessageStatusEntity(modelBuilder);
             SetupMessageEntity(modelBuilder);
+            SetupReviewEntity(modelBuilder);
+            SetupReviewRatingEntity(modelBuilder);
+        }
+
+        private void SetupReviewRatingEntity(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ReviewRating>()
+                .HasKey(r => r.Value);
+
+            modelBuilder.Entity<ReviewRating>()
+                .Property(r => r.Value)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+        }
+
+        private void SetupReviewEntity(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Review>()
+                .HasKey(m => m.Id);
+
+            modelBuilder.Entity<Review>()
+                .HasRequired(m => m.AuthorUser)
+                .WithMany(m => m.SentReviews)
+                .HasForeignKey(m => m.AuthorUserId);
+
+            modelBuilder.Entity<Review>()
+                .HasRequired(m => m.TargetUser)
+                .WithMany(m => m.ReceivedReviews)
+                .HasForeignKey(m => m.TargetUserId);
+
+            modelBuilder.Entity<Review>()
+                .Property(m => m.DateCreated)
+                .IsRequired();
+
+            modelBuilder.Entity<Review>()
+                .Property(m => m.Content)
+                .IsRequired();
+
+            modelBuilder.Entity<Review>()
+                .Property(m => m.Content)
+                .HasMaxLength(2000);
+
+            modelBuilder.Entity<Review>()
+                .HasRequired(m => m.Rating)
+                .WithMany(m => m.Reviews)
+                .HasForeignKey(m => m.RatingValue);
         }
 
         private void SetupMessageEntity(DbModelBuilder modelBuilder)

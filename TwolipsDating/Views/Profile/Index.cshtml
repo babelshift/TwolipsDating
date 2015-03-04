@@ -8,24 +8,29 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modalReviewLabel">New review</h4>
+                <h4 class="modal-title" id="modalReviewLabel">New review for @Model.UserName</h4>
             </div>
-            <div class="modal-body">
-                <form>
+            @using (Html.BeginForm("writereview", "profile", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
+                <div class="modal-body">
                     <div class="form-group">
-                        <label for="recipient-name" class="control-label">Title:</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        @Html.LabelFor(m => m.RatingValue, new { @class = "control-label" })
+                        <div id="star"></div> <small>(hover and select star)</small>
+                        @Html.HiddenFor(m => m.RatingValue)
                     </div>
                     <div class="form-group">
                         <label for="message-text" class="control-label">Content:</label>
-                        <textarea class="form-control" id="message-text"></textarea>
+                        @Html.TextAreaFor(m => m.ReviewContent, new { @class = "form-control" })
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Submit review</button>
-            </div>
+                    @Html.HiddenFor(m => m.ProfileUserId)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit review</button>
+                </div>
+            }
         </div>
     </div>
 </div>
@@ -34,7 +39,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modalMessageLabel">New message</h4>
+                <h4 class="modal-title" id="modalMessageLabel">New message to @Model.UserName</h4>
             </div>
             @using (Html.BeginForm("sendmessage", "profile", FormMethod.Post))
             {
@@ -144,30 +149,47 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <ul class="nav nav-pills">
-                        <li role="presentation" class="active"><a href="#">Feed</a></li>
-                        <li role="presentation"><a href="#">Pictures</a></li>
-                        <li role="presentation"><a href="#">Reviews</a></li>
+                        @if (Model.ActiveTab == "feed")
+                        {
+                            <li role="presentation" class="active">@Html.ActionLink("Feed", "index", new { tab = "feed" })</li>
+                        }
+                        else
+                        {
+                            <li role="presentation">@Html.ActionLink("Feed", "index", new { tab = "feed" })</li>
+                        }
+                        @if (Model.ActiveTab == "pictures")
+                        {
+                            <li role="presentation" class="active">@Html.ActionLink("Pictures", "index", new { tab = "pictures" })</li>
+                        }
+                        else
+                        {
+                            <li role="presentation">@Html.ActionLink("Pictures", "index", new { tab = "pictures" })</li>
+                        }
+                        @if (Model.ActiveTab == "reviews")
+                        {
+                            <li role="presentation" class="active">@Html.ActionLink("Reviews", "index", new { tab = "reviews" })</li>
+                        }
+                        else
+                        {
+                            <li role="presentation">@Html.ActionLink("Reviews", "index", new { tab = "reviews" })</li>
+                        }
                         <li role="presentation"><a href="#">Achievements</a></li>
                         <li role="presentation"><a href="#">Stats</a></li>
                         <li role="presentation"><a href="#">Trophy Room</a></li>
                     </ul>
                     <hr />
-                    <p>
-                        <a href="#">jskiles1</a> completed the challenge <a href="#" class="label label-primary">Bring Out Your Dead</a>
-                        <br />
-                        <small>3 minutes ago</small>
-                    </p>
-                    <p>
-                        <a href="#">jskiles1</a> defeated <a href="#">joanne123</a> in a game of <a href="#" class="label label-primary">Chicken</a>
-                        <br />
-                        <small>5 hours ago</small>
-                    </p>
-                    <p>
-                        <a href="#">jskiles1</a> made an announcement: <strong>all I do is win!</strong>
-                        <br />
-                        <small>7 hours ago</small>
-                    </p>
+                    @if (Model.ActiveTab == "feed")
+                    {
+                        Html.RenderPartial("_FeedPartial");
+                    }
+                    else if (Model.ActiveTab == "pictures")
+                    {
+                    }
+                    else if (Model.ActiveTab == "reviews")
+                    {
+                    }
                 </div>
+
             </div>
         </div>
     }
@@ -239,12 +261,20 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
-
     <script type="text/javascript">
         $(document).ready(function () {
             var countrySelect = $("#SelectedCountryId");
-            countrySelect.val(215); // united stats
+            countrySelect.val(215); // united states
             countrySelect.change();
+
+            // initialize the star rating plugin
+            $("#star").raty({
+                score: 3,
+                hints: ['awful', 'bad', 'average', 'good', 'great'],
+                click: function (score, evt) {
+                    $("#RatingValue").val(score);
+                }
+            });
         });
 
         function onCountrySelected(e, obj) {

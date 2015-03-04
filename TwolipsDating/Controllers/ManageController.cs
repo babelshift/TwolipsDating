@@ -12,7 +12,7 @@ using TwolipsDating.ViewModels;
 namespace TwolipsDating.Controllers
 {
     [Authorize]
-    public class ManageController : Controller
+    public class ManageController : BaseController
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
@@ -55,11 +55,13 @@ namespace TwolipsDating.Controllers
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
+            var currentUser = await GetCurrentUserAsync();
             IndexViewModel model = new IndexViewModel()
             {
                 Email = await UserManager.GetEmailAsync(User.Identity.GetUserId()),
                 UserName = User.Identity.Name
             };
+            SetUnreadCountsInViewBag(ProfileService, currentUser);
 
             return View(model);
         }
@@ -230,6 +232,7 @@ namespace TwolipsDating.Controllers
         // GET: /Manage/ChangePassword
         public async Task<ActionResult> Settings(ManageMessageId? message)
         {
+            var currentUser = await GetCurrentUserAsync();
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
@@ -244,6 +247,7 @@ namespace TwolipsDating.Controllers
                     Logins = await UserManager.GetLoginsAsync(User.Identity.GetUserId())
                 }
             };
+            SetUnreadCountsInViewBag(ProfileService, currentUser);
             return View(model);
         }
 
@@ -337,6 +341,7 @@ namespace TwolipsDating.Controllers
         // GET: /Manage/ManageLogins
         public async Task<ActionResult> Externals(ManageMessageId? message)
         {
+            var currentUser = await GetCurrentUserAsync();
             ViewBag.StatusMessage =
                 message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
                 : message == ManageMessageId.Error ? "An error has occurred."
@@ -349,13 +354,13 @@ namespace TwolipsDating.Controllers
             var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId());
             var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
             ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
+            SetUnreadCountsInViewBag(ProfileService, currentUser);
             return View(new ManageLoginsViewModel
             {
                 CurrentLogins = userLogins,
                 OtherLogins = otherLogins
             });
         }
-
 
         //
         // POST: /Manage/LinkLogin

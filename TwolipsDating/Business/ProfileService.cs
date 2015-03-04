@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using TwolipsDating.Models;
 
@@ -9,13 +11,39 @@ namespace TwolipsDating.Business
 {
     public class ProfileService : BaseService
     {
-        public int SendMessage(string senderUserId, string receiverUserId, string subject, string body)
+        public async Task<int> WriteReviewAsync(string authorUserId, string targetUserId, string content, int ratingValue)
         {
             // don't allow us to send messages to our self
-            //if(senderUserId == receiverUserId)
-            //{
-            //    return 0;
-            //}
+            if (authorUserId == targetUserId)
+            {
+                return 0;
+            }
+
+            Review review = db.Reviews.Create();
+
+            ApplicationUser authorUser = new ApplicationUser() { Id = authorUserId };
+            db.Users.Attach(authorUser);
+            review.AuthorUser = authorUser;
+
+            ApplicationUser targetUser = new ApplicationUser() { Id = targetUserId };
+            db.Users.Attach(targetUser);
+            review.TargetUser = targetUser;
+
+            review.Content = content;
+            review.DateCreated = DateTime.Now;
+            review.RatingValue = ratingValue;
+
+            db.Reviews.Add(review);
+            return await db.SaveChangesAsync();
+        }
+
+        public async Task<int> SendMessageAsync(string senderUserId, string receiverUserId, string subject, string body)
+        {
+            // don't allow us to send messages to our self
+            if (senderUserId == receiverUserId)
+            {
+                return 0;
+            }
 
             Message message = db.Messages.Create();
 
@@ -23,17 +51,9 @@ namespace TwolipsDating.Business
             db.Users.Attach(senderUser);
             message.SenderApplicationUser = senderUser;
 
-            // if 
-            if (senderUserId != receiverUserId)
-            {
-                ApplicationUser receiverUser = new ApplicationUser() { Id = receiverUserId };
-                db.Users.Attach(receiverUser);
-                message.ReceiverApplicationUser = receiverUser;
-            }
-            else
-            {
-                message.ReceiverApplicationUser = senderUser;
-            }
+            ApplicationUser receiverUser = new ApplicationUser() { Id = receiverUserId };
+            db.Users.Attach(receiverUser);
+            message.ReceiverApplicationUser = receiverUser;
 
             message.Body = body;
             message.Subject = subject;
@@ -41,16 +61,16 @@ namespace TwolipsDating.Business
             message.MessageStatusId = (int)MessageStatusValue.Unread;
 
             db.Messages.Add(message);
-            return db.SaveChanges();
+            return await db.SaveChangesAsync();
         }
 
-        public Profile GetProfile(string userId)
+        public async Task<Profile> GetProfileAsync(string userId)
         {
             var profile = from user in db.Users
                           where user.Id == userId
                           select user.Profile;
 
-            return profile.FirstOrDefault();
+            return await profile.FirstOrDefaultAsync();
         }
 
         public IReadOnlyCollection<Gender> GetGenders()

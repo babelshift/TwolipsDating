@@ -6,14 +6,18 @@ using System.Web.Mvc;
 using TwolipsDating.Business;
 using TwolipsDating.Models;
 using Microsoft.AspNet.Identity.Owin;
+using System.Threading.Tasks;
 
 namespace TwolipsDating.Controllers
 {
     public class BaseController : Controller
     {
+        private ProfileService profileService = new ProfileService();
         private ApplicationUserManager _userManager;
 
-        public ApplicationUserManager UserManager
+        protected ProfileService ProfileService { get { return profileService; } }
+
+        protected ApplicationUserManager UserManager
         {
             get
             {
@@ -23,6 +27,17 @@ namespace TwolipsDating.Controllers
             {
                 _userManager = value;
             }
+        }
+
+        protected async Task<ApplicationUser> GetCurrentUserAsync()
+        {
+                ApplicationUser currentUser = Session["CurrentUser"] as ApplicationUser;
+                if(currentUser == null)
+                {
+                    currentUser = await UserManager.FindByNameAsync(User.Identity.Name);
+                    Session["CurrentUser"] = currentUser;
+                }
+                return currentUser;
         }
 
         protected void SetUnreadCountsInViewBag(ProfileService p, ApplicationUser user)

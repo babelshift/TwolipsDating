@@ -17,60 +17,92 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> SendMessage(ProfileViewModel viewModel)
         {
-            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            var currentUser = await GetCurrentUserAsync();
 
-            profileService.SendMessage(user.Id, viewModel.ProfileUserId, viewModel.MessageSubject, viewModel.MessageBody);
-
-            return RedirectToAction("index");
+            await profileService.SendMessageAsync(currentUser.Id, viewModel.ProfileUserId, viewModel.MessageSubject, viewModel.MessageBody);
+            
+            return RedirectToIndex();
         }
 
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> WriteReview(ProfileViewModel viewModel)
         {
-            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            var currentUser = await GetCurrentUserAsync();
 
-            var profile = profileService.GetProfile(user.Id);
+            await profileService.WriteReviewAsync(currentUser.Id, viewModel.ProfileUserId, viewModel.ReviewContent, viewModel.RatingValue);
 
+            return RedirectToIndex();
+        }
+
+        public async Task<ActionResult> Index(string tab)
+        {
+            var currentUser = await GetCurrentUserAsync();
+            var profile = await profileService.GetProfileAsync(currentUser.Id);
+
+            // profile exists, let's show it
             if (profile != null)
             {
-                var profileViewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
-                SetUnreadCountsInViewBag(profileService, user);
-
-                return View(profileViewModel);
-            }
-            else
-            {
-                var genders = profileService.GetGenders();
-                var countries = profileService.GetCountries();
-
-                ProfileViewModel viewModel = new ProfileViewModel();
-                
-                Dictionary<int, string> genderCollection = new Dictionary<int, string>();
-                foreach (var gender in genders)
+                var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
+                if(tab == "feed")
                 {
-                    genderCollection.Add(gender.Id, gender.Name);
+
                 }
-
-                viewModel.Genders = genderCollection;
-
-                Dictionary<int, string> countryCollection = new Dictionary<int, string>();
-                foreach (var country in countries)
+                else if(tab == "pictures")
                 {
-                    countryCollection.Add(country.Id, country.Name);
-                }
 
-                viewModel.Countries = countryCollection;
+                }
+                else if(tab == "reviews")
+                {
+
+                }
+                SetUnreadCountsInViewBag(ProfileService, currentUser);
+
+                viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
 
                 return View(viewModel);
             }
+            // profile doesn't exist yet, we need to ask the user for more info
+            else
+            {
+                return GetViewModelForProfileCreation();
+            }
+        }
+
+        private ActionResult GetViewModelForProfileCreation()
+        {
+            var genders = profileService.GetGenders();
+            var countries = profileService.GetCountries();
+
+            ProfileViewModel viewModel = new ProfileViewModel();
+
+            Dictionary<int, string> genderCollection = new Dictionary<int, string>();
+            foreach (var gender in genders)
+            {
+                genderCollection.Add(gender.Id, gender.Name);
+            }
+
+            viewModel.Genders = genderCollection;
+
+            Dictionary<int, string> countryCollection = new Dictionary<int, string>();
+            foreach (var country in countries)
+            {
+                countryCollection.Add(country.Id, country.Name);
+            }
+
+            viewModel.Countries = countryCollection;
+
+            return View(viewModel);
         }
 
         public async Task<ActionResult> Create(ProfileViewModel viewModel)
         {
-            var user = await UserManager.FindByNameAsync(User.Identity.Name);
-
+            var currentUser = await GetCurrentUserAsync();
             DateTime birthday = new DateTime(viewModel.BirthYear.Value, viewModel.BirthMonth.Value, viewModel.BirthDayOfMonth.Value);
-            profileService.CreateProfile(viewModel.SelectedGenderId.Value, viewModel.SelectedZipCodeId, viewModel.SelectedCityId.Value, user.Id, birthday);
+            profileService.CreateProfile(viewModel.SelectedGenderId.Value, viewModel.SelectedZipCodeId, viewModel.SelectedCityId.Value, currentUser.Id, birthday);
+            return RedirectToIndex();
+        }
 
+        private ActionResult RedirectToIndex()
+        {
             return RedirectToAction("index");
         }
     }

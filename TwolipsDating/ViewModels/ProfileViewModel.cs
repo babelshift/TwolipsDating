@@ -16,6 +16,17 @@ namespace TwolipsDating.ViewModels
         public string Location { get; set; }
         public int ProfileId { get; set; }
         public string ProfileUserId { get; set; }
+        public string ActiveTab { get; set; }
+
+        #endregion
+
+        #region Write review stuff
+
+        [Required]
+        public string ReviewContent { get; set; }
+
+        [Required]
+        public int RatingValue { get; set; }
 
         #endregion
 

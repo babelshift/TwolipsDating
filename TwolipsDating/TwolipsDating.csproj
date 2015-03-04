@@ -270,6 +270,10 @@
     <Compile Include="Migrations\201503022308388_RunSeed.Designer.cs">
       <DependentUpon>201503022308388_RunSeed.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503040211369_AddReviewAndRatingEntities.cs" />
+    <Compile Include="Migrations\201503040211369_AddReviewAndRatingEntities.Designer.cs">
+      <DependentUpon>201503040211369_AddReviewAndRatingEntities.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ChangeIdentityOperation.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\CustomSqlServerMigrationSqlGenerator.cs" />
@@ -281,8 +285,11 @@
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\MessageStatus.cs" />
     <Compile Include="Models\Profile.cs" />
+    <Compile Include="Models\ReviewRating.cs" />
+    <Compile Include="Models\Review.cs" />
     <Compile Include="Models\USState.cs" />
     <Compile Include="Models\ZipCode.cs" />
+    <Compile Include="Utilities\GuidEncoder.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\DropDownMenuViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
@@ -302,8 +309,13 @@
   <ItemGroup>
     <Content Include="Content\bird_blue_16.png" />
     <Content Include="Content\bootstrap-yeti.css" />
+    <Content Include="Content\cancel-off.png" />
+    <Content Include="Content\cancel-on.png" />
     <Content Include="Content\fb_16.png" />
     <Content Include="Content\gplus-16.png" />
+    <Content Include="Content\star-half.png" />
+    <Content Include="Content\star-off.png" />
+    <Content Include="Content\star-on.png" />
     <Content Include="Content\twolipsico.ico" />
     <Content Include="Content\twolipsicon-white.png" />
     <Content Include="Content\twolipsicon.png" />
@@ -322,6 +334,7 @@
     <Content Include="Scripts\jquery-2.1.3.min.js" />
     <Content Include="Scripts\jquery-2.1.3.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.raty.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -377,6 +390,7 @@
     <Content Include="Views\Manage\_ManageNavigationPartial.cshtml" />
     <Content Include="Views\Manage\Settings.cshtml" />
     <Content Include="Views\Manage\Externals.cshtml" />
+    <Content Include="Views\Profile\_FeedPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -426,6 +440,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503022308388_RunSeed.resx">
       <DependentUpon>201503022308388_RunSeed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503040211369_AddReviewAndRatingEntities.resx">
+      <DependentUpon>201503040211369_AddReviewAndRatingEntities.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -25,6 +25,8 @@ namespace TwolipsDating.Models
 
         public virtual Profile Profile { get; set; }
 
+        public ICollection<Review> SentReviews { get; set; }
+        public ICollection<Review> ReceivedReviews { get; set; }
         public ICollection<Message> SentMessages { get; set; }
         public ICollection<Message> ReceivedMessages { get; set; }
 

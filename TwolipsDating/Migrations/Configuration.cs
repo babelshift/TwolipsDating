@@ -28,6 +28,14 @@ namespace TwolipsDating.Migrations
                 new MessageStatus() { Id = 2, Name = "Read" },
                 new MessageStatus() { Id = 3, Name = "Deleted" }
             );
+
+            context.ReviewRatings.AddOrUpdate(m => m.Value,
+                new ReviewRating() { Value = 1 },
+                new ReviewRating() { Value = 2 },
+                new ReviewRating() { Value = 3 },
+                new ReviewRating() { Value = 4 },
+                new ReviewRating() { Value = 5 }
+            );
         }
     }
 }
