@@ -1,84 +1,62 @@
 ﻿@model TwolipsDating.Models.IndexViewModel
 @{
-    ViewBag.Title = "Manage";
+    ViewBag.Title = "Manage your profile";
 }
 
-<h2>@ViewBag.Title.</h2>
-
-<p class="text-success">@ViewBag.StatusMessage</p>
-<div>
-    <h4>Change your account settings</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Password:</dt>
-        <dd>
-            [
-            @if (Model.HasPassword)
-            {
-                @Html.ActionLink("Change your password", "ChangePassword")
-            }
-            else
-            {
-                @Html.ActionLink("Create", "SetPassword")
-            }
-            ]
-        </dd>
-        <dt>External Logins:</dt>
-        <dd>
-            @Model.Logins.Count [
-            @Html.ActionLink("Manage", "ManageLogins") ]
-        </dd>
-        @*
-            Phone Numbers can used as a second factor of verification in a two-factor authentication system.
-             
-             See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                for details on setting up this ASP.NET application to support two-factor authentication using SMS.
-             
-             Uncomment the following block after you have set up two-factor authentication
-        *@
-        @*  
-            <dt>Phone Number:</dt>
-            <dd>
-                @(Model.PhoneNumber ?? "None") [
-                @if (Model.PhoneNumber != null)
-                {
-                    @Html.ActionLink("Change", "AddPhoneNumber")
-                    @: &nbsp;|&nbsp;
-                    @Html.ActionLink("Remove", "RemovePhoneNumber")
-                }
-                else
-                {
-                    @Html.ActionLink("Add", "AddPhoneNumber")
-                }
-                ]
-            </dd>
-        *@
-        <dt>Two-Factor Authentication:</dt>
-        <dd>
-            <p>
-                There are no two-factor authentication providers configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                for details on setting up this ASP.NET application to support two-factor authentication.
-            </p>
-            @*@if (Model.TwoFactor)
-                {
-                    using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <text>Enabled
-                        <input type="submit" value="Disable" class="btn btn-link" />
-                        </text>
-                    }
-                }
-                else
-                {
-                    using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <text>Disabled
-                        <input type="submit" value="Enable" class="btn btn-link" />
-                        </text>
-                    }
-                }*@
-        </dd>
-    </dl>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Settings" })
+        <div class="pull-right">
+            <ul class="nav nav-pills">
+                <li role="presentation" class="active">
+                    @Html.ActionLink("Profile", "index")
+                </li>
+                <li role="presentation">
+                    @Html.ActionLink("Account", "settings")
+                </li>
+                <li role="presentation">
+                    @Html.ActionLink("Social Logins", "externals")
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="alert alert-info">
+                    <p>Your user name must be unique.</p>
+                    <p>Your e-mail address must be unique.</p>
+                    <p>Changing your e-mail address will require you to confirm the new address.</p>
+                </div>
+                @if (!String.IsNullOrEmpty(ViewBag.StatusMessage))
+                {
+                    <div class="alert alert-success alert-dismissable" role="alert">
+                        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <p>@ViewBag.StatusMessage</p>
+                    </div>
+                }
+                @using (Html.BeginForm("index", "manage", FormMethod.Post, new { role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary("", new { @class = "alert alert-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.UserName, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                        <p><small>This user name will be displayed throughout the community and used for login purposes.</small></p>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        <p><small>You will sometimes receive communication related to your account. According to our privacy policy, we will not share your information with anyone.</small></p>
+                    </div>
+                    <input type="submit" class="btn btn-default btn-sm" value="Save" />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,96 @@
+﻿@model TwolipsDating.Models.ManageLoginsViewModel
+@using Microsoft.Owin.Security
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Settings" })
+        <div class="pull-right">
+            <ul class="nav nav-pills">
+                <li role="presentation">
+                    @Html.ActionLink("Profile", "index")
+                </li>
+                <li role="presentation">
+                    @Html.ActionLink("Account", "settings")
+                </li>
+                <li role="presentation" class="active">
+                    @Html.ActionLink("Social Logins", "externals")
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <p class="panel-title">External logins</p>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-info">
+                    <p>You can alternatively login to this community through popular networks. Once logged in to these services, you are also authenticated to our services. Add and remove registered external logins below.</p>
+                </div>
+                @if (Model.CurrentLogins.Count > 0)
+                {
+                    <h5>Currently registered logins</h5>
+                    <table class="table">
+                        <tbody>
+                            @foreach (var account in Model.CurrentLogins)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (ViewBag.ShowRemoveButton)
+                                        {
+                                            using (Html.BeginForm("RemoveLogin", "Manage"))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                @Html.Hidden("loginProvider", account.LoginProvider)
+                                                @Html.Hidden("providerKey", account.ProviderKey)
+                                                <button type="submit" class="btn btn-default btn-xs" value="Remove" title="Remove this @account.LoginProvider login from your account">
+                                                    <span class="glyphicon glyphicon-remove"></span>
+                                                </button>
+                                                @:&nbsp;
+                                                @account.LoginProvider
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @account.LoginProvider
+                                        }
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                @if (Model.OtherLogins.Count > 0)
+                {
+                    <h5>Add another service to log in</h5>
+                    using (Html.BeginForm("LinkLogin", "Manage"))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <table class="table">
+                            <tbody>
+                                @foreach (AuthenticationDescription p in Model.OtherLogins)
+                                {
+                                    <tr>
+                                        <td>
+                                            <button type="submit" class="btn btn-default btn-xs"
+                                                    id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType"
+                                                    title="Log in using your @p.Caption account">
+                                                <span class="glyphicon glyphicon-log-in"></span>
+                                            </button>
+                                            &nbsp;
+                                            @p.AuthenticationType
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

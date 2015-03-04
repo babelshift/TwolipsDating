@@ -9,8 +9,13 @@ namespace TwolipsDating.Models
     {
         public bool HasPassword { get; set; }
         public IList<UserLoginInfo> Logins { get; set; }
-        public string PhoneNumber { get; set; }
-        public bool TwoFactor { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
+        [Required]
+        public string UserName { get; set; }
+
         public bool BrowserRemembered { get; set; }
     }
 
