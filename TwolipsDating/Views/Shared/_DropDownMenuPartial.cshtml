@@ -1,5 +1,5 @@
 ﻿@model TwolipsDating.ViewModels.DropDownMenuViewModel
-<div class="btn-group">
+<div id="dropdown-main" class="btn-group">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         <i class="glyphicon glyphicon-user"></i>&nbsp;@Model.ActiveMenuText&nbsp;<span class="caret"></span>
     </button>
@@ -7,8 +7,10 @@
         <li><a href="@Url.Action("index", "home")"><i class="glyphicon glyphicon-home"></i>&nbsp;Dashboard</a></li>
         <li><a href="@Url.Action("index", "profile")"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
         <li><a href="@Url.Action("received", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Messages</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-search"></i>&nbsp;Search</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-tower"></i>&nbsp;Challenges</a></li>
+        @*
+            <li><a href="#"><i class="glyphicon glyphicon-search"></i>&nbsp;Search</a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-tower"></i>&nbsp;Challenges</a></li>
+        *@
         <li class="divider"></li>
         <li><a href="@Url.Action("index", "manage")"><i class="glyphicon glyphicon-cog"></i>&nbsp;Settings</a></li>
     </ul>

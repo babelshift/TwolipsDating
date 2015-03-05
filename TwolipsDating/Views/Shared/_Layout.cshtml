@@ -28,7 +28,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="@Url.Action("index", "home")">
+                <a class="navbar-brand" style="padding-top: 7px; padding-right: 3px;" href="@Url.Action("index", "home")">
                     <img alt="twolips dating" src="~/Content/twolipsicon-white.png" width="32" height="32" />
                 </a>
                 @Html.ActionLink("twolips dating", "index", "home", null, new { @class = "navbar-brand" })
@@ -42,7 +42,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="@Url.Action("message", "profile")" title="Messages">
+                        <a href="@Url.Action("received", "message")" title="Messages">
                             <i class="glyphicon glyphicon-inbox"></i>&nbsp;&nbsp;@ViewBag.UnreadMessageCount
                         </a>
                     </li>
@@ -51,9 +51,11 @@
                             <i class="glyphicon glyphicon-bell"></i>&nbsp;&nbsp;@ViewBag.UnreadNotificationCount&nbsp;<span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="@Url.Action("message", "profile")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;&nbsp;@ViewBag.UnreadMessageCount unread messages</a></li>
-                            <li><a href="#"><i class="glyphicon glyphicon-gift"></i>&nbsp;&nbsp;@ViewBag.GiftCount gifts received</a></li>
-                            <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i>&nbsp;&nbsp;@ViewBag.ItemCount new items</a></li>
+                            <li><a href="@Url.Action("received", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;&nbsp;@ViewBag.UnreadMessageCount unread messages</a></li>
+                            @*
+                                <li><a href="#"><i class="glyphicon glyphicon-gift"></i>&nbsp;&nbsp;@ViewBag.GiftCount gifts received</a></li>
+                                <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i>&nbsp;&nbsp;@ViewBag.ItemCount new items</a></li>
+                            *@
                         </ul>
                     </li>
                 </ul>
@@ -160,6 +162,16 @@
         ga('create', 'UA-55633694-1', 'auto');
         ga('send', 'pageview');
 
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var dropdownMain = $("#dropdown-main");
+            if (dropdownMain != null) {
+                dropdownMain.hover(function () {
+                    dropdownMain.toggleClass("open");
+                });
+            }
+        });
     </script>
     @RenderSection("scripts", required: false)
 </body>

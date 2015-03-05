@@ -98,8 +98,8 @@
                             <button class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-thumbs-down"></i></button>&nbsp;7
                         </p>
                     </div>
-                    <hr />
-                    <h4><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tagged himself</h4>
+                    <h4 style="display: inline-block"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tagged self&nbsp;</h4>
+                    <a style="display: inline-block" href="#">edit</a>
                     <div class="tags">
                         <a href="#" class="btn btn-default btn-xs" title="a clever one">
                             intellectual
@@ -114,7 +114,8 @@
                             pro gamer
                         </a>
                     </div>
-                    <h4><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Others tagged him</h4>
+                    <h4 style="display: inline-block"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Other tagged&nbsp;</h4>
+                    <a style="display: inline-block" href="#">suggest</a>
                     <div class="tags">
                         <a href="#" class="btn btn-default btn-xs" title="a clever one">
                             intellectual
@@ -173,9 +174,11 @@
                         {
                             <li role="presentation">@Html.ActionLink("Reviews", "index", new { tab = "reviews" })</li>
                         }
-                        <li role="presentation"><a href="#">Achievements</a></li>
-                        <li role="presentation"><a href="#">Stats</a></li>
-                        <li role="presentation"><a href="#">Trophy Room</a></li>
+                        @*
+                            <li role="presentation"><a href="#">Achievements</a></li>
+                            <li role="presentation"><a href="#">Stats</a></li>
+                            <li role="presentation"><a href="#">Trophy Room</a></li>
+                        *@
                     </ul>
                     <hr />
                     @if (Model.ActiveTab == "feed")
@@ -184,6 +187,7 @@
                     }
                     else if (Model.ActiveTab == "pictures")
                     {
+                        Html.RenderPartial("_PicturesPartial");
                     }
                     else if (Model.ActiveTab == "reviews")
                     {
