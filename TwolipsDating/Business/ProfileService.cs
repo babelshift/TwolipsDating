@@ -11,6 +11,16 @@ namespace TwolipsDating.Business
 {
     public class ProfileService : BaseService
     {
+        public async Task<IReadOnlyCollection<Review>> GetReviewsWrittenForUserAsync(string targetUserId)
+        {
+            var reviewsForUser = from reviews in db.Reviews
+                                 where reviews.TargetUserId == targetUserId
+                                 select reviews;
+
+            var results = await reviewsForUser.ToListAsync();
+            return results.AsReadOnly();
+        }
+
         public async Task<int> WriteReviewAsync(string authorUserId, string targetUserId, string content, int ratingValue)
         {
             // don't allow us to send messages to our self
@@ -73,39 +83,41 @@ namespace TwolipsDating.Business
             return await profile.FirstOrDefaultAsync();
         }
 
-        public IReadOnlyCollection<Gender> GetGenders()
+        public async Task<IReadOnlyCollection<Gender>> GetGendersAsync()
         {
             var genders = from gender in db.Genders
                           select gender;
 
-            return genders.ToList().AsReadOnly();
+            var results = await genders.ToListAsync();
+            return results.AsReadOnly();
         }
 
-        public IReadOnlyCollection<Country> GetCountries()
+        public async Task<IReadOnlyCollection<Country>> GetCountriesAsync()
         {
             var countries = from country in db.Countries
                             select country;
 
-            return countries.ToList().AsReadOnly();
+            var results = await countries.ToListAsync();
+            return results.AsReadOnly();
         }
 
-        public City GetCityByName(string cityName)
+        public async Task<City> GetCityByNameAsync(string cityName)
         {
-            var city = (from cities in db.Cities
-                        where cities.Name == cityName
-                        select cities).FirstOrDefault();
-            return city;
+            var result = from cities in db.Cities
+                         where cities.Name == cityName
+                         select cities;
+            return await result.FirstOrDefaultAsync();
         }
 
-        public City GetCityByZipCode(string zipCode)
+        public async Task<City> GetCityByZipCodeAsync(string zipCode)
         {
-            var city = (from zipCodes in db.ZipCodes
-                        where zipCodes.ZipCodeId == zipCode
-                        select zipCodes.City).FirstOrDefault();
-            return city;
+            var result = from zipCodes in db.ZipCodes
+                         where zipCodes.ZipCodeId == zipCode
+                         select zipCodes.City;
+            return await result.FirstOrDefaultAsync();
         }
 
-        public void CreateProfile(int genderId, int? zipCode, int cityId, string userId, DateTime birthday)
+        public async Task<int> CreateProfileAsync(int genderId, int? zipCode, int cityId, string userId, DateTime birthday)
         {
             ApplicationUser user = new ApplicationUser() { Id = userId };
 
@@ -119,25 +131,26 @@ namespace TwolipsDating.Business
             p.ZipCode = zipCode;
 
             db.Profiles.Add(p);
-            db.SaveChanges();
+            return await db.SaveChangesAsync();
         }
 
-        public int GetUnreadMessageCount(string userId)
+        public async Task<int> GetUnreadMessageCountAsync(string userId)
         {
-            int unreadMessageCount = (from messages in db.Messages
-                                      where messages.ReceiverApplicationUserId == userId
-                                      where messages.MessageStatusId == (int)MessageStatusValue.Unread
-                                      select messages).Count();
+            int unreadMessageCount = await (from messages in db.Messages
+                                            where messages.ReceiverApplicationUserId == userId
+                                            where messages.MessageStatusId == (int)MessageStatusValue.Unread
+                                            select messages).CountAsync();
             return unreadMessageCount;
         }
 
-        public IReadOnlyCollection<Message> GetMessagesByUser(string userId)
+        public async Task<IReadOnlyCollection<Message>> GetMessagesByUserAsync(string userId)
         {
             var userMessages = from messages in db.Messages
                                where messages.ReceiverApplicationUserId == userId
                                || messages.SenderApplicationUserId == userId
                                select messages;
-            return userMessages.ToList().AsReadOnly();
+            var results = await userMessages.ToListAsync();
+            return results.AsReadOnly();
         }
     }
 }

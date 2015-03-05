@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TwolipsDating.Business;
 using AutoMapper;
 using TwolipsDating.ViewModels;
+using TwolipsDating.Models;
 
 namespace TwolipsDating.Controllers
 {
@@ -44,17 +45,19 @@ namespace TwolipsDating.Controllers
                 var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
                 if(tab == "feed")
                 {
-
+                    // get the user's feed
                 }
                 else if(tab == "pictures")
                 {
-
+                    // get the user's uploaded pictures
                 }
                 else if(tab == "reviews")
                 {
-
+                    // get the user's reviews
+                    var reviews = await profileService.GetReviewsWrittenForUserAsync(currentUser.Id);
+                    viewModel.Reviews = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewViewModel>>(reviews);
                 }
-                SetUnreadCountsInViewBag(ProfileService, currentUser);
+                await SetUnreadCountsInViewBag(ProfileService, currentUser);
 
                 viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
 
@@ -63,14 +66,14 @@ namespace TwolipsDating.Controllers
             // profile doesn't exist yet, we need to ask the user for more info
             else
             {
-                return GetViewModelForProfileCreation();
+                return await GetViewModelForProfileCreationAsync();
             }
         }
 
-        private ActionResult GetViewModelForProfileCreation()
+        private async Task<ActionResult> GetViewModelForProfileCreationAsync()
         {
-            var genders = profileService.GetGenders();
-            var countries = profileService.GetCountries();
+            var genders = await profileService.GetGendersAsync();
+            var countries = await profileService.GetCountriesAsync();
 
             ProfileViewModel viewModel = new ProfileViewModel();
 
@@ -97,7 +100,7 @@ namespace TwolipsDating.Controllers
         {
             var currentUser = await GetCurrentUserAsync();
             DateTime birthday = new DateTime(viewModel.BirthYear.Value, viewModel.BirthMonth.Value, viewModel.BirthDayOfMonth.Value);
-            profileService.CreateProfile(viewModel.SelectedGenderId.Value, viewModel.SelectedZipCodeId, viewModel.SelectedCityId.Value, currentUser.Id, birthday);
+            await profileService.CreateProfileAsync(viewModel.SelectedGenderId.Value, viewModel.SelectedZipCodeId, viewModel.SelectedCityId.Value, currentUser.Id, birthday);
             return RedirectToIndex();
         }
 

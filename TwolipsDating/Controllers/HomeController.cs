@@ -20,7 +20,7 @@ namespace TwolipsDating.Controllers
                 // dashboard
                 var user = await UserManager.FindByNameAsync(User.Identity.Name);
                 DashboardViewModel viewModel = new DashboardViewModel();
-                SetUnreadCountsInViewBag(profileService, user);
+                await SetUnreadCountsInViewBag(profileService, user);
                 return View("dashboard", viewModel);
             }
             else

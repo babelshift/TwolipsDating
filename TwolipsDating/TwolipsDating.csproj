@@ -211,6 +211,9 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Utilities\DateTimeExtensions.cs" />
+    <Compile Include="Utilities\ReviewExtensions.cs" />
+    <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -391,6 +394,7 @@
     <Content Include="Views\Manage\Settings.cshtml" />
     <Content Include="Views\Manage\Externals.cshtml" />
     <Content Include="Views\Profile\_FeedPartial.cshtml" />
+    <Content Include="Views\Profile\_ReviewsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

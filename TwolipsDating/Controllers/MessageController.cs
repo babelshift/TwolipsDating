@@ -17,9 +17,9 @@ namespace TwolipsDating.Controllers
         public async Task<ActionResult> Received()
         {
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
-            SetUnreadCountsInViewBag(p, user);
+            await SetUnreadCountsInViewBag(p, user);
 
-            var messages = p.GetMessagesByUser(user.Id);
+            var messages = await p.GetMessagesByUserAsync(user.Id);
 
             List<ReceivedMessageViewModel> receivedMessages = new List<ReceivedMessageViewModel>();
             List<SentMessageViewModel> sentMessages = new List<SentMessageViewModel>();
@@ -49,11 +49,10 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Sent()
         {
-
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
-            SetUnreadCountsInViewBag(p, user);
+            await SetUnreadCountsInViewBag(p, user);
 
-            var messages = p.GetMessagesByUser(user.Id);
+            var messages = await p.GetMessagesByUserAsync(user.Id);
 
             List<SentMessageViewModel> sentMessages = new List<SentMessageViewModel>();
             foreach (var message in messages)

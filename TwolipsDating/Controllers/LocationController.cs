@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using TwolipsDating.Business;
@@ -16,12 +17,12 @@ namespace TwolipsDating.Controllers
 
     public class LocationController : Controller
     {
-        public JsonResult Zip(string id)
+        public async Task<JsonResult> Zip(string id)
         {
             if (Request.IsAuthenticated)
             {
                 ProfileService p = new ProfileService();
-                var city = p.GetCityByZipCode(id);
+                var city = await p.GetCityByZipCodeAsync(id);
                 if (city != null)
                 {
                     return Json(new LocationJsonResult() { CityId = city.Id, CityName = city.Name }, JsonRequestBehavior.AllowGet);
@@ -37,12 +38,12 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        public JsonResult City(string id)
+        public async Task<JsonResult> City(string id)
         {
             if (Request.IsAuthenticated)
             {
                 ProfileService p = new ProfileService();
-                var city = p.GetCityByName(id);
+                var city = await p.GetCityByNameAsync(id);
                 if (city != null)
                 {
                     return Json(new LocationJsonResult() { CityId = city.Id, CityName = city.Name }, JsonRequestBehavior.AllowGet);

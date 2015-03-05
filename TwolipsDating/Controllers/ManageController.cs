@@ -15,7 +15,6 @@ namespace TwolipsDating.Controllers
     public class ManageController : BaseController
     {
         private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
 
         public ManageController()
         {
@@ -23,7 +22,6 @@ namespace TwolipsDating.Controllers
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
-            UserManager = userManager;
             SignInManager = signInManager;
         }
 
@@ -39,18 +37,6 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-
         //
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
@@ -61,7 +47,7 @@ namespace TwolipsDating.Controllers
                 Email = await UserManager.GetEmailAsync(User.Identity.GetUserId()),
                 UserName = User.Identity.Name
             };
-            SetUnreadCountsInViewBag(ProfileService, currentUser);
+            await SetUnreadCountsInViewBag(ProfileService, currentUser);
 
             return View(model);
         }
@@ -247,7 +233,7 @@ namespace TwolipsDating.Controllers
                     Logins = await UserManager.GetLoginsAsync(User.Identity.GetUserId())
                 }
             };
-            SetUnreadCountsInViewBag(ProfileService, currentUser);
+            await SetUnreadCountsInViewBag(ProfileService, currentUser);
             return View(model);
         }
 
@@ -354,7 +340,7 @@ namespace TwolipsDating.Controllers
             var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId());
             var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
             ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
-            SetUnreadCountsInViewBag(ProfileService, currentUser);
+            await SetUnreadCountsInViewBag(ProfileService, currentUser);
             return View(new ManageLoginsViewModel
             {
                 CurrentLogins = userLogins,
@@ -383,17 +369,6 @@ namespace TwolipsDating.Controllers
             }
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && _userManager != null)
-            {
-                _userManager.Dispose();
-                _userManager = null;
-            }
-
-            base.Dispose(disposing);
         }
 
 #region Helpers

@@ -18,6 +18,8 @@ namespace TwolipsDating.ViewModels
         public string ProfileUserId { get; set; }
         public string ActiveTab { get; set; }
 
+        public IReadOnlyCollection<ReviewViewModel> Reviews { get; set; }
+
         #endregion
 
         #region Write review stuff
