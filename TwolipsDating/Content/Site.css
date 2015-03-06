@@ -178,3 +178,12 @@ input[type="checkbox"].input-validation-error {
 .tags a {
     margin-bottom: 4px;
 }
+
+.circular-image {
+	width: 32px;
+	height: 32px;
+	border-radius: 16px;
+	-webkit-border-radius: 16px;
+	-moz-border-radius: 16px;
+	background: url(http://placehold.it/256x256) no-repeat;
+}

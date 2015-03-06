@@ -69,11 +69,13 @@
         @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Profile" })
         <div class="pull-right">
             <ul class="nav nav-pills">
-                <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message"><i class="glyphicon glyphicon-envelope"></i></a></li>
-                <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review"><i class="glyphicon glyphicon-edit"></i></a></li>
-                <li role="presentation"><a href="#" title="Send a gift"><i class="glyphicon glyphicon-gift"></i></a></li>
-                <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
-                <li role="presentation"><a href="#" title="Add to ignore"><i class="glyphicon glyphicon-volume-off"></i></a></li>
+                <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Send Message</a></li>
+                <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review"><i class="glyphicon glyphicon-edit"></i>&nbsp;Write Review</a></li>
+                @*
+                    <li role="presentation"><a href="#" title="Send a gift"><i class="glyphicon glyphicon-gift"></i></a></li>
+                    <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
+                    <li role="presentation"><a href="#" title="Add to ignore"><i class="glyphicon glyphicon-volume-off"></i></a></li>
+                *@
             </ul>
         </div>
     </div>
@@ -89,16 +91,28 @@
                         <h3>@Model.UserName</h3>
                         <h5>@Model.Age&nbsp;&bull;&nbsp;@Model.Gender&nbsp;&bull;&nbsp;@Model.Location</h5>
                     </div>
-                    <div class="text-center" style="margin-top: 20px;">
-                        <p>
-                            <span style="margin-right: 10px;">
-                                <button class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-heart"></i></button>&nbsp;3472
-                            </span>
-                            <span style="margin-right: 10px;"><button class="btn btn-success btn-xs"><i class="glyphicon glyphicon-thumbs-up"></i></button>&nbsp;51</span>
-                            <button class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-thumbs-down"></i></button>&nbsp;7
-                        </p>
+                    <div class="text-center" style="margin-top: 15px;">
+                        <h4>
+                            @for (int i = 1; i <= Model.AverageRatingValue; i++)
+                            {
+                                <i class="glyphicon glyphicon-star"></i>
+                            }
+                            @for (int j = 1; j <= 5 - Model.AverageRatingValue; j++)
+                            {
+                                <i class="glyphicon glyphicon-star-empty"></i>
+                            }
+                        </h4>
+                        @*
+                            <p>
+                                <span style="margin-right: 10px;">
+                                    <button class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-heart"></i></button>&nbsp;3472
+                                </span>
+                                <span style="margin-right: 10px;"><button class="btn btn-success btn-xs"><i class="glyphicon glyphicon-thumbs-up"></i></button>&nbsp;51</span>
+                                <button class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-thumbs-down"></i></button>&nbsp;7
+                            </p>
+                        *@
                     </div>
-                    <h4 style="display: inline-block"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tagged self&nbsp;</h4>
+                    <h4 style="display: inline-block"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tagged by self&nbsp;</h4>
                     <a style="display: inline-block" href="#">edit</a>
                     <div class="tags">
                         <a href="#" class="btn btn-default btn-xs" title="a clever one">
@@ -114,7 +128,7 @@
                             pro gamer
                         </a>
                     </div>
-                    <h4 style="display: inline-block"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Other tagged&nbsp;</h4>
+                    <h4 style="display: inline-block"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tagged by others&nbsp;</h4>
                     <a style="display: inline-block" href="#">suggest</a>
                     <div class="tags">
                         <a href="#" class="btn btn-default btn-xs" title="a clever one">
@@ -136,13 +150,14 @@
                             reliable
                         </a>
                     </div>
-                    <hr />
-                    <h4><i class="glyphicon glyphicon-book"></i>&nbsp;&nbsp;Badges</h4>
-                    <span class="label label-danger"><i class="glyphicon glyphicon-apple"></i></span>
-                    <span class="label label-success"><i class="glyphicon glyphicon-music"></i></span>
-                    <span class="label label-info"><i class="glyphicon glyphicon-knight"></i></span>
-                    <span class="label label-info"><i class="glyphicon glyphicon-king"></i></span>
-                    <span class="label label-warning"><i class="glyphicon glyphicon-baby-formula"></i></span>
+                    @*
+                        <h4><i class="glyphicon glyphicon-book"></i>&nbsp;&nbsp;Badges earned</h4>
+                        <span class="label label-danger"><i class="glyphicon glyphicon-apple"></i></span>
+                        <span class="label label-success"><i class="glyphicon glyphicon-music"></i></span>
+                        <span class="label label-info"><i class="glyphicon glyphicon-knight"></i></span>
+                        <span class="label label-info"><i class="glyphicon glyphicon-king"></i></span>
+                        <span class="label label-warning"><i class="glyphicon glyphicon-baby-formula"></i></span>
+                    *@
                 </div>
             </div>
         </div>

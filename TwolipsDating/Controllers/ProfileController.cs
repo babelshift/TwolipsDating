@@ -9,6 +9,7 @@ using TwolipsDating.Business;
 using AutoMapper;
 using TwolipsDating.ViewModels;
 using TwolipsDating.Models;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.Controllers
 {
@@ -38,6 +39,7 @@ namespace TwolipsDating.Controllers
         {
             var currentUser = await GetCurrentUserAsync();
             var profile = await profileService.GetProfileAsync(currentUser.Id);
+            var reviews = await profileService.GetReviewsWrittenForUserAsync(currentUser.Id);
 
             // profile exists, let's show it
             if (profile != null)
@@ -54,11 +56,11 @@ namespace TwolipsDating.Controllers
                 else if(tab == "reviews")
                 {
                     // get the user's reviews
-                    var reviews = await profileService.GetReviewsWrittenForUserAsync(currentUser.Id);
                     viewModel.Reviews = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewViewModel>>(reviews);
                 }
                 await SetUnreadCountsInViewBag(ProfileService, currentUser);
 
+                viewModel.AverageRatingValue = reviews.AverageRating();
                 viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
 
                 return View(viewModel);

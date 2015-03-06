@@ -17,6 +17,7 @@ namespace TwolipsDating.ViewModels
         public int ProfileId { get; set; }
         public string ProfileUserId { get; set; }
         public string ActiveTab { get; set; }
+        public int AverageRatingValue { get; set; }
 
         public IReadOnlyCollection<ReviewViewModel> Reviews { get; set; }
 

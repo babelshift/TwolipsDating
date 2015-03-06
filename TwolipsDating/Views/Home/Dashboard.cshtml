@@ -7,33 +7,106 @@
 <div class="panel panel-default">
     <div class="panel-body">
         @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Dashboard" })
-        <div class="pull-right">
-            <ul class="nav nav-pills">
-                <li role="presentation" class="active"><a href="#">Feed</a></li>
-                <li role="presentation"><a href="#">Achievements</a></li>
-                <li role="presentation"><a href="#">Awards</a></li>
-                <li role="presentation"><a href="#">Reviews</a></li>
-            </ul>
-        </div>
     </div>
 </div>
 
-<div class="panel panel-default">
-    <div class="panel-body">
-        <p>
-            <a href="#">jskiles1</a> completed the challenge <a href="#" class="label label-primary">Bring Out Your Dead</a>
-            <br />
-            <small>3 minutes ago</small>
-        </p>
-        <p>
-            <a href="#">jskiles1</a> defeated <a href="#">joanne123</a> in a game of <a href="#" class="label label-primary">Chicken</a>
-            <br />
-            <small>5 hours ago</small>
-        </p>
-        <p>
-            <a href="#">jskiles1</a> made an announcement: <strong>all I do is win!</strong>
-            <br />
-            <small>7 hours ago</small>
-        </p>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
+                    You sent a message to
+                </p>
+                <div class="circular-image" style="display: inline-block"></div>
+                <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
+                    <a href="#">joanne</a>
+                    <small> &bull;&nbsp;1 hour ago</small>
+                </p>
+                <div class="well well-sm">
+                    <small>lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor </small>
+                </div>
+
+                <div class="circular-image" style="display: inline-block"></div>
+                <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
+                    <a href="#">joanne</a> sent you a message
+                    <small> &bull;&nbsp;3 hours ago</small>
+                </p>
+                <div class="well well-sm">
+                    <small>yo yo yo ...</small>
+                </div>
+
+                <div class="circular-image" style="display: inline-block"></div>
+                <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
+                    <a href="#">hotgirl7</a> uploaded some pictures
+                    <small> &bull;&nbsp;5 hours ago</small>
+                </p>
+                <div class="row">
+                    <div class="col-xs-4 col-md-2">
+                        <a href="#" class="thumbnail">
+                            <img src="http://placehold.it/128x128">
+                        </a>
+                    </div>
+                    <div class="col-xs-4 col-md-2">
+                        <a href="#" class="thumbnail">
+                            <img src="http://placehold.it/128x128">
+                        </a>
+                    </div>
+                    <div class="col-xs-4 col-md-2">
+                        <a href="#" class="thumbnail">
+                            <img src="http://placehold.it/128x128">
+                        </a>
+                    </div>
+                    <div class="col-xs-4 col-md-2">
+                        <a href="#" class="thumbnail">
+                            <img src="http://placehold.it/128x128">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="circular-image" style="display: inline-block"></div>
+                <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
+                    <a href="#">joanne</a> writes about
+                </p>
+                <div class="circular-image" style="display: inline-block"></div>
+                <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
+                    <a href="#">justin</a>
+                    <small>
+                        &bull;&nbsp;
+                        <i class="glyphicon glyphicon-star"></i>
+                        <i class="glyphicon glyphicon-star"></i>
+                        <i class="glyphicon glyphicon-star"></i>
+                        <i class="glyphicon glyphicon-star-empty"></i>
+                        <i class="glyphicon glyphicon-star-empty"></i>
+                        &bull;&nbsp;6 hours ago
+                    </small>
+                </p>
+                <p style="margin-top: 5px; " class="pull-right">
+                    <a href="#" class="label label-primary"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Share</a>
+                    <a href="#" class="label label-default"><i class="glyphicon glyphicon-alert"></i>&nbsp;Report</a>
+                </p>
+                <div class="clearfix"></div>
+                <div class="well well-sm">
+                    <small>dude this guy is retarded</small>
+                </div>
+
+                @*
+                    <p>
+                        <a href="#">jskiles1</a> completed the challenge <a href="#" class="label label-primary">Bring Out Your Dead</a>
+                        <br />
+                        <small>3 minutes ago</small>
+                    </p>
+                    <p>
+                        <a href="#">jskiles1</a> defeated <a href="#">joanne123</a> in a game of <a href="#" class="label label-primary">Chicken</a>
+                        <br />
+                        <small>5 hours ago</small>
+                    </p>
+                    <p>
+                        <a href="#">jskiles1</a> made an announcement: <strong>all I do is win!</strong>
+                        <br />
+                        <small>7 hours ago</small>
+                    </p>
+                *@
+            </div>
+        </div>
     </div>
 </div>

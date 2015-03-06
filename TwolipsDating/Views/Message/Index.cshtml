@@ -13,19 +13,19 @@
                 @if (Model.MessageViewMode == MessageViewMode.Received)
                 {
                     <li role="presentation" class="active">
-                        @Html.ActionLink("Received", "received", null, new { title = "Your received messages" })
+                        <a href="@Url.Action("received")" title="Your received messages"><i class="glyphicon glyphicon-download"></i>&nbsp;Received</a>
                     </li>
                     <li role="presentation">
-                        @Html.ActionLink("Sent", "sent", null, new { title = "Your sent messages" })
+                        <a href="@Url.Action("sent")" title="Your sent messages"><i class="glyphicon glyphicon-upload"></i>&nbsp;Sent</a>
                     </li>
                 }
                 else
                 {
                     <li role="presentation">
-                        @Html.ActionLink("Received", "received", null, new { title = "Your received messages" })
+                        <a href="@Url.Action("received")" title="Your received messages"><i class="glyphicon glyphicon-download"></i>&nbsp;Received</a>
                     </li>
                     <li role="presentation" class="active">
-                        @Html.ActionLink("Sent", "sent", null, new { title = "Your sent messages" })
+                        <a href="@Url.Action("sent")" title="Your sent messages"><i class="glyphicon glyphicon-upload"></i>&nbsp;Sent</a>
                     </li>
                 }
             </ul>
