@@ -43,23 +43,27 @@
                             </a>
                         </li>
                     *@
-                    <li>
-                        <a href="@Url.Action("received", "message")" title="Messages">
-                            <i class="glyphicon glyphicon-inbox"></i>&nbsp;&nbsp;@ViewBag.UnreadMessageCount
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="Notifications">
-                            <i class="glyphicon glyphicon-bell"></i>&nbsp;&nbsp;@ViewBag.UnreadNotificationCount&nbsp;<span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="@Url.Action("received", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;&nbsp;@ViewBag.UnreadMessageCount unread messages</a></li>
-                            @*
-                                <li><a href="#"><i class="glyphicon glyphicon-gift"></i>&nbsp;&nbsp;@ViewBag.GiftCount gifts received</a></li>
-                                <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i>&nbsp;&nbsp;@ViewBag.ItemCount new items</a></li>
-                            *@
-                        </ul>
-                    </li>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li>
+                            <a href="@Url.Action("received", "message")" title="Messages">
+                                <i class="glyphicon glyphicon-inbox"></i>&nbsp;&nbsp;@ViewBag.UnreadMessageCount
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="Notifications">
+                                <i class="glyphicon glyphicon-bell"></i>&nbsp;&nbsp;@ViewBag.UnreadNotificationCount&nbsp;<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="@Url.Action("received", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;&nbsp;@ViewBag.UnreadMessageCount unread messages</a></li>
+                                @*
+                                    <li><a href="#"><i class="glyphicon glyphicon-gift"></i>&nbsp;&nbsp;@ViewBag.GiftCount gifts received</a></li>
+                                    <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i>&nbsp;&nbsp;@ViewBag.ItemCount new items</a></li>
+                                *@
+                            </ul>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>
@@ -68,83 +72,101 @@
         @RenderBody()
     </div>
     <footer class="footer">
-        <div class="footer-top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-3">
-                        <h4>
-                            <a href="@Url.Action("index", "home")"><img src="~/Content/twolipsicon-white.png" width="32" height="32" /></a>  twolips dating
-                        </h4>
-                        <p>Dating shouldn't be a hassle. In fact, it should be fun. Interact with others around here to prove it.</p>
-                        <p>Get started today for free!</p>
-                        <p>Email: <a href="mailto:info@twolipsdating.com">info@twolipsdating.com</a></p>
-                    </div>
-                    <div class="col-md-3">
-                        <h5>About Us</h5>
-                        <hr />
-                        <ul class="list-unstyled">
-                            <li>
-                                @Html.ActionLink("Who we are", "index", "about")
-                                <i class="glyphicon glyphicon-chevron-right"></i>
-                            </li>
-                            <li>
-                                @Html.ActionLink("FAQ", "faq", "help")
-                                <i class="glyphicon glyphicon-chevron-right"></i>
-                            </li>
-                            <li>
-                                <a href="mailto:info@twolipsdating.com">Contact Us</a>
-                                <i class="glyphicon glyphicon-chevron-right"></i>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3">
-                        <h5>Our Policies</h5>
-                        <hr />
-                        <ul class="list-unstyled">
-                            <li>
-                                @Html.ActionLink("Privacy policy", "privacy", "about")
-                                <i class="glyphicon glyphicon-chevron-right"></i>
-                            </li>
-                            <li>
-                                @Html.ActionLink("Terms of service", "terms", "about")
-                                <i class="glyphicon glyphicon-chevron-right"></i>
-                            </li>
-                            <li>
-                                @Html.ActionLink("Content guidelines", "content", "help")
-                                <i class="glyphicon glyphicon-chevron-right"></i>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3">
-                        <h5>Useful Links</h5>
-                        <hr />
-                        <ul class="list-unstyled">
-                            <li>
-                                @Html.ActionLink("Dating tips", "tips", "dating")
-                                <i class="glyphicon glyphicon-chevron-right"></i>
-                            </li>
-                            <li>
-                                @Html.ActionLink("Meet people", "meet", "dating")
-                                <i class="glyphicon glyphicon-chevron-right"></i>
-                            </li>
-                            <li>
-                                @Html.ActionLink("Grow your network", "network", "dating")
-                                <i class="glyphicon glyphicon-chevron-right"></i>
-                            </li>
-                            <li>
-                                @Html.ActionLink("Writing a good review", "advice", "help")
-                                <i class="glyphicon glyphicon-chevron-right"></i>
-                            </li>
-                        </ul>
+        @*
+                <div class="footer-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h4>
+                                <a href="@Url.Action("index", "home")"><img src="~/Content/twolipsicon-white.png" width="32" height="32" /></a>  twolips dating
+                            </h4>
+                            <p>Dating shouldn't be a hassle. In fact, it should be fun. Interact with others around here to prove it.</p>
+                            <p>Get started today for free!</p>
+                            <p>Email: <a href="mailto:info@twolipsdating.com">info@twolipsdating.com</a></p>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>About Us</h5>
+                            <hr />
+                            <ul class="list-unstyled">
+                                <li>
+                                    @Html.ActionLink("Who we are", "index", "about")
+                                    <i class="glyphicon glyphicon-chevron-right"></i>
+                                </li>
+                                <li>
+                                    @Html.ActionLink("FAQ", "faq", "help")
+                                    <i class="glyphicon glyphicon-chevron-right"></i>
+                                </li>
+                                <li>
+                                    <a href="mailto:info@twolipsdating.com">Contact Us</a>
+                                    <i class="glyphicon glyphicon-chevron-right"></i>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>Our Policies</h5>
+                            <hr />
+                            <ul class="list-unstyled">
+                                <li>
+                                    @Html.ActionLink("Privacy policy", "privacy", "about")
+                                    <i class="glyphicon glyphicon-chevron-right"></i>
+                                </li>
+                                <li>
+                                    @Html.ActionLink("Terms of service", "terms", "about")
+                                    <i class="glyphicon glyphicon-chevron-right"></i>
+                                </li>
+                                <li>
+                                    @Html.ActionLink("Content guidelines", "content", "help")
+                                    <i class="glyphicon glyphicon-chevron-right"></i>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>Useful Links</h5>
+                            <hr />
+                            <ul class="list-unstyled">
+                                <li>
+                                    @Html.ActionLink("Dating tips", "tips", "dating")
+                                    <i class="glyphicon glyphicon-chevron-right"></i>
+                                </li>
+                                <li>
+                                    @Html.ActionLink("Meet people", "meet", "dating")
+                                    <i class="glyphicon glyphicon-chevron-right"></i>
+                                </li>
+                                <li>
+                                    @Html.ActionLink("Grow your network", "network", "dating")
+                                    <i class="glyphicon glyphicon-chevron-right"></i>
+                                </li>
+                                <li>
+                                    @Html.ActionLink("Writing a good review", "advice", "help")
+                                    <i class="glyphicon glyphicon-chevron-right"></i>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        *@
         <div class="footer-bottom">
             <div class="container">
-                <p>
-                    &copy; @DateTime.Now.Year - @Html.CurrentVersion()
-                </p>
+                <h5 style="display: inline-block">
+                    &copy; @DateTime.Now.Year
+                </h5>
+                <h4 style="display: inline-block">
+                    <a href="@Url.Action("index", "home")"><img src="~/Content/twolipsicon-white.png" width="32" height="32" /></a> twolips dating <small>@Html.CurrentVersion()</small>
+                </h4>
+                <div style="margin-top: 10px;" class="pull-right">
+                    @Html.ActionLink("About", "index", "about")
+                    <p style="display: inline-block;">&bull;</p>
+                    @Html.ActionLink("FAQ", "faq", "help")
+                    <p style="display: inline-block;">&bull;</p>
+                    <a href="mailto:info@twolipsdating.com">Contact</a>
+                    <p style="display: inline-block;">&bull;</p>
+                    @Html.ActionLink("Privacy policy", "privacy", "about")
+                    <p style="display: inline-block;">&bull;</p>
+                    @Html.ActionLink("Terms of service", "terms", "about")
+                    <p style="display: inline-block;">&bull;</p>
+                    @Html.ActionLink("Content guidelines", "content", "help")
+                </div>
             </div>
         </div>
     </footer>

@@ -16,13 +16,13 @@
                 @Html.ValidationSummary()
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(m => m.RatingValue, new { @class = "control-label" })
+                        @Html.LabelFor(m => m.WriteReview.RatingValue, new { @class = "control-label" })
                         <div id="star"></div> <small>(hover and select star)</small>
-                        @Html.HiddenFor(m => m.RatingValue)
+                        @Html.HiddenFor(m => m.WriteReview.RatingValue)
                     </div>
                     <div class="form-group">
-                        <label for="message-text" class="control-label">Content:</label>
-                        @Html.TextAreaFor(m => m.ReviewContent, new { @class = "form-control" })
+                        @Html.LabelFor(m => m.WriteReview.ReviewContent, new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.WriteReview.ReviewContent, new { @class = "form-control" })
                     </div>
                     @Html.HiddenFor(m => m.ProfileUserId)
                 </div>
@@ -47,12 +47,12 @@
                 @Html.ValidationSummary()
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="message-text" class="control-label">Subject:</label>
-                        @Html.TextBoxFor(m => m.MessageSubject, new { @class = "form-control" })
+                        @Html.LabelFor(m => m.SendMessage.MessageSubject, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.SendMessage.MessageSubject, new { @class = "form-control" })
                     </div>
                     <div class="form-group">
-                        <label for="message-text" class="control-label">Message:</label>
-                        @Html.TextAreaFor(m => m.MessageBody, new { @class = "form-control" })
+                        @Html.LabelFor(m => m.SendMessage.MessageBody, new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.SendMessage.MessageBody, new { @class = "form-control" })
                     </div>
                     @Html.HiddenFor(m => m.ProfileUserId)
                 </div>
@@ -202,7 +202,7 @@
                     }
                     else if (Model.ActiveTab == "pictures")
                     {
-                        Html.RenderPartial("_PicturesPartial");
+                        Html.RenderPartial("_PicturesPartial", Model.UploadImage);
                     }
                     else if (Model.ActiveTab == "reviews")
                     {
@@ -232,38 +232,38 @@
 
                                 <div class="form-group">
                                     <p class="control-label">What are you?</p>
-                                    @Html.DropDownListFor(m => m.SelectedGenderId,
-                                    new SelectList(Model.Genders, "Key", "Value"),
+                                    @Html.DropDownListFor(m => m.CreateProfile.SelectedGenderId,
+                                     new SelectList(Model.CreateProfile.Genders, "Key", "Value"),
                                     new { @class = "form-control", data_placeholder = "What are you?" })
                                 </div>
                                 <div class="form-group">
                                     <p class="control-label">When were you born?</p>
                                     <div class="row">
                                         <div class="col-md-4">
-                                            @Html.TextBoxFor(m => m.BirthMonth, new { @class = "form-control", @placeholder = "MM", maxlength = "2" })
+                                            @Html.TextBoxFor(m => m.CreateProfile.BirthMonth, new { @class = "form-control", @placeholder = "MM", maxlength = "2" })
                                         </div>
                                         <div class="col-md-4">
-                                            @Html.TextBoxFor(m => m.BirthDayOfMonth, new { @class = "form-control", @placeholder = "DD", maxlength = "2" })
+                                            @Html.TextBoxFor(m => m.CreateProfile.BirthDayOfMonth, new { @class = "form-control", @placeholder = "DD", maxlength = "2" })
                                         </div>
                                         <div class="col-md-4">
-                                            @Html.TextBoxFor(m => m.BirthYear, new { @class = "form-control", @placeholder = "YYYY", maxlength = "4" })
+                                            @Html.TextBoxFor(m => m.CreateProfile.BirthYear, new { @class = "form-control", @placeholder = "YYYY", maxlength = "4" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <p class="control-label">Where are you?</p>
-                                    @Html.DropDownListFor(m => m.SelectedCountryId,
-                                    new SelectList(Model.Countries, "Key", "Value"),
+                                    @Html.DropDownListFor(m => m.CreateProfile.SelectedCountryId,
+                                     new SelectList(Model.CreateProfile.Countries, "Key", "Value"),
                                     new { @class = "form-control", data_placeholder = "What country are you in?", onchange = "onCountrySelected(event, this)" })
                                 </div>
                                 <div class="form-group">
                                     <input type="text" id="textBoxZipCode" class="form-control" placeholder="Zip Code (ex. 33777)" onblur="onZipCodeBlur(event, this)" maxlength="5" />
-                                    @Html.HiddenFor(m => m.SelectedZipCodeId)
+                                    @Html.HiddenFor(m => m.CreateProfile.SelectedZipCodeId)
                                     <p id="zipCodeLocationText"></p>
                                 </div>
                                 <div class="form-group">
                                     <input type="text" id="textBoxCity" class="form-control" placeholder="City (ex. London)" onblur="onCityBlur(event, this)" />
-                                    @Html.HiddenFor(m => m.SelectedCityId)
+                                    @Html.HiddenFor(m => m.CreateProfile.SelectedCityId)
                                     <p id="cityLocationText"></p>
                                 </div>
                                 <div class="form-group">

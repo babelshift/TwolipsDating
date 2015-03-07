@@ -26,6 +26,10 @@ namespace TwolipsDating
                 .ForMember(dest => dest.Content, opts => opts.MapFrom(source => source.Content))
                 .ForMember(dest => dest.RatingValue, opts => opts.MapFrom(source => source.RatingValue))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateCreated.GetTimeAgo()));
+
+            Mapper.CreateMap<UserImage, UserImageViewModel>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(source => source.Id))
+                .ForMember(dest => dest.Path, opts => opts.MapFrom(source => String.Format("http://az732589.vo.msecnd.net/twolipsdatingcdn/{0}", source.FileName)));
         }
     }
 }

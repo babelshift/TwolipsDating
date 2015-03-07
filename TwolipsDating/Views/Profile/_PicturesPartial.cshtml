@@ -1,37 +1,23 @@
-﻿<div class="row">
-    <div class="col-xs-6 col-md-3">
-        <a href="#" class="thumbnail">
-            <img src="http://placehold.it/256x256">
-        </a>
+﻿@model TwolipsDating.ViewModels.UploadImageViewModel
+
+@using (Html.BeginForm("uploadimage", "profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div>
+        @Html.LabelFor(x => x.UploadedImage)
+        @Html.TextBoxFor(x => x.UploadedImage, new { type = "file" })
+        @Html.ValidationMessageFor(x => x.UploadedImage)
     </div>
-    <div class="col-xs-6 col-md-3">
-        <a href="#" class="thumbnail">
-            <img src="http://placehold.it/256x256">
-        </a>
-    </div>
-    <div class="col-xs-6 col-md-3">
-        <a href="#" class="thumbnail">
-            <img src="http://placehold.it/256x256">
-        </a>
-    </div>
-    <div class="col-xs-6 col-md-3">
-        <a href="#" class="thumbnail">
-            <img src="http://placehold.it/256x256">
-        </a>
-    </div>
-    <div class="col-xs-6 col-md-3">
-        <a href="#" class="thumbnail">
-            <img src="http://placehold.it/256x256">
-        </a>
-    </div>
-    <div class="col-xs-6 col-md-3">
-        <a href="#" class="thumbnail">
-            <img src="http://placehold.it/256x256">
-        </a>
-    </div>
-    <div class="col-xs-6 col-md-3">
-        <a href="#" class="thumbnail">
-            <img src="http://placehold.it/256x256">
-        </a>
-    </div>
+
+    <button type="submit">Upload</button>
+}
+
+<div class="row">
+    @foreach (var userImage in Model.UserImages)
+    {
+        <div class="col-xs-6 col-md-3">
+            <a href="#" class="thumbnail">
+                <img src="@userImage.Path">
+            </a>
+        </div>
+    }
 </div>

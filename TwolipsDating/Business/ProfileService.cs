@@ -11,6 +11,38 @@ namespace TwolipsDating.Business
 {
     public class ProfileService : BaseService
     {
+        public async Task<IReadOnlyCollection<UserImage>> GetUserImagesAsync(string userId)
+        {
+            if (String.IsNullOrEmpty(userId))
+            {
+                return null;
+            }
+
+            var userImageResult = from userImages in db.UserImages
+                                  where userImages.ApplicationUserId == userId
+                                  select userImages;
+
+            var results = await userImageResult.ToListAsync();
+            return results.AsReadOnly();
+        }
+
+        public async Task<int> AddUploadedImageForUserAsync(string userId, string fileName)
+        {
+            if (String.IsNullOrEmpty(userId) || String.IsNullOrEmpty(fileName))
+            {
+                return 0;
+            }
+
+            UserImage userImage = db.UserImages.Create();
+            ApplicationUser user = new ApplicationUser() { Id = userId };
+            db.Users.Attach(user);
+            userImage.ApplicationUser = user;
+            userImage.FileName = fileName;
+
+            db.UserImages.Add(userImage);
+            return await db.SaveChangesAsync();
+        }
+
         public async Task<IReadOnlyCollection<Review>> GetReviewsWrittenForUserAsync(string targetUserId)
         {
             var reviewsForUser = from reviews in db.Reviews

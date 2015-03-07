@@ -25,6 +25,7 @@ namespace TwolipsDating.Models
         public DbSet<MessageStatus> MessageStatuses { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<ReviewRating> ReviewRatings { get; set; }
+        public DbSet<UserImage> UserImages { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -48,6 +49,26 @@ namespace TwolipsDating.Models
             SetupMessageEntity(modelBuilder);
             SetupReviewEntity(modelBuilder);
             SetupReviewRatingEntity(modelBuilder);
+            SetupUserImageEntity(modelBuilder);
+        }
+
+        private void SetupUserImageEntity(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserImage>()
+                .HasKey(i => i.Id);
+
+            modelBuilder.Entity<UserImage>()
+                .HasRequired(i => i.ApplicationUser)
+                .WithMany(i => i.UploadedImages)
+                .HasForeignKey(i => i.ApplicationUserId);
+
+            modelBuilder.Entity<UserImage>()
+                .Property(i => i.FileName)
+                .IsRequired();
+
+            modelBuilder.Entity<UserImage>()
+                .Property(i => i.FileName)
+                .HasMaxLength(64);
         }
 
         private void SetupReviewRatingEntity(DbModelBuilder modelBuilder)
@@ -286,6 +307,10 @@ namespace TwolipsDating.Models
             modelBuilder.Entity<Profile>()
                 .Property(p => p.Birthday)
                 .IsRequired();
+
+            modelBuilder.Entity<Profile>()
+                .HasOptional(i => i.UserImage)
+                .WithOptionalPrincipal(i => i.Profile);
         }
     }
 }

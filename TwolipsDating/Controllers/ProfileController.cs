@@ -10,6 +10,10 @@ using AutoMapper;
 using TwolipsDating.ViewModels;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.Storage.Blob;
+using System.IO;
 
 namespace TwolipsDating.Controllers
 {
@@ -17,22 +21,62 @@ namespace TwolipsDating.Controllers
     {
         private ProfileService profileService = new ProfileService();
 
+        [HttpPost]
         public async Task<ActionResult> SendMessage(ProfileViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToIndex();
+            }
+
             var currentUser = await GetCurrentUserAsync();
 
-            await profileService.SendMessageAsync(currentUser.Id, viewModel.ProfileUserId, viewModel.MessageSubject, viewModel.MessageBody);
-            
+            await profileService.SendMessageAsync(currentUser.Id, viewModel.ProfileUserId, viewModel.SendMessage.MessageSubject, viewModel.SendMessage.MessageBody);
+
             return RedirectToIndex();
         }
 
         public async Task<ActionResult> WriteReview(ProfileViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToIndex();
+            }
+
             var currentUser = await GetCurrentUserAsync();
 
-            await profileService.WriteReviewAsync(currentUser.Id, viewModel.ProfileUserId, viewModel.ReviewContent, viewModel.RatingValue);
+            await profileService.WriteReviewAsync(currentUser.Id, viewModel.ProfileUserId, viewModel.WriteReview.ReviewContent, viewModel.WriteReview.RatingValue);
 
             return RedirectToIndex();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UploadImage(UploadImageViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToIndex(new { tab = "pictures" });
+            }
+
+            var currentUser = await GetCurrentUserAsync();
+
+            string fileType = viewModel.UploadedImage.FileName;
+            string fileName = String.Format("{0}{1}", Guid.NewGuid(), Path.GetExtension(fileType));
+
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
+
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = blobClient.GetContainerReference("twolipsdatingcdn");
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
+
+            using(var stream = viewModel.UploadedImage.InputStream)
+            {
+                blockBlob.UploadFromStream(stream);
+            }
+
+            await profileService.AddUploadedImageForUserAsync(currentUser.Id, fileName);
+
+            return RedirectToIndex(new { tab = "pictures" });
         }
 
         public async Task<ActionResult> Index(string tab)
@@ -45,15 +89,17 @@ namespace TwolipsDating.Controllers
             if (profile != null)
             {
                 var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
-                if(tab == "feed")
+                if (tab == "feed")
                 {
                     // get the user's feed
                 }
-                else if(tab == "pictures")
+                else if (tab == "pictures")
                 {
-                    // get the user's uploaded pictures
+                    viewModel.UploadImage = new UploadImageViewModel();
+                    var userImages = await profileService.GetUserImagesAsync(currentUser.Id);
+                    viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
                 }
-                else if(tab == "reviews")
+                else if (tab == "reviews")
                 {
                     // get the user's reviews
                     viewModel.Reviews = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewViewModel>>(reviews);
@@ -85,7 +131,7 @@ namespace TwolipsDating.Controllers
                 genderCollection.Add(gender.Id, gender.Name);
             }
 
-            viewModel.Genders = genderCollection;
+            viewModel.CreateProfile.Genders = genderCollection;
 
             Dictionary<int, string> countryCollection = new Dictionary<int, string>();
             foreach (var country in countries)
@@ -93,7 +139,7 @@ namespace TwolipsDating.Controllers
                 countryCollection.Add(country.Id, country.Name);
             }
 
-            viewModel.Countries = countryCollection;
+            viewModel.CreateProfile.Countries = countryCollection;
 
             return View(viewModel);
         }
@@ -101,14 +147,14 @@ namespace TwolipsDating.Controllers
         public async Task<ActionResult> Create(ProfileViewModel viewModel)
         {
             var currentUser = await GetCurrentUserAsync();
-            DateTime birthday = new DateTime(viewModel.BirthYear.Value, viewModel.BirthMonth.Value, viewModel.BirthDayOfMonth.Value);
-            await profileService.CreateProfileAsync(viewModel.SelectedGenderId.Value, viewModel.SelectedZipCodeId, viewModel.SelectedCityId.Value, currentUser.Id, birthday);
+            DateTime birthday = new DateTime(viewModel.CreateProfile.BirthYear.Value, viewModel.CreateProfile.BirthMonth.Value, viewModel.CreateProfile.BirthDayOfMonth.Value);
+            await profileService.CreateProfileAsync(viewModel.CreateProfile.SelectedGenderId.Value, viewModel.CreateProfile.SelectedZipCodeId, viewModel.CreateProfile.SelectedCityId.Value, currentUser.Id, birthday);
             return RedirectToIndex();
         }
 
-        private ActionResult RedirectToIndex()
+        private ActionResult RedirectToIndex(object routeValues = null)
         {
-            return RedirectToAction("index");
+            return RedirectToAction("index", routeValues);
         }
     }
 }
