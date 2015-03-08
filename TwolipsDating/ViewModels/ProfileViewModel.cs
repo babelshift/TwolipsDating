@@ -18,7 +18,9 @@ namespace TwolipsDating.ViewModels
         public string ProfileUserId { get; set; }
         public string ActiveTab { get; set; }
         public int AverageRatingValue { get; set; }
+        public string ProfileImagePath { get; set; }
 
+        public IReadOnlyCollection<ProfileFeedViewModel> Feed { get; set; }
         public IReadOnlyCollection<ReviewViewModel> Reviews { get; set; }
 
         #endregion
@@ -44,6 +46,12 @@ namespace TwolipsDating.ViewModels
         #region Image upload stuff
 
         public UploadImageViewModel UploadImage { get; set; }
+
+        #endregion
+
+        #region Profile image stuff
+
+        public ChangeProfileImageViewModel ChangeImage { get; set; }
 
         #endregion
     }

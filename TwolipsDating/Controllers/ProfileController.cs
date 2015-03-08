@@ -14,12 +14,14 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System.IO;
+using System.Configuration;
 
 namespace TwolipsDating.Controllers
 {
     public class ProfileController : BaseController
     {
         private ProfileService profileService = new ProfileService();
+        private string cdn = ConfigurationManager.AppSettings["cdnUrl"];
 
         [HttpPost]
         public async Task<ActionResult> SendMessage(ProfileViewModel viewModel)
@@ -36,6 +38,7 @@ namespace TwolipsDating.Controllers
             return RedirectToIndex();
         }
 
+        [HttpPost]
         public async Task<ActionResult> WriteReview(ProfileViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -58,6 +61,14 @@ namespace TwolipsDating.Controllers
                 return RedirectToIndex(new { tab = "pictures" });
             }
 
+            if (viewModel.UploadedImage.ContentType != "image/jpeg"
+                && viewModel.UploadedImage.ContentType != "image/png"
+                && viewModel.UploadedImage.ContentType != "image/bmp"
+                && viewModel.UploadedImage.ContentType != "image/gif")
+            {
+                return RedirectToIndex(new { tab = "pictures" });
+            }
+
             var currentUser = await GetCurrentUserAsync();
 
             string fileType = viewModel.UploadedImage.FileName;
@@ -69,7 +80,7 @@ namespace TwolipsDating.Controllers
             CloudBlobContainer container = blobClient.GetContainerReference("twolipsdatingcdn");
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
 
-            using(var stream = viewModel.UploadedImage.InputStream)
+            using (var stream = viewModel.UploadedImage.InputStream)
             {
                 blockBlob.UploadFromStream(stream);
             }
@@ -79,27 +90,44 @@ namespace TwolipsDating.Controllers
             return RedirectToIndex(new { tab = "pictures" });
         }
 
+        [HttpPost]
+        public async Task<ActionResult> ChangeImage(ProfileViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToIndex();
+            }
+
+            await profileService.ChangeProfileUserImageAsync(viewModel.ProfileId, viewModel.ChangeImage.UserImageId);
+
+            return RedirectToIndex();
+        }
+
         public async Task<ActionResult> Index(string tab)
         {
             var currentUser = await GetCurrentUserAsync();
             var profile = await profileService.GetProfileAsync(currentUser.Id);
-            var reviews = await profileService.GetReviewsWrittenForUserAsync(currentUser.Id);
 
             // profile exists, let's show it
             if (profile != null)
             {
+                var reviews = await profileService.GetReviewsWrittenForUserAsync(currentUser.Id);
                 var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
-                if (tab == "feed")
+                viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
+
+                viewModel.UploadImage = new UploadImageViewModel();
+                var userImages = await profileService.GetUserImagesAsync(currentUser.Id);
+                viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
+
+                if (viewModel.ActiveTab == "feed")
                 {
-                    // get the user's feed
+                     viewModel.Feed = GetUsersFeed(profile, reviews, userImages);
                 }
-                else if (tab == "pictures")
+                else if (viewModel.ActiveTab == "pictures")
                 {
-                    viewModel.UploadImage = new UploadImageViewModel();
-                    var userImages = await profileService.GetUserImagesAsync(currentUser.Id);
-                    viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
+                    // any picture specific stuff?
                 }
-                else if (tab == "reviews")
+                else if (viewModel.ActiveTab == "reviews")
                 {
                     // get the user's reviews
                     viewModel.Reviews = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewViewModel>>(reviews);
@@ -107,7 +135,6 @@ namespace TwolipsDating.Controllers
                 await SetUnreadCountsInViewBag(ProfileService, currentUser);
 
                 viewModel.AverageRatingValue = reviews.AverageRating();
-                viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
 
                 return View(viewModel);
             }
@@ -116,6 +143,41 @@ namespace TwolipsDating.Controllers
             {
                 return await GetViewModelForProfileCreationAsync();
             }
+        }
+
+        private IReadOnlyCollection<ProfileFeedViewModel> GetUsersFeed(Models.Profile profile, IReadOnlyCollection<Review> reviews, IReadOnlyCollection<UserImage> userImages)
+        {
+            List<ProfileFeedViewModel> feed = new List<ProfileFeedViewModel>();
+            foreach (var userImage in userImages)
+            {
+                List<string> userImagePaths = new List<string>();
+                userImagePaths.Add(String.Format("{0}/{1}", cdn, userImage.FileName));
+                feed.Add(new ProfileFeedViewModel()
+                {
+                    OriginatorProfileImagePath = String.Format("{0}/{1}", cdn, profile.UserImage.FileName),
+                    OriginatorUserName = profile.ApplicationUser.UserName,
+                    UploadedImagesPaths = userImagePaths.AsReadOnly(),
+                    TimeAgo = userImage.DateUploaded.GetTimeAgo(),
+                    DateOccurred = userImage.DateUploaded
+                });
+            }
+
+            foreach (var reviewWritten in reviews)
+            {
+                feed.Add(new ProfileFeedViewModel()
+                {
+                    OriginatorProfileImagePath = String.Format("{0}/{1}", cdn, profile.UserImage.FileName),
+                    OriginatorUserName = profile.ApplicationUser.UserName,
+                    TargetProfileImagePath = String.Format("{0}/{1}", cdn, reviewWritten.AuthorUser.Profile.UserImage.FileName),
+                    TargetUserName = reviewWritten.AuthorUser.UserName,
+                    TimeAgo = reviewWritten.DateCreated.GetTimeAgo(),
+                    ReviewRatingValue = reviewWritten.RatingValue,
+                    ReviewContent = reviewWritten.Content,
+                    DateOccurred = reviewWritten.DateCreated
+                });
+            }
+
+            return feed.OrderByDescending(f => f.DateOccurred).ToList().AsReadOnly();
         }
 
         private async Task<ActionResult> GetViewModelForProfileCreationAsync()
@@ -144,6 +206,7 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
+        [HttpPost]
         public async Task<ActionResult> Create(ProfileViewModel viewModel)
         {
             var currentUser = await GetCurrentUserAsync();

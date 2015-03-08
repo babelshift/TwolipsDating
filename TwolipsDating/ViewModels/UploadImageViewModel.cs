@@ -8,7 +8,7 @@ namespace TwolipsDating.ViewModels
 {
     public class UploadImageViewModel
     {
-        [Required]
+        [Required(ErrorMessage="You have to select an image to upload.")]
         public HttpPostedFileBase UploadedImage { get; set; }
 
         public IReadOnlyCollection<UserImageViewModel> UserImages { get; set; }

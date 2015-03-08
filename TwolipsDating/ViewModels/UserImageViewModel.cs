@@ -9,5 +9,6 @@ namespace TwolipsDating.ViewModels
     {
         public int Id { get; set; }
         public string Path { get; set; }
+        public string TimeAgo { get; set; }
     }
 }

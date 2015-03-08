@@ -64,6 +64,40 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modalProfileImage" tabindex="-1" role="dialog" aria-labelledby="modalProfileImageLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modalProfileImageLabel">Select your profile image</h4>
+            </div>
+            @using (Html.BeginForm("changeimage", "profile", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
+                <div class="modal-body">
+                    <div class="row">
+                        @foreach (var userImage in Model.UploadImage.UserImages)
+                        {
+                            <div class="col-xs-6 col-md-3">
+                                <a id="@userImage.Id" href="#" class="thumbnail" onclick="onSelectProfileImageClick(event, this)">
+                                    <img src="@userImage.Path" style="max-height: 128px;">
+                                </a>
+                            </div>
+                        }
+                    </div>
+
+                    @Html.HiddenFor(m => m.ProfileId)
+                    @Html.HiddenFor(m => m.ChangeImage.UserImageId)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">OK</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 <div class="panel panel-default">
     <div class="panel-body">
         @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Profile" })
@@ -87,7 +121,9 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="text-center">
-                        <img src="http://placehold.it/128x128">
+                        <a href="#" data-toggle="modal" data-target="#modalProfileImage" data-keyboard="true" title="Change your profile image">
+                            <img src="@Model.ProfileImagePath" style="max-height: 128px">
+                        </a>
                         <h3>@Model.UserName</h3>
                         <h5>@Model.Age&nbsp;&bull;&nbsp;@Model.Gender&nbsp;&bull;&nbsp;@Model.Location</h5>
                     </div>
@@ -167,27 +203,39 @@
                     <ul class="nav nav-pills">
                         @if (Model.ActiveTab == "feed")
                         {
-                            <li role="presentation" class="active">@Html.ActionLink("Feed", "index", new { tab = "feed" })</li>
+                            <li role="presentation" class="active">
+                                <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
+                            </li>
                         }
                         else
                         {
-                            <li role="presentation">@Html.ActionLink("Feed", "index", new { tab = "feed" })</li>
+                            <li role="presentation">
+                                <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
+                            </li>
                         }
                         @if (Model.ActiveTab == "pictures")
                         {
-                            <li role="presentation" class="active">@Html.ActionLink("Pictures", "index", new { tab = "pictures" })</li>
+                            <li role="presentation" class="active">
+                                <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
+                            </li>
                         }
                         else
                         {
-                            <li role="presentation">@Html.ActionLink("Pictures", "index", new { tab = "pictures" })</li>
+                            <li role="presentation">
+                                <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
+                            </li>
                         }
                         @if (Model.ActiveTab == "reviews")
                         {
-                            <li role="presentation" class="active">@Html.ActionLink("Reviews", "index", new { tab = "reviews" })</li>
+                            <li role="presentation" class="active">
+                                <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
+                            </li>
                         }
                         else
                         {
-                            <li role="presentation">@Html.ActionLink("Reviews", "index", new { tab = "reviews" })</li>
+                            <li role="presentation">
+                                <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
+                            </li>
                         }
                         @*
                             <li role="presentation"><a href="#">Achievements</a></li>
@@ -198,7 +246,7 @@
                     <hr />
                     @if (Model.ActiveTab == "feed")
                     {
-                        Html.RenderPartial("_FeedPartial");
+                        Html.RenderPartial("_FeedPartial", Model.Feed);
                     }
                     else if (Model.ActiveTab == "pictures")
                     {
@@ -283,9 +331,12 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            // when the page loads, select US country by default, fire change event
             var countrySelect = $("#SelectedCountryId");
-            countrySelect.val(215); // united states
-            countrySelect.change();
+            if (countrySelect != null) {
+                countrySelect.val(215); // united states
+                countrySelect.change();
+            }
 
             // initialize the star rating plugin
             $("#star").raty({
@@ -295,6 +346,28 @@
                     $("#RatingValue").val(score);
                 }
             });
+
+            // handle file selection text updating
+            $('.btn-file :file').on('fileselect', function (event, numFiles, label) {
+
+                var input = $(this).parents('.input-group').find(':text'),
+                    log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                if (input.length) {
+                    input.val(log);
+                } else {
+                    if (log) alert(log);
+                }
+
+            });
+        });
+
+        // handle file selection text updating
+        $(document).on('change', '.btn-file :file', function () {
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
         });
 
         function onCountrySelected(e, obj) {
@@ -358,6 +431,12 @@
                     }
                 });
             }
+        }
+
+        function onSelectProfileImageClick(e, obj) {
+            var imageId = $(obj).attr("id");
+            var hiddenProfileImage = $("#ChangeImage_UserImageId");
+            hiddenProfileImage.val(imageId);
         }
     </script>
 }

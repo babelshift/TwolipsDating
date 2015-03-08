@@ -69,6 +69,10 @@ namespace TwolipsDating.Models
             modelBuilder.Entity<UserImage>()
                 .Property(i => i.FileName)
                 .HasMaxLength(64);
+
+            modelBuilder.Entity<UserImage>()
+                .Property(i => i.DateUploaded)
+                .IsRequired();
         }
 
         private void SetupReviewRatingEntity(DbModelBuilder modelBuilder)

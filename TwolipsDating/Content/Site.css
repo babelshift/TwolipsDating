@@ -153,11 +153,49 @@ input[type="checkbox"].input-validation-error {
     margin-bottom: 4px;
 }
 
-.circular-image {
+.circular-image-wrapper {
+    text-align: center;
     width: 32px;
     height: 32px;
-    border-radius: 16px;
-    -webkit-border-radius: 16px;
-    -moz-border-radius: 16px;
-    background: url(http://placehold.it/256x256) no-repeat;
+    position: relative;
+    overflow: hidden;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%;
+    display: inline-block;
+    margin: auto;
+}
+
+.circular-image {
+    margin: 0 auto;
+    height: 100%;
+    width: auto;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+
+input[readonly] {
+    background-color: white !important;
+    cursor: text !important;
 }

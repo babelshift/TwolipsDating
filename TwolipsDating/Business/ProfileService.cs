@@ -11,6 +11,38 @@ namespace TwolipsDating.Business
 {
     public class ProfileService : BaseService
     {
+        public async Task<IReadOnlyCollection<UserImage>> GetUserImagesAsync(string userId, DateTime startDate)
+        {
+            if (String.IsNullOrEmpty(userId))
+            {
+                return null;
+            }
+
+            var userImageResult = from userImages in db.UserImages
+                                  where userImages.ApplicationUserId == userId
+                                  where userImages.DateUploaded >= startDate
+                                  select userImages;
+
+            var results = await userImageResult.ToListAsync();
+            return results.AsReadOnly();
+        }
+
+        public async Task<int> ChangeProfileUserImageAsync(int profileId, int imageId)
+        {
+            var profile = await (from profiles in db.Profiles
+                                 where profiles.Id == profileId
+                                 select profiles).FirstOrDefaultAsync();
+
+            UserImage userImage = new UserImage() { Id = imageId };
+            db.UserImages.Attach(userImage);
+
+            // clear out old user image profile reference
+            profile.UserImage.Profile = null;
+            profile.UserImage = userImage;
+
+            return await db.SaveChangesAsync();
+        }
+
         public async Task<IReadOnlyCollection<UserImage>> GetUserImagesAsync(string userId)
         {
             if (String.IsNullOrEmpty(userId))
@@ -38,6 +70,7 @@ namespace TwolipsDating.Business
             db.Users.Attach(user);
             userImage.ApplicationUser = user;
             userImage.FileName = fileName;
+            userImage.DateUploaded = DateTime.Now;
 
             db.UserImages.Add(userImage);
             return await db.SaveChangesAsync();
