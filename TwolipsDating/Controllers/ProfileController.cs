@@ -121,7 +121,7 @@ namespace TwolipsDating.Controllers
 
                 if (viewModel.ActiveTab == "feed")
                 {
-                     viewModel.Feed = GetUsersFeed(profile, reviews, userImages);
+                     viewModel.Feed = GetUserFeed(profile, reviews, userImages);
                 }
                 else if (viewModel.ActiveTab == "pictures")
                 {
@@ -145,39 +145,34 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private IReadOnlyCollection<ProfileFeedViewModel> GetUsersFeed(Models.Profile profile, IReadOnlyCollection<Review> reviews, IReadOnlyCollection<UserImage> userImages)
+        private IReadOnlyCollection<ProfileFeedViewModel> GetUserFeed(Models.Profile profile, IReadOnlyCollection<Review> reviews, IReadOnlyCollection<UserImage> uploadedImages)
         {
-            List<ProfileFeedViewModel> feed = new List<ProfileFeedViewModel>();
-            foreach (var userImage in userImages)
+            List<ProfileFeedViewModel> viewModel = new List<ProfileFeedViewModel>();
+
+            var reviewFeedViewModel = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewWrittenFeedViewModel>>(reviews);
+            var uploadedImageFeedViewModel = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UploadedImageFeedViewModel>>(uploadedImages);
+
+            foreach (var reviewFeed in reviewFeedViewModel)
             {
-                List<string> userImagePaths = new List<string>();
-                userImagePaths.Add(String.Format("{0}/{1}", cdn, userImage.FileName));
-                feed.Add(new ProfileFeedViewModel()
+                viewModel.Add(new ProfileFeedViewModel()
                 {
-                    OriginatorProfileImagePath = String.Format("{0}/{1}", cdn, profile.UserImage.FileName),
-                    OriginatorUserName = profile.ApplicationUser.UserName,
-                    UploadedImagesPaths = userImagePaths.AsReadOnly(),
-                    TimeAgo = userImage.DateUploaded.GetTimeAgo(),
-                    DateOccurred = userImage.DateUploaded
+                    ItemType = DashboardFeedItemType.ReviewWritten,
+                    DateOccurred = reviewFeed.DateOccurred,
+                    ReviewWrittenFeedItem = reviewFeed
                 });
             }
 
-            foreach (var reviewWritten in reviews)
+            foreach (var uploadedImage in uploadedImageFeedViewModel)
             {
-                feed.Add(new ProfileFeedViewModel()
+                viewModel.Add(new ProfileFeedViewModel()
                 {
-                    OriginatorProfileImagePath = String.Format("{0}/{1}", cdn, profile.UserImage.FileName),
-                    OriginatorUserName = profile.ApplicationUser.UserName,
-                    TargetProfileImagePath = String.Format("{0}/{1}", cdn, reviewWritten.AuthorUser.Profile.UserImage.FileName),
-                    TargetUserName = reviewWritten.AuthorUser.UserName,
-                    TimeAgo = reviewWritten.DateCreated.GetTimeAgo(),
-                    ReviewRatingValue = reviewWritten.RatingValue,
-                    ReviewContent = reviewWritten.Content,
-                    DateOccurred = reviewWritten.DateCreated
+                    ItemType = DashboardFeedItemType.UploadedPictures,
+                    DateOccurred = uploadedImage.DateOccurred,
+                    UploadedImageFeedItem = uploadedImage
                 });
             }
 
-            return feed.OrderByDescending(f => f.DateOccurred).ToList().AsReadOnly();
+            return viewModel.OrderByDescending(v => v.DateOccurred).ToList().AsReadOnly();
         }
 
         private async Task<ActionResult> GetViewModelForProfileCreationAsync()

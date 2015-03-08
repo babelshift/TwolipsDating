@@ -5,16 +5,17 @@ using System.Web;
 
 namespace TwolipsDating.ViewModels
 {
+    public enum ProfileFeedItemType
+    {
+        UploadedPictures,
+        ReviewWritten
+    }
+
     public class ProfileFeedViewModel
     {
-        public string OriginatorUserName { get; set; }
-        public string OriginatorProfileImagePath { get; set; }
-        public string TargetUserName { get; set; }
-        public string TargetProfileImagePath { get; set; }
-        public IReadOnlyCollection<string> UploadedImagesPaths { get; set; }
-        public int? ReviewRatingValue { get; set; }
-        public string ReviewContent { get; set; }
-        public string TimeAgo { get; set; }
         public DateTime DateOccurred { get; set; }
+        public DashboardFeedItemType ItemType { get; set; }
+        public UploadedImageFeedViewModel UploadedImageFeedItem { get; set; }
+        public ReviewWrittenFeedViewModel ReviewWrittenFeedItem { get; set; }
     }
 }
