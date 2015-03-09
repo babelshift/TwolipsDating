@@ -11,8 +11,6 @@ namespace TwolipsDating.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "TwolipsDating.Models.ApplicationDbContext";
-            SetSqlGenerator("System.Data.SqlClient", new MySqlServerMigrationSqlGenerator());
         }
 
         protected override void Seed(TwolipsDating.Models.ApplicationDbContext context)
@@ -36,6 +34,7 @@ namespace TwolipsDating.Migrations
                 new ReviewRating() { Value = 4 },
                 new ReviewRating() { Value = 5 }
             );
+
         }
     }
 }

@@ -483,6 +483,7 @@ namespace TwolipsDating.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            Session["CurrentUser"] = null;
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }

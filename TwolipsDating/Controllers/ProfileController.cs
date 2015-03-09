@@ -114,8 +114,8 @@ namespace TwolipsDating.Controllers
                 var reviews = await profileService.GetReviewsWrittenForUserAsync(currentUser.Id);
                 var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
                 viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
-
                 viewModel.UploadImage = new UploadImageViewModel();
+
                 var userImages = await profileService.GetUserImagesAsync(currentUser.Id);
                 viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
 
@@ -181,6 +181,7 @@ namespace TwolipsDating.Controllers
             var countries = await profileService.GetCountriesAsync();
 
             ProfileViewModel viewModel = new ProfileViewModel();
+            viewModel.CreateProfile = new CreateProfileViewModel();
 
             Dictionary<int, string> genderCollection = new Dictionary<int, string>();
             foreach (var gender in genders)

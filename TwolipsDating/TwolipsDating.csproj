@@ -236,13 +236,9 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
-    <Compile Include="Migrations\201503070041549_test.cs" />
-    <Compile Include="Migrations\201503070041549_test.Designer.cs">
-      <DependentUpon>201503070041549_test.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503080318042_AddDateUploadedToUserImage.cs" />
-    <Compile Include="Migrations\201503080318042_AddDateUploadedToUserImage.Designer.cs">
-      <DependentUpon>201503080318042_AddDateUploadedToUserImage.cs</DependentUpon>
+    <Compile Include="Migrations\201503082310198_initial.cs" />
+    <Compile Include="Migrations\201503082310198_initial.Designer.cs">
+      <DependentUpon>201503082310198_initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\UserImage.cs" />
     <Compile Include="Utilities\DateTimeExtensions.cs" />
@@ -255,66 +251,6 @@
     <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502282019595_InitialCreate.cs" />
-    <Compile Include="Migrations\201502282019595_InitialCreate.Designer.cs">
-      <DependentUpon>201502282019595_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503011609066_InitialCreate2.cs" />
-    <Compile Include="Migrations\201503011609066_InitialCreate2.Designer.cs">
-      <DependentUpon>201503011609066_InitialCreate2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503011754346_AddStateAndCityChanges.cs" />
-    <Compile Include="Migrations\201503011754346_AddStateAndCityChanges.Designer.cs">
-      <DependentUpon>201503011754346_AddStateAndCityChanges.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503011838028_FixedZipCodeCity.cs" />
-    <Compile Include="Migrations\201503011838028_FixedZipCodeCity.Designer.cs">
-      <DependentUpon>201503011838028_FixedZipCodeCity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503011929313_RemovedCityNameUniqueIndex.cs" />
-    <Compile Include="Migrations\201503011929313_RemovedCityNameUniqueIndex.Designer.cs">
-      <DependentUpon>201503011929313_RemovedCityNameUniqueIndex.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503012030057_FixScrewedUpUserToProfile.cs" />
-    <Compile Include="Migrations\201503012030057_FixScrewedUpUserToProfile.Designer.cs">
-      <DependentUpon>201503012030057_FixScrewedUpUserToProfile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503012047311_TryToFixItAgain.cs" />
-    <Compile Include="Migrations\201503012047311_TryToFixItAgain.Designer.cs">
-      <DependentUpon>201503012047311_TryToFixItAgain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503012059107_ReAddProfile.cs" />
-    <Compile Include="Migrations\201503012059107_ReAddProfile.Designer.cs">
-      <DependentUpon>201503012059107_ReAddProfile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503012153162_AddBirthdayRemoveAge.cs" />
-    <Compile Include="Migrations\201503012153162_AddBirthdayRemoveAge.Designer.cs">
-      <DependentUpon>201503012153162_AddBirthdayRemoveAge.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503012251352_NullableZipCodeOnProfile.cs" />
-    <Compile Include="Migrations\201503012251352_NullableZipCodeOnProfile.Designer.cs">
-      <DependentUpon>201503012251352_NullableZipCodeOnProfile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503020229516_BlankForProfileUniqueUser.cs" />
-    <Compile Include="Migrations\201503020229516_BlankForProfileUniqueUser.Designer.cs">
-      <DependentUpon>201503020229516_BlankForProfileUniqueUser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503022238189_AddMessageSystem.cs" />
-    <Compile Include="Migrations\201503022238189_AddMessageSystem.Designer.cs">
-      <DependentUpon>201503022238189_AddMessageSystem.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503022301071_RemoveWrongIdentityColumns.cs" />
-    <Compile Include="Migrations\201503022301071_RemoveWrongIdentityColumns.Designer.cs">
-      <DependentUpon>201503022301071_RemoveWrongIdentityColumns.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503022308388_RunSeed.cs" />
-    <Compile Include="Migrations\201503022308388_RunSeed.Designer.cs">
-      <DependentUpon>201503022308388_RunSeed.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503040211369_AddReviewAndRatingEntities.cs" />
-    <Compile Include="Migrations\201503040211369_AddReviewAndRatingEntities.Designer.cs">
-      <DependentUpon>201503040211369_AddReviewAndRatingEntities.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\ChangeIdentityOperation.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -374,6 +310,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <None Include="Properties\PublishProfiles\twolipsdating.pubxml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -451,56 +388,8 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201502282019595_InitialCreate.resx">
-      <DependentUpon>201502282019595_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503011609066_InitialCreate2.resx">
-      <DependentUpon>201503011609066_InitialCreate2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503011754346_AddStateAndCityChanges.resx">
-      <DependentUpon>201503011754346_AddStateAndCityChanges.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503011838028_FixedZipCodeCity.resx">
-      <DependentUpon>201503011838028_FixedZipCodeCity.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503011929313_RemovedCityNameUniqueIndex.resx">
-      <DependentUpon>201503011929313_RemovedCityNameUniqueIndex.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503012030057_FixScrewedUpUserToProfile.resx">
-      <DependentUpon>201503012030057_FixScrewedUpUserToProfile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503012047311_TryToFixItAgain.resx">
-      <DependentUpon>201503012047311_TryToFixItAgain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503012059107_ReAddProfile.resx">
-      <DependentUpon>201503012059107_ReAddProfile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503012153162_AddBirthdayRemoveAge.resx">
-      <DependentUpon>201503012153162_AddBirthdayRemoveAge.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503012251352_NullableZipCodeOnProfile.resx">
-      <DependentUpon>201503012251352_NullableZipCodeOnProfile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503020229516_BlankForProfileUniqueUser.resx">
-      <DependentUpon>201503020229516_BlankForProfileUniqueUser.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503022238189_AddMessageSystem.resx">
-      <DependentUpon>201503022238189_AddMessageSystem.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503022301071_RemoveWrongIdentityColumns.resx">
-      <DependentUpon>201503022301071_RemoveWrongIdentityColumns.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503022308388_RunSeed.resx">
-      <DependentUpon>201503022308388_RunSeed.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503040211369_AddReviewAndRatingEntities.resx">
-      <DependentUpon>201503040211369_AddReviewAndRatingEntities.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503070041549_test.resx">
-      <DependentUpon>201503070041549_test.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503080318042_AddDateUploadedToUserImage.resx">
-      <DependentUpon>201503080318042_AddDateUploadedToUserImage.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201503082310198_initial.resx">
+      <DependentUpon>201503082310198_initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -3,120 +3,121 @@
 @{
     ViewBag.Title = "twolips - your profile";
 }
-<div class="modal fade" id="modalReview" tabindex="-1" role="dialog" aria-labelledby="modalReviewLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modalReviewLabel">New review for @Model.UserName</h4>
-            </div>
-            @using (Html.BeginForm("writereview", "profile", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
-                @Html.ValidationSummary()
-                <div class="modal-body">
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.WriteReview.RatingValue, new { @class = "control-label" })
-                        <div id="star"></div> <small>(hover and select star)</small>
-                        @Html.HiddenFor(m => m.WriteReview.RatingValue)
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.WriteReview.ReviewContent, new { @class = "control-label" })
-                        @Html.TextAreaFor(m => m.WriteReview.ReviewContent, new { @class = "form-control" })
-                    </div>
-                    @Html.HiddenFor(m => m.ProfileUserId)
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit review</button>
-                </div>
-            }
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="modalMessage" tabindex="-1" role="dialog" aria-labelledby="modalMessageLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modalMessageLabel">New message to @Model.UserName</h4>
-            </div>
-            @using (Html.BeginForm("sendmessage", "profile", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
-                @Html.ValidationSummary()
-                <div class="modal-body">
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.SendMessage.MessageSubject, new { @class = "control-label" })
-                        @Html.TextBoxFor(m => m.SendMessage.MessageSubject, new { @class = "form-control" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.SendMessage.MessageBody, new { @class = "control-label" })
-                        @Html.TextAreaFor(m => m.SendMessage.MessageBody, new { @class = "form-control" })
-                    </div>
-                    @Html.HiddenFor(m => m.ProfileUserId)
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Send message</button>
-                </div>
-            }
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="modalProfileImage" tabindex="-1" role="dialog" aria-labelledby="modalProfileImageLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modalProfileImageLabel">Select your profile image</h4>
-            </div>
-            @using (Html.BeginForm("changeimage", "profile", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
-                @Html.ValidationSummary()
-                <div class="modal-body">
-                    <div class="row">
-                        @foreach (var userImage in Model.UploadImage.UserImages)
-                        {
-                            <div class="col-xs-6 col-md-3">
-                                <a id="@userImage.Id" href="#" class="thumbnail" onclick="onSelectProfileImageClick(event, this)">
-                                    <img src="@userImage.Path" style="max-height: 128px;">
-                                </a>
-                            </div>
-                        }
-                    </div>
 
-                    @Html.HiddenFor(m => m.ProfileId)
-                    @Html.HiddenFor(m => m.ChangeImage.UserImageId)
+@if (Model != null && !String.IsNullOrEmpty(Model.UserName))
+{
+    <div class="modal fade" id="modalReview" tabindex="-1" role="dialog" aria-labelledby="modalReviewLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modalReviewLabel">New review for @Model.UserName</h4>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">OK</button>
-                </div>
-            }
+                @using (Html.BeginForm("writereview", "profile", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary()
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.WriteReview.RatingValue, new { @class = "control-label" })
+                            <div id="star"></div> <small>(hover and select star)</small>
+                            @Html.HiddenFor(m => m.WriteReview.RatingValue)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.WriteReview.ReviewContent, new { @class = "control-label" })
+                            @Html.TextAreaFor(m => m.WriteReview.ReviewContent, new { @class = "form-control" })
+                        </div>
+                        @Html.HiddenFor(m => m.ProfileUserId)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit review</button>
+                    </div>
+                }
+            </div>
         </div>
     </div>
-</div>
-<div class="panel panel-default">
-    <div class="panel-body">
-        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Profile" })
-        <div class="pull-right">
-            <ul class="nav nav-pills">
-                <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Send Message</a></li>
-                <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review"><i class="glyphicon glyphicon-edit"></i>&nbsp;Write Review</a></li>
-                @*
-                    <li role="presentation"><a href="#" title="Send a gift"><i class="glyphicon glyphicon-gift"></i></a></li>
-                    <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
-                    <li role="presentation"><a href="#" title="Add to ignore"><i class="glyphicon glyphicon-volume-off"></i></a></li>
-                *@
-            </ul>
+    <div class="modal fade" id="modalMessage" tabindex="-1" role="dialog" aria-labelledby="modalMessageLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modalMessageLabel">New message to @Model.UserName</h4>
+                </div>
+                @using (Html.BeginForm("sendmessage", "profile", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary()
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SendMessage.MessageSubject, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.SendMessage.MessageSubject, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.SendMessage.MessageBody, new { @class = "control-label" })
+                            @Html.TextAreaFor(m => m.SendMessage.MessageBody, new { @class = "form-control" })
+                        </div>
+                        @Html.HiddenFor(m => m.ProfileUserId)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Send message</button>
+                    </div>
+                }
+            </div>
         </div>
     </div>
-</div>
-<div class="row">
-    @if (Model != null && !String.IsNullOrEmpty(Model.UserName))
-    {
+    <div class="modal fade" id="modalProfileImage" tabindex="-1" role="dialog" aria-labelledby="modalProfileImageLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modalProfileImageLabel">Select your profile image</h4>
+                </div>
+                @using (Html.BeginForm("changeimage", "profile", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary()
+                    <div class="modal-body">
+                        <div class="row">
+                            @foreach (var userImage in Model.UploadImage.UserImages)
+                            {
+                                <div class="col-xs-6 col-md-3">
+                                    <a id="@userImage.Id" href="#" class="thumbnail" onclick="onSelectProfileImageClick(event, this)">
+                                        <img src="@userImage.Path" style="max-height: 128px;">
+                                    </a>
+                                </div>
+                            }
+                        </div>
+
+                        @Html.HiddenFor(m => m.ProfileId)
+                        @Html.HiddenFor(m => m.ChangeImage.UserImageId)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">OK</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Profile" })
+            <div class="pull-right">
+                <ul class="nav nav-pills">
+                    <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Send Message</a></li>
+                    <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review"><i class="glyphicon glyphicon-edit"></i>&nbsp;Write Review</a></li>
+                    @*
+                        <li role="presentation"><a href="#" title="Send a gift"><i class="glyphicon glyphicon-gift"></i></a></li>
+                        <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
+                        <li role="presentation"><a href="#" title="Add to ignore"><i class="glyphicon glyphicon-volume-off"></i></a></li>
+                    *@
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-4">
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -131,11 +132,11 @@
                         <h4>
                             @for (int i = 1; i <= Model.AverageRatingValue; i++)
                             {
-                                <i class="glyphicon glyphicon-star"></i>
+                            <i class="glyphicon glyphicon-star"></i>
                             }
                             @for (int j = 1; j <= 5 - Model.AverageRatingValue; j++)
                             {
-                                <i class="glyphicon glyphicon-star-empty"></i>
+                            <i class="glyphicon glyphicon-star-empty"></i>
                             }
                         </h4>
                         @*
@@ -203,39 +204,39 @@
                     <ul class="nav nav-pills">
                         @if (Model.ActiveTab == "feed")
                         {
-                            <li role="presentation" class="active">
-                                <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
-                            </li>
+                        <li role="presentation" class="active">
+                            <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
+                        </li>
                         }
                         else
                         {
-                            <li role="presentation">
-                                <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
-                            </li>
+                        <li role="presentation">
+                            <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
+                        </li>
                         }
                         @if (Model.ActiveTab == "pictures")
                         {
-                            <li role="presentation" class="active">
-                                <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
-                            </li>
+                        <li role="presentation" class="active">
+                            <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
+                        </li>
                         }
                         else
                         {
-                            <li role="presentation">
-                                <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
-                            </li>
+                        <li role="presentation">
+                            <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
+                        </li>
                         }
                         @if (Model.ActiveTab == "reviews")
                         {
-                            <li role="presentation" class="active">
-                                <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
-                            </li>
+                        <li role="presentation" class="active">
+                            <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
+                        </li>
                         }
                         else
                         {
-                            <li role="presentation">
-                                <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
-                            </li>
+                        <li role="presentation">
+                            <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
+                        </li>
                         }
                         @*
                             <li role="presentation"><a href="#">Achievements</a></li>
@@ -260,9 +261,11 @@
 
             </div>
         </div>
-    }
-    else
-    {
+    </div>
+}
+else
+{
+    <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -324,15 +327,15 @@
                 </div>
             </div>
         </div>
-    }
-</div>
+    </div>
+}
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
     <script type="text/javascript">
         $(document).ready(function () {
             // when the page loads, select US country by default, fire change event
-            var countrySelect = $("#SelectedCountryId");
+            var countrySelect = $("#CreateProfile_SelectedCountryId");
             if (countrySelect != null) {
                 countrySelect.val(215); // united states
                 countrySelect.change();
@@ -388,8 +391,8 @@
 
             $("#zipCodeLocationText").html('');
             $("#cityLocationText").html('');
-            $("#SelectedCityId").val('');
-            $("#SelectedZipCodeId").val('');
+            $("#CreateProfile_SelectedCityId").val('');
+            $("#CreateProfile_SelectedZipCodeId").val('');
         }
 
         function onCityBlur(e, obj) {
@@ -402,10 +405,10 @@
                 success: function (data) {
                     if (data.CityName === '' || data.CityName === null) {
                         $("#cityLocationText").html("<small>Are you sure that's a real city?</small>");
-                        $("#SelectedCityId").val('');
+                        $("#CreateProfile_SelectedCityId").val('');
                     } else {
                         $("#cityLocationText").html("<small>Cool, you're in " + data.CityName + "</small>");
-                        $("#SelectedCityId").val(data.CityId);
+                        $("#CreateProfile_SelectedCityId").val(data.CityId);
                     }
                 }
             });
@@ -422,11 +425,11 @@
                     success: function (data) {
                         if (data.CityName === '' || data.CityName === null) {
                             $("#zipCodeLocationText").html("<small>That's a bad zip code.</small>");
-                            $("#SelectedZipCodeId").val('');
+                            $("#CreateProfile_SelectedZipCodeId").val('');
                         } else {
                             $("#zipCodeLocationText").html("<small>Cool, you're in " + data.CityName + "</small>");
-                            $("#SelectedZipCodeId").val(zipCode);
-                            $("#SelectedCityId").val(data.CityId);
+                            $("#CreateProfile_SelectedZipCodeId").val(zipCode);
+                            $("#CreateProfile_SelectedCityId").val(data.CityId);
                         }
                     }
                 });
