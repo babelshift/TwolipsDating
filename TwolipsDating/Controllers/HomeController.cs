@@ -16,6 +16,7 @@ namespace TwolipsDating.Controllers
         private ProfileService profileService = new ProfileService();
         private DashboardService dashboardService = new DashboardService();
 
+        [AllowAnonymous]
         public async Task<ActionResult> Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -63,7 +64,7 @@ namespace TwolipsDating.Controllers
                     });
                 }
 
-                await SetUnreadCountsInViewBag(profileService, currentUser);
+                await SetUnreadCountsInViewBag();
 
                 return View("dashboard", viewModel.OrderByDescending(v => v.DateOccurred).ToList().AsReadOnly());
             }
@@ -73,20 +74,6 @@ namespace TwolipsDating.Controllers
                 HomeViewModel viewModel = new HomeViewModel();
                 return View(String.Empty, "~/Views/Shared/_LayoutSplash.cshtml", viewModel);
             }
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
         }
     }
 }

@@ -7,15 +7,20 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using Microsoft.AspNet.Identity.Owin;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace TwolipsDating.Controllers
 {
     public class BaseController : Controller
     {
+        private string cdn = ConfigurationManager.AppSettings["cdnUrl"];
+
         private ProfileService profileService = new ProfileService();
         private ApplicationUserManager _userManager;
 
         protected ProfileService ProfileService { get { return profileService; } }
+
+        protected string CDN { get { return cdn; } }
 
         protected ApplicationUserManager UserManager
         {
@@ -29,20 +34,23 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        protected async Task<ApplicationUser> GetCurrentUserAsync()
+        protected async Task<string> GetCurrentUserIdAsync()
         {
-            ApplicationUser currentUser = Session["CurrentUser"] as ApplicationUser;
-            if (currentUser == null)
+            string currentUserId = String.Empty;
+
+            if(Session["CurrentUserId"] == null || String.IsNullOrEmpty(Session["CurrentUserId"].ToString()))
             {
-                currentUser = await UserManager.FindByNameAsync(User.Identity.Name);
-                Session["CurrentUser"] = currentUser;
+                var currentUser = await UserManager.FindByNameAsync(User.Identity.Name);
+                Session["CurrentUserId"] = currentUser.Id;
             }
-            return currentUser;
+
+            return Session["CurrentUserId"].ToString();
         }
 
-        protected async Task SetUnreadCountsInViewBag(ProfileService p, ApplicationUser user)
+        protected async Task SetUnreadCountsInViewBag()
         {
-            int unreadMessageCount = await p.GetUnreadMessageCountAsync(user.Id);
+            string currentUserId = await GetCurrentUserIdAsync();
+            int unreadMessageCount = await profileService.GetUnreadMessageCountAsync(currentUserId);
             ViewBag.UnreadAnnouncementCount = 0;
             ViewBag.ItemCount = 0;
             ViewBag.GiftCount = 0;

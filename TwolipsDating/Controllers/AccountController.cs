@@ -13,7 +13,6 @@ using TwolipsDating.Utilities;
 
 namespace TwolipsDating.Controllers
 {
-    [Authorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;

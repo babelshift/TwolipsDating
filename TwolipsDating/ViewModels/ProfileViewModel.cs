@@ -8,6 +8,13 @@ namespace TwolipsDating.ViewModels
 {
     public class ProfileViewModel
     {
+        public enum ProfileViewMode
+        {
+            ShowProfile,
+            CreateProfile,
+            NoProfile
+        }
+
         #region Profile view stuff
 
         public string UserName { get; set; }
@@ -19,6 +26,8 @@ namespace TwolipsDating.ViewModels
         public string ActiveTab { get; set; }
         public int AverageRatingValue { get; set; }
         public string ProfileImagePath { get; set; }
+        public string CurrentUserId { get; set; }
+        public ProfileViewMode ViewMode { get; set; }
 
         public IReadOnlyCollection<ProfileFeedViewModel> Feed { get; set; }
         public IReadOnlyCollection<ReviewViewModel> Reviews { get; set; }

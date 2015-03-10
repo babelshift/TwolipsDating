@@ -4,7 +4,7 @@
     ViewBag.Title = "twolips - your profile";
 }
 
-@if (Model != null && !String.IsNullOrEmpty(Model.UserName))
+@if (Model != null && Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileViewMode.ShowProfile)
 {
     <div class="modal fade" id="modalReview" tabindex="-1" role="dialog" aria-labelledby="modalReviewLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -104,17 +104,20 @@
     <div class="panel panel-default">
         <div class="panel-body">
             @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Profile" })
-            <div class="pull-right">
-                <ul class="nav nav-pills">
-                    <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Send Message</a></li>
-                    <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review"><i class="glyphicon glyphicon-edit"></i>&nbsp;Write Review</a></li>
-                    @*
-                        <li role="presentation"><a href="#" title="Send a gift"><i class="glyphicon glyphicon-gift"></i></a></li>
-                        <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
-                        <li role="presentation"><a href="#" title="Add to ignore"><i class="glyphicon glyphicon-volume-off"></i></a></li>
-                    *@
-                </ul>
-            </div>
+            @if (Model.ProfileUserId != Model.CurrentUserId)
+            {
+                <div class="pull-right">
+                    <ul class="nav nav-pills">
+                        <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Send Message</a></li>
+                        <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review"><i class="glyphicon glyphicon-edit"></i>&nbsp;Write Review</a></li>
+                        @*
+                            <li role="presentation"><a href="#" title="Send a gift"><i class="glyphicon glyphicon-gift"></i></a></li>
+                            <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
+                            <li role="presentation"><a href="#" title="Add to ignore"><i class="glyphicon glyphicon-volume-off"></i></a></li>
+                        *@
+                    </ul>
+                </div>
+            }
         </div>
     </div>
     <div class="row">
@@ -132,11 +135,11 @@
                         <h4>
                             @for (int i = 1; i <= Model.AverageRatingValue; i++)
                             {
-                            <i class="glyphicon glyphicon-star"></i>
+                                <i class="glyphicon glyphicon-star"></i>
                             }
                             @for (int j = 1; j <= 5 - Model.AverageRatingValue; j++)
                             {
-                            <i class="glyphicon glyphicon-star-empty"></i>
+                                <i class="glyphicon glyphicon-star-empty"></i>
                             }
                         </h4>
                         @*
@@ -204,39 +207,39 @@
                     <ul class="nav nav-pills">
                         @if (Model.ActiveTab == "feed")
                         {
-                        <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
-                        </li>
+                            <li role="presentation" class="active">
+                                <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
+                            </li>
                         }
                         else
                         {
-                        <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
-                        </li>
+                            <li role="presentation">
+                                <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
+                            </li>
                         }
                         @if (Model.ActiveTab == "pictures")
                         {
-                        <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
-                        </li>
+                            <li role="presentation" class="active">
+                                <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
+                            </li>
                         }
                         else
                         {
-                        <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
-                        </li>
+                            <li role="presentation">
+                                <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
+                            </li>
                         }
                         @if (Model.ActiveTab == "reviews")
                         {
-                        <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
-                        </li>
+                            <li role="presentation" class="active">
+                                <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
+                            </li>
                         }
                         else
                         {
-                        <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
-                        </li>
+                            <li role="presentation">
+                                <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
+                            </li>
                         }
                         @*
                             <li role="presentation"><a href="#">Achievements</a></li>
@@ -263,7 +266,7 @@
         </div>
     </div>
 }
-else
+else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileViewMode.CreateProfile)
 {
     <div class="row">
         <div class="col-md-12">
@@ -329,6 +332,7 @@ else
         </div>
     </div>
 }
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 

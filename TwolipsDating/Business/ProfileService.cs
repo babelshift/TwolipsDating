@@ -139,7 +139,16 @@ namespace TwolipsDating.Business
             return await db.SaveChangesAsync();
         }
 
-        public async Task<Profile> GetProfileAsync(string userId)
+        public async Task<Profile> GetProfileAsync(int profileId)
+        {
+            var profile = from profiles in db.Profiles
+                          where profiles.Id == profileId
+                          select profiles;
+
+            return await profile.FirstOrDefaultAsync();
+        }
+
+        public async Task<Profile> GetUserProfileAsync(string userId)
         {
             var profile = from user in db.Users
                           where user.Id == userId

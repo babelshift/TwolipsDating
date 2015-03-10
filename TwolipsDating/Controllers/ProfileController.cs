@@ -15,14 +15,12 @@ using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System.IO;
 using System.Configuration;
+using System.Net;
 
 namespace TwolipsDating.Controllers
 {
     public class ProfileController : BaseController
     {
-        private ProfileService profileService = new ProfileService();
-        private string cdn = ConfigurationManager.AppSettings["cdnUrl"];
-
         [HttpPost]
         public async Task<ActionResult> SendMessage(ProfileViewModel viewModel)
         {
@@ -31,9 +29,9 @@ namespace TwolipsDating.Controllers
                 return RedirectToIndex();
             }
 
-            var currentUser = await GetCurrentUserAsync();
+            string currentUserId = await GetCurrentUserIdAsync();
 
-            await profileService.SendMessageAsync(currentUser.Id, viewModel.ProfileUserId, viewModel.SendMessage.MessageSubject, viewModel.SendMessage.MessageBody);
+            await ProfileService.SendMessageAsync(currentUserId, viewModel.ProfileUserId, viewModel.SendMessage.MessageSubject, viewModel.SendMessage.MessageBody);
 
             return RedirectToIndex();
         }
@@ -46,9 +44,9 @@ namespace TwolipsDating.Controllers
                 return RedirectToIndex();
             }
 
-            var currentUser = await GetCurrentUserAsync();
+            string currentUserId = await GetCurrentUserIdAsync();
 
-            await profileService.WriteReviewAsync(currentUser.Id, viewModel.ProfileUserId, viewModel.WriteReview.ReviewContent, viewModel.WriteReview.RatingValue);
+            await ProfileService.WriteReviewAsync(currentUserId, viewModel.ProfileUserId, viewModel.WriteReview.ReviewContent, viewModel.WriteReview.RatingValue);
 
             return RedirectToIndex();
         }
@@ -69,7 +67,7 @@ namespace TwolipsDating.Controllers
                 return RedirectToIndex(new { tab = "pictures" });
             }
 
-            var currentUser = await GetCurrentUserAsync();
+            string currentUserId = await GetCurrentUserIdAsync();
 
             string fileType = viewModel.UploadedImage.FileName;
             string fileName = String.Format("{0}{1}", Guid.NewGuid(), Path.GetExtension(fileType));
@@ -85,7 +83,7 @@ namespace TwolipsDating.Controllers
                 blockBlob.UploadFromStream(stream);
             }
 
-            await profileService.AddUploadedImageForUserAsync(currentUser.Id, fileName);
+            await ProfileService.AddUploadedImageForUserAsync(currentUserId, fileName);
 
             return RedirectToIndex(new { tab = "pictures" });
         }
@@ -98,50 +96,97 @@ namespace TwolipsDating.Controllers
                 return RedirectToIndex();
             }
 
-            await profileService.ChangeProfileUserImageAsync(viewModel.ProfileId, viewModel.ChangeImage.UserImageId);
+            await ProfileService.ChangeProfileUserImageAsync(viewModel.ProfileId, viewModel.ChangeImage.UserImageId);
 
             return RedirectToIndex();
         }
 
-        public async Task<ActionResult> Index(string tab)
+        public async Task<ActionResult> Index(int? id, string tab)
         {
-            var currentUser = await GetCurrentUserAsync();
-            var profile = await profileService.GetProfileAsync(currentUser.Id);
+            string currentUserId = await GetCurrentUserIdAsync();
 
-            // profile exists, let's show it
-            if (profile != null)
+            // user attempting to view profile based on explicit id
+            if (id.HasValue)
             {
-                var reviews = await profileService.GetReviewsWrittenForUserAsync(currentUser.Id);
-                var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
-                viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
-                viewModel.UploadImage = new UploadImageViewModel();
+                Models.Profile profileToBeViewed = await ProfileService.GetProfileAsync(id.Value);
 
-                var userImages = await profileService.GetUserImagesAsync(currentUser.Id);
-                viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
-
-                if (viewModel.ActiveTab == "feed")
+                // user is viewing a valid profile by id
+                if (profileToBeViewed != null)
                 {
-                     viewModel.Feed = GetUserFeed(profile, reviews, userImages);
+                    return await ShowUserProfileAsync(tab, currentUserId, profileToBeViewed);
                 }
-                else if (viewModel.ActiveTab == "pictures")
+                else
                 {
-                    // any picture specific stuff?
-                }
-                else if (viewModel.ActiveTab == "reviews")
-                {
-                    // get the user's reviews
-                    viewModel.Reviews = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewViewModel>>(reviews);
-                }
-                await SetUnreadCountsInViewBag(ProfileService, currentUser);
+                    Models.Profile currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
+                    // view profile by id but profile doesn't exist
+                    int? currentUserProfileId = currentUserProfile != null ? (int?)currentUserProfile.Id : null;
 
-                viewModel.AverageRatingValue = reviews.AverageRating();
-
-                return View(viewModel);
+                    // if the current user has a profile and is viewing his own profile by id, show it
+                    if (currentUserProfileId.HasValue && currentUserProfileId.Value == id.Value)
+                    {
+                        return await ShowUserProfileAsync(tab, currentUserId, profileToBeViewed);
+                    }
+                    // user doesn't have a profile or is viewing someone else's non-existent profile
+                    else
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+                    }
+                }
             }
-            // profile doesn't exist yet, we need to ask the user for more info
+            // user attempting to view own profile
             else
             {
-                return await GetViewModelForProfileCreationAsync();
+                Models.Profile currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
+
+                if (currentUserProfile != null)
+                {
+                    return await ShowUserProfileAsync(tab, currentUserId, currentUserProfile);
+                }
+                else
+                {
+                    return await GetViewModelForProfileCreationAsync();
+                }
+            }
+        }
+
+        private async Task<ActionResult> ShowUserProfileAsync(string tab, string currentUserId, Models.Profile profile)
+        {
+            var reviews = await ProfileService.GetReviewsWrittenForUserAsync(currentUserId);
+            var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
+            viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
+            viewModel.CurrentUserId = currentUserId;
+            viewModel.AverageRatingValue = reviews.AverageRating();
+            viewModel.ViewMode = ProfileViewModel.ProfileViewMode.ShowProfile;
+
+            // setup user images and uploads
+            var userImages = await ProfileService.GetUserImagesAsync(currentUserId);
+            viewModel.UploadImage = new UploadImageViewModel();
+            viewModel.UploadImage.CurrentUserId = currentUserId;
+            viewModel.UploadImage.ProfileUserId = profile.ApplicationUser.Id;
+            viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
+
+            // set the active tab's content
+            SetViewModelBasedOnActiveTab(profile, reviews, viewModel, userImages);
+
+            await SetUnreadCountsInViewBag();
+
+            return View(viewModel);
+        }
+
+        private void SetViewModelBasedOnActiveTab(Models.Profile profile, IReadOnlyCollection<Review> reviews, ProfileViewModel viewModel, IReadOnlyCollection<UserImage> userImages)
+        {
+            if (viewModel.ActiveTab == "feed")
+            {
+                viewModel.Feed = GetUserFeed(profile, reviews, userImages);
+            }
+            else if (viewModel.ActiveTab == "pictures")
+            {
+                // any picture specific stuff?
+            }
+            else if (viewModel.ActiveTab == "reviews")
+            {
+                // get the user's reviews
+                viewModel.Reviews = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewViewModel>>(reviews);
             }
         }
 
@@ -177,10 +222,11 @@ namespace TwolipsDating.Controllers
 
         private async Task<ActionResult> GetViewModelForProfileCreationAsync()
         {
-            var genders = await profileService.GetGendersAsync();
-            var countries = await profileService.GetCountriesAsync();
+            var genders = await ProfileService.GetGendersAsync();
+            var countries = await ProfileService.GetCountriesAsync();
 
             ProfileViewModel viewModel = new ProfileViewModel();
+            viewModel.ViewMode = ProfileViewModel.ProfileViewMode.CreateProfile;
             viewModel.CreateProfile = new CreateProfileViewModel();
 
             Dictionary<int, string> genderCollection = new Dictionary<int, string>();
@@ -205,9 +251,9 @@ namespace TwolipsDating.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(ProfileViewModel viewModel)
         {
-            var currentUser = await GetCurrentUserAsync();
+            string currentUserId = await GetCurrentUserIdAsync();
             DateTime birthday = new DateTime(viewModel.CreateProfile.BirthYear.Value, viewModel.CreateProfile.BirthMonth.Value, viewModel.CreateProfile.BirthDayOfMonth.Value);
-            await profileService.CreateProfileAsync(viewModel.CreateProfile.SelectedGenderId.Value, viewModel.CreateProfile.SelectedZipCodeId, viewModel.CreateProfile.SelectedCityId.Value, currentUser.Id, birthday);
+            await ProfileService.CreateProfileAsync(viewModel.CreateProfile.SelectedGenderId.Value, viewModel.CreateProfile.SelectedZipCodeId, viewModel.CreateProfile.SelectedCityId.Value, currentUserId, birthday);
             return RedirectToIndex();
         }
 
