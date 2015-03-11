@@ -50,11 +50,6 @@
                     @Html.ValidationSummary()
                     <div class="modal-body">
                         <div class="form-group">
-                            @Html.LabelFor(m => m.SendMessage.MessageSubject, new { @class = "control-label" })
-                            @Html.TextBoxFor(m => m.SendMessage.MessageSubject, new { @class = "form-control" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.SendMessage.MessageBody, new { @class = "control-label" })
                             @Html.TextAreaFor(m => m.SendMessage.MessageBody, new { @class = "form-control" })
                         </div>
                         @Html.HiddenFor(m => m.ProfileUserId)
@@ -126,7 +121,14 @@
                 <div class="panel-body">
                     <div class="text-center">
                         <a href="#" data-toggle="modal" data-target="#modalProfileImage" data-keyboard="true" title="Change your profile image">
-                            <img src="@Model.ProfileImagePath" style="max-height: 128px">
+                            @if (!String.IsNullOrEmpty(Model.ProfileImagePath))
+                            {
+                                <img src="@Model.ProfileImagePath" style="max-height: 128px">
+                            }
+                            else
+                            {
+                                <img src="http://placehold.it/128x128">
+                            }
                         </a>
                         <h3>@Model.UserName</h3>
                         <h5>@Model.Age&nbsp;&bull;&nbsp;@Model.Gender&nbsp;&bull;&nbsp;@Model.Location</h5>
@@ -350,7 +352,7 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
                 score: 3,
                 hints: ['awful', 'bad', 'average', 'good', 'great'],
                 click: function (score, evt) {
-                    $("#RatingValue").val(score);
+                    $("#WriteReview_RatingValue").val(score);
                 }
             });
 

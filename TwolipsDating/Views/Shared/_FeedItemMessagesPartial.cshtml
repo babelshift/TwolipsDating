@@ -10,7 +10,7 @@
         <img class="circular-image" src="@Model.ReceiverProfileImagePath" />
     </div>
     <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
-        <a href="#">@Model.ReceiverUserName</a>
+        <a href="@Url.Action("index", "profile", new { id = Model.ReceiverProfileId })">@Model.ReceiverUserName</a>
         <small> &bull;&nbsp;@Model.TimeAgo</small>
     </p>
     <div class="well well-sm">
@@ -24,7 +24,7 @@ else
         <img class="circular-image" src="@Model.SenderProfileImagePath" />
     </div>
     <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
-        <a href="#">@Model.SenderUserName</a> sent you a message
+        <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId })">@Model.SenderUserName</a> sent you a message
         <small> &bull;&nbsp;@Model.TimeAgo</small>
     </p>
     <div class="well well-sm">

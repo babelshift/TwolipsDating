@@ -240,6 +240,10 @@
     <Compile Include="Migrations\201503082310198_initial.Designer.cs">
       <DependentUpon>201503082310198_initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503102228043_RemoveSubjectFromMessage.cs" />
+    <Compile Include="Migrations\201503102228043_RemoveSubjectFromMessage.Designer.cs">
+      <DependentUpon>201503102228043_RemoveSubjectFromMessage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\UserImage.cs" />
     <Compile Include="Utilities\DateTimeExtensions.cs" />
     <Compile Include="Utilities\ReviewExtensions.cs" />
@@ -390,6 +394,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201503082310198_initial.resx">
       <DependentUpon>201503082310198_initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503102228043_RemoveSubjectFromMessage.resx">
+      <DependentUpon>201503102228043_RemoveSubjectFromMessage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

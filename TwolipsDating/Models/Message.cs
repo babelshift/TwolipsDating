@@ -11,7 +11,6 @@ namespace TwolipsDating.Models
         public string SenderApplicationUserId { get; set; }
         public string ReceiverApplicationUserId { get; set; }
         public DateTime DateSent { get; set; }
-        public string Subject { get; set; }
         public string Body { get; set; }
         public int MessageStatusId { get; set; }
 

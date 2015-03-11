@@ -1,10 +1,10 @@
 ﻿@model TwolipsDating.ViewModels.UploadedImageFeedViewModel
 
 <div class="circular-image-wrapper">
-    <img class="circular-image" src="@Model.OriginatorProfileImagePath" />
+    <img class="circular-image" src="@Model.UploaderProfileImagePath" />
 </div>
 <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
-    <a href="#">@Model.OriginatorUserName</a> uploaded some pictures &bull; <small>@Model.TimeAgo</small>
+    <a href="@Url.Action("index", "profile", new { id = Model.UploaderProfileId })">@Model.UploaderUserName</a> uploaded some pictures &bull; <small>@Model.TimeAgo</small>
 </p>
 <div class="row">
     @foreach (var userImagePath in Model.UploadedImagesPaths)

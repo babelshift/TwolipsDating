@@ -38,11 +38,12 @@ namespace TwolipsDating
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateUploaded.GetTimeAgo()));
 
             Mapper.CreateMap<UserImage, UploadedImageFeedViewModel>()
-                .ForMember(dest => dest.OriginatorProfileImagePath, opts => opts.MapFrom(source => String.Format("{0}/{1}", cdn, source.ApplicationUser.Profile.UserImage.FileName)))
-                .ForMember(dest => dest.OriginatorUserName, opts => opts.MapFrom(source => source.ApplicationUser.UserName))
+                .ForMember(dest => dest.UploaderProfileImagePath, opts => opts.MapFrom(source => String.Format("{0}/{1}", cdn, source.ApplicationUser.Profile.UserImage.FileName)))
+                .ForMember(dest => dest.UploaderUserName, opts => opts.MapFrom(source => source.ApplicationUser.UserName))
                 .ForMember(dest => dest.UploadedImagesPaths, opts => opts.MapFrom(source => new List<string>() { String.Format("{0}/{1}", cdn, source.FileName) }))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateUploaded.GetTimeAgo()))
-                .ForMember(dest => dest.DateOccurred, opts => opts.MapFrom(source => source.DateUploaded));
+                .ForMember(dest => dest.DateOccurred, opts => opts.MapFrom(source => source.DateUploaded))
+                .ForMember(dest => dest.UploaderProfileId, opts => opts.MapFrom(source => source.ApplicationUser.Profile.Id));
 
             Mapper.CreateMap<Message, MessageFeedViewModel>()
                 .ForMember(dest => dest.SenderUserName, opts => opts.MapFrom(source => source.SenderApplicationUser.UserName))
@@ -51,7 +52,9 @@ namespace TwolipsDating
                 .ForMember(dest => dest.ReceiverProfileImagePath, opts => opts.MapFrom(source => String.Format("{0}/{1}", cdn, source.ReceiverApplicationUser.Profile.UserImage.FileName)))
                 .ForMember(dest => dest.MessageContent, opts => opts.MapFrom(source => source.Body))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()))
-                .ForMember(dest => dest.DateOccurred, opts => opts.MapFrom(source => source.DateSent));
+                .ForMember(dest => dest.DateOccurred, opts => opts.MapFrom(source => source.DateSent))
+                .ForMember(dest => dest.SenderProfileId, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.Id))
+                .ForMember(dest => dest.ReceiverProfileId, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Profile.Id));
 
             Mapper.CreateMap<Review, ReviewWrittenFeedViewModel>()
                 .ForMember(dest => dest.TargetUserName, opts => opts.MapFrom(source => source.TargetUser.UserName))
@@ -61,7 +64,9 @@ namespace TwolipsDating
                 .ForMember(dest => dest.ReviewRatingValue, opts => opts.MapFrom(source => source.RatingValue))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateCreated.GetTimeAgo()))
                 .ForMember(dest => dest.AuthorProfileImagePath, opts => opts.MapFrom(source => String.Format("{0}/{1}", cdn, source.AuthorUser.Profile.UserImage.FileName)))
-                .ForMember(dest => dest.DateOccurred, opts => opts.MapFrom(source => source.DateCreated));
+                .ForMember(dest => dest.DateOccurred, opts => opts.MapFrom(source => source.DateCreated))
+                .ForMember(dest => dest.AuthorProfileId, opts => opts.MapFrom(source => source.AuthorUser.Profile.Id))
+                .ForMember(dest => dest.TargetProfileId, opts => opts.MapFrom(source => source.TargetUser.Profile.Id));
         }
     }
 }

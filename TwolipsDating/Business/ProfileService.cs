@@ -37,7 +37,11 @@ namespace TwolipsDating.Business
             db.UserImages.Attach(userImage);
 
             // clear out old user image profile reference
-            profile.UserImage.Profile = null;
+            if (profile.UserImage != null)
+            {
+                profile.UserImage.Profile = null;
+            }
+
             profile.UserImage = userImage;
 
             return await db.SaveChangesAsync();
@@ -112,7 +116,7 @@ namespace TwolipsDating.Business
             return await db.SaveChangesAsync();
         }
 
-        public async Task<int> SendMessageAsync(string senderUserId, string receiverUserId, string subject, string body)
+        public async Task<int> SendMessageAsync(string senderUserId, string receiverUserId, string body)
         {
             // don't allow us to send messages to our self
             if (senderUserId == receiverUserId)
@@ -131,7 +135,6 @@ namespace TwolipsDating.Business
             message.ReceiverApplicationUser = receiverUser;
 
             message.Body = body;
-            message.Subject = subject;
             message.DateSent = DateTime.Now;
             message.MessageStatusId = (int)MessageStatusValue.Unread;
 

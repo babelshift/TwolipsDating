@@ -9,7 +9,9 @@ namespace TwolipsDating.ViewModels
     {
         public DateTime DateOccurred { get; set; }
         public string SenderUserName { get; set; }
+        public string SenderProfileId { get; set; }
         public string SenderProfileImagePath { get; set; }
+        public string ReceiverProfileId { get; set; }
         public string ReceiverUserName { get; set; }
         public string ReceiverProfileImagePath { get; set; }
         public string TimeAgo { get; set; }

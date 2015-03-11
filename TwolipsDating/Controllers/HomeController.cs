@@ -22,10 +22,10 @@ namespace TwolipsDating.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 // dashboard
-                var currentUser = await UserManager.FindByNameAsync(User.Identity.Name);
+                string currentUserId = await GetCurrentUserIdAsync();
                 List<DashboardViewModel> viewModel = new List<DashboardViewModel>();
 
-                var messages = await profileService.GetMessagesByUserAsync(currentUser.Id);
+                var messages = await profileService.GetMessagesByUserAsync(currentUserId);
                 var messageFeedViewModel = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyCollection<MessageFeedViewModel>>(messages);
 
                 var reviews = await dashboardService.GetRecentlyWrittenReviewsAsync();

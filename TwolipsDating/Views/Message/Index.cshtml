@@ -32,50 +32,53 @@
         </div>
     </div>
 </div>
-<div class="panel panel-default">
-    <div class="panel-body">
-        <table class="table table-striped">
-            <tr>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="panel panel-default">
+            <div class="panel-body">
                 @if (Model.MessageViewMode == MessageViewMode.Received)
                 {
-                    <th>Sent from</th>
+                    foreach (var message in Model.ReceivedMessages)
+                    {
+                        <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
+                            From
+                        </p>
+                        <div class="circular-image-wrapper">
+                            <img class="circular-image" src="@message.SenderProfileImagePath" />
+                        </div>
+                        <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
+                            <a href="@Url.Action("index", "profile", new { id = message.SenderProfileId })">@message.SenderName</a>
+                            <small> &bull;&nbsp;@message.TimeAgo</small>
+                        </p>
+                        <div class="well well-sm">
+                            <small>@message.Body</small>
+                        </div>
+                    }
                 }
-                else
+                else if (Model.MessageViewMode == MessageViewMode.Sent)
                 {
-                    <th>Sent to</th>
+                    foreach (var message in Model.SentMessages)
+                    {
+                        <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
+                            To
+                        </p>
+                        <div class="circular-image-wrapper">
+                            <img class="circular-image" src="@message.ReceiverProfileImagePath" />
+                        </div>
+                        <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
+                            <a href="@Url.Action("index", "profile", new { id = message.ReceiverProfileId })">@message.ReceiverName</a>
+                            <small> &bull;&nbsp;@message.TimeAgo</small>
+                        </p>
+                        <div class="well well-sm">
+                            <small>@message.Body</small>
+                        </div>
+                    }
                 }
-                <th>Date Sent</th>
-                <th>Subject</th>
-                <th>Body</th>
-            </tr>
-
-            @if (Model.MessageViewMode == MessageViewMode.Received)
-            {
-                foreach (var message in Model.ReceivedMessages)
-                {
-                    <tr>
-                        <td>@message.SenderName</td>
-                        <td>@message.DateSent</td>
-                        <td>@message.Subject</td>
-                        <td>@message.Body</td>
-                    </tr>
-                }
-            }
-            else
-            {
-                foreach (var message in Model.SentMessages)
-                {
-                    <tr>
-                        <td>@message.ReceiverName</td>
-                        <td>@message.DateSent</td>
-                        <td>@message.Subject</td>
-                        <td>@message.Body</td>
-                    </tr>
-                }
-            }
-        </table>
+            </div>
+        </div>
     </div>
 </div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

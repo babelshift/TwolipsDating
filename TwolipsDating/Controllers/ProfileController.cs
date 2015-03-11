@@ -31,7 +31,7 @@ namespace TwolipsDating.Controllers
 
             string currentUserId = await GetCurrentUserIdAsync();
 
-            await ProfileService.SendMessageAsync(currentUserId, viewModel.ProfileUserId, viewModel.SendMessage.MessageSubject, viewModel.SendMessage.MessageBody);
+            await ProfileService.SendMessageAsync(currentUserId, viewModel.ProfileUserId, viewModel.SendMessage.MessageBody);
 
             return RedirectToIndex();
         }
@@ -115,22 +115,10 @@ namespace TwolipsDating.Controllers
                 {
                     return await ShowUserProfileAsync(tab, currentUserId, profileToBeViewed);
                 }
+                // the profile that the user is viewing doesn't exist
                 else
                 {
-                    Models.Profile currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
-                    // view profile by id but profile doesn't exist
-                    int? currentUserProfileId = currentUserProfile != null ? (int?)currentUserProfile.Id : null;
-
-                    // if the current user has a profile and is viewing his own profile by id, show it
-                    if (currentUserProfileId.HasValue && currentUserProfileId.Value == id.Value)
-                    {
-                        return await ShowUserProfileAsync(tab, currentUserId, profileToBeViewed);
-                    }
-                    // user doesn't have a profile or is viewing someone else's non-existent profile
-                    else
-                    {
-                        return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-                    }
+                    return new HttpStatusCodeResult(HttpStatusCode.NotFound);
                 }
             }
             // user attempting to view own profile
@@ -151,7 +139,7 @@ namespace TwolipsDating.Controllers
 
         private async Task<ActionResult> ShowUserProfileAsync(string tab, string currentUserId, Models.Profile profile)
         {
-            var reviews = await ProfileService.GetReviewsWrittenForUserAsync(currentUserId);
+            var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profile.ApplicationUser.Id);
             var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
             viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
             viewModel.CurrentUserId = currentUserId;
@@ -159,7 +147,7 @@ namespace TwolipsDating.Controllers
             viewModel.ViewMode = ProfileViewModel.ProfileViewMode.ShowProfile;
 
             // setup user images and uploads
-            var userImages = await ProfileService.GetUserImagesAsync(currentUserId);
+            var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);
             viewModel.UploadImage = new UploadImageViewModel();
             viewModel.UploadImage.CurrentUserId = currentUserId;
             viewModel.UploadImage.ProfileUserId = profile.ApplicationUser.Id;

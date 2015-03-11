@@ -23,10 +23,10 @@ namespace TwolipsDating.Business
 
         public async Task<IReadOnlyCollection<Review>> GetRecentlyWrittenReviewsAsync()
         {
-            var reviewsForUser = from reviews in db.Reviews
+            var recentReviews = from reviews in db.Reviews
                                  select reviews;
 
-            var results = await reviewsForUser.ToListAsync();
+            var results = await recentReviews.ToListAsync();
             return results.AsReadOnly();
         }
     }

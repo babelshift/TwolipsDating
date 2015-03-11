@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.ViewModels;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.Controllers
 {
@@ -33,14 +34,16 @@ namespace TwolipsDating.Controllers
                         Body = message.Body,
                         DateSent = message.DateSent,
                         SenderName = message.SenderApplicationUser.UserName,
-                        Subject = message.Subject
+                        TimeAgo = message.DateSent.GetTimeAgo(),
+                        SenderProfileImagePath = String.Format("{0}/{1}", CDN, message.SenderApplicationUser.Profile.UserImage.FileName),
+                        SenderProfileId = message.SenderApplicationUser.Profile.Id
                     });
                 }
             }
 
             MessageViewModel viewModel = new MessageViewModel()
             {
-                ReceivedMessages = receivedMessages,
+                ReceivedMessages = receivedMessages.OrderByDescending(m => m.DateSent).ToList().AsReadOnly(),
                 MessageViewMode = MessageViewMode.Received
             };
 
@@ -65,14 +68,16 @@ namespace TwolipsDating.Controllers
                         Body = message.Body,
                         DateSent = message.DateSent,
                         ReceiverName = message.ReceiverApplicationUser.UserName,
-                        Subject = message.Subject
+                        TimeAgo = message.DateSent.GetTimeAgo(),
+                        ReceiverProfileImagePath = String.Format("{0}/{1}", CDN, message.ReceiverApplicationUser.Profile.UserImage.FileName),
+                        ReceiverProfileId = message.ReceiverApplicationUser.Profile.Id
                     });
                 }
             }
 
             MessageViewModel viewModel = new MessageViewModel()
             {
-                SentMessages = sentMessages,
+                SentMessages = sentMessages.OrderByDescending(m => m.DateSent).ToList().AsReadOnly(),
                 MessageViewMode = MessageViewMode.Sent
             };
 

@@ -4,13 +4,13 @@
     <img class="circular-image" src="@Model.AuthorProfileImagePath" />
 </div>
 <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
-    <a href="#">@Model.AuthorUserName</a> writes about
+    <a href="@Url.Action("index", "profile", new { id = Model.AuthorProfileId })#">@Model.AuthorUserName</a> writes about
 </p>
 <div class="circular-image-wrapper">
     <img class="circular-image" src="@Model.TargetProfileImagePath" />
 </div>
 <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
-    <a href="#">@Model.TargetUserName</a>
+    <a href="@Url.Action("index", "profile", new { id = Model.TargetProfileId })">@Model.TargetUserName</a>
     <small>
         &nbsp;&bull;&nbsp;
         @for (int i = 1; i <= Model.ReviewRatingValue; i++)

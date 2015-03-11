@@ -143,16 +143,8 @@ namespace TwolipsDating.Models
                 .IsRequired();
 
             modelBuilder.Entity<Message>()
-                .Property(m => m.Subject)
-                .IsRequired();
-
-            modelBuilder.Entity<Message>()
                 .Property(m => m.Body)
                 .IsRequired();
-
-            modelBuilder.Entity<Message>()
-                .Property(m => m.Subject)
-                .HasMaxLength(255);
 
             modelBuilder.Entity<Message>()
                 .Property(m => m.Body)
