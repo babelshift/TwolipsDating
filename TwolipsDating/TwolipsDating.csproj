@@ -229,6 +229,7 @@
     <Compile Include="Business\BaseService.cs" />
     <Compile Include="Business\DashboardService.cs" />
     <Compile Include="Business\ProfileService.cs" />
+    <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -384,6 +385,7 @@
     <Content Include="Views\Shared\_FeedItemUploadedPicturesPartial.cshtml" />
     <Content Include="Views\Shared\_FeedItemReviewWrittenPartial.cshtml" />
     <Content Include="Views\Shared\_FeedItemMessagesPartial.cshtml" />
+    <Content Include="Views\About\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
