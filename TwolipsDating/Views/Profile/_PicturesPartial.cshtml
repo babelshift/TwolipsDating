@@ -24,10 +24,10 @@
     <br />
 }
 <div class="row">
-    @foreach (var userImage in Model.UserImages)
+    @foreach(var userImage in Model.UserImages)
     {
         <div class="col-xs-6 col-md-3">
-            <a href="#" class="thumbnail" style="min-height: 128px; max-height: 128px;">
+            <a data-toggle="lightbox" href="@userImage.Path" class="thumbnail" style="min-height: 128px; max-height: 128px;">
                 <img src="@userImage.Path" style="max-height: 118px;">
             </a>
         </div>

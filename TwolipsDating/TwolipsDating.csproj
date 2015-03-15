@@ -302,6 +302,7 @@
     <Content Include="Content\bootstrap-yeti.css" />
     <Content Include="Content\cancel-off.png" />
     <Content Include="Content\cancel-on.png" />
+    <Content Include="Content\ekko-lightbox.css" />
     <Content Include="Content\fb_16.png" />
     <Content Include="Content\gplus-16.png" />
     <Content Include="Content\star-half.png" />
@@ -322,6 +323,7 @@
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\ekko-lightbox.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
     <Content Include="Scripts\jquery-2.1.3.min.map" />

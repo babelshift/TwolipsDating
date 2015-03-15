@@ -10,7 +10,7 @@
     @foreach (var userImagePath in Model.UploadedImagesPaths)
     {
         <div class="col-xs-4 col-md-2">
-            <a href="#" class="thumbnail">
+            <a data-toggle="lightbox" href="@userImagePath" class="thumbnail">
                 <img src="@userImagePath" style="max-height: 128px;">
             </a>
         </div>
