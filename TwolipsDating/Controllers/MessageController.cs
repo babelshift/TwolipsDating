@@ -13,14 +13,12 @@ namespace TwolipsDating.Controllers
 {
     public class MessageController : BaseController
     {
-        ProfileService p = new ProfileService();
-
         public async Task<ActionResult> Received()
         {
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
             await SetUnreadCountsInViewBag();
 
-            var messages = await p.GetMessagesByUserAsync(user.Id);
+            var messages = await ProfileService.GetMessagesByUserAsync(user.Id);
 
             List<ReceivedMessageViewModel> receivedMessages = new List<ReceivedMessageViewModel>();
             List<SentMessageViewModel> sentMessages = new List<SentMessageViewModel>();
@@ -55,7 +53,7 @@ namespace TwolipsDating.Controllers
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
             await SetUnreadCountsInViewBag();
 
-            var messages = await p.GetMessagesByUserAsync(user.Id);
+            var messages = await ProfileService.GetMessagesByUserAsync(user.Id);
 
             List<SentMessageViewModel> sentMessages = new List<SentMessageViewModel>();
             foreach (var message in messages)

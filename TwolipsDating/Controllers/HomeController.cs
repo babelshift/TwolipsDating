@@ -13,7 +13,6 @@ namespace TwolipsDating.Controllers
 {
     public class HomeController : BaseController
     {
-        private ProfileService profileService = new ProfileService();
         private DashboardService dashboardService = new DashboardService();
 
         [AllowAnonymous]
@@ -25,7 +24,7 @@ namespace TwolipsDating.Controllers
                 string currentUserId = await GetCurrentUserIdAsync();
                 List<DashboardViewModel> viewModel = new List<DashboardViewModel>();
 
-                var messages = await profileService.GetMessagesByUserAsync(currentUserId);
+                var messages = await ProfileService.GetMessagesByUserAsync(currentUserId);
                 var messageFeedViewModel = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyCollection<MessageFeedViewModel>>(messages);
 
                 var reviews = await dashboardService.GetRecentlyWrittenReviewsAsync();
