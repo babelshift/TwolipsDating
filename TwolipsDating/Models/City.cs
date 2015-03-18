@@ -8,6 +8,12 @@ namespace TwolipsDating.Models
 {
     public class City
     {
+		public City()
+		{
+			Profiles = new List<Profile>();
+			ZipCodes = new List<ZipCode>();
+		}
+
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -20,8 +26,8 @@ namespace TwolipsDating.Models
 
         public virtual USState USState { get; set; }
 
-        public ICollection<Profile> Profiles { get; set; }
+        public virtual ICollection<Profile> Profiles { get; set; }
 
-        public ICollection<ZipCode> ZipCodes { get; set; }
+        public virtual ICollection<ZipCode> ZipCodes { get; set; }
     }
 }

@@ -7,6 +7,11 @@ namespace TwolipsDating.Models
 {
     public class Profile
     {
+		public Profile()
+		{
+			Tags = new List<Tag>();
+		}
+
         public int Id { get; set; }
         public DateTime Birthday { get; set; }
         public int GenderId { get; set; }
@@ -18,5 +23,7 @@ namespace TwolipsDating.Models
         public virtual Gender Gender { get; set; }
         public virtual City City { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
+
+		public virtual ICollection<Tag> Tags { get; set; }
     }
 }

@@ -15,6 +15,11 @@ namespace TwolipsDating.Models
 
     public class MessageStatus
     {
+		public MessageStatus()
+		{
+			Messages = new List<Message>();
+		}
+
         public int Id { get; set; }
 
         [Index("UX_Name", 1, IsUnique = true)]      // EF 6.1 doesn't support first class unique indexes via Fluent API

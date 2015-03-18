@@ -26,6 +26,7 @@ namespace TwolipsDating.Models
         public DbSet<Review> Reviews { get; set; }
         public DbSet<ReviewRating> ReviewRatings { get; set; }
         public DbSet<UserImage> UserImages { get; set; }
+		public DbSet<Tag> Tags { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -50,7 +51,29 @@ namespace TwolipsDating.Models
             SetupReviewEntity(modelBuilder);
             SetupReviewRatingEntity(modelBuilder);
             SetupUserImageEntity(modelBuilder);
+			SetupTagEntity(modelBuilder);
         }
+
+		private void SetupTagEntity(DbModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<Tag>().HasKey(t => t.TagId);
+
+			modelBuilder.Entity<Tag>()
+				.Property(g => g.TagId)
+				.HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+			modelBuilder.Entity<Tag>()
+				.Property(t => t.Name)
+				.HasMaxLength(255);
+
+			modelBuilder.Entity<Tag>()
+				.Property(t => t.Name)
+				.IsRequired();
+
+			modelBuilder.Entity<Tag>()
+				.HasMany(t => t.Profiles)
+				.WithMany(t => t.Tags);
+		}
 
         private void SetupUserImageEntity(DbModelBuilder modelBuilder)
         {

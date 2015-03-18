@@ -8,6 +8,11 @@ namespace TwolipsDating.Models
 {
     public class USState
     {
+		public USState()
+		{
+			Cities = new List<City>();
+		}
+
         public int Id { get; set; }
         
         [Index("UX_Abbreviation", 1, IsUnique = true)]      // EF 6.1 doesn't support first class unique indexes via Fluent API

@@ -35,6 +35,7 @@ namespace TwolipsDating.Migrations
                 new ReviewRating() { Value = 5 }
             );
 
+
         }
     }
 }
