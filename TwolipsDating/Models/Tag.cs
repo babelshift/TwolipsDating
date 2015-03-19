@@ -20,5 +20,7 @@ namespace TwolipsDating.Models
 		public string Description { get; set; }
 
 		public virtual ICollection<Profile> Profiles { get; set; }
+
+		public virtual ICollection<TagSuggestion> TagSuggestions { get; set; }
 	}
 }

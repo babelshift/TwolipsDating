@@ -11,6 +11,21 @@ namespace TwolipsDating.Business
 {
     public class ProfileService : BaseService
     {
+        public async Task<int> SuggestTagAsync(int tagId, int profileId, string suggestingUserId)
+        {
+            TagSuggestion tagSuggestion = new TagSuggestion()
+            {
+                ProfileId = profileId,
+                SuggestingUserId = suggestingUserId,
+                TagId = tagId,
+                DateSuggested = DateTime.Now
+            };
+
+            db.TagSuggestions.Add(tagSuggestion);
+
+            return await db.SaveChangesAsync();
+        }
+
         public async Task<IReadOnlyCollection<UserImage>> GetUserImagesAsync(string userId, DateTime startDate)
         {
             if (String.IsNullOrEmpty(userId))

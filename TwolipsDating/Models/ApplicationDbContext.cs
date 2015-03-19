@@ -27,6 +27,7 @@ namespace TwolipsDating.Models
         public DbSet<ReviewRating> ReviewRatings { get; set; }
         public DbSet<UserImage> UserImages { get; set; }
 		public DbSet<Tag> Tags { get; set; }
+		public DbSet<TagSuggestion> TagSuggestions { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -52,7 +53,33 @@ namespace TwolipsDating.Models
             SetupReviewRatingEntity(modelBuilder);
             SetupUserImageEntity(modelBuilder);
 			SetupTagEntity(modelBuilder);
+			SetupTagSuggestionEntity(modelBuilder);
         }
+
+		private void SetupTagSuggestionEntity(DbModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<TagSuggestion>()
+				.HasKey(t => new { t.TagId, t.ProfileId, t.SuggestingUserId });
+
+			modelBuilder.Entity<TagSuggestion>()
+				.Property(t => t.DateSuggested)
+				.IsRequired();
+
+			modelBuilder.Entity<TagSuggestion>()
+				.HasRequired(t => t.Profile)
+				.WithMany(t => t.TagSuggestions)
+				.HasForeignKey(t => t.ProfileId);
+
+			modelBuilder.Entity<TagSuggestion>()
+				.HasRequired(t => t.SuggestingUser)
+				.WithMany(t => t.TagSuggestions)
+				.HasForeignKey(t => t.SuggestingUserId);
+
+			modelBuilder.Entity<TagSuggestion>()
+				.HasRequired(t => t.Tag)
+				.WithMany(t => t.TagSuggestions)
+				.HasForeignKey(t => t.TagId);
+		}
 
 		private void SetupTagEntity(DbModelBuilder modelBuilder)
 		{

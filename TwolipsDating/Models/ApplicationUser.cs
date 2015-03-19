@@ -25,11 +25,12 @@ namespace TwolipsDating.Models
 
         public virtual Profile Profile { get; set; }
 
-        public ICollection<Review> SentReviews { get; set; }
-        public ICollection<Review> ReceivedReviews { get; set; }
-        public ICollection<Message> SentMessages { get; set; }
-        public ICollection<Message> ReceivedMessages { get; set; }
-        public ICollection<UserImage> UploadedImages { get; set; }
+		public virtual ICollection<Review> SentReviews { get; set; }
+		public virtual ICollection<Review> ReceivedReviews { get; set; }
+		public virtual ICollection<Message> SentMessages { get; set; }
+		public virtual ICollection<Message> ReceivedMessages { get; set; }
+		public virtual ICollection<UserImage> UploadedImages { get; set; }
+		public virtual ICollection<TagSuggestion> TagSuggestions { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

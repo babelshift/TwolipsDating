@@ -16,11 +16,36 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using System.IO;
 using System.Configuration;
 using System.Net;
+using System.Data.Entity.Infrastructure;
 
 namespace TwolipsDating.Controllers
 {
     public class ProfileController : BaseController
     {
+        [HttpPost]
+        public async Task<JsonResult> SuggestTag(int id, int profileId)
+        {
+            try
+            {
+                string currentUserId = await GetCurrentUserIdAsync();
+                int changes = await ProfileService.SuggestTagAsync(id, profileId, currentUserId);
+
+                if (changes > 0)
+                {
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    return Json(new { success = false, error = "Unknown error while suggesting tag." });
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                return Json(new { success = false, error = e.InnerException.Message });
+            }
+
+        }
+
         [HttpPost]
         public async Task<ActionResult> SendMessage(ProfileViewModel viewModel)
         {
@@ -101,7 +126,7 @@ namespace TwolipsDating.Controllers
             return RedirectToIndex();
         }
 
-        public async Task<ActionResult> Index(int? id, string tab)
+        public async Task<ActionResult> Index(int? id = null, string tab = null)
         {
             string currentUserId = await GetCurrentUserIdAsync();
 

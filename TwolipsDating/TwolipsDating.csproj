@@ -252,7 +252,12 @@
     <Compile Include="Migrations\201503172322386_AddTagTable.Designer.cs">
       <DependentUpon>201503172322386_AddTagTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503190121301_AddTagSuggestions.cs" />
+    <Compile Include="Migrations\201503190121301_AddTagSuggestions.Designer.cs">
+      <DependentUpon>201503190121301_AddTagSuggestions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\TagSuggestion.cs" />
     <Compile Include="Models\UserImage.cs" />
     <Compile Include="Utilities\DateTimeExtensions.cs" />
     <Compile Include="Utilities\ReviewExtensions.cs" />
@@ -414,6 +419,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503172322386_AddTagTable.resx">
       <DependentUpon>201503172322386_AddTagTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503190121301_AddTagSuggestions.resx">
+      <DependentUpon>201503190121301_AddTagSuggestions.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

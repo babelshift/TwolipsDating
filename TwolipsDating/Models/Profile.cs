@@ -25,5 +25,6 @@ namespace TwolipsDating.Models
         public virtual ApplicationUser ApplicationUser { get; set; }
 
 		public virtual ICollection<Tag> Tags { get; set; }
+		public virtual ICollection<TagSuggestion> TagSuggestions { get; set; }
     }
 }

@@ -12,14 +12,10 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li>
-                        <a href="@Url.Action("index", "profile")">
-                            View your profile
-                        </a>
+                        @Html.ActionLink("View your profile", "index", "profile", new { id = (int?)null }, null)
                     </li>
                     <li>
-                        <a href="@Url.Action("index", "manage")">
-                            Manage your settings
-                        </a>
+                        @Html.ActionLink("Manage your settings", "index", "manage")
                     </li>
                     <li class="divider"></li>
                     <li>
