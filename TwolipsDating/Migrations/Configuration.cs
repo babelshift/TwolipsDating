@@ -35,7 +35,9 @@ namespace TwolipsDating.Migrations
                 new ReviewRating() { Value = 5 }
             );
 
-
+            context.Tags.AddOrUpdate(m => m.TagId,
+                new Tag() {  TagId = 1, Name = "intellectual", Description = "intellectual" }
+            );
         }
     }
 }

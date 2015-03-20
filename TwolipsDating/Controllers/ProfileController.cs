@@ -23,16 +23,27 @@ namespace TwolipsDating.Controllers
     public class ProfileController : BaseController
     {
         [HttpPost]
-        public async Task<JsonResult> SuggestTag(int id, int profileId)
+        public async Task<JsonResult> SuggestTag(int id, int profileId, string suggestAction)
         {
             try
             {
                 string currentUserId = await GetCurrentUserIdAsync();
-                int changes = await ProfileService.SuggestTagAsync(id, profileId, currentUserId);
 
+                int changes = 0;
+
+                if (suggestAction == "add")
+                {
+                    changes = await ProfileService.AddTagSuggestionAsync(id, profileId, currentUserId);
+                }
+                else if(suggestAction == "remove")
+                {
+                    changes = await ProfileService.RemoveTagSuggestionAsync(id, profileId, currentUserId);
+                }
+                
                 if (changes > 0)
                 {
-                    return Json(new { success = true });
+                    int tagCount = await ProfileService.GetTagSuggestionCountForProfileAsync(id, profileId);
+                    return Json(new { tagId = id, success = true, tagCount = tagCount, suggestAction = suggestAction });
                 }
                 else
                 {
@@ -165,11 +176,24 @@ namespace TwolipsDating.Controllers
         private async Task<ActionResult> ShowUserProfileAsync(string tab, string currentUserId, Models.Profile profile)
         {
             var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profile.ApplicationUser.Id);
+            var tagSuggestions = await ProfileService.GetProfileTagSuggestionsAsync(profile.Id);
+            var tagsCurrentUserSuggested = await ProfileService.GetTagsThatUserSuggestedForProfileAsync(currentUserId, profile.Id);
+
+            var tagsCurrentUserSuggestedDictionary = tagsCurrentUserSuggested.ToDictionary(t => t.TagId);
+
+            foreach(var tagSuggestion in tagSuggestions)
+            {
+                TagSuggestion t = null;
+                bool didUserSuggestTag = tagsCurrentUserSuggestedDictionary.TryGetValue(tagSuggestion.TagId, out t);
+                tagSuggestion.DidUserSuggest = didUserSuggestTag;
+            }
+
             var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
             viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
             viewModel.CurrentUserId = currentUserId;
             viewModel.AverageRatingValue = reviews.AverageRating();
             viewModel.ViewMode = ProfileViewModel.ProfileViewMode.ShowProfile;
+            viewModel.Tags = tagSuggestions;
 
             // setup user images and uploads
             var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);

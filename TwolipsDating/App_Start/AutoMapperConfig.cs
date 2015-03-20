@@ -67,6 +67,8 @@ namespace TwolipsDating
                 .ForMember(dest => dest.DateOccurred, opts => opts.MapFrom(source => source.DateCreated))
                 .ForMember(dest => dest.AuthorProfileId, opts => opts.MapFrom(source => source.AuthorUser.Profile.Id))
                 .ForMember(dest => dest.TargetProfileId, opts => opts.MapFrom(source => source.TargetUser.Profile.Id));
+
+            Mapper.CreateMap<Tag, TagViewModel>();
         }
     }
 }

@@ -108,40 +108,26 @@
                     @Html.AntiForgeryToken()
                     <div class="modal-body">
                         <div class="tags">
-                            <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                                <span class="badge">9</span> intellectual
-                            </a>
-                            <a onclick="onSuggestTag(event, this, 1)"><i class="glyphicon glyphicon-plus"></i></a>
-                            &nbsp;
-                            &nbsp;
-                            <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                                <span class="badge">4</span> bookworm
-                            </a>
-                            <a href="#"><i class="glyphicon glyphicon-plus"></i></a>
-                            &nbsp;
-                            &nbsp;
-                            <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                                <span class="badge">3</span> responsive
-                            </a>
-                            <a href="#"><i class="glyphicon glyphicon-plus"></i></a>
-                            &nbsp;
-                            &nbsp;
-                            <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                                <span class="badge">1</span> pro gamer
-                            </a>
-                            <a href="#"><i class="glyphicon glyphicon-plus"></i></a>
-                            &nbsp;
-                            &nbsp;
-                            <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                                <span class="badge">1</span> nerdy
-                            </a>
-                            <a href="#"><i class="glyphicon glyphicon-plus"></i></a>
-                            &nbsp;
-                            &nbsp;
-                            <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                                <span class="badge">1</span> reliable
-                            </a>
-                            <a href="#"><i class="glyphicon glyphicon-plus"></i></a>
+                            @foreach (var tag in Model.Tags)
+                            {
+                                if (tag.DidUserSuggest)
+                                {
+                                    <a href="#" id="@String.Format("{0}-tag-button", tag.TagId)" onclick="onSuggestTag(event, this, @tag.TagId)" class="btn btn-primary btn-xs" title="a clever one">
+                                        <span id="@String.Format("{0}-tag-count", tag.TagId)" class="badge">@tag.TagCount</span> @tag.TagName
+                                    </a>
+                                    <a href="#" onclick="onSuggestTag(event, this, @tag.TagId)"><i id="@String.Format("{0}-tag-glyph", tag.TagId)" class="glyphicon glyphicon-minus"></i></a>
+                                }
+                                else
+                                {
+                                    <a href="#" id="@String.Format("{0}-tag-button", tag.TagId)" onclick="onSuggestTag(event, this, @tag.TagId)" class="btn btn-default btn-xs" title="a clever one">
+                                        <span id="@String.Format("{0}-tag-count", tag.TagId)" class="badge">@tag.TagCount</span> @tag.TagName
+                                    </a>
+                                    <a href="#" onclick="onSuggestTag(event, this, @tag.TagId)"><i id="@String.Format("{0}-tag-glyph", tag.TagId)" class="glyphicon glyphicon-plus"></i></a>
+                                }
+                                <input id="@String.Format("{0}-tag-hidden", tag.TagId)" type="hidden" value="@tag.DidUserSuggest.ToString().ToLower()" />
+                                @:&nbsp;
+                                @:&nbsp;
+                            }
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -498,21 +484,66 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
         }
 
         function onSelectProfileImageClick(e, obj) {
+            e.preventDefault();
             var imageId = $(obj).attr("id");
             var hiddenProfileImage = $("#ChangeImage_UserImageId");
             hiddenProfileImage.val(imageId);
         }
 
         function onSuggestTag(e, obj, tagId) {
+            e.preventDefault();
             var profileId = $("#ProfileId").val();
-            var json = "{\"id\":" + tagId + ", \"profileId\":\"" + profileId + "\"}";
+            var json = "";
+
+            var didUserSuggest = $("#" + tagId + "-tag-hidden").val();
+
+            if (didUserSuggest === "true") {
+                json = "{\"id\":" + tagId + ", \"profileId\":" + profileId + ", \"suggestAction\":\"" + "remove" + "\"}";
+            } else {
+                json = "{\"id\":" + tagId + ", \"profileId\":" + profileId + ", \"suggestAction\":\"" + "add" + "\"}";
+            }
+
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action("suggestTag", "profile")',
                 data: json,
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
-                    alert('nice');
+                    if (data.success) {
+                        var tagGlyphClassRemove = "";
+                        var tagButtonClassRemove = "";
+                        var tagGlyphClassAdd = "";
+                        var tagButtonClassAdd = "";
+
+                        if (data.suggestAction == "remove") {
+                            tagGlyphClassRemove = "glyphicon-minus";
+                            tagGlyphClassAdd = "glyphicon-plus";
+                            tagButtonClassRemove = "btn-primary";
+                            tagButtonClassAdd = "btn-default";
+                            $("#" + data.tagId + "-tag-hidden").val(false);
+
+                        } else if (data.suggestAction == "add") {
+                            tagGlyphClassRemove = "glyphicon-plus";
+                            tagGlyphClassAdd = "glyphicon-minus";
+                            tagButtonClassRemove = "btn-default";
+                            tagButtonClassAdd = "btn-primary";
+                            $("#" + data.tagId + "-tag-hidden").val(true);
+                        }
+
+                        var tagGlyph = $("#" + data.tagId + "-tag-glyph");
+                        tagGlyph.removeClass(tagGlyphClassRemove);
+                        tagGlyph.addClass(tagGlyphClassAdd);
+
+                        var tagButton = $("#" + data.tagId + "-tag-button");
+                        tagButton.removeClass(tagButtonClassRemove);
+                        tagButton.addClass(tagButtonClassAdd);
+
+                        var tagCount = $("#" + data.tagId + "-tag-count");
+                        tagCount.text(data.tagCount);
+                    }
+                    else {
+                        alert(data.error);
+                    }
                 }
             });
         }

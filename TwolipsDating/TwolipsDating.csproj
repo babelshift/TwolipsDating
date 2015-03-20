@@ -266,6 +266,7 @@
     <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\MessageFeedViewModel.cs" />
     <Compile Include="ViewModels\ProfileFeedViewModel.cs" />
+    <Compile Include="ViewModels\ProfileTagSuggestionViewModel.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -302,6 +303,7 @@
     <Compile Include="ViewModels\SendMessageViewModel.cs" />
     <Compile Include="ViewModels\SentMessageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\TagViewModel.cs" />
     <Compile Include="ViewModels\UploadedImageFeedViewModel.cs" />
     <Compile Include="ViewModels\UploadImageViewModel.cs" />
     <Compile Include="ViewModels\UserImageViewModel.cs" />

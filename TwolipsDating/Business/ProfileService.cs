@@ -6,12 +6,69 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using TwolipsDating.Models;
+using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
 {
     public class ProfileService : BaseService
     {
-        public async Task<int> SuggestTagAsync(int tagId, int profileId, string suggestingUserId)
+        public async Task<IReadOnlyCollection<TagSuggestion>> GetTagsThatUserSuggestedForProfileAsync(string userId, int profileId)
+        {
+            var tagsList = from tagSuggestions in db.TagSuggestions
+                           where tagSuggestions.SuggestingUserId == userId
+                           where tagSuggestions.ProfileId == profileId
+                           select tagSuggestions;
+
+            var result = await tagsList.ToListAsync();
+            return result.AsReadOnly();
+        }
+
+        public async Task<IReadOnlyCollection<ProfileTagSuggestionViewModel>> GetProfileTagSuggestionsAsync(int profileId)
+        {
+            var tagsList = from tagSuggestions in db.TagSuggestions
+                           from tags in db.Tags
+                           where tags.TagId == tagSuggestions.TagId
+                           where tagSuggestions.ProfileId == profileId
+                           group tags by new { tags.TagId, tags.Name }
+                           into grouping
+                           select new ProfileTagSuggestionViewModel()
+                           {
+                                TagId = grouping.Key.TagId,
+                                TagName = grouping.Key.Name,
+                                TagCount = grouping.Count()
+                           };
+
+            var results = await tagsList.ToListAsync();
+            return results.AsReadOnly();
+        }
+
+        public async Task<int> GetTagSuggestionCountForProfileAsync(int tagId, int profileId)
+        {
+            int count = await (from tagSuggestions in db.TagSuggestions
+                               where tagSuggestions.TagId == tagId
+                               where tagSuggestions.ProfileId == profileId
+                               select tagSuggestions).CountAsync();
+
+            return count;
+        }
+
+        public async Task<int> RemoveTagSuggestionAsync(int tagId, int profileId, string suggestingUserId)
+        {
+            TagSuggestion tagSuggestion = new TagSuggestion()
+            {
+                ProfileId = profileId,
+                SuggestingUserId = suggestingUserId,
+                TagId = tagId
+            };
+
+            db.TagSuggestions.Attach(tagSuggestion);
+
+            db.TagSuggestions.Remove(tagSuggestion);
+
+            return await db.SaveChangesAsync();
+        }
+
+        public async Task<int> AddTagSuggestionAsync(int tagId, int profileId, string suggestingUserId)
         {
             TagSuggestion tagSuggestion = new TagSuggestion()
             {
