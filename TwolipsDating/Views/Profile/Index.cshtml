@@ -108,7 +108,7 @@
                     @Html.AntiForgeryToken()
                     <div class="modal-body">
                         <div class="tags">
-                            @foreach (var tag in Model.Tags)
+                            @foreach (var tag in Model.AllTags)
                             {
                                 if (tag.DidUserSuggest)
                                 {
@@ -195,43 +195,45 @@
                             </p>
                         *@
                     </div>
-                    <h4 style="display: inline-block"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tagged by self&nbsp;</h4>
-                    <a style="display: inline-block" href="#">edit</a>
-                    <div class="tags">
-                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                            intellectual
-                        </a>
-                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                            wizard
-                        </a>
-                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                            challenge master
-                        </a>
-                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                            pro gamer
-                        </a>
-                    </div>
+                    @*
+                        <h4 style="display: inline-block"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tagged by self&nbsp;</h4>
+                        <a style="display: inline-block" href="#">edit</a>
+                        <div class="tags">
+                            <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                                intellectual
+                            </a>
+                            <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                                wizard
+                            </a>
+                            <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                                challenge master
+                            </a>
+                            <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                                pro gamer
+                            </a>
+                        </div>
+                    *@
                     <h4 style="display: inline-block"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tagged by others&nbsp;</h4>
-                    <a style="display: inline-block" href="#" data-toggle="modal" data-target="#modalSuggestTags" data-keyboard="true">suggest</a>
+                    @if (Model.ProfileUserId != Model.CurrentUserId)
+                    {
+                        <a style="display: inline-block" href="#" data-toggle="modal" data-target="#modalSuggestTags" data-keyboard="true">suggest</a>
+                    }
                     <div class="tags">
-                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                            <span class="badge">9</span> intellectual
-                        </a>
-                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                            <span class="badge">4</span> bookworm
-                        </a>
-                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                            <span class="badge">3</span> responsive
-                        </a>
-                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                            <span class="badge">1</span> pro gamer
-                        </a>
-                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                            <span class="badge">1</span> nerdy
-                        </a>
-                        <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                            <span class="badge">1</span> reliable
-                        </a>
+                        @foreach (var tag in Model.SuggestedTags)
+                        {
+                            if (tag.DidUserSuggest)
+                            {
+                                <a href="#" class="btn btn-primary btn-xs" title="a clever one">
+                                    <span class="badge">@tag.TagCount</span> @tag.TagName
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                                    <span class="badge">@tag.TagCount</span> @tag.TagName
+                                </a>
+                            }
+                        }
                     </div>
                     @*
                         <h4><i class="glyphicon glyphicon-book"></i>&nbsp;&nbsp;Badges earned</h4>

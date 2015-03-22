@@ -69,6 +69,9 @@ namespace TwolipsDating
                 .ForMember(dest => dest.TargetProfileId, opts => opts.MapFrom(source => source.TargetUser.Profile.Id));
 
             Mapper.CreateMap<Tag, TagViewModel>();
+
+            Mapper.CreateMap<Tag, ProfileTagSuggestionViewModel>()
+                .ForMember(dest => dest.TagName, opts => opts.MapFrom(source => source.Name));
         }
     }
 }

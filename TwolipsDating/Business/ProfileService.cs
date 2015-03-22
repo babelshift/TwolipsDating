@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -12,34 +13,74 @@ namespace TwolipsDating.Business
 {
     public class ProfileService : BaseService
     {
-        public async Task<IReadOnlyCollection<TagSuggestion>> GetTagsThatUserSuggestedForProfileAsync(string userId, int profileId)
+        public async Task<IReadOnlyCollection<Tag>> GetAllTagsAsync()
         {
-            var tagsList = from tagSuggestions in db.TagSuggestions
-                           where tagSuggestions.SuggestingUserId == userId
-                           where tagSuggestions.ProfileId == profileId
-                           select tagSuggestions;
+            var tags = from tag in db.Tags
+                       select tag;
 
-            var result = await tagsList.ToListAsync();
+            var result = await tags.ToListAsync();
             return result.AsReadOnly();
         }
+        public async Task<IReadOnlyCollection<ProfileTagSuggestionViewModel>> GetTagsSuggestedForProfileAsync(string userId, int profileId)
+        {
+            // i had to separate the queries of identifying if the user suggested and the tag counts because i couldn't find a good way
+            // to get counts via group by while maintaining the flag which identifies if the user suggested
 
-        public async Task<IReadOnlyCollection<ProfileTagSuggestionViewModel>> GetProfileTagSuggestionsAsync(int profileId)
+            // this will return tag suggestions with an identifier which shows if the passed userId was the one who suggested that tag
+            var firstQuery = from tagSuggestion in db.TagSuggestions
+                             from tag in db.Tags
+                             where tag.TagId == tagSuggestion.TagId
+                             where tagSuggestion.ProfileId == profileId
+                             select new ProfileTagSuggestionViewModel()
+                            {
+                                TagId = tag.TagId,
+                                TagName = tag.Name,
+                                TagCount = 0,
+                                DidUserSuggest = (tagSuggestion.SuggestingUserId == userId) ? true : false
+                            };
+
+            // this will return tag suggestions and the count of the number of that tag's suggestions from the first query
+            var secondQuery = from f in firstQuery
+                              group f by new { f.TagId, f.TagName }
+                                  into grouping
+                                  select new ProfileTagSuggestionViewModel()
+                                  {
+                                      TagId = grouping.Key.TagId,
+                                      TagName = grouping.Key.TagName,
+                                      TagCount = grouping.Count(),
+                                      DidUserSuggest = false
+                                  };
+
+            var secondResults = await secondQuery.ToListAsync();
+
+            // now we merge the two results by updated the user suggest flag
+            foreach (var tag in secondResults)
+            {
+                bool didUserSuggest = await firstQuery.AnyAsync(t => t.TagId == tag.TagId && t.DidUserSuggest == true);
+                tag.DidUserSuggest = didUserSuggest;
+            }
+
+            return secondResults.AsReadOnly();
+        }
+
+        public async Task<IReadOnlyCollection<ProfileTagSuggestionViewModel>> GetTagsThatUserSuggestedForProfileAsync(string userId, int profileId)
         {
             var tagsList = from tagSuggestions in db.TagSuggestions
                            from tags in db.Tags
                            where tags.TagId == tagSuggestions.TagId
+                           where tagSuggestions.SuggestingUserId == userId
                            where tagSuggestions.ProfileId == profileId
                            group tags by new { tags.TagId, tags.Name }
-                           into grouping
-                           select new ProfileTagSuggestionViewModel()
-                           {
-                                TagId = grouping.Key.TagId,
-                                TagName = grouping.Key.Name,
-                                TagCount = grouping.Count()
-                           };
+                               into grouping
+                               select new ProfileTagSuggestionViewModel()
+                               {
+                                   TagId = grouping.Key.TagId,
+                                   TagName = grouping.Key.Name,
+                                   TagCount = grouping.Count()
+                               };
 
-            var results = await tagsList.ToListAsync();
-            return results.AsReadOnly();
+            var result = await tagsList.ToListAsync();
+            return result.AsReadOnly();
         }
 
         public async Task<int> GetTagSuggestionCountForProfileAsync(int tagId, int profileId)

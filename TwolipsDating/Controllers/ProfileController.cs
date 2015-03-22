@@ -35,11 +35,11 @@ namespace TwolipsDating.Controllers
                 {
                     changes = await ProfileService.AddTagSuggestionAsync(id, profileId, currentUserId);
                 }
-                else if(suggestAction == "remove")
+                else if (suggestAction == "remove")
                 {
                     changes = await ProfileService.RemoveTagSuggestionAsync(id, profileId, currentUserId);
                 }
-                
+
                 if (changes > 0)
                 {
                     int tagCount = await ProfileService.GetTagSuggestionCountForProfileAsync(id, profileId);
@@ -47,14 +47,15 @@ namespace TwolipsDating.Controllers
                 }
                 else
                 {
-                    return Json(new { success = false, error = "Unknown error while suggesting tag." });
+                    return Json(new { success = false, error = "No changes were made to your suggestion entry." });
                 }
             }
             catch (DbUpdateException e)
             {
-                return Json(new { success = false, error = e.InnerException.Message });
-            }
+                // log e here
 
+                return Json(new { success = false, error = "Could not update your suggestion entry." });
+            }
         }
 
         [HttpPost]
@@ -175,25 +176,16 @@ namespace TwolipsDating.Controllers
 
         private async Task<ActionResult> ShowUserProfileAsync(string tab, string currentUserId, Models.Profile profile)
         {
+            var tagsSuggestedForProfile = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profile.Id);
             var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profile.ApplicationUser.Id);
-            var tagSuggestions = await ProfileService.GetProfileTagSuggestionsAsync(profile.Id);
-            var tagsCurrentUserSuggested = await ProfileService.GetTagsThatUserSuggestedForProfileAsync(currentUserId, profile.Id);
-
-            var tagsCurrentUserSuggestedDictionary = tagsCurrentUserSuggested.ToDictionary(t => t.TagId);
-
-            foreach(var tagSuggestion in tagSuggestions)
-            {
-                TagSuggestion t = null;
-                bool didUserSuggestTag = tagsCurrentUserSuggestedDictionary.TryGetValue(tagSuggestion.TagId, out t);
-                tagSuggestion.DidUserSuggest = didUserSuggestTag;
-            }
 
             var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
             viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
             viewModel.CurrentUserId = currentUserId;
             viewModel.AverageRatingValue = reviews.AverageRating();
             viewModel.ViewMode = ProfileViewModel.ProfileViewMode.ShowProfile;
-            viewModel.Tags = tagSuggestions;
+            viewModel.SuggestedTags = tagsSuggestedForProfile; // these are the tag suggestions that will be displayed at the profile screen
+            viewModel.AllTags = await GetAllTagsAndCountsInSystemAsync(tagsSuggestedForProfile); // these are all tags to be displayed in the "suggest" popup
 
             // setup user images and uploads
             var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);
@@ -208,6 +200,23 @@ namespace TwolipsDating.Controllers
             await SetUnreadCountsInViewBag();
 
             return View(viewModel);
+        }
+
+        private async Task<IReadOnlyCollection<ProfileTagSuggestionViewModel>> GetAllTagsAndCountsInSystemAsync(IReadOnlyCollection<ProfileTagSuggestionViewModel> tagsSuggestedForProfile)
+        {
+            var allTagsInSystem = Mapper.Map<IReadOnlyCollection<Tag>, IReadOnlyCollection<ProfileTagSuggestionViewModel>>(await ProfileService.GetAllTagsAsync());
+            var d = tagsSuggestedForProfile.ToDictionary(t => t.TagId);
+            foreach (var tag in allTagsInSystem)
+            {
+                ProfileTagSuggestionViewModel t = null;
+                bool success = d.TryGetValue(tag.TagId, out t);
+                if (success)
+                {
+                    tag.TagCount = t.TagCount;
+                    tag.DidUserSuggest = t.DidUserSuggest;
+                }
+            }
+            return allTagsInSystem;
         }
 
         private void SetViewModelBasedOnActiveTab(Models.Profile profile, IReadOnlyCollection<Review> reviews, ProfileViewModel viewModel, IReadOnlyCollection<UserImage> userImages)
