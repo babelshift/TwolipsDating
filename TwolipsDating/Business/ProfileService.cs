@@ -13,6 +13,14 @@ namespace TwolipsDating.Business
 {
     public class ProfileService : BaseService
     {
+        public async Task<int> DeleteUserImage(int userImageId)
+        {
+            UserImage u = new UserImage() { Id = userImageId };
+            db.UserImages.Attach(u);
+            db.UserImages.Remove(u);
+            return await db.SaveChangesAsync();
+        }
+
         public async Task<IReadOnlyCollection<Tag>> GetAllTagsAsync()
         {
             var tags = from tag in db.Tags
@@ -21,6 +29,7 @@ namespace TwolipsDating.Business
             var result = await tags.ToListAsync();
             return result.AsReadOnly();
         }
+
         public async Task<IReadOnlyCollection<ProfileTagSuggestionViewModel>> GetTagsSuggestedForProfileAsync(string userId, int profileId)
         {
             // i had to separate the queries of identifying if the user suggested and the tag counts because i couldn't find a good way

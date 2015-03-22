@@ -382,95 +382,95 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
     @Scripts.Render("~/bundles/jqueryval")
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            // when the page loads, select US country by default, fire change event
-            var countrySelect = $("#CreateProfile_SelectedCountryId");
-            if (countrySelect != null) {
-                countrySelect.val(215); // united states
-                countrySelect.change();
+    $(document).ready(function () {
+        // when the page loads, select US country by default, fire change event
+        var countrySelect = $("#CreateProfile_SelectedCountryId");
+        if (countrySelect != null) {
+            countrySelect.val(215); // united states
+            countrySelect.change();
+        }
+
+        // initialize the star rating plugin
+        $("#star").raty({
+            score: 3,
+            hints: ['awful', 'bad', 'average', 'good', 'great'],
+            click: function (score, evt) {
+                $("#WriteReview_RatingValue").val(score);
             }
-
-            // initialize the star rating plugin
-            $("#star").raty({
-                score: 3,
-                hints: ['awful', 'bad', 'average', 'good', 'great'],
-                click: function (score, evt) {
-                    $("#WriteReview_RatingValue").val(score);
-                }
-            });
-
-            // handle file selection text updating
-            $('.btn-file :file').on('fileselect', function (event, numFiles, label) {
-
-                var input = $(this).parents('.input-group').find(':text'),
-                    log = numFiles > 1 ? numFiles + ' files selected' : label;
-
-                if (input.length) {
-                    input.val(log);
-                } else {
-                    if (log) alert(log);
-                }
-
-            });
         });
 
         // handle file selection text updating
-        $(document).on('change', '.btn-file :file', function () {
-            var input = $(this),
-                numFiles = input.get(0).files ? input.get(0).files.length : 1,
-                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-            input.trigger('fileselect', [numFiles, label]);
-        });
+        $('.btn-file :file').on('fileselect', function (event, numFiles, label) {
 
-        function onCountrySelected(e, obj) {
+            var input = $(this).parents('.input-group').find(':text'),
+                log = numFiles > 1 ? numFiles + ' files selected' : label;
 
-            var countryId = $(obj).val();
-
-            if (countryId == 215) { // united states
-                $("#textBoxCity").hide();
-                var zipCodeSelect = $("#textBoxZipCode");
-                zipCodeSelect.show();
-                zipCodeSelect.val('');
+            if (input.length) {
+                input.val(log);
             } else {
-                var citySelect = $("#textBoxCity");
-                citySelect.show();
-                citySelect.val('');
-                $("#textBoxZipCode").hide();
+                if (log) alert(log);
             }
 
-            $("#zipCodeLocationText").html('');
-            $("#cityLocationText").html('');
-            $("#CreateProfile_SelectedCityId").val('');
-            $("#CreateProfile_SelectedZipCodeId").val('');
+        });
+    });
+
+    // handle file selection text updating
+    $(document).on('change', '.btn-file :file', function () {
+        var input = $(this),
+            numFiles = input.get(0).files ? input.get(0).files.length : 1,
+            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+        input.trigger('fileselect', [numFiles, label]);
+    });
+
+    function onCountrySelected(e, obj) {
+
+        var countryId = $(obj).val();
+
+        if (countryId == 215) { // united states
+            $("#textBoxCity").hide();
+            var zipCodeSelect = $("#textBoxZipCode");
+            zipCodeSelect.show();
+            zipCodeSelect.val('');
+        } else {
+            var citySelect = $("#textBoxCity");
+            citySelect.show();
+            citySelect.val('');
+            $("#textBoxZipCode").hide();
         }
 
-        function onCityBlur(e, obj) {
+        $("#zipCodeLocationText").html('');
+        $("#cityLocationText").html('');
+        $("#CreateProfile_SelectedCityId").val('');
+        $("#CreateProfile_SelectedZipCodeId").val('');
+    }
 
-            var city = $(obj).val();
+    function onCityBlur(e, obj) {
 
+        var city = $(obj).val();
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("city", "location")' + '/' + city,
+            success: function (data) {
+                if (data.CityName === '' || data.CityName === null) {
+                    $("#cityLocationText").html("<small>Are you sure that's a real city?</small>");
+                    $("#CreateProfile_SelectedCityId").val('');
+                } else {
+                    $("#cityLocationText").html("<small>Cool, you're in " + data.CityName + "</small>");
+                    $("#CreateProfile_SelectedCityId").val(data.CityId);
+                }
+            }
+        });
+    }
+
+    function onZipCodeBlur(e, obj) {
+
+        var zipCode = $(obj).val();
+
+        if (zipCode.length === 5) {
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action("city", "location")' + '/' + city,
-                success: function (data) {
-                    if (data.CityName === '' || data.CityName === null) {
-                        $("#cityLocationText").html("<small>Are you sure that's a real city?</small>");
-                        $("#CreateProfile_SelectedCityId").val('');
-                    } else {
-                        $("#cityLocationText").html("<small>Cool, you're in " + data.CityName + "</small>");
-                        $("#CreateProfile_SelectedCityId").val(data.CityId);
-                    }
-                }
-            });
-        }
-
-        function onZipCodeBlur(e, obj) {
-
-            var zipCode = $(obj).val();
-
-            if (zipCode.length === 5) {
-                $.ajax({
-                    type: 'GET',
-                    url: '@Url.Action("zip", "location")' + '/' + zipCode,
+                url: '@Url.Action("zip", "location")' + '/' + zipCode,
                     success: function (data) {
                         if (data.CityName === '' || data.CityName === null) {
                             $("#zipCodeLocationText").html("<small>That's a bad zip code.</small>");
@@ -492,6 +492,28 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
             hiddenProfileImage.val(imageId);
         }
 
+        function onDeleteImage(e, obj, userImageId, fileName, profileUserId) {
+
+            json = "{\"id\":" + userImageId + ", \"fileName\":\"" + fileName + "\", \"profileUserId\":\"" + profileUserId + "\"}";
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("deleteImage", "profile")',
+                data: json,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.success) {
+                        var div = $("#" + userImageId + "-image-div");
+                        div.fadeOut(300, function () {
+                            div.remove();
+                        });
+                    } else {
+                        alert(data.error);
+                    }
+                }
+            });
+        }
+
         function onSuggestTag(e, obj, tagId) {
             e.preventDefault();
             var profileId = $("#ProfileId").val();
@@ -508,46 +530,46 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action("suggestTag", "profile")',
-                data: json,
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    if (data.success) {
-                        var tagGlyphClassRemove = "";
-                        var tagButtonClassRemove = "";
-                        var tagGlyphClassAdd = "";
-                        var tagButtonClassAdd = "";
+                        data: json,
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            if (data.success) {
+                                var tagGlyphClassRemove = "";
+                                var tagButtonClassRemove = "";
+                                var tagGlyphClassAdd = "";
+                                var tagButtonClassAdd = "";
 
-                        if (data.suggestAction == "remove") {
-                            tagGlyphClassRemove = "glyphicon-minus";
-                            tagGlyphClassAdd = "glyphicon-plus";
-                            tagButtonClassRemove = "btn-primary";
-                            tagButtonClassAdd = "btn-default";
-                            $("#" + data.tagId + "-tag-hidden").val(false);
+                                if (data.suggestAction == "remove") {
+                                    tagGlyphClassRemove = "glyphicon-minus";
+                                    tagGlyphClassAdd = "glyphicon-plus";
+                                    tagButtonClassRemove = "btn-primary";
+                                    tagButtonClassAdd = "btn-default";
+                                    $("#" + data.tagId + "-tag-hidden").val(false);
 
-                        } else if (data.suggestAction == "add") {
-                            tagGlyphClassRemove = "glyphicon-plus";
-                            tagGlyphClassAdd = "glyphicon-minus";
-                            tagButtonClassRemove = "btn-default";
-                            tagButtonClassAdd = "btn-primary";
-                            $("#" + data.tagId + "-tag-hidden").val(true);
+                                } else if (data.suggestAction == "add") {
+                                    tagGlyphClassRemove = "glyphicon-plus";
+                                    tagGlyphClassAdd = "glyphicon-minus";
+                                    tagButtonClassRemove = "btn-default";
+                                    tagButtonClassAdd = "btn-primary";
+                                    $("#" + data.tagId + "-tag-hidden").val(true);
+                                }
+
+                                var tagGlyph = $("#" + data.tagId + "-tag-glyph");
+                                tagGlyph.removeClass(tagGlyphClassRemove);
+                                tagGlyph.addClass(tagGlyphClassAdd);
+
+                                var tagButton = $("#" + data.tagId + "-tag-button");
+                                tagButton.removeClass(tagButtonClassRemove);
+                                tagButton.addClass(tagButtonClassAdd);
+
+                                var tagCount = $("#" + data.tagId + "-tag-count");
+                                tagCount.text(data.tagCount);
+                            }
+                            else {
+                                alert(data.error);
+                            }
                         }
-
-                        var tagGlyph = $("#" + data.tagId + "-tag-glyph");
-                        tagGlyph.removeClass(tagGlyphClassRemove);
-                        tagGlyph.addClass(tagGlyphClassAdd);
-
-                        var tagButton = $("#" + data.tagId + "-tag-button");
-                        tagButton.removeClass(tagButtonClassRemove);
-                        tagButton.addClass(tagButtonClassAdd);
-
-                        var tagCount = $("#" + data.tagId + "-tag-count");
-                        tagCount.text(data.tagCount);
-                    }
-                    else {
-                        alert(data.error);
-                    }
+                    });
                 }
-            });
-        }
     </script>
 }

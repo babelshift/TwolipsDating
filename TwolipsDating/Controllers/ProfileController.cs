@@ -89,6 +89,43 @@ namespace TwolipsDating.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> DeleteImage(int id, string fileName, string profileUserId)
+        {
+            string currentUserId = await GetCurrentUserIdAsync();
+            if(profileUserId != currentUserId)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
+
+            try
+            {
+                int changes = await ProfileService.DeleteUserImage(id);
+
+                if (changes > 0)
+                {
+                    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
+                    CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                    CloudBlobContainer container = blobClient.GetContainerReference("twolipsdatingcdn");
+                    CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
+
+                    await blockBlob.DeleteAsync();
+
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    return Json(new { success = false, error = "The selected image was not deleted." });
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                // log e here
+
+                return Json(new { success = false, error = "Could not delete the selected image." });
+            }
+        }
+
+        [HttpPost]
         public async Task<ActionResult> UploadImage(UploadImageViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -110,7 +147,6 @@ namespace TwolipsDating.Controllers
             string fileName = String.Format("{0}{1}", Guid.NewGuid(), Path.GetExtension(fileType));
 
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
-
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
             CloudBlobContainer container = blobClient.GetContainerReference("twolipsdatingcdn");
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);

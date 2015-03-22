@@ -23,11 +23,17 @@
     }
     <br />
 }
-<div class="row">
-    @foreach(var userImage in Model.UserImages)
+<div class="row wrapper">
+    @foreach (var userImage in Model.UserImages)
     {
-        <div class="col-xs-6 col-md-3">
-            <a data-toggle="lightbox" href="@userImage.Path" class="thumbnail" style="min-height: 128px; max-height: 128px;">
+        <div id="@String.Format("{0}-image-div", userImage.Id)" class="col-xs-6 col-md-3">
+            @if (Model.CurrentUserId == Model.ProfileUserId)
+            {
+                <button onclick="onDeleteImage(event, this, @userImage.Id, '@userImage.FileName', '@Model.ProfileUserId')" style="position: absolute; top: 3px; right: 18px;" class="btn btn-default btn-xs">
+                    <i class="glyphicon glyphicon-remove"></i>
+                </button>
+            }
+            <a class="thumbnail" data-parent=".wrapper" data-toggle="lightbox" data-gallery="multiimages" href="@userImage.Path" style="min-height: 128px; max-height: 128px;">
                 <img src="@userImage.Path" style="max-height: 118px;">
             </a>
         </div>

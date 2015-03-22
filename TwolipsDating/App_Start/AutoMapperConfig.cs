@@ -34,6 +34,7 @@ namespace TwolipsDating
 
             Mapper.CreateMap<UserImage, UserImageViewModel>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(source => source.Id))
+                .ForMember(dest => dest.FileName, opts => opts.MapFrom(source => source.FileName))
                 .ForMember(dest => dest.Path, opts => opts.MapFrom(source => String.Format("{0}/{1}", cdn, source.FileName)))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateUploaded.GetTimeAgo()));
 
