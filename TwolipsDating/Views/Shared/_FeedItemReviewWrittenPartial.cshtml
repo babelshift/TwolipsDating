@@ -1,14 +1,20 @@
 ﻿@model TwolipsDating.ViewModels.ReviewWrittenFeedViewModel
 
-<div class="circular-image-wrapper">
-    <img class="circular-image" src="@Model.AuthorProfileImagePath" />
-</div>
+@if (!String.IsNullOrEmpty(Model.AuthorProfileImagePath))
+{
+    <div class="circular-image-wrapper">
+        <img class="circular-image" src="@Model.AuthorProfileImagePath" />
+    </div>
+}
 <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
     <a href="@Url.Action("index", "profile", new { id = Model.AuthorProfileId })#">@Model.AuthorUserName</a> writes about
 </p>
-<div class="circular-image-wrapper">
-    <img class="circular-image" src="@Model.TargetProfileImagePath" />
-</div>
+@if (!String.IsNullOrEmpty(Model.TargetProfileImagePath))
+{
+    <div class="circular-image-wrapper">
+        <img class="circular-image" src="@Model.TargetProfileImagePath" />
+    </div>
+}
 <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
     <a href="@Url.Action("index", "profile", new { id = Model.TargetProfileId })">@Model.TargetUserName</a>
     <small>

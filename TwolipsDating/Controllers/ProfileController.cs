@@ -169,6 +169,12 @@ namespace TwolipsDating.Controllers
                 return RedirectToIndex();
             }
 
+            string currentUserId = await GetCurrentUserIdAsync();
+            if (viewModel.ProfileUserId != currentUserId)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
+
             await ProfileService.ChangeProfileUserImageAsync(viewModel.ProfileId, viewModel.ChangeImage.UserImageId);
 
             return RedirectToIndex();
