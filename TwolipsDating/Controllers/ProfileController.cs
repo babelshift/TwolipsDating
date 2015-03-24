@@ -1,22 +1,20 @@
-﻿using System;
+﻿using AutoMapper;
+using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.IO;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity.Owin;
+using System.Net;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using TwolipsDating.Business;
-using AutoMapper;
-using TwolipsDating.ViewModels;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Storage.Blob;
-using System.IO;
-using System.Configuration;
-using System.Net;
-using System.Data.Entity.Infrastructure;
+using TwolipsDating.ViewModels;
+using NLog;
 
 namespace TwolipsDating.Controllers
 {
@@ -47,14 +45,24 @@ namespace TwolipsDating.Controllers
                 }
                 else
                 {
-                    return Json(new { success = false, error = "No changes were made to your suggestion entry." });
+                    Log.Warn(
+                        "SuggestTag",
+                        ErrorMessages.TagSuggestionNotSaved,
+                        parameters: new { tagId = id, profileId = profileId, suggestAction = suggestAction }
+                    );
+
+                    return Json(new { success = false, ErrorMessages.TagSuggestionNotSaved });
                 }
             }
             catch (DbUpdateException e)
             {
-                // log e here
+                Log.Error(
+                    "SuggestTag",
+                    e,
+                    parameters: new { tagId = id, profileId = profileId, suggestAction = suggestAction }
+                );
 
-                return Json(new { success = false, error = "Could not update your suggestion entry." });
+                return Json(new { success = false, error = ErrorMessages.TagSuggestionNotSaved });
             }
         }
 
@@ -63,12 +71,36 @@ namespace TwolipsDating.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToIndex();
+                return RedirectToIndex(new { id = viewModel.ProfileId });
             }
 
-            string currentUserId = await GetCurrentUserIdAsync();
+            try
+            {
+                string currentUserId = await GetCurrentUserIdAsync();
 
-            await ProfileService.SendMessageAsync(currentUserId, viewModel.ProfileUserId, viewModel.SendMessage.MessageBody);
+                int changes = await ProfileService.SendMessageAsync(currentUserId, viewModel.ProfileUserId, viewModel.SendMessage.MessageBody);
+
+                if (changes == 0)
+                {
+                    Log.Warn(
+                        "SendMessage",
+                        ErrorMessages.MessageNotSent,
+                        new { currentUserId = currentUserId, profileId = viewModel.ProfileUserId, messageBody = viewModel.SendMessage.MessageBody }
+                    );
+
+                    AddError(ErrorMessages.MessageNotSent);
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                Log.Error(
+                    "SendMessage",
+                    e,
+                    new { profileId = viewModel.ProfileUserId, messageBody = viewModel.SendMessage.MessageBody }
+                );
+
+                AddError(ErrorMessages.MessageNotSent);
+            }
 
             return RedirectToIndex();
         }
@@ -81,9 +113,33 @@ namespace TwolipsDating.Controllers
                 return RedirectToIndex();
             }
 
-            string currentUserId = await GetCurrentUserIdAsync();
+            try
+            {
+                string currentUserId = await GetCurrentUserIdAsync();
 
-            await ProfileService.WriteReviewAsync(currentUserId, viewModel.ProfileUserId, viewModel.WriteReview.ReviewContent, viewModel.WriteReview.RatingValue);
+                int changes = await ProfileService.WriteReviewAsync(currentUserId, viewModel.ProfileUserId, viewModel.WriteReview.ReviewContent, viewModel.WriteReview.RatingValue);
+
+                if (changes == 0)
+                {
+                    Log.Warn(
+                        "WriteReview",
+                        ErrorMessages.ReviewNotSaved,
+                        parameters: new { profileId = viewModel.ProfileUserId, reviewContent = viewModel.WriteReview.ReviewContent, ratingValue = viewModel.WriteReview.RatingValue }
+                    );
+
+                    AddError(ErrorMessages.ReviewNotSaved);
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                Log.Error(
+                    "WriteReview",
+                    e,
+                    parameters: new { profileId = viewModel.ProfileUserId, reviewContent = viewModel.WriteReview.ReviewContent, ratingValue = viewModel.WriteReview.RatingValue }
+                );
+
+                AddError(ErrorMessages.ReviewNotSaved);
+            }
 
             return RedirectToIndex();
         }
@@ -92,7 +148,7 @@ namespace TwolipsDating.Controllers
         public async Task<ActionResult> DeleteImage(int id, string fileName, string profileUserId)
         {
             string currentUserId = await GetCurrentUserIdAsync();
-            if(profileUserId != currentUserId)
+            if (profileUserId != currentUserId)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
@@ -114,14 +170,24 @@ namespace TwolipsDating.Controllers
                 }
                 else
                 {
-                    return Json(new { success = false, error = "The selected image was not deleted." });
+                    Log.Warn(
+                        "DeleteImage",
+                        ErrorMessages.UserImageNotDeleted,
+                        parameters: new { userImageId = id, fileName = fileName, profileUserId = profileUserId }
+                    );
+
+                    return Json(new { success = false, error = ErrorMessages.UserImageNotDeleted });
                 }
             }
             catch (DbUpdateException e)
             {
-                // log e here
+                Log.Error(
+                    "DeleteImage",
+                    e,
+                    parameters: new { userImageId = id, fileName = fileName, profileUserId = profileUserId }
+                );
 
-                return Json(new { success = false, error = "Could not delete the selected image." });
+                return Json(new { success = false, error = ErrorMessages.UserImageNotDeleted });
             }
         }
 
@@ -141,22 +207,49 @@ namespace TwolipsDating.Controllers
                 return RedirectToIndex(new { tab = "pictures" });
             }
 
-            string currentUserId = await GetCurrentUserIdAsync();
-
-            string fileType = viewModel.UploadedImage.FileName;
-            string fileName = String.Format("{0}{1}", Guid.NewGuid(), Path.GetExtension(fileType));
-
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
-            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-            CloudBlobContainer container = blobClient.GetContainerReference("twolipsdatingcdn");
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
-
-            using (var stream = viewModel.UploadedImage.InputStream)
+            try
             {
-                blockBlob.UploadFromStream(stream);
-            }
+                string currentUserId = await GetCurrentUserIdAsync();
 
-            await ProfileService.AddUploadedImageForUserAsync(currentUserId, fileName);
+                if (viewModel.ProfileUserId != currentUserId)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                }
+
+                string fileType = Path.GetExtension(viewModel.UploadedImage.FileName);
+                string fileName = String.Format("{0}{1}", Guid.NewGuid(), fileType);
+
+                int changes = await ProfileService.AddUploadedImageForUserAsync(currentUserId, fileName);
+
+                if (changes > 0)
+                {
+                    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
+                    CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                    CloudBlobContainer container = blobClient.GetContainerReference("twolipsdatingcdn");
+                    CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
+
+                    using (var stream = viewModel.UploadedImage.InputStream)
+                    {
+                        blockBlob.UploadFromStream(stream);
+                    }
+                }
+                else
+                {
+                    Log.Warn(
+                        "UploadImage",
+                        ErrorMessages.UserImageNotUploaded,
+                        parameters: new { currentUserId = currentUserId, fileType = fileType, fileName = fileName }
+                    );
+
+                    AddError(ErrorMessages.UserImageNotUploaded);
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                Log.Error("UploadImage", e);
+
+                AddError(ErrorMessages.UserImageNotUploaded);
+            }
 
             return RedirectToIndex(new { tab = "pictures" });
         }
@@ -169,17 +262,42 @@ namespace TwolipsDating.Controllers
                 return RedirectToIndex();
             }
 
-            string currentUserId = await GetCurrentUserIdAsync();
-            if (viewModel.ProfileUserId != currentUserId)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
-            }
+                string currentUserId = await GetCurrentUserIdAsync();
 
-            await ProfileService.ChangeProfileUserImageAsync(viewModel.ProfileId, viewModel.ChangeImage.UserImageId);
+                if (viewModel.ProfileUserId != currentUserId)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                }
+
+                int changes = await ProfileService.ChangeProfileUserImageAsync(viewModel.ProfileId, viewModel.ChangeImage.UserImageId);
+
+                if (changes == 0)
+                {
+                    Log.Warn(
+                        "UploadImage", ErrorMessages.ProfileImageNotChanged,
+                        new { currentUserId = currentUserId, profileUserId = viewModel.ProfileUserId, userImageId = viewModel.ChangeImage.UserImageId }
+                    );
+
+                    AddError(ErrorMessages.ProfileImageNotChanged);
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                Log.Error(
+                    "UploadImage",
+                    e,
+                    new { profileUserId = viewModel.ProfileUserId, userImageId = viewModel.ChangeImage.UserImageId }
+                );
+
+                AddError(ErrorMessages.ProfileImageNotChanged);
+            }
 
             return RedirectToIndex();
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Index(int? id = null, string tab = null)
         {
             string currentUserId = await GetCurrentUserIdAsync();
@@ -203,6 +321,12 @@ namespace TwolipsDating.Controllers
             // user attempting to view own profile
             else
             {
+                // user attempting to view base /profile URL but isn't logged in
+                if (String.IsNullOrEmpty(currentUserId))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+                }
+
                 Models.Profile currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
 
                 if (currentUserProfile != null)
@@ -339,15 +463,51 @@ namespace TwolipsDating.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(ProfileViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToIndex();
+            }
+
             string currentUserId = await GetCurrentUserIdAsync();
             DateTime birthday = new DateTime(viewModel.CreateProfile.BirthYear.Value, viewModel.CreateProfile.BirthMonth.Value, viewModel.CreateProfile.BirthDayOfMonth.Value);
-            await ProfileService.CreateProfileAsync(viewModel.CreateProfile.SelectedGenderId.Value, viewModel.CreateProfile.SelectedZipCodeId, viewModel.CreateProfile.SelectedCityId.Value, currentUserId, birthday);
-            return RedirectToIndex();
-        }
 
-        private ActionResult RedirectToIndex(object routeValues = null)
-        {
-            return RedirectToAction("index", routeValues);
+            try
+            {
+                int changes = await ProfileService.CreateProfileAsync(viewModel.CreateProfile.SelectedGenderId.Value, viewModel.CreateProfile.SelectedZipCodeId, viewModel.CreateProfile.SelectedCityId.Value, currentUserId, birthday);
+
+                if (changes == 0)
+                {
+                    Log.Warn("Create", ErrorMessages.ProfileNotCreated,
+                        new
+                        {
+                            currentUserId = currentUserId,
+                            birthday = birthday.ToString(),
+                            genderId = viewModel.CreateProfile.SelectedGenderId.Value,
+                            zipCodeId = viewModel.CreateProfile.SelectedZipCodeId,
+                            cityid = viewModel.CreateProfile.SelectedCityId.Value
+                        }
+                    );
+
+                    AddError(ErrorMessages.ProfileNotCreated);
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                Log.Error("Create", e,
+                    new
+                    {
+                        currentUserId = currentUserId,
+                        birthday = birthday.ToString(),
+                        genderId = viewModel.CreateProfile.SelectedGenderId.Value,
+                        zipCodeId = viewModel.CreateProfile.SelectedZipCodeId,
+                        cityid = viewModel.CreateProfile.SelectedCityId.Value
+                    }
+                );
+
+                AddError(ErrorMessages.ProfileNotCreated);
+            }
+
+            return RedirectToIndex();
         }
     }
 }

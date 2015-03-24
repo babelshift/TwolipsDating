@@ -9,40 +9,38 @@ using TwolipsDating.Business;
 
 namespace TwolipsDating.Controllers
 {
-	public class LocationJsonResult
-	{
-		public int CityId { get; set; }
-		public string CityName { get; set; }
-	}
+    public class LocationJsonResult
+    {
+        public int CityId { get; set; }
+        public string CityName { get; set; }
+    }
 
-	public class LocationController : Controller
-	{
-		public async Task<JsonResult> Zip(string id)
-		{
-			ProfileService p = new ProfileService();
-			var city = await p.GetCityByZipCodeAsync(id);
-			if (city != null)
-			{
-				return Json(new LocationJsonResult() { CityId = city.Id, CityName = city.Name }, JsonRequestBehavior.AllowGet);
-			}
-			else
-			{
-				return Json(new LocationJsonResult() { CityName = String.Empty }, JsonRequestBehavior.AllowGet);
-			}
-		}
+    public class LocationController : BaseController
+    {
+        public async Task<JsonResult> Zip(string id)
+        {
+            var city = await ProfileService.GetCityByZipCodeAsync(id);
+            if (city != null)
+            {
+                return Json(new LocationJsonResult() { CityId = city.Id, CityName = city.Name }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new LocationJsonResult() { CityName = String.Empty }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
-		public async Task<JsonResult> City(string id)
-		{
-			ProfileService p = new ProfileService();
-			var city = await p.GetCityByNameAsync(id);
-			if (city != null)
-			{
-				return Json(new LocationJsonResult() { CityId = city.Id, CityName = city.Name }, JsonRequestBehavior.AllowGet);
-			}
-			else
-			{
-				return Json(new LocationJsonResult() { CityName = String.Empty }, JsonRequestBehavior.AllowGet);
-			}
-		}
-	}
+        public async Task<JsonResult> City(string id)
+        {
+            var city = await ProfileService.GetCityByNameAsync(id);
+            if (city != null)
+            {
+                return Json(new LocationJsonResult() { CityId = city.Id, CityName = city.Name }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new LocationJsonResult() { CityName = String.Empty }, JsonRequestBehavior.AllowGet);
+            }
+        }
+    }
 }

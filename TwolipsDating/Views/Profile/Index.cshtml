@@ -140,20 +140,27 @@
     </div>
     <div class="panel panel-default">
         <div class="panel-body">
-            @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Profile" })
-            @if (Model.ProfileUserId != Model.CurrentUserId)
+            @if (User.Identity.IsAuthenticated)
             {
-                <div class="pull-right">
-                    <ul class="nav nav-pills">
-                        <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Send Message</a></li>
-                        <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review"><i class="glyphicon glyphicon-edit"></i>&nbsp;Write Review</a></li>
-                        @*
-                            <li role="presentation"><a href="#" title="Send a gift"><i class="glyphicon glyphicon-gift"></i></a></li>
-                            <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
-                            <li role="presentation"><a href="#" title="Add to ignore"><i class="glyphicon glyphicon-volume-off"></i></a></li>
-                        *@
-                    </ul>
-                </div>
+                @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Profile" })
+
+                if (Model.ProfileUserId != Model.CurrentUserId)
+                {
+                    <div class="pull-right">
+                        <ul class="nav nav-pills">
+                            <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Send Message</a></li>
+                            <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review"><i class="glyphicon glyphicon-edit"></i>&nbsp;Write Review</a></li>
+                            @*
+                                <li role="presentation"><a href="#" title="Send a gift"><i class="glyphicon glyphicon-gift"></i></a></li>
+                                <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
+                                <li role="presentation"><a href="#" title="Add to ignore"><i class="glyphicon glyphicon-volume-off"></i></a></li>
+                            *@
+                        </ul>
+                    </div>}
+            }
+            else
+            {
+                <h4>You are viewing this profile as an anonymous user. You can interact with this profile if you @Html.ActionLink("sign up", "register", "account") today!</h4>
             }
         </div>
     </div>
@@ -162,7 +169,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="text-center">
-                        @if (Model.CurrentUserId == Model.ProfileUserId)
+                        @if (User.Identity.IsAuthenticated && Model.CurrentUserId == Model.ProfileUserId)
                         {
                             <a href="#" data-toggle="modal" data-target="#modalProfileImage" data-keyboard="true" title="Change your profile image">
                                 @if (!String.IsNullOrEmpty(Model.ProfileImagePath))
@@ -229,7 +236,7 @@
                         </div>
                     *@
                     <h4 style="display: inline-block"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tagged by others&nbsp;</h4>
-                    @if (Model.ProfileUserId != Model.CurrentUserId)
+                    @if (User.Identity.IsAuthenticated && Model.ProfileUserId != Model.CurrentUserId)
                     {
                         <a style="display: inline-block" href="#" data-toggle="modal" data-target="#modalSuggestTags" data-keyboard="true">suggest</a>
                     }

@@ -260,6 +260,12 @@
     <Compile Include="Models\TagSuggestion.cs" />
     <Compile Include="Models\UserImage.cs" />
     <Compile Include="Utilities\DateTimeExtensions.cs" />
+    <Compile Include="Utilities\ErrorMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ErrorMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\LogHelper.cs" />
     <Compile Include="Utilities\ReviewExtensions.cs" />
     <Compile Include="ViewModels\ChangeProfileImageViewModel.cs" />
     <Compile Include="ViewModels\CreateProfileViewModel.cs" />
@@ -331,6 +337,12 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\PublishProfiles\twolipsdating.pubxml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -424,6 +436,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503190121301_AddTagSuggestions.resx">
       <DependentUpon>201503190121301_AddTagSuggestions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utilities\ErrorMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

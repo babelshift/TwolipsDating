@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using TwolipsDating.Models;
 using TwolipsDating.ViewModels;
 
@@ -15,6 +13,8 @@ namespace TwolipsDating.Business
     {
         public async Task<int> DeleteUserImage(int userImageId)
         {
+            Debug.Assert(userImageId > 0);
+
             UserImage u = new UserImage() { Id = userImageId };
             db.UserImages.Attach(u);
             db.UserImages.Remove(u);
@@ -32,6 +32,8 @@ namespace TwolipsDating.Business
 
         public async Task<IReadOnlyCollection<ProfileTagSuggestionViewModel>> GetTagsSuggestedForProfileAsync(string userId, int profileId)
         {
+            Debug.Assert(profileId > 0);
+
             // i had to separate the queries of identifying if the user suggested and the tag counts because i couldn't find a good way
             // to get counts via group by while maintaining the flag which identifies if the user suggested
 
@@ -45,7 +47,7 @@ namespace TwolipsDating.Business
                                 TagId = tag.TagId,
                                 TagName = tag.Name,
                                 TagCount = 0,
-                                DidUserSuggest = (tagSuggestion.SuggestingUserId == userId) ? true : false
+                                DidUserSuggest = (!String.IsNullOrEmpty(userId) && tagSuggestion.SuggestingUserId == userId) ? true : false
                             };
 
             // this will return tag suggestions and the count of the number of that tag's suggestions from the first query
@@ -72,28 +74,11 @@ namespace TwolipsDating.Business
             return secondResults.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<ProfileTagSuggestionViewModel>> GetTagsThatUserSuggestedForProfileAsync(string userId, int profileId)
-        {
-            var tagsList = from tagSuggestions in db.TagSuggestions
-                           from tags in db.Tags
-                           where tags.TagId == tagSuggestions.TagId
-                           where tagSuggestions.SuggestingUserId == userId
-                           where tagSuggestions.ProfileId == profileId
-                           group tags by new { tags.TagId, tags.Name }
-                               into grouping
-                               select new ProfileTagSuggestionViewModel()
-                               {
-                                   TagId = grouping.Key.TagId,
-                                   TagName = grouping.Key.Name,
-                                   TagCount = grouping.Count()
-                               };
-
-            var result = await tagsList.ToListAsync();
-            return result.AsReadOnly();
-        }
-
         public async Task<int> GetTagSuggestionCountForProfileAsync(int tagId, int profileId)
         {
+            Debug.Assert(tagId > 0);
+            Debug.Assert(profileId > 0);
+
             int count = await (from tagSuggestions in db.TagSuggestions
                                where tagSuggestions.TagId == tagId
                                where tagSuggestions.ProfileId == profileId
@@ -104,6 +89,10 @@ namespace TwolipsDating.Business
 
         public async Task<int> RemoveTagSuggestionAsync(int tagId, int profileId, string suggestingUserId)
         {
+            Debug.Assert(tagId > 0);
+            Debug.Assert(profileId > 0);
+            Debug.Assert(!String.IsNullOrEmpty(suggestingUserId));
+
             TagSuggestion tagSuggestion = new TagSuggestion()
             {
                 ProfileId = profileId,
@@ -120,6 +109,10 @@ namespace TwolipsDating.Business
 
         public async Task<int> AddTagSuggestionAsync(int tagId, int profileId, string suggestingUserId)
         {
+            Debug.Assert(tagId > 0);
+            Debug.Assert(profileId > 0);
+            Debug.Assert(!String.IsNullOrEmpty(suggestingUserId));
+
             TagSuggestion tagSuggestion = new TagSuggestion()
             {
                 ProfileId = profileId,
@@ -135,10 +128,7 @@ namespace TwolipsDating.Business
 
         public async Task<IReadOnlyCollection<UserImage>> GetUserImagesAsync(string userId, DateTime startDate)
         {
-            if (String.IsNullOrEmpty(userId))
-            {
-                return null;
-            }
+            Debug.Assert(!String.IsNullOrEmpty(userId));
 
             var userImageResult = from userImages in db.UserImages
                                   where userImages.ApplicationUserId == userId
@@ -151,6 +141,9 @@ namespace TwolipsDating.Business
 
         public async Task<int> ChangeProfileUserImageAsync(int profileId, int imageId)
         {
+            Debug.Assert(profileId > 0);
+            Debug.Assert(imageId > 0);
+
             var profile = await (from profiles in db.Profiles
                                  where profiles.Id == profileId
                                  select profiles).FirstOrDefaultAsync();
@@ -171,10 +164,7 @@ namespace TwolipsDating.Business
 
         public async Task<IReadOnlyCollection<UserImage>> GetUserImagesAsync(string userId)
         {
-            if (String.IsNullOrEmpty(userId))
-            {
-                return null;
-            }
+            Debug.Assert(!String.IsNullOrEmpty(userId));
 
             var userImageResult = from userImages in db.UserImages
                                   where userImages.ApplicationUserId == userId
@@ -186,10 +176,8 @@ namespace TwolipsDating.Business
 
         public async Task<int> AddUploadedImageForUserAsync(string userId, string fileName)
         {
-            if (String.IsNullOrEmpty(userId) || String.IsNullOrEmpty(fileName))
-            {
-                return 0;
-            }
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+            Debug.Assert(!String.IsNullOrEmpty(fileName));
 
             UserImage userImage = db.UserImages.Create();
             ApplicationUser user = new ApplicationUser() { Id = userId };
@@ -204,6 +192,8 @@ namespace TwolipsDating.Business
 
         public async Task<IReadOnlyCollection<Review>> GetReviewsWrittenForUserAsync(string targetUserId)
         {
+            Debug.Assert(!String.IsNullOrEmpty(targetUserId));
+
             var reviewsForUser = from reviews in db.Reviews
                                  where reviews.TargetUserId == targetUserId
                                  select reviews;
@@ -214,6 +204,11 @@ namespace TwolipsDating.Business
 
         public async Task<int> WriteReviewAsync(string authorUserId, string targetUserId, string content, int ratingValue)
         {
+            Debug.Assert(!String.IsNullOrEmpty(authorUserId));
+            Debug.Assert(!String.IsNullOrEmpty(targetUserId));
+            Debug.Assert(!String.IsNullOrEmpty(content));
+            Debug.Assert(ratingValue > 0);
+
             // don't allow us to send messages to our self
             if (authorUserId == targetUserId)
             {
@@ -240,6 +235,10 @@ namespace TwolipsDating.Business
 
         public async Task<int> SendMessageAsync(string senderUserId, string receiverUserId, string body)
         {
+            Debug.Assert(!String.IsNullOrEmpty(senderUserId));
+            Debug.Assert(!String.IsNullOrEmpty(receiverUserId));
+            Debug.Assert(!String.IsNullOrEmpty(body));
+
             // don't allow us to send messages to our self
             if (senderUserId == receiverUserId)
             {
@@ -266,6 +265,8 @@ namespace TwolipsDating.Business
 
         public async Task<Profile> GetProfileAsync(int profileId)
         {
+            Debug.Assert(profileId > 0);
+
             var profile = from profiles in db.Profiles
                           where profiles.Id == profileId
                           select profiles;
@@ -275,6 +276,8 @@ namespace TwolipsDating.Business
 
         public async Task<Profile> GetUserProfileAsync(string userId)
         {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
             var profile = from user in db.Users
                           where user.Id == userId
                           select user.Profile;
@@ -302,6 +305,8 @@ namespace TwolipsDating.Business
 
         public async Task<City> GetCityByNameAsync(string cityName)
         {
+            Debug.Assert(!String.IsNullOrEmpty(cityName));
+
             var result = from cities in db.Cities
                          where cities.Name == cityName
                          select cities;
@@ -310,6 +315,8 @@ namespace TwolipsDating.Business
 
         public async Task<City> GetCityByZipCodeAsync(string zipCode)
         {
+            Debug.Assert(!String.IsNullOrEmpty(zipCode));
+
             var result = from zipCodes in db.ZipCodes
                          where zipCodes.ZipCodeId == zipCode
                          select zipCodes.City;
@@ -318,6 +325,14 @@ namespace TwolipsDating.Business
 
         public async Task<int> CreateProfileAsync(int genderId, int? zipCode, int cityId, string userId, DateTime birthday)
         {
+            if (zipCode.HasValue)
+            {
+                Debug.Assert(zipCode > 0);
+            }
+            Debug.Assert(genderId > 0);
+            Debug.Assert(cityId > 0);
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
             ApplicationUser user = new ApplicationUser() { Id = userId };
 
             db.Users.Attach(user);
@@ -335,6 +350,8 @@ namespace TwolipsDating.Business
 
         public async Task<int> GetUnreadMessageCountAsync(string userId)
         {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
             int unreadMessageCount = await (from messages in db.Messages
                                             where messages.ReceiverApplicationUserId == userId
                                             where messages.MessageStatusId == (int)MessageStatusValue.Unread
@@ -344,6 +361,8 @@ namespace TwolipsDating.Business
 
         public async Task<IReadOnlyCollection<Message>> GetMessagesByUserAsync(string userId)
         {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
             var userMessages = from messages in db.Messages
                                where messages.ReceiverApplicationUserId == userId
                                || messages.SenderApplicationUserId == userId

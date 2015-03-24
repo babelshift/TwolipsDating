@@ -15,16 +15,14 @@ namespace TwolipsDating.Controllers
     {
         public async Task<ActionResult> Received()
         {
-            var user = await UserManager.FindByNameAsync(User.Identity.Name);
-            await SetUnreadCountsInViewBag();
+            var currentUserId = await GetCurrentUserIdAsync();
 
-            var messages = await ProfileService.GetMessagesByUserAsync(user.Id);
+            var messages = await ProfileService.GetMessagesByUserAsync(currentUserId);
 
             List<ReceivedMessageViewModel> receivedMessages = new List<ReceivedMessageViewModel>();
-            List<SentMessageViewModel> sentMessages = new List<SentMessageViewModel>();
             foreach (var message in messages)
             {
-                if (message.ReceiverApplicationUserId == user.Id)
+                if (message.ReceiverApplicationUserId == currentUserId)
                 {
                     receivedMessages.Add(new ReceivedMessageViewModel()
                     {
@@ -45,20 +43,21 @@ namespace TwolipsDating.Controllers
                 MessageViewMode = MessageViewMode.Received
             };
 
+            await SetUnreadCountsInViewBag();
+
             return View("index", viewModel);
         }
 
         public async Task<ActionResult> Sent()
         {
-            var user = await UserManager.FindByNameAsync(User.Identity.Name);
-            await SetUnreadCountsInViewBag();
+            var currentUserId = await GetCurrentUserIdAsync();
 
-            var messages = await ProfileService.GetMessagesByUserAsync(user.Id);
+            var messages = await ProfileService.GetMessagesByUserAsync(currentUserId);
 
             List<SentMessageViewModel> sentMessages = new List<SentMessageViewModel>();
             foreach (var message in messages)
             {
-                if (message.SenderApplicationUserId == user.Id)
+                if (message.SenderApplicationUserId == currentUserId)
                 {
                     sentMessages.Add(new SentMessageViewModel()
                     {
@@ -78,6 +77,8 @@ namespace TwolipsDating.Controllers
                 SentMessages = sentMessages.OrderByDescending(m => m.DateSent).ToList().AsReadOnly(),
                 MessageViewMode = MessageViewMode.Sent
             };
+
+            await SetUnreadCountsInViewBag();
 
             return View("index", viewModel);
         }
