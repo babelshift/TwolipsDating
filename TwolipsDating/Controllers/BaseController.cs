@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using NLog;
 using TwolipsDating.Utilities;
+using System.Net;
 
 namespace TwolipsDating.Controllers
 {
@@ -54,6 +55,7 @@ namespace TwolipsDating.Controllers
             {
                 return;
             }
+            filterContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
             filterContext.Result = GetActionResult(filterContext);
 
@@ -64,22 +66,15 @@ namespace TwolipsDating.Controllers
 
         private ActionResult GetActionResult(ExceptionContext filterContext)
         {
-            string actionName = filterContext.RouteData.Values["action"].ToString();
-            Type controller = filterContext.Controller.GetType();
-            var method = controller.GetMethod(actionName);
-            var returnType = method.ReturnType;
-
-            if (returnType.Equals(typeof(JsonResult)))
+            if(filterContext.HttpContext.Request.IsAjaxRequest())
             {
-                return Json(new { success = false, message = "An unhandled exception occurred." });
-            }
-            else if (returnType.Equals(typeof(ActionResult)) || returnType.IsSubclassOf(typeof(ActionResult)))
-            {
-                return new ViewResult() { ViewName = "~/Views/Error/Index.cshtml" };
+                JsonResult jsonResult = Json(new { success = false, message = "An unhandled exception occurred." });
+                jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+                return jsonResult;
             }
             else
             {
-                return null;
+                return new ViewResult() { ViewName = "~/Views/Shared/Error.cshtml" };
             }
         }
 

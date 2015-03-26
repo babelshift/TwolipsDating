@@ -43,9 +43,12 @@
                         <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
                             From
                         </p>
-                        <div class="circular-image-wrapper">
-                            <img class="circular-image" src="@message.SenderProfileImagePath" />
-                        </div>
+                        if (!String.IsNullOrEmpty(message.SenderProfileImagePath))
+                        {
+                            <div class="circular-image-wrapper">
+                                <img class="circular-image" src="@message.SenderProfileImagePath" />
+                            </div>
+                        }
                         <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
                             <a href="@Url.Action("index", "profile", new { id = message.SenderProfileId })">@message.SenderName</a>
                             <small> &bull;&nbsp;@message.TimeAgo</small>
@@ -62,9 +65,12 @@
                         <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
                             To
                         </p>
-                        <div class="circular-image-wrapper">
-                            <img class="circular-image" src="@message.ReceiverProfileImagePath" />
-                        </div>
+                        if (!String.IsNullOrEmpty(message.ReceiverProfileImagePath))
+                        {
+                            <div class="circular-image-wrapper">
+                                <img class="circular-image" src="@message.ReceiverProfileImagePath" />
+                            </div>
+                        }
                         <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
                             <a href="@Url.Action("index", "profile", new { id = message.ReceiverProfileId })">@message.ReceiverName</a>
                             <small> &bull;&nbsp;@message.TimeAgo</small>
