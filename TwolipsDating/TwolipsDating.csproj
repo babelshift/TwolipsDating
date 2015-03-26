@@ -284,6 +284,14 @@
     <Compile Include="Migrations\201503190121301_AddTagSuggestions.Designer.cs">
       <DependentUpon>201503190121301_AddTagSuggestions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503260043359_RemoveProfileUserImageRelationships.cs" />
+    <Compile Include="Migrations\201503260043359_RemoveProfileUserImageRelationships.Designer.cs">
+      <DependentUpon>201503260043359_RemoveProfileUserImageRelationships.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503260044505_FixProfileUserImageRelationships.cs" />
+    <Compile Include="Migrations\201503260044505_FixProfileUserImageRelationships.Designer.cs">
+      <DependentUpon>201503260044505_FixProfileUserImageRelationships.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\TagSuggestion.cs" />
     <Compile Include="Models\UserImage.cs" />
@@ -472,6 +480,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503190121301_AddTagSuggestions.resx">
       <DependentUpon>201503190121301_AddTagSuggestions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503260043359_RemoveProfileUserImageRelationships.resx">
+      <DependentUpon>201503260043359_RemoveProfileUserImageRelationships.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503260044505_FixProfileUserImageRelationships.resx">
+      <DependentUpon>201503260044505_FixProfileUserImageRelationships.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

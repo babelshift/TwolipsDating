@@ -151,12 +151,6 @@ namespace TwolipsDating.Business
             UserImage userImage = new UserImage() { Id = imageId };
             db.UserImages.Attach(userImage);
 
-            // clear out old user image profile reference
-            if (profile.UserImage != null)
-            {
-                profile.UserImage.Profile = null;
-            }
-
             profile.UserImage = userImage;
 
             return await db.SaveChangesAsync();

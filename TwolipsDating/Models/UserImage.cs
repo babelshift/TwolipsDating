@@ -13,6 +13,5 @@ namespace TwolipsDating.Models
         public DateTime DateUploaded { get; set; }
 
         public virtual ApplicationUser ApplicationUser { get; set; }
-        public virtual Profile Profile { get; set; }
     }
 }

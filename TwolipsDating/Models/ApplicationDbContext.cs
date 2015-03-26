@@ -353,10 +353,6 @@ namespace TwolipsDating.Models
             modelBuilder.Entity<Profile>()
                 .Property(p => p.Birthday)
                 .IsRequired();
-
-            modelBuilder.Entity<Profile>()
-                .HasOptional(i => i.UserImage)
-                .WithOptionalPrincipal(i => i.Profile);
         }
     }
 }
