@@ -26,6 +26,7 @@ namespace TwolipsDating
                 .ForMember(dest => dest.ProfileImagePath, opts => opts.MapFrom(source => String.Format("{0}/{1}", cdn, source.UserImage.FileName)));
 
             Mapper.CreateMap<Review, ReviewViewModel>()
+                .ForMember(dest => dest.AuthorProfileId, opts => opts.MapFrom(source => source.AuthorUser.Profile.Id))
                 .ForMember(dest => dest.AuthorUserName, opts => opts.MapFrom(source => source.AuthorUser.UserName))
                 .ForMember(dest => dest.Content, opts => opts.MapFrom(source => source.Content))
                 .ForMember(dest => dest.RatingValue, opts => opts.MapFrom(source => source.RatingValue))

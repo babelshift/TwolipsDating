@@ -6,7 +6,7 @@
         <img class="circular-image" src="@review.ProfileImagePath" />
     </div>
     <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
-        <a href="#">@review.AuthorUserName</a>
+        <a href="@Url.Action("index", "profile", new { id = review.AuthorProfileId })">@review.AuthorUserName</a>
         <small>
             &nbsp;&bull;&nbsp;
             @for (int i = 1; i <= review.RatingValue; i++)
