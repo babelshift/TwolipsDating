@@ -7,6 +7,7 @@ namespace TwolipsDating.ViewModels
 {
     public enum MessageViewMode
     {
+        Conversation,
         Received,
         Sent
     }

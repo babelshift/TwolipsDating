@@ -364,5 +364,32 @@ namespace TwolipsDating.Business
             var results = await userMessages.ToListAsync();
             return results.AsReadOnly();
         }
+
+        public async Task<IReadOnlyCollection<MessageConversation>> GetMessageConversationsAsync(string userId)
+        {
+            var messageConversations = from m in db.MessageConversations
+                                       where m.SenderApplicationUserId == userId
+                                       || m.ReceiverApplicationUserId == userId
+                                       orderby m.DateSent descending
+                                       select m;
+
+            var results = await messageConversations.ToListAsync();
+            return results.AsReadOnly();
+        }
+
+        public async Task<IReadOnlyCollection<Message>> GetMessagesBetweenUsersAsync(string userId, string userId2)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+            Debug.Assert(!String.IsNullOrEmpty(userId2));
+
+            var messagesBetweenUsers = from messages in db.Messages
+                                       where (messages.SenderApplicationUserId == userId && messages.ReceiverApplicationUserId == userId2)
+                                       || (messages.SenderApplicationUserId == userId2 && messages.ReceiverApplicationUserId == userId)
+                                       orderby messages.DateSent descending 
+                                       select messages;
+
+            var results = await messagesBetweenUsers.ToListAsync();
+            return results.AsReadOnly();
+        }
     }
 }

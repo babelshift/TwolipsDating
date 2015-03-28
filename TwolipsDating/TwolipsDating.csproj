@@ -292,9 +292,38 @@
     <Compile Include="Migrations\201503260044505_FixProfileUserImageRelationships.Designer.cs">
       <DependentUpon>201503260044505_FixProfileUserImageRelationships.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503270153321_AddMessageConversationView.cs" />
+    <Compile Include="Migrations\201503270153321_AddMessageConversationView.Designer.cs">
+      <DependentUpon>201503270153321_AddMessageConversationView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503270245341_WhatIsGoingOn.cs" />
+    <Compile Include="Migrations\201503270245341_WhatIsGoingOn.Designer.cs">
+      <DependentUpon>201503270245341_WhatIsGoingOn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503281654299_UpdateConversationView.cs" />
+    <Compile Include="Migrations\201503281654299_UpdateConversationView.Designer.cs">
+      <DependentUpon>201503281654299_UpdateConversationView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503281717200_Why.cs" />
+    <Compile Include="Migrations\201503281717200_Why.Designer.cs">
+      <DependentUpon>201503281717200_Why.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503281725356_Why2.cs" />
+    <Compile Include="Migrations\201503281725356_Why2.Designer.cs">
+      <DependentUpon>201503281725356_Why2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503281805323_UpdateConversationViewAgain.cs" />
+    <Compile Include="Migrations\201503281805323_UpdateConversationViewAgain.Designer.cs">
+      <DependentUpon>201503281805323_UpdateConversationViewAgain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\CreateViewOperation.cs" />
+    <Compile Include="Migrations\CustomDbConfiguration.cs" />
+    <Compile Include="Migrations\RemoveViewOperation.cs" />
+    <Compile Include="Models\MessageConversation.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\TagSuggestion.cs" />
     <Compile Include="Models\UserImage.cs" />
+    <Compile Include="Utilities\ConversationKey.cs" />
     <Compile Include="Utilities\DateTimeExtensions.cs" />
     <Compile Include="Utilities\ErrorMessages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -304,6 +333,8 @@
     <Compile Include="Utilities\LogHelper.cs" />
     <Compile Include="Utilities\ReviewExtensions.cs" />
     <Compile Include="ViewModels\ChangeProfileImageViewModel.cs" />
+    <Compile Include="ViewModels\ConversationItemViewModel.cs" />
+    <Compile Include="ViewModels\ConversationViewModel.cs" />
     <Compile Include="ViewModels\CreateProfileViewModel.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\MessageFeedViewModel.cs" />
@@ -461,6 +492,7 @@
     <Content Include="Views\About\Index.cshtml" />
     <Content Include="Views\About\Privacy.cshtml" />
     <Content Include="Views\About\Terms.cshtml" />
+    <Content Include="Views\Message\Conversation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -486,6 +518,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503260044505_FixProfileUserImageRelationships.resx">
       <DependentUpon>201503260044505_FixProfileUserImageRelationships.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503270153321_AddMessageConversationView.resx">
+      <DependentUpon>201503270153321_AddMessageConversationView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503270245341_WhatIsGoingOn.resx">
+      <DependentUpon>201503270245341_WhatIsGoingOn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503281654299_UpdateConversationView.resx">
+      <DependentUpon>201503281654299_UpdateConversationView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503281717200_Why.resx">
+      <DependentUpon>201503281717200_Why.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503281725356_Why2.resx">
+      <DependentUpon>201503281725356_Why2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503281805323_UpdateConversationViewAgain.resx">
+      <DependentUpon>201503281805323_UpdateConversationViewAgain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

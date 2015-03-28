@@ -2,7 +2,7 @@
 @using TwolipsDating.ViewModels
 
 @{
-    ViewBag.Title = "twolips - your profile";
+    ViewBag.Title = "twolips - your messages";
 }
 
 <div class="panel panel-default">
@@ -12,6 +12,9 @@
             <ul class="nav nav-pills">
                 @if (Model.MessageViewMode == MessageViewMode.Received)
                 {
+                    <li role="presentation">
+                        <a href="@Url.Action("conversation")" title="Your conversations"><i class="glyphicon glyphicon-comment"></i>&nbsp;Conversations</a>
+                    </li>
                     <li role="presentation" class="active">
                         <a href="@Url.Action("received")" title="Your received messages"><i class="glyphicon glyphicon-download"></i>&nbsp;Received</a>
                     </li>
@@ -21,6 +24,9 @@
                 }
                 else
                 {
+                    <li role="presentation">
+                        <a href="@Url.Action("conversation")" title="Your conversations"><i class="glyphicon glyphicon-comment"></i>&nbsp;Conversations</a>
+                    </li>
                     <li role="presentation">
                         <a href="@Url.Action("received")" title="Your received messages"><i class="glyphicon glyphicon-download"></i>&nbsp;Received</a>
                     </li>
@@ -84,7 +90,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

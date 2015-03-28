@@ -2,9 +2,12 @@
 
 @foreach (var review in Model)
 {
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="@review.ProfileImagePath" />
-    </div>
+    if (!String.IsNullOrEmpty(review.ProfileImagePath))
+    {
+        <div class="circular-image-wrapper">
+            <img class="circular-image" src="@review.ProfileImagePath" />
+        </div>
+    }
     <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
         <a href="@Url.Action("index", "profile", new { id = review.AuthorProfileId })">@review.AuthorUserName</a>
         <small>

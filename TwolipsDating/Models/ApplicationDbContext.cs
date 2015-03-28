@@ -28,6 +28,7 @@ namespace TwolipsDating.Models
         public DbSet<UserImage> UserImages { get; set; }
 		public DbSet<Tag> Tags { get; set; }
 		public DbSet<TagSuggestion> TagSuggestions { get; set; }
+        public DbSet<MessageConversation> MessageConversations { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -54,6 +55,16 @@ namespace TwolipsDating.Models
             SetupUserImageEntity(modelBuilder);
 			SetupTagEntity(modelBuilder);
 			SetupTagSuggestionEntity(modelBuilder);
+            SetupMessageConversations(modelBuilder);
+        }
+
+        private void SetupMessageConversations(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<MessageConversation>()
+                .HasKey(m => m.MessageId);
+
+            modelBuilder.Entity<MessageConversation>()
+                .ToTable("dbo.MessageConversations");
         }
 
 		private void SetupTagSuggestionEntity(DbModelBuilder modelBuilder)

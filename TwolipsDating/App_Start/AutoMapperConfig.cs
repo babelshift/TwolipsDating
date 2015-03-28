@@ -18,7 +18,7 @@ namespace TwolipsDating
 
             Mapper.CreateMap<TwolipsDating.Models.Profile, ProfileViewModel>()
                 .ForMember(dest => dest.UserName, opts => opts.MapFrom(source => source.ApplicationUser.UserName))
-                .ForMember(dest => dest.Age, opts => opts.MapFrom(source => (int)((DateTime.Now - source.Birthday).TotalDays / 365)))
+                .ForMember(dest => dest.Age, opts => opts.MapFrom(source => source.Birthday.GetAge()))
                 .ForMember(dest => dest.Gender, opts => opts.MapFrom(source => source.Gender.Name))
                 .ForMember(dest => dest.Location, opts => opts.MapFrom(source => String.Format("{0}, {1}", source.City.Name, source.City.USState.Abbreviation)))
                 .ForMember(dest => dest.ProfileId, opts => opts.MapFrom(source => source.Id))
@@ -74,6 +74,17 @@ namespace TwolipsDating
 
             Mapper.CreateMap<Tag, ProfileTagSuggestionViewModel>()
                 .ForMember(dest => dest.TagName, opts => opts.MapFrom(source => source.Name));
+
+            Mapper.CreateMap<Message, ConversationItemViewModel>()
+                .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateSent))
+                .ForMember(dest => dest.TargetProfileImagePath, opts => opts.MapFrom(source => String.Format("{0}/{1}", cdn, source.SenderApplicationUser.Profile.UserImage.FileName)))
+                .ForMember(dest => dest.MostRecentMessageBody, opts => opts.MapFrom(source => source.Body))
+                .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()));
+
+            Mapper.CreateMap<MessageConversation, ConversationItemViewModel>()
+                .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateSent))
+                .ForMember(dest => dest.MostRecentMessageBody, opts => opts.MapFrom(source => source.Body))
+                .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()));
         }
     }
 }

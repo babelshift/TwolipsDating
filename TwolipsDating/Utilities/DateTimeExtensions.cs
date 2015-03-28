@@ -7,6 +7,11 @@ namespace TwolipsDating.Utilities
 {
     public static class DateTimeExtensions
     {
+        public static int GetAge(this DateTime dateTime)
+        {
+            return (int)((DateTime.Now - dateTime).TotalDays / 365);
+        }
+
         public static string GetTimeAgo(this DateTime dateReviewCreated)
         {
             string timeAgoNumber = String.Empty;

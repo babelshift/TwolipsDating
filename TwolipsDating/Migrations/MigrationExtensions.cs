@@ -47,5 +47,26 @@ namespace TwolipsDating.Migrations
                 return this;
             }
         }
+
+        /// <summary>
+        /// Creates a view in the database with the passed view name and passed logic identified in the query string.
+        /// </summary>
+        /// <param name="migration"></param>
+        /// <param name="viewName"></param>
+        /// <param name="viewQueryString"></param>
+        public static void CreateView(this DbMigration migration, string viewName, string viewQueryString)
+        {
+            ((IDbMigration)migration).AddOperation(new CreateViewOperation(viewName, viewQueryString));
+        }
+
+        /// <summary>
+        /// Removes a view from the database with the passed view name.
+        /// </summary>
+        /// <param name="migration"></param>
+        /// <param name="viewName"></param>
+        public static void RemoveView(this DbMigration migration, string viewName)
+        {
+            ((IDbMigration)migration).AddOperation(new RemoveViewOperation(viewName));
+        }
     }
 }
