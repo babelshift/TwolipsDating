@@ -14,6 +14,8 @@ namespace TwolipsDating.Controllers
 {
     public class MessageController : BaseController
     {
+        #region Conversations
+
         public async Task<ActionResult> Conversation(string id)
         {
             var currentUserId = await GetCurrentUserIdAsync();
@@ -32,13 +34,13 @@ namespace TwolipsDating.Controllers
                     ConversationMessages = conversationMessages,
                     TargetUserName = profileForOtherUser.ApplicationUser.UserName,
                     TargetUserAge = profileForOtherUser.Birthday.GetAge(),
-                    TargetUserLocation = String.Format("{0}, {1}", profileForOtherUser.City.Name, profileForOtherUser.City.USState.Abbreviation)
+                    TargetUserLocation = profileForOtherUser.City.GetCityAndState()
                 };
 
                 // if the profile we are looking up has a profile image, set the url it appropriately
                 if(profileForOtherUser.UserImage != null && !String.IsNullOrEmpty(profileForOtherUser.UserImage.FileName))
                 {
-                    viewModel.TargetProfileImagePath = String.Format("{0}/{1}", CDN, profileForOtherUser.UserImage.FileName);
+                    viewModel.TargetProfileImagePath = profileForOtherUser.GetProfileImagePath();
                 }
 
                 await SetUnreadCountsInViewBag();
@@ -120,6 +122,10 @@ namespace TwolipsDating.Controllers
             return conversation;
         }
 
+        #endregion
+
+        #region Sent/Received
+
         public async Task<ActionResult> Received()
         {
             var currentUserId = await GetCurrentUserIdAsync();
@@ -131,10 +137,6 @@ namespace TwolipsDating.Controllers
             {
                 if (message.ReceiverApplicationUserId == currentUserId)
                 {
-                    string senderProfileImagePath = message.SenderApplicationUser.Profile.UserImage != null
-                        ? String.Format("{0}/{1}", CDN, message.SenderApplicationUser.Profile.UserImage.FileName)
-                        : String.Empty;
-
                     receivedMessages.Add(new ReceivedMessageViewModel()
                     {
                         Id = message.Id,
@@ -142,7 +144,7 @@ namespace TwolipsDating.Controllers
                         DateSent = message.DateSent,
                         SenderName = message.SenderApplicationUser.UserName,
                         TimeAgo = message.DateSent.GetTimeAgo(),
-                        SenderProfileImagePath = senderProfileImagePath,
+                        SenderProfileImagePath = message.SenderApplicationUser.Profile.GetProfileImagePath(),
                         SenderProfileId = message.SenderApplicationUser.Profile.Id
                     });
                 }
@@ -170,10 +172,6 @@ namespace TwolipsDating.Controllers
             {
                 if (message.SenderApplicationUserId == currentUserId)
                 {
-                    string receiverProfileImagePath = message.ReceiverApplicationUser.Profile.UserImage != null
-                        ? String.Format("{0}/{1}", CDN, message.ReceiverApplicationUser.Profile.UserImage.FileName)
-                        : String.Empty;
-
                     sentMessages.Add(new SentMessageViewModel()
                     {
                         Id = message.Id,
@@ -181,7 +179,7 @@ namespace TwolipsDating.Controllers
                         DateSent = message.DateSent,
                         ReceiverName = message.ReceiverApplicationUser.UserName,
                         TimeAgo = message.DateSent.GetTimeAgo(),
-                        ReceiverProfileImagePath = receiverProfileImagePath,
+                        ReceiverProfileImagePath = message.ReceiverApplicationUser.Profile.GetProfileImagePath(),
                         ReceiverProfileId = message.ReceiverApplicationUser.Profile.Id
                     });
                 }
@@ -197,5 +195,7 @@ namespace TwolipsDating.Controllers
 
             return View("index", viewModel);
         }
+
+        #endregion
     }
 }

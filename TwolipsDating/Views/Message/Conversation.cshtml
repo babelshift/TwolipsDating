@@ -67,7 +67,7 @@
                 </div>
             </div>
         }
-        else if(Model.Conversations != null && Model.Conversations.Count > 0)
+        else if (Model.Conversations != null && Model.Conversations.Count > 0)
         {
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -95,7 +95,11 @@
         }
         else
         {
-            <h3>You don't have any recent conversations. Go find someone new and message them!</h3>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>You don't have any recent conversations. Go find someone new and message them!</h4>
+                </div>
+            </div>
         }
     </div>
 </div>

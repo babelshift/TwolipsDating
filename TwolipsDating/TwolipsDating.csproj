@@ -323,6 +323,7 @@
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\TagSuggestion.cs" />
     <Compile Include="Models\UserImage.cs" />
+    <Compile Include="Utilities\CityExtensions.cs" />
     <Compile Include="Utilities\ConversationKey.cs" />
     <Compile Include="Utilities\DateTimeExtensions.cs" />
     <Compile Include="Utilities\ErrorMessages.Designer.cs">
@@ -331,6 +332,7 @@
       <DependentUpon>ErrorMessages.resx</DependentUpon>
     </Compile>
     <Compile Include="Utilities\LogHelper.cs" />
+    <Compile Include="Utilities\ProfileExtensions.cs" />
     <Compile Include="Utilities\ReviewExtensions.cs" />
     <Compile Include="ViewModels\ChangeProfileImageViewModel.cs" />
     <Compile Include="ViewModels\ConversationItemViewModel.cs" />

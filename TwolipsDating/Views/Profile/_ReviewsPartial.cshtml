@@ -1,34 +1,41 @@
 ﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.ReviewViewModel>
 
-@foreach (var review in Model)
+@if (Model != null && Model.Count > 0)
 {
-    if (!String.IsNullOrEmpty(review.ProfileImagePath))
+    foreach (var review in Model)
     {
-        <div class="circular-image-wrapper">
-            <img class="circular-image" src="@review.ProfileImagePath" />
+        if (!String.IsNullOrEmpty(review.ProfileImagePath))
+        {
+            <div class="circular-image-wrapper">
+                <img class="circular-image" src="@review.ProfileImagePath" />
+            </div>
+        }
+        <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
+            <a href="@Url.Action("index", "profile", new { id = review.AuthorProfileId })">@review.AuthorUserName</a>
+            <small>
+                &nbsp;&bull;&nbsp;
+                @for (int i = 1; i <= review.RatingValue; i++)
+                {
+                    <i class="glyphicon glyphicon-star"></i>
+                }
+                @for (int j = 1; j <= 5 - review.RatingValue; j++)
+                {
+                    <i class="glyphicon glyphicon-star-empty"></i>
+                }
+                &nbsp;&bull;&nbsp;&nbsp;@review.TimeAgo
+            </small>
+        </p>
+        <p style="margin-top: 5px; " class="pull-right">
+            <a href="#" class="label label-primary"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Share</a>
+            <a href="#" class="label label-default"><i class="glyphicon glyphicon-alert"></i>&nbsp;Report</a>
+        </p>
+        <div class="clearfix"></div>
+        <div class="well well-sm">
+            <small>@review.Content</small>
         </div>
     }
-    <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
-        <a href="@Url.Action("index", "profile", new { id = review.AuthorProfileId })">@review.AuthorUserName</a>
-        <small>
-            &nbsp;&bull;&nbsp;
-            @for (int i = 1; i <= review.RatingValue; i++)
-            {
-                <i class="glyphicon glyphicon-star"></i>
-            }
-            @for (int j = 1; j <= 5 - review.RatingValue; j++)
-            {
-                <i class="glyphicon glyphicon-star-empty"></i>
-            }
-            &nbsp;&bull;&nbsp;&nbsp;@review.TimeAgo
-        </small>
-    </p>
-    <p style="margin-top: 5px; " class="pull-right">
-        <a href="#" class="label label-primary"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Share</a>
-        <a href="#" class="label label-default"><i class="glyphicon glyphicon-alert"></i>&nbsp;Report</a>
-    </p>
-    <div class="clearfix"></div>
-    <div class="well well-sm">
-        <small>@review.Content</small>
-    </div>
+}
+else
+{
+    <h4>This user doesn't have any reviews yet.</h4>
 }
