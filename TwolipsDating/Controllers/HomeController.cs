@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using TwolipsDating.Business;
 using TwolipsDating.Models;
+using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Controllers
@@ -30,9 +31,6 @@ namespace TwolipsDating.Controllers
                 var reviews = await dashboardService.GetRecentlyWrittenReviewsAsync();
                 var reviewFeedViewModel = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewWrittenFeedViewModel>>(reviews);
 
-                var uploadedImages = await dashboardService.GetRecentlyUploadedImagesAsync();
-                var uploadedImageFeedViewModel = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UploadedImageFeedViewModel>>(uploadedImages);
-
                 foreach(var messageFeed in messageFeedViewModel)
                 {
                     viewModel.Add(new DashboardViewModel()
@@ -53,13 +51,17 @@ namespace TwolipsDating.Controllers
                     });
                 }
 
-                foreach (var uploadedImage in uploadedImageFeedViewModel)
+                var uploadedImages = await dashboardService.GetRecentlyUploadedImagesAsync();
+
+                var uploadedImagesConsolidated = uploadedImages.GetConsolidatedImagesForFeed();
+
+                foreach(var userImageViewModel in uploadedImagesConsolidated)
                 {
                     viewModel.Add(new DashboardViewModel()
                     {
                         ItemType = DashboardFeedItemType.UploadedPictures,
-                        DateOccurred = uploadedImage.DateOccurred,
-                        UploadedImageFeedItem = uploadedImage
+                        DateOccurred = userImageViewModel.DateOccurred,
+                        UploadedImageFeedItem = userImageViewModel
                     });
                 }
 

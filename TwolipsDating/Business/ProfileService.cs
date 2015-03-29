@@ -174,9 +174,7 @@ namespace TwolipsDating.Business
             Debug.Assert(!String.IsNullOrEmpty(fileName));
 
             UserImage userImage = db.UserImages.Create();
-            ApplicationUser user = new ApplicationUser() { Id = userId };
-            db.Users.Attach(user);
-            userImage.ApplicationUser = user;
+            userImage.ApplicationUserId = userId;
             userImage.FileName = fileName;
             userImage.DateUploaded = DateTime.Now;
 

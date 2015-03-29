@@ -334,6 +334,8 @@
     <Compile Include="Utilities\LogHelper.cs" />
     <Compile Include="Utilities\ProfileExtensions.cs" />
     <Compile Include="Utilities\ReviewExtensions.cs" />
+    <Compile Include="Utilities\UploadedImageFeedKey.cs" />
+    <Compile Include="Utilities\UserImageListExtensions.cs" />
     <Compile Include="ViewModels\ChangeProfileImageViewModel.cs" />
     <Compile Include="ViewModels\ConversationItemViewModel.cs" />
     <Compile Include="ViewModels\ConversationViewModel.cs" />

@@ -42,10 +42,11 @@ namespace TwolipsDating
             Mapper.CreateMap<UserImage, UploadedImageFeedViewModel>()
                 .ForMember(dest => dest.UploaderProfileImagePath, opts => opts.MapFrom(source => source.ApplicationUser.Profile.GetProfileImagePath()))
                 .ForMember(dest => dest.UploaderUserName, opts => opts.MapFrom(source => source.ApplicationUser.UserName))
-                .ForMember(dest => dest.UploadedImagesPaths, opts => opts.MapFrom(source => new List<string>() { String.Format("{0}/{1}", cdn, source.FileName) }))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateUploaded.GetTimeAgo()))
                 .ForMember(dest => dest.DateOccurred, opts => opts.MapFrom(source => source.DateUploaded))
-                .ForMember(dest => dest.UploaderProfileId, opts => opts.MapFrom(source => source.ApplicationUser.Profile.Id));
+                .ForMember(dest => dest.UploaderProfileId, opts => opts.MapFrom(source => source.ApplicationUser.Profile.Id))
+                .ForMember(dest => dest.UploaderUserId, opts => opts.MapFrom(source => source.ApplicationUser.Id))
+                .AfterMap((source, dest) => dest.UploadedImagesPaths = new List<string> { String.Format("{0}/{1}", cdn, source.FileName) });
 
             Mapper.CreateMap<Message, MessageFeedViewModel>()
                 .ForMember(dest => dest.SenderUserName, opts => opts.MapFrom(source => source.SenderApplicationUser.UserName))

@@ -11,7 +11,8 @@
                 <div class="input-group">
                     <span class="input-group-btn">
                         <span class="btn btn-default btn-file">
-                            <i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Browse... @Html.TextBoxFor(x => x.UploadedImage, new { type = "file" })
+                            <i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Browse...
+                            @Html.TextBoxFor(x => x.UploadedImages, new { type = "file", multiple = "multiple", accept = "image/jpeg,image/gif,image/bmp,image/png" })
                         </span>
                     </span>
                     <input type="text" class="form-control" readonly>

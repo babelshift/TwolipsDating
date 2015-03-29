@@ -11,8 +11,8 @@ namespace TwolipsDating.ViewModels
         public string ProfileUserId { get; set; }
         public string CurrentUserId { get; set; }
 
-        [Required(ErrorMessage="You have to select an image to upload.")]
-        public HttpPostedFileBase UploadedImage { get; set; }
+        [Required(ErrorMessage="You have to select at least one image to upload.")]
+        public HttpPostedFileBase[] UploadedImages { get; set; }
 
         public IReadOnlyCollection<UserImageViewModel> UserImages { get; set; }
     }

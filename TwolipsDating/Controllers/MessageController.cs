@@ -34,7 +34,8 @@ namespace TwolipsDating.Controllers
                     ConversationMessages = conversationMessages,
                     TargetUserName = profileForOtherUser.ApplicationUser.UserName,
                     TargetUserAge = profileForOtherUser.Birthday.GetAge(),
-                    TargetUserLocation = profileForOtherUser.City.GetCityAndState()
+                    TargetUserLocation = profileForOtherUser.City.GetCityAndState(),
+                    TargetProfileId = profileForOtherUser.Id
                 };
 
                 // if the profile we are looking up has a profile image, set the url it appropriately

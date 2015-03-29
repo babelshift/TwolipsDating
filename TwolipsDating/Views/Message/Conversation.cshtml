@@ -11,7 +11,7 @@
         <div class="pull-right">
             <ul class="nav nav-pills">
                 <li role="presentation" class="active">
-                    <a href="@Url.Action("conversation")" title="Your conversations"><i class="glyphicon glyphicon-comment"></i>&nbsp;Conversations</a>
+                    <a href="@Url.Action("conversation", new { id = (int?)null })" title="Your conversations"><i class="glyphicon glyphicon-comment"></i>&nbsp;Conversations</a>
                 </li>
                 <li role="presentation">
                     <a href="@Url.Action("received")" title="Your received messages"><i class="glyphicon glyphicon-download"></i>&nbsp;Received</a>
@@ -37,7 +37,7 @@
                             </div>
                         }
                         <h3 style="margin-left: 7px; display: inline-block; vertical-align: top; margin-top: 2px;">
-                            <a href="#">@Model.TargetUserName</a>
+                            @Html.ActionLink(Model.TargetUserName, "index", "profile", new { id = Model.TargetProfileId }, null)
                             <br />
                             <small>@Model.TargetUserAge&nbsp;&bull;&nbsp;@Model.TargetUserLocation</small>
                         </h3>

@@ -199,56 +199,60 @@ namespace TwolipsDating.Controllers
                 return RedirectToIndex(new { tab = "pictures" });
             }
 
-            if (viewModel.UploadedImage.ContentType != "image/jpeg"
-                && viewModel.UploadedImage.ContentType != "image/png"
-                && viewModel.UploadedImage.ContentType != "image/bmp"
-                && viewModel.UploadedImage.ContentType != "image/gif")
+            string currentUserId = await GetCurrentUserIdAsync();
+
+            if (viewModel.ProfileUserId != currentUserId)
             {
-                return RedirectToIndex(new { tab = "pictures" });
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
 
-            try
+            foreach (var uploadedImage in viewModel.UploadedImages)
             {
-                string currentUserId = await GetCurrentUserIdAsync();
-
-                if (viewModel.ProfileUserId != currentUserId)
+                // skip over non-images
+                if (uploadedImage.ContentType != "image/jpeg"
+                    && uploadedImage.ContentType != "image/png"
+                    && uploadedImage.ContentType != "image/bmp"
+                    && uploadedImage.ContentType != "image/gif")
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                    continue;
                 }
 
-                string fileType = Path.GetExtension(viewModel.UploadedImage.FileName);
-                string fileName = String.Format("{0}{1}", Guid.NewGuid(), fileType);
-
-                int changes = await ProfileService.AddUploadedImageForUserAsync(currentUserId, fileName);
-
-                if (changes > 0)
+                try
                 {
-                    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
-                    CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-                    CloudBlobContainer container = blobClient.GetContainerReference("twolipsdatingcdn");
-                    CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
+                    string fileType = Path.GetExtension(uploadedImage.FileName);
+                    string fileName = String.Format("{0}{1}", Guid.NewGuid(), fileType);
 
-                    using (var stream = viewModel.UploadedImage.InputStream)
+                    int changes = await ProfileService.AddUploadedImageForUserAsync(currentUserId, fileName);
+
+                    if (changes > 0)
                     {
-                        blockBlob.UploadFromStream(stream);
+                        CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
+                        CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                        CloudBlobContainer container = blobClient.GetContainerReference("twolipsdatingcdn");
+                        CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
+
+                        using (var stream = uploadedImage.InputStream)
+                        {
+                            blockBlob.UploadFromStream(stream);
+                        }
+                    }
+                    else
+                    {
+                        Log.Warn(
+                            "UploadImage",
+                            ErrorMessages.UserImageNotUploaded,
+                            parameters: new { currentUserId = currentUserId, fileType = fileType, fileName = fileName }
+                        );
+
+                        AddError(ErrorMessages.UserImageNotUploaded);
                     }
                 }
-                else
+                catch (DbUpdateException e)
                 {
-                    Log.Warn(
-                        "UploadImage",
-                        ErrorMessages.UserImageNotUploaded,
-                        parameters: new { currentUserId = currentUserId, fileType = fileType, fileName = fileName }
-                    );
+                    Log.Error("UploadImage", e);
 
                     AddError(ErrorMessages.UserImageNotUploaded);
                 }
-            }
-            catch (DbUpdateException e)
-            {
-                Log.Error("UploadImage", e);
-
-                AddError(ErrorMessages.UserImageNotUploaded);
             }
 
             return RedirectToIndex(new { tab = "pictures" });
@@ -407,7 +411,6 @@ namespace TwolipsDating.Controllers
             List<ProfileFeedViewModel> viewModel = new List<ProfileFeedViewModel>();
 
             var reviewFeedViewModel = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewWrittenFeedViewModel>>(reviews);
-            var uploadedImageFeedViewModel = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UploadedImageFeedViewModel>>(uploadedImages);
 
             foreach (var reviewFeed in reviewFeedViewModel)
             {
@@ -419,7 +422,9 @@ namespace TwolipsDating.Controllers
                 });
             }
 
-            foreach (var uploadedImage in uploadedImageFeedViewModel)
+            var uploadedImagesConsolidated = uploadedImages.GetConsolidatedImagesForFeed();
+
+            foreach (var uploadedImage in uploadedImagesConsolidated)
             {
                 viewModel.Add(new ProfileFeedViewModel()
                 {
