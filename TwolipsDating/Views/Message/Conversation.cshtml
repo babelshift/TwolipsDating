@@ -52,14 +52,12 @@
                         <div class="conversation-item">
                             @if (!String.IsNullOrEmpty(message.TargetProfileImagePath))
                             {
-                                <div class="circular-image-wrapper">
+                                <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
                                     <img class=" circular-image" src="@message.TargetProfileImagePath" />
                                 </div>
                             }
-                            <div style="margin-left: 7px; display: inline-block; vertical-align: top; margin-top: 2px;">
-                                <p>@message.MostRecentMessageBody</p>
-                                <small>Sent @message.TimeAgo</small>
-                            </div>
+                            <p>@message.MostRecentMessageBody</p>
+                            <small class="conversation-item-time-ago">@message.TimeAgo</small>
                         </div>
                         if (i < Model.ConversationMessages.Count - 1)
                         {
@@ -69,7 +67,7 @@
                 </div>
             </div>
         }
-        else
+        else if(Model.Conversations != null && Model.Conversations.Count > 0)
         {
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -80,16 +78,14 @@
                                 <div class="well well-sm">
                                     @if (!String.IsNullOrEmpty(conversation.TargetProfileImagePath))
                                     {
-                                        <div class="circular-image-wrapper">
+                                        <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
                                             <img class=" circular-image" src="@conversation.TargetProfileImagePath" />
                                         </div>
                                     }
-                                    <div style="margin-left: 7px; display: inline-block; vertical-align: top; margin-top: 2px;">
-                                        <strong>@conversation.TargetName</strong>
-                                        <small> &bull;&nbsp;@conversation.TimeAgo</small>
-                                        <br />
-                                        <small>@conversation.MostRecentMessageBody</small>
-                                    </div>
+                                    <strong>@conversation.TargetName</strong>
+                                    <small> &bull;&nbsp;@conversation.TimeAgo</small>
+                                    <br />
+                                    <small>@conversation.MostRecentMessageBody</small>
                                 </div>
                             </a>
                         </div>
@@ -97,6 +93,9 @@
                 </div>
             </div>
         }
+        else
+        {
+            <h3>You don't have any recent conversations. Go find someone new and message them!</h3>
+        }
     </div>
-
 </div>

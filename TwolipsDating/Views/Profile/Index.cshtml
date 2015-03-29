@@ -240,23 +240,30 @@
                     {
                         <a style="display: inline-block" href="#" data-toggle="modal" data-target="#modalSuggestTags" data-keyboard="true">suggest</a>
                     }
-                    <div class="tags">
-                        @foreach (var tag in Model.SuggestedTags)
-                        {
-                            if (tag.DidUserSuggest)
+                    @if (Model.SuggestedTags != null && Model.SuggestedTags.Count > 0)
+                    {
+                        <div class="tags">
+                            @foreach (var tag in Model.SuggestedTags)
                             {
-                                <a href="#" class="btn btn-primary btn-xs" title="a clever one">
-                                    <span class="badge">@tag.TagCount</span> @tag.TagName
-                                </a>
+                                if (tag.DidUserSuggest)
+                                {
+                                    <a href="#" class="btn btn-primary btn-xs" title="a clever one">
+                                        <span class="badge">@tag.TagCount</span> @tag.TagName
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="#" class="btn btn-default btn-xs" title="a clever one">
+                                        <span class="badge">@tag.TagCount</span> @tag.TagName
+                                    </a>
+                                }
                             }
-                            else
-                            {
-                                <a href="#" class="btn btn-default btn-xs" title="a clever one">
-                                    <span class="badge">@tag.TagCount</span> @tag.TagName
-                                </a>
-                            }
-                        }
-                    </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>This user doesn't have any tags yet. Suggest some!</p>
+                    }
                     @*
                         <h4><i class="glyphicon glyphicon-book"></i>&nbsp;&nbsp;Badges earned</h4>
                         <span class="label label-danger"><i class="glyphicon glyphicon-apple"></i></span>

@@ -21,11 +21,12 @@ namespace TwolipsDating.Controllers
             // if id has a value, look up all messages between the current user and the passed user id
             if (!String.IsNullOrEmpty(id))
             {
+                // lookup the profile we are accessing and the messages between the current user and that profile
                 var profileForOtherUser = await ProfileService.GetUserProfileAsync(id);
                 var messagesBetweenUsers = await ProfileService.GetMessagesBetweenUsersAsync(currentUserId, id);
 
+                // setup the conversation view model
                 var conversationMessages = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyList<ConversationItemViewModel>>(messagesBetweenUsers);
-
                 ConversationViewModel viewModel = new ConversationViewModel()
                 {
                     ConversationMessages = conversationMessages,
@@ -34,18 +35,23 @@ namespace TwolipsDating.Controllers
                     TargetUserLocation = String.Format("{0}, {1}", profileForOtherUser.City.Name, profileForOtherUser.City.USState.Abbreviation)
                 };
 
+                // if the profile we are looking up has a profile image, set the url it appropriately
                 if(profileForOtherUser.UserImage != null && !String.IsNullOrEmpty(profileForOtherUser.UserImage.FileName))
                 {
                     viewModel.TargetProfileImagePath = String.Format("{0}/{1}", CDN, profileForOtherUser.UserImage.FileName);
                 }
+
+                await SetUnreadCountsInViewBag();
 
                 return View(viewModel);
             }
             // otherwise, look up the most recent messages and conversations for the current user
             else
             {
+                // get all messages sent and received by the current user
                 var messagesForUser = await ProfileService.GetMessageConversationsAsync(currentUserId);
 
+                // setup the viewmodel to only include the most recent message from a conversation (like google hangouts home screen)
                 Dictionary<ConversationKey, ConversationItemViewModel> conversations = new Dictionary<ConversationKey, ConversationItemViewModel>();
                 foreach (var message in messagesForUser)
                 {
@@ -60,10 +66,10 @@ namespace TwolipsDating.Controllers
                     UpdateConversationCollection(conversations, conversation, conversationKey);
                 }
 
-                await SetUnreadCountsInViewBag();
-
                 ConversationViewModel viewModel = new ConversationViewModel();
                 viewModel.Conversations = conversations.Values.ToList().AsReadOnly();
+
+                await SetUnreadCountsInViewBag();
 
                 return View(viewModel);
             }
