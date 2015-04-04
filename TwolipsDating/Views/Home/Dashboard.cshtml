@@ -1,4 +1,4 @@
-﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.DashboardViewModel>
+﻿@model IReadOnlyList<TwolipsDating.ViewModels.DashboardViewModel>
 
 @{
     ViewBag.Title = "twolips - your dashboard";
@@ -14,8 +14,10 @@
     <div class="col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-body">
-                @foreach (var feedItem in Model)
+                @for (int i = 0; i < Model.Count; i++)
                 {
+                    var feedItem = Model[i];
+
                     if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.Message)
                     {
                         Html.RenderPartial("_FeedItemMessagesPartial", feedItem.MessageFeedItem);
@@ -28,7 +30,11 @@
                     {
                         Html.RenderPartial("_FeedItemReviewWrittenPartial", feedItem.ReviewWrittenFeedItem);
                     }
-                    <hr />
+
+                    if (i < Model.Count - 1)
+                    {
+                        <hr />
+                    }
                 }
 
                 @*
@@ -52,3 +58,24 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // loop through all share review links and turn them into valid popovers with share buttons
+            $("a[id^='share-profile-link']").popover({
+                content: function () {
+                    var match = $(this).attr('id').match(new RegExp(/[0-9 -()+]+$/)); // extract the review ID
+                    var shareButtonsDiv = "#share-profile-buttons-popover-" + match[0];
+                    var clone = $(shareButtonsDiv).clone(true);
+                    var cloneUnhide = clone.removeClass('hide');
+                    return cloneUnhide.html();
+                    //return $(shareButtonsDiv).html();
+                }
+            });
+            $("a[id^='share-profile-link']").click(function (e) {
+                e.preventDefault(); // prevents the page from jumping to the top on click
+            });
+        });
+    </script>
+}
