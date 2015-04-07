@@ -23,83 +23,98 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-8 col-md-offset-2">
-        @if (Model.ConversationMessages != null && Model.ConversationMessages.Count > 0)
-        {
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="conversation-header">
-                        @if (!String.IsNullOrEmpty(Model.TargetProfileImagePath))
-                        {
-                            <div class="circular-image-wrapper">
-                                <img class=" circular-image" src="@Model.TargetProfileImagePath" />
-                            </div>
-                        }
-                        <h3 style="margin-left: 7px; display: inline-block; vertical-align: top; margin-top: 2px;">
-                            @Html.ActionLink(Model.TargetUserName, "index", "profile", new { id = Model.TargetProfileId }, null)
-                            <br />
-                            <small>@Model.TargetUserAge&nbsp;&bull;&nbsp;@Model.TargetUserLocation</small>
-                        </h3>
-                    </div>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    @for (int i = 0; i < Model.ConversationMessages.Count; i++)
-                    {
-                        var message = Model.ConversationMessages[i];
-                        <div class="conversation-item">
-                            @if (!String.IsNullOrEmpty(message.TargetProfileImagePath))
+@if (Model.IsCurrentUserEmailConfirmed)
+{
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            @if (Model.ConversationMessages != null && Model.ConversationMessages.Count > 0)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="conversation-header">
+                            @if (!String.IsNullOrEmpty(Model.TargetProfileImagePath))
                             {
-                                <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
-                                    <img class=" circular-image" src="@message.TargetProfileImagePath" />
+                                <div class="circular-image-wrapper">
+                                    <img class=" circular-image" src="@Model.TargetProfileImagePath" />
                                 </div>
                             }
-                            <p>@message.MostRecentMessageBody</p>
-                            <small class="conversation-item-time-ago">@message.TimeAgo</small>
+                            <h3 style="margin-left: 7px; display: inline-block; vertical-align: top; margin-top: 2px;">
+                                @Html.ActionLink(Model.TargetUserName, "index", "profile", new { id = Model.TargetProfileId }, null)
+                                <br />
+                                <small>@Model.TargetUserAge&nbsp;&bull;&nbsp;@Model.TargetUserLocation</small>
+                            </h3>
                         </div>
-                        if (i < Model.ConversationMessages.Count - 1)
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @for (int i = 0; i < Model.ConversationMessages.Count; i++)
                         {
-                            <hr />
+                            var message = Model.ConversationMessages[i];
+                            <div class="conversation-item">
+                                @if (!String.IsNullOrEmpty(message.TargetProfileImagePath))
+                                {
+                                    <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
+                                        <img class=" circular-image" src="@message.TargetProfileImagePath" />
+                                    </div>
+                                }
+                                <p>@message.MostRecentMessageBody</p>
+                                <small class="conversation-item-time-ago">@message.TimeAgo</small>
+                            </div>
+                            if (i < Model.ConversationMessages.Count - 1)
+                            {
+                                <hr />
+                            }
                         }
-                    }
+                    </div>
                 </div>
-            </div>
-        }
-        else if (Model.Conversations != null && Model.Conversations.Count > 0)
-        {
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    @foreach (var conversation in Model.Conversations)
-                    {
-                        <div class="conversation-item">
-                            <a href="@Url.Action("conversation", "message", new { id = conversation.TargetUserId })">
-                                <div class="well well-sm">
-                                    @if (!String.IsNullOrEmpty(conversation.TargetProfileImagePath))
-                                    {
-                                        <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
-                                            <img class=" circular-image" src="@conversation.TargetProfileImagePath" />
-                                        </div>
-                                    }
-                                    <strong>@conversation.TargetName</strong>
-                                    <small> &bull;&nbsp;@conversation.TimeAgo</small>
-                                    <br />
-                                    <small>@conversation.MostRecentMessageBody</small>
-                                </div>
-                            </a>
-                        </div>
-                    }
+            }
+            else if (Model.Conversations != null && Model.Conversations.Count > 0)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @foreach (var conversation in Model.Conversations)
+                        {
+                            <div class="conversation-item">
+                                <a href="@Url.Action("conversation", "message", new { id = conversation.TargetUserId })">
+                                    <div class="well well-sm">
+                                        @if (!String.IsNullOrEmpty(conversation.TargetProfileImagePath))
+                                        {
+                                            <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
+                                                <img class=" circular-image" src="@conversation.TargetProfileImagePath" />
+                                            </div>
+                                        }
+                                        <strong>@conversation.TargetName</strong>
+                                        <small> &bull;&nbsp;@conversation.TimeAgo</small>
+                                        <br />
+                                        <small>@conversation.MostRecentMessageBody</small>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    </div>
                 </div>
-            </div>
-        }
-        else
-        {
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <h4>You don't have any recent conversations. Go find someone new and message them!</h4>
+            }
+            else
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>You don't have any recent conversations. Go find someone new and message them!</h4>
+                    </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
-</div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>Before you can participate in message conversations, you need to confirm your email address.</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+}

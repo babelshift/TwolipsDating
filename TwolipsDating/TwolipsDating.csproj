@@ -340,6 +340,7 @@
     <Compile Include="ViewModels\ConversationItemViewModel.cs" />
     <Compile Include="ViewModels\ConversationViewModel.cs" />
     <Compile Include="ViewModels\CreateProfileViewModel.cs" />
+    <Compile Include="ViewModels\DashboardItemViewModel.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\MessageFeedViewModel.cs" />
     <Compile Include="ViewModels\ProfileFeedViewModel.cs" />

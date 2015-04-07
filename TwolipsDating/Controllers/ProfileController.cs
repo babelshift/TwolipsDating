@@ -20,6 +20,8 @@ namespace TwolipsDating.Controllers
 {
     public class ProfileController : BaseController
     {
+        #region Suggest Tags
+        
         [HttpPost]
         public async Task<JsonResult> SuggestTag(int id, int profileId, string suggestAction)
         {
@@ -66,6 +68,10 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        #endregion
+
+        #region Send Messages
+
         [HttpPost]
         public async Task<ActionResult> SendMessage(ProfileViewModel viewModel)
         {
@@ -78,17 +84,22 @@ namespace TwolipsDating.Controllers
             {
                 string currentUserId = await GetCurrentUserIdAsync();
 
-                int changes = await ProfileService.SendMessageAsync(currentUserId, viewModel.ProfileUserId, viewModel.SendMessage.MessageBody);
+                bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
-                if (changes == 0)
+                if (isCurrentUserEmailConfirmed)
                 {
-                    Log.Warn(
-                        "SendMessage",
-                        ErrorMessages.MessageNotSent,
-                        new { currentUserId = currentUserId, profileId = viewModel.ProfileUserId, messageBody = viewModel.SendMessage.MessageBody }
-                    );
+                    int changes = await ProfileService.SendMessageAsync(currentUserId, viewModel.ProfileUserId, viewModel.SendMessage.MessageBody);
 
-                    AddError(ErrorMessages.MessageNotSent);
+                    if (changes == 0)
+                    {
+                        Log.Warn(
+                            "SendMessage",
+                            ErrorMessages.MessageNotSent,
+                            new { currentUserId = currentUserId, profileId = viewModel.ProfileUserId, messageBody = viewModel.SendMessage.MessageBody }
+                        );
+
+                        AddError(ErrorMessages.MessageNotSent);
+                    }
                 }
             }
             catch (DbUpdateException e)
@@ -105,6 +116,10 @@ namespace TwolipsDating.Controllers
             return RedirectToIndex();
         }
 
+        #endregion
+
+        #region Write Reviews
+
         [HttpPost]
         public async Task<ActionResult> WriteReview(ProfileViewModel viewModel)
         {
@@ -116,18 +131,23 @@ namespace TwolipsDating.Controllers
             try
             {
                 string currentUserId = await GetCurrentUserIdAsync();
+                
+                bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
-                int changes = await ProfileService.WriteReviewAsync(currentUserId, viewModel.ProfileUserId, viewModel.WriteReview.ReviewContent, viewModel.WriteReview.RatingValue);
-
-                if (changes == 0)
+                if (isCurrentUserEmailConfirmed)
                 {
-                    Log.Warn(
-                        "WriteReview",
-                        ErrorMessages.ReviewNotSaved,
-                        parameters: new { profileId = viewModel.ProfileUserId, reviewContent = viewModel.WriteReview.ReviewContent, ratingValue = viewModel.WriteReview.RatingValue }
-                    );
+                    int changes = await ProfileService.WriteReviewAsync(currentUserId, viewModel.ProfileUserId, viewModel.WriteReview.ReviewContent, viewModel.WriteReview.RatingValue);
 
-                    AddError(ErrorMessages.ReviewNotSaved);
+                    if (changes == 0)
+                    {
+                        Log.Warn(
+                            "WriteReview",
+                            ErrorMessages.ReviewNotSaved,
+                            parameters: new { profileId = viewModel.ProfileUserId, reviewContent = viewModel.WriteReview.ReviewContent, ratingValue = viewModel.WriteReview.RatingValue }
+                        );
+
+                        AddError(ErrorMessages.ReviewNotSaved);
+                    }
                 }
             }
             catch (DbUpdateException e)
@@ -144,11 +164,16 @@ namespace TwolipsDating.Controllers
             return RedirectToIndex();
         }
 
+        #endregion
+
+        #region Manage Image Uploads
+
         [HttpPost]
         public async Task<ActionResult> DeleteImage(int id, string fileName, string profileUserId)
         {
             string currentUserId = await GetCurrentUserIdAsync();
-            if (profileUserId != currentUserId)
+            bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+            if (profileUserId != currentUserId || !isCurrentUserEmailConfirmed)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
@@ -200,8 +225,8 @@ namespace TwolipsDating.Controllers
             }
 
             string currentUserId = await GetCurrentUserIdAsync();
-
-            if (viewModel.ProfileUserId != currentUserId)
+            bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+            if (viewModel.ProfileUserId != currentUserId || !isCurrentUserEmailConfirmed)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
@@ -269,8 +294,8 @@ namespace TwolipsDating.Controllers
             try
             {
                 string currentUserId = await GetCurrentUserIdAsync();
-
-                if (viewModel.ProfileUserId != currentUserId)
+                bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+                if (viewModel.ProfileUserId != currentUserId || !isCurrentUserEmailConfirmed)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
                 }
@@ -300,6 +325,10 @@ namespace TwolipsDating.Controllers
 
             return RedirectToIndex();
         }
+
+        #endregion
+
+        #region Index and Show Profile
 
         [AllowAnonymous]
         public async Task<ActionResult> Index(int? id = null, string tab = null)
@@ -362,6 +391,7 @@ namespace TwolipsDating.Controllers
             viewModel.UploadImage = new UploadImageViewModel();
             viewModel.UploadImage.CurrentUserId = currentUserId;
             viewModel.UploadImage.ProfileUserId = profile.ApplicationUser.Id;
+            viewModel.UploadImage.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
             viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
 
             // set the active tab's content
@@ -465,6 +495,10 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
+        #endregion
+
+        #region Create Profile
+
         [HttpPost]
         public async Task<ActionResult> Create(ProfileViewModel viewModel)
         {
@@ -514,5 +548,7 @@ namespace TwolipsDating.Controllers
 
             return RedirectToIndex();
         }
+
+        #endregion
     }
 }

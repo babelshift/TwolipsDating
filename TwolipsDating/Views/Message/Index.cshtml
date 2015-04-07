@@ -42,63 +42,70 @@
     <div class="col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-body">
-                @if (Model.MessageViewMode == MessageViewMode.Received)
+                @if (Model.IsCurrentUserEmailConfirmed)
                 {
-                    if (Model.ReceivedMessages != null && Model.ReceivedMessages.Count > 0)
+                    if (Model.MessageViewMode == MessageViewMode.Received)
                     {
-                        foreach (var message in Model.ReceivedMessages)
+                        if (Model.ReceivedMessages != null && Model.ReceivedMessages.Count > 0)
                         {
-                            <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
-                                From
-                            </p>
-                            if (!String.IsNullOrEmpty(message.SenderProfileImagePath))
+                            foreach (var message in Model.ReceivedMessages)
                             {
-                                <div class="circular-image-wrapper">
-                                    <img class="circular-image" src="@message.SenderProfileImagePath" />
+                                <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
+                                    From
+                                </p>
+                                if (!String.IsNullOrEmpty(message.SenderProfileImagePath))
+                                {
+                                    <div class="circular-image-wrapper">
+                                        <img class="circular-image" src="@message.SenderProfileImagePath" />
+                                    </div>
+                                }
+                                <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
+                                    <a href="@Url.Action("index", "profile", new { id = message.SenderProfileId })">@message.SenderName</a>
+                                    <small> &bull;&nbsp;@message.TimeAgo</small>
+                                </p>
+                                <div class="well well-sm">
+                                    <small>@message.Body</small>
                                 </div>
                             }
-                            <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
-                                <a href="@Url.Action("index", "profile", new { id = message.SenderProfileId })">@message.SenderName</a>
-                                <small> &bull;&nbsp;@message.TimeAgo</small>
-                            </p>
-                            <div class="well well-sm">
-                                <small>@message.Body</small>
-                            </div>
+                        }
+                        else
+                        {
+                            <h4>You don't have any received messages. Go find someone new and message them!</h4>
                         }
                     }
-                    else
+                    else if (Model.MessageViewMode == MessageViewMode.Sent)
                     {
-                        <h4>You don't have any received messages. Go find someone new and message them!</h4>
+                        if (Model.SentMessages != null && Model.SentMessages.Count > 0)
+                        {
+                            foreach (var message in Model.SentMessages)
+                            {
+                                <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
+                                    To
+                                </p>
+                                if (!String.IsNullOrEmpty(message.ReceiverProfileImagePath))
+                                {
+                                    <div class="circular-image-wrapper">
+                                        <img class="circular-image" src="@message.ReceiverProfileImagePath" />
+                                    </div>
+                                }
+                                <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
+                                    <a href="@Url.Action("index", "profile", new { id = message.ReceiverProfileId })">@message.ReceiverName</a>
+                                    <small> &bull;&nbsp;@message.TimeAgo</small>
+                                </p>
+                                <div class="well well-sm">
+                                    <small>@message.Body</small>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <h4>You don't have any sent messages. Go find someone new and message them!</h4>
+                        }
                     }
                 }
-                else if (Model.MessageViewMode == MessageViewMode.Sent)
+                else
                 {
-                    if (Model.SentMessages != null && Model.SentMessages.Count > 0)
-                    {
-                        foreach (var message in Model.SentMessages)
-                        {
-                            <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
-                                To
-                            </p>
-                            if (!String.IsNullOrEmpty(message.ReceiverProfileImagePath))
-                            {
-                                <div class="circular-image-wrapper">
-                                    <img class="circular-image" src="@message.ReceiverProfileImagePath" />
-                                </div>
-                            }
-                            <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
-                                <a href="@Url.Action("index", "profile", new { id = message.ReceiverProfileId })">@message.ReceiverName</a>
-                                <small> &bull;&nbsp;@message.TimeAgo</small>
-                            </p>
-                            <div class="well well-sm">
-                                <small>@message.Body</small>
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        <h4>You don't have any sent messages. Go find someone new and message them!</h4>
-                    }
+                    <h4>Before you can send and receive messages, you must confirm your email address.</h4>
                 }
             </div>
         </div>

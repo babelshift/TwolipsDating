@@ -8,6 +8,7 @@ namespace TwolipsDating.ViewModels
 {
     public class UploadImageViewModel
     {
+        public bool IsCurrentUserEmailConfirmed { get; set; }
         public string ProfileUserId { get; set; }
         public string CurrentUserId { get; set; }
 

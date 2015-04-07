@@ -1,4 +1,4 @@
-﻿@model IReadOnlyList<TwolipsDating.ViewModels.DashboardViewModel>
+﻿@model TwolipsDating.ViewModels.DashboardViewModel
 
 @{
     ViewBag.Title = "twolips - your dashboard";
@@ -14,27 +14,34 @@
     <div class="col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-body">
-                @for (int i = 0; i < Model.Count; i++)
+                @if (Model.IsCurrentUserEmailConfirmed)
                 {
-                    var feedItem = Model[i];
+                    for (int i = 0; i < Model.Items.Count; i++)
+                    {
+                        var feedItem = Model.Items[i];
 
-                    if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.Message)
-                    {
-                        Html.RenderPartial("_FeedItemMessagesPartial", feedItem.MessageFeedItem);
-                    }
-                    else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.UploadedPictures)
-                    {
-                        Html.RenderPartial("_FeedItemUploadedPicturesPartial", feedItem.UploadedImageFeedItem);
-                    }
-                    else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.ReviewWritten)
-                    {
-                        Html.RenderPartial("_FeedItemReviewWrittenPartial", feedItem.ReviewWrittenFeedItem);
-                    }
+                        if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.Message)
+                        {
+                            Html.RenderPartial("_FeedItemMessagesPartial", feedItem.MessageFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.UploadedPictures)
+                        {
+                            Html.RenderPartial("_FeedItemUploadedPicturesPartial", feedItem.UploadedImageFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.ReviewWritten)
+                        {
+                            Html.RenderPartial("_FeedItemReviewWrittenPartial", feedItem.ReviewWrittenFeedItem);
+                        }
 
-                    if (i < Model.Count - 1)
-                    {
-                        <hr />
+                        if (i < Model.Items.Count - 1)
+                        {
+                            <hr />
+                        }
                     }
+                }
+                else
+                {
+                    <h4>Before you can view your dashboard, you must confirm your email address.</h4>
                 }
 
                 @*

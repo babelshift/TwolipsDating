@@ -17,6 +17,7 @@ namespace TwolipsDating.ViewModels
 
         #region Profile view stuff
 
+        public bool IsCurrentUserEmailConfirmed { get; set; }
         public string UserName { get; set; }
         public int Age { get; set; }
         public string Gender { get; set; }

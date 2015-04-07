@@ -23,7 +23,7 @@ namespace TwolipsDating.Controllers
             {
                 // dashboard
                 string currentUserId = await GetCurrentUserIdAsync();
-                List<DashboardViewModel> viewModel = new List<DashboardViewModel>();
+                List<DashboardItemViewModel> dashboardItems = new List<DashboardItemViewModel>();
 
                 var messages = await ProfileService.GetMessagesByUserAsync(currentUserId);
                 var messageFeedViewModel = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyCollection<MessageFeedViewModel>>(messages);
@@ -33,7 +33,7 @@ namespace TwolipsDating.Controllers
 
                 foreach(var messageFeed in messageFeedViewModel)
                 {
-                    viewModel.Add(new DashboardViewModel()
+                    dashboardItems.Add(new DashboardItemViewModel()
                     {
                         ItemType = DashboardFeedItemType.Message,
                         DateOccurred = messageFeed.DateOccurred,
@@ -43,7 +43,7 @@ namespace TwolipsDating.Controllers
 
                 foreach (var reviewFeed in reviewFeedViewModel)
                 {
-                    viewModel.Add(new DashboardViewModel()
+                    dashboardItems.Add(new DashboardItemViewModel()
                     {
                         ItemType = DashboardFeedItemType.ReviewWritten,
                         DateOccurred = reviewFeed.DateOccurred,
@@ -57,7 +57,7 @@ namespace TwolipsDating.Controllers
 
                 foreach(var userImageViewModel in uploadedImagesConsolidated)
                 {
-                    viewModel.Add(new DashboardViewModel()
+                    dashboardItems.Add(new DashboardItemViewModel()
                     {
                         ItemType = DashboardFeedItemType.UploadedPictures,
                         DateOccurred = userImageViewModel.DateOccurred,
@@ -66,8 +66,12 @@ namespace TwolipsDating.Controllers
                 }
 
                 await SetUnreadCountsInViewBag();
+                
+                DashboardViewModel viewModel = new DashboardViewModel();
+                viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+                viewModel.Items = dashboardItems.OrderByDescending(v => v.DateOccurred).ToList().AsReadOnly();
 
-                return View("dashboard", viewModel.OrderByDescending(v => v.DateOccurred).ToList().AsReadOnly());
+                return View("dashboard", viewModel);
             }
             else
             {

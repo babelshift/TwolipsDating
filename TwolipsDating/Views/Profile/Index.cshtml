@@ -144,7 +144,7 @@
             {
                 @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Profile" })
 
-                if (Model.ProfileUserId != Model.CurrentUserId)
+                if (Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
                 {
                     <div class="pull-right">
                         <ul class="nav nav-pills">
@@ -236,7 +236,7 @@
                         </div>
                     *@
                     <h4 style="display: inline-block"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tagged by others&nbsp;</h4>
-                    @if (User.Identity.IsAuthenticated && Model.ProfileUserId != Model.CurrentUserId)
+                    @if (User.Identity.IsAuthenticated && Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
                     {
                         <a style="display: inline-block" href="#" data-toggle="modal" data-target="#modalSuggestTags" data-keyboard="true">suggest</a>
                     }
@@ -346,61 +346,68 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div class="text-center">
-                        <h2>Your profile will be here soon</h2>
-                        <h4>Fill out some info below to finalize it</h4>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-md-4 col-md-offset-4">
-                            @using (Html.BeginForm("create", "profile", FormMethod.Post, new { role = "form" }))
-                            {
-                                @Html.AntiForgeryToken()
-                                @Html.ValidationSummary()
+                    @if (Model.IsCurrentUserEmailConfirmed)
+                    {
+                        <div class="text-center">
+                            <h2>Your profile will be here soon</h2>
+                            <h4>Fill out some info below to finalize it</h4>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-4 col-md-offset-4">
+                                @using (Html.BeginForm("create", "profile", FormMethod.Post, new { role = "form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary()
 
-                                <div class="form-group">
-                                    <p class="control-label">What are you?</p>
-                                    @Html.DropDownListFor(m => m.CreateProfile.SelectedGenderId,
+                                    <div class="form-group">
+                                        <p class="control-label">What are you?</p>
+                                        @Html.DropDownListFor(m => m.CreateProfile.SelectedGenderId,
                                      new SelectList(Model.CreateProfile.Genders, "Key", "Value"),
                                     new { @class = "form-control", data_placeholder = "What are you?" })
-                                </div>
-                                <div class="form-group">
-                                    <p class="control-label">When were you born?</p>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            @Html.TextBoxFor(m => m.CreateProfile.BirthMonth, new { @class = "form-control", @placeholder = "MM", maxlength = "2" })
-                                        </div>
-                                        <div class="col-md-4">
-                                            @Html.TextBoxFor(m => m.CreateProfile.BirthDayOfMonth, new { @class = "form-control", @placeholder = "DD", maxlength = "2" })
-                                        </div>
-                                        <div class="col-md-4">
-                                            @Html.TextBoxFor(m => m.CreateProfile.BirthYear, new { @class = "form-control", @placeholder = "YYYY", maxlength = "4" })
+                                    </div>
+                                    <div class="form-group">
+                                        <p class="control-label">When were you born?</p>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                @Html.TextBoxFor(m => m.CreateProfile.BirthMonth, new { @class = "form-control", @placeholder = "MM", maxlength = "2" })
+                                            </div>
+                                            <div class="col-md-4">
+                                                @Html.TextBoxFor(m => m.CreateProfile.BirthDayOfMonth, new { @class = "form-control", @placeholder = "DD", maxlength = "2" })
+                                            </div>
+                                            <div class="col-md-4">
+                                                @Html.TextBoxFor(m => m.CreateProfile.BirthYear, new { @class = "form-control", @placeholder = "YYYY", maxlength = "4" })
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <p class="control-label">Where are you?</p>
-                                    @Html.DropDownListFor(m => m.CreateProfile.SelectedCountryId,
-                                     new SelectList(Model.CreateProfile.Countries, "Key", "Value"),
-                                    new { @class = "form-control", data_placeholder = "What country are you in?", onchange = "onCountrySelected(event, this)" })
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" id="textBoxZipCode" class="form-control" placeholder="Zip Code (ex. 33777)" onblur="onZipCodeBlur(event, this)" maxlength="5" />
-                                    @Html.HiddenFor(m => m.CreateProfile.SelectedZipCodeId)
-                                    <p id="zipCodeLocationText"></p>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" id="textBoxCity" class="form-control" placeholder="City (ex. London)" onblur="onCityBlur(event, this)" />
-                                    @Html.HiddenFor(m => m.CreateProfile.SelectedCityId)
-                                    <p id="cityLocationText"></p>
-                                </div>
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary pull-right">OK</button>
-                                    <div class="clearfix"></div>
-                                </div>
-                            }
+                                    <div class="form-group">
+                                        <p class="control-label">Where are you?</p>
+                                        @Html.DropDownListFor(m => m.CreateProfile.SelectedCountryId,
+                                                new SelectList(Model.CreateProfile.Countries, "Key", "Value"),
+                                                new { @class = "form-control", data_placeholder = "What country are you in?", onchange = "onCountrySelected(event, this)" })
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" id="textBoxZipCode" class="form-control" placeholder="Zip Code (ex. 33777)" onblur="onZipCodeBlur(event, this)" maxlength="5" />
+                                        @Html.HiddenFor(m => m.CreateProfile.SelectedZipCodeId)
+                                        <p id="zipCodeLocationText"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" id="textBoxCity" class="form-control" placeholder="City (ex. London)" onblur="onCityBlur(event, this)" />
+                                        @Html.HiddenFor(m => m.CreateProfile.SelectedCityId)
+                                        <p id="cityLocationText"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary pull-right">OK</button>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                }
+                            </div>
                         </div>
-                    </div>
+                    }
+                    else
+                    {
+                        <h4>You need to confirm your email address before you can create your profile.</h4>
+                    }
                 </div>
             </div>
         </div>

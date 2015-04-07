@@ -44,6 +44,8 @@ namespace TwolipsDating.Controllers
                     viewModel.TargetProfileImagePath = profileForOtherUser.GetProfileImagePath();
                 }
 
+                viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+
                 await SetUnreadCountsInViewBag();
 
                 return View(viewModel);
@@ -71,6 +73,8 @@ namespace TwolipsDating.Controllers
 
                 ConversationViewModel viewModel = new ConversationViewModel();
                 viewModel.Conversations = conversations.Values.ToList().AsReadOnly();
+
+                viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
                 await SetUnreadCountsInViewBag();
 
@@ -154,7 +158,8 @@ namespace TwolipsDating.Controllers
             MessageViewModel viewModel = new MessageViewModel()
             {
                 ReceivedMessages = receivedMessages.OrderByDescending(m => m.DateSent).ToList().AsReadOnly(),
-                MessageViewMode = MessageViewMode.Received
+                MessageViewMode = MessageViewMode.Received,
+                IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId)
             };
 
             await SetUnreadCountsInViewBag();
@@ -189,7 +194,8 @@ namespace TwolipsDating.Controllers
             MessageViewModel viewModel = new MessageViewModel()
             {
                 SentMessages = sentMessages.OrderByDescending(m => m.DateSent).ToList().AsReadOnly(),
-                MessageViewMode = MessageViewMode.Sent
+                MessageViewMode = MessageViewMode.Sent,
+                IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId)
             };
 
             await SetUnreadCountsInViewBag();

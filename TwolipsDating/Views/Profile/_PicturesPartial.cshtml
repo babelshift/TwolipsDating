@@ -1,6 +1,6 @@
 ﻿@model TwolipsDating.ViewModels.UploadImageViewModel
 
-@if (Model.ProfileUserId == Model.CurrentUserId)
+@if (Model.ProfileUserId == Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
 {
     using (Html.BeginForm("uploadimage", "profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
