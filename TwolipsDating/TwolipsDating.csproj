@@ -260,6 +260,7 @@
     <Compile Include="Business\BaseService.cs" />
     <Compile Include="Business\DashboardService.cs" />
     <Compile Include="Business\ProfileService.cs" />
+    <Compile Include="Business\ViolationService.cs" />
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -268,6 +269,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\ViolationController.cs" />
     <Compile Include="Migrations\201503082310198_initial.cs" />
     <Compile Include="Migrations\201503082310198_initial.Designer.cs">
       <DependentUpon>201503082310198_initial.cs</DependentUpon>
@@ -316,13 +318,19 @@
     <Compile Include="Migrations\201503281805323_UpdateConversationViewAgain.Designer.cs">
       <DependentUpon>201503281805323_UpdateConversationViewAgain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504080055045_AddReviewViolation.cs" />
+    <Compile Include="Migrations\201504080055045_AddReviewViolation.Designer.cs">
+      <DependentUpon>201504080055045_AddReviewViolation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
     <Compile Include="Models\MessageConversation.cs" />
+    <Compile Include="Models\ReviewViolation.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\TagSuggestion.cs" />
     <Compile Include="Models\UserImage.cs" />
+    <Compile Include="Models\ViolationType.cs" />
     <Compile Include="Utilities\CityExtensions.cs" />
     <Compile Include="Utilities\ConversationKey.cs" />
     <Compile Include="Utilities\DateTimeExtensions.cs" />
@@ -386,6 +394,7 @@
     <Compile Include="ViewModels\UploadImageViewModel.cs" />
     <Compile Include="ViewModels\UserImageViewModel.cs" />
     <Compile Include="ViewModels\WriteReviewViewModel.cs" />
+    <Compile Include="ViewModels\WriteReviewViolationViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="403.aspx" />
@@ -501,6 +510,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Violation\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -541,6 +551,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503281805323_UpdateConversationViewAgain.resx">
       <DependentUpon>201503281805323_UpdateConversationViewAgain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504080055045_AddReviewViolation.resx">
+      <DependentUpon>201504080055045_AddReviewViolation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

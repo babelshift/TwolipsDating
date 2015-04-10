@@ -29,6 +29,8 @@ namespace TwolipsDating.Models
 		public DbSet<Tag> Tags { get; set; }
 		public DbSet<TagSuggestion> TagSuggestions { get; set; }
         public DbSet<MessageConversation> MessageConversations { get; set; }
+        public DbSet<ViolationType> ViolationTypes { get; set; }
+        public DbSet<ReviewViolation> ReviewViolations { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -56,6 +58,54 @@ namespace TwolipsDating.Models
 			SetupTagEntity(modelBuilder);
 			SetupTagSuggestionEntity(modelBuilder);
             SetupMessageConversations(modelBuilder);
+            SetupViolationTypes(modelBuilder);
+            SetupReviewViolationEntity(modelBuilder);
+        }
+
+        private static void SetupReviewViolationEntity(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ReviewViolation>()
+                .HasKey(p => p.Id);
+
+            modelBuilder.Entity<ReviewViolation>()
+                .HasRequired(p => p.Review)
+                .WithMany(p => p.Violations)
+                .HasForeignKey(p => p.ReviewId);
+
+            modelBuilder.Entity<ReviewViolation>()
+                .HasRequired(p => p.AuthorUser)
+                .WithMany(p => p.ReviewViolationsAuthored)
+                .HasForeignKey(p => p.AuthorUserId);
+
+            modelBuilder.Entity<ReviewViolation>()
+                .HasRequired(p => p.ViolationType)
+                .WithMany(p => p.ReviewViolations)
+                .HasForeignKey(p => p.ViolationTypeId);
+
+            modelBuilder.Entity<ReviewViolation>().Property(r => r.Content).HasMaxLength(3000);
+
+            modelBuilder.Entity<ReviewViolation>().Property(p => p.AuthorUserId).IsRequired();
+            modelBuilder.Entity<ReviewViolation>().Property(p => p.Content).IsRequired();
+            modelBuilder.Entity<ReviewViolation>().Property(p => p.DateCreated).IsRequired();
+            modelBuilder.Entity<ReviewViolation>().Property(p => p.ReviewId).IsRequired();
+        }
+
+        private static void SetupViolationTypes(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ViolationType>()
+                .HasKey(v => v.Id);
+
+            modelBuilder.Entity<ViolationType>()
+                .Property(v => v.Name)
+                .HasMaxLength(64);
+
+            modelBuilder.Entity<ViolationType>()
+                .Property(v => v.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<ViolationType>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
         }
 
         private void SetupMessageConversations(DbModelBuilder modelBuilder)

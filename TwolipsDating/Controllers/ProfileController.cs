@@ -379,6 +379,7 @@ namespace TwolipsDating.Controllers
             var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profile.ApplicationUser.Id);
 
             var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
+            viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
             viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
             viewModel.CurrentUserId = currentUserId;
             viewModel.AverageRatingValue = reviews.AverageRating();

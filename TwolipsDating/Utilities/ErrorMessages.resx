@@ -129,8 +129,14 @@
   <data name="ReviewNotSaved" xml:space="preserve">
     <value>Something prevented your review from being saved. If this continues, contact support.</value>
   </data>
+  <data name="ReviewViolationNotSaved" xml:space="preserve">
+    <value>Something prevented your review violation from being sent. If this continues, contact support.</value>
+  </data>
   <data name="TagSuggestionNotSaved" xml:space="preserve">
     <value>Something prevented your tag suggestion from being saved. If this continues, contact support.</value>
+  </data>
+  <data name="UserAlreadyReportedReview" xml:space="preserve">
+    <value>We already received a violation report by you for this review.</value>
   </data>
   <data name="UserImageNotDeleted" xml:space="preserve">
     <value>Something prevented your image from being deleted. If this continues, contact support.</value>

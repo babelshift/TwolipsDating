@@ -4,6 +4,39 @@
     ViewBag.Title = "twolips - your dashboard";
 }
 
+<div class="modal fade" id="modalReviewViolation" tabindex="-1" role="dialog" aria-labelledby="modalReviewViolationLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modalReviewLabel">Submit violation for review</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="review-author-name" class="control-label">Review Author:</label>
+                    <p id="review-author-name"></p>
+                    <input type="hidden" id="review-id" />
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.WriteReviewViolation.ViolationTypeId, new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.WriteReviewViolation.ViolationTypeId,
+                        new SelectList(Model.WriteReviewViolation.ViolationTypes, "Key", "Value"),
+                        new { @class = "form-control", data_placeholder = "What's the problem?" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "control-label" })
+                    @Html.TextAreaFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "form-control" })
+                </div>
+                @Html.HiddenFor(m => m.CurrentUserId)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button onclick="onAddReviewViolation(event, this)" type="button" data-dismiss="modal" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="panel panel-default">
     <div class="panel-body">
         @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Dashboard" })
@@ -68,7 +101,39 @@
 
 @section Scripts {
     <script type="text/javascript">
+        function onAddReviewViolation(e, obj) {
+            var reviewId = $('#review-id').val();
+            var violationTypeId = $('#WriteReviewViolation_ViolationTypeId').val();
+            var authorUserId = $('#CurrentUserId').val();
+            var content = $('#WriteReviewViolation_ViolationContent').val();
+
+            json = "{\"reviewId\":" + reviewId + ", \"violationTypeId\":" + violationTypeId + ", \"authorUserId\":\"" + authorUserId + "\", \"content\":\"" + content + "\"}";
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("addReviewViolation", "violation")',
+                data: json,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.success) {
+                        // show success box somewhere (next to report button?)
+                    } else {
+                        // show error box somewhere (next to report button?)
+                    }
+                }
+            });
+        }
+
         $(document).ready(function () {
+            $('#modalReviewViolation').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var recipient = button.data('review-author'); // Extract info from data-* attributes
+                var reviewId = button.data('review-id');
+                var modal = $(this);
+                modal.find('#review-author-name').text(recipient)
+                modal.find('#review-id').val(reviewId)
+            });
+
             // loop through all share review links and turn them into valid popovers with share buttons
             $("a[id^='share-profile-link']").popover({
                 content: function () {

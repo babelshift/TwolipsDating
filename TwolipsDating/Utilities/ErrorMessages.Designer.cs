@@ -97,11 +97,29 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something prevented your review violation from being sent. If this continues, contact support..
+        /// </summary>
+        internal static string ReviewViolationNotSaved {
+            get {
+                return ResourceManager.GetString("ReviewViolationNotSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Something prevented your tag suggestion from being saved. If this continues, contact support..
         /// </summary>
         internal static string TagSuggestionNotSaved {
             get {
                 return ResourceManager.GetString("TagSuggestionNotSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We already received a violation report by you for this review..
+        /// </summary>
+        internal static string UserAlreadyReportedReview {
+            get {
+                return ResourceManager.GetString("UserAlreadyReportedReview", resourceCulture);
             }
         }
         

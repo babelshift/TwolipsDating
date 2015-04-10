@@ -15,6 +15,5 @@ namespace TwolipsDating.ViewModels
         [Required]
         [Display(Name = "Rating:")]
         public int RatingValue { get; set; }
-
     }
 }

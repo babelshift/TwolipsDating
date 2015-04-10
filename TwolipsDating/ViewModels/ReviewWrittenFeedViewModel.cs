@@ -7,6 +7,7 @@ namespace TwolipsDating.ViewModels
 {
     public class ReviewWrittenFeedViewModel
     {
+        public int ReviewId { get; set; }
         public string AuthorUserName { get; set; }
         public string AuthorProfileId { get; set; }
         public string AuthorProfileImagePath { get; set; }

@@ -60,6 +60,7 @@ namespace TwolipsDating
                 .ForMember(dest => dest.ReceiverProfileId, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Profile.Id));
 
             Mapper.CreateMap<Review, ReviewWrittenFeedViewModel>()
+                .ForMember(dest => dest.ReviewId, opts => opts.MapFrom(source => source.Id))
                 .ForMember(dest => dest.TargetUserName, opts => opts.MapFrom(source => source.TargetUser.UserName))
                 .ForMember(dest => dest.TargetProfileImagePath, opts => opts.MapFrom(source => source.TargetUser.Profile.GetProfileImagePath()))
                 .ForMember(dest => dest.AuthorUserName, opts => opts.MapFrom(source => source.AuthorUser.UserName))

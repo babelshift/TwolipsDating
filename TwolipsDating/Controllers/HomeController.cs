@@ -15,6 +15,7 @@ namespace TwolipsDating.Controllers
     public class HomeController : BaseController
     {
         private DashboardService dashboardService = new DashboardService();
+        private ViolationService violationService = new ViolationService();
 
         [AllowAnonymous]
         public async Task<ActionResult> Index()
@@ -31,7 +32,7 @@ namespace TwolipsDating.Controllers
                 var reviews = await dashboardService.GetRecentlyWrittenReviewsAsync();
                 var reviewFeedViewModel = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewWrittenFeedViewModel>>(reviews);
 
-                foreach(var messageFeed in messageFeedViewModel)
+                foreach (var messageFeed in messageFeedViewModel)
                 {
                     dashboardItems.Add(new DashboardItemViewModel()
                     {
@@ -55,7 +56,7 @@ namespace TwolipsDating.Controllers
 
                 var uploadedImagesConsolidated = uploadedImages.GetConsolidatedImagesForFeed();
 
-                foreach(var userImageViewModel in uploadedImagesConsolidated)
+                foreach (var userImageViewModel in uploadedImagesConsolidated)
                 {
                     dashboardItems.Add(new DashboardItemViewModel()
                     {
@@ -66,10 +67,18 @@ namespace TwolipsDating.Controllers
                 }
 
                 await SetUnreadCountsInViewBag();
-                
+
                 DashboardViewModel viewModel = new DashboardViewModel();
+                viewModel.CurrentUserId = currentUserId;
                 viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
-                viewModel.Items = dashboardItems.OrderByDescending(v => v.DateOccurred).ToList().AsReadOnly();
+                viewModel.Items = dashboardItems
+                    .OrderByDescending(v => v.DateOccurred)
+                    .ToList()
+                    .AsReadOnly();
+
+                var violationTypes = await violationService.GetViolationTypesAsync();
+                viewModel.WriteReviewViolation = new WriteReviewViolationViewModel();
+                viewModel.WriteReviewViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
 
                 return View("dashboard", viewModel);
             }

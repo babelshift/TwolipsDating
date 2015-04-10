@@ -53,6 +53,13 @@ namespace TwolipsDating.Migrations
                 new Tag() { TagId = 15, Name = "creative", Description = "someone who can draw the door and show you through it" },
                 new Tag() { TagId = 16, Name = "film-critic", Description = "able to find flaws in absolutely everything" }
             );
+
+            context.ViolationTypes.AddOrUpdate(v => v.Id,
+                new ViolationType() { Id = 1, Name = "Illegal content" },
+                new ViolationType() { Id = 2, Name = "Spam" },
+                new ViolationType() { Id = 3, Name = "Advertising" },
+                new ViolationType() { Id = 4, Name = "Harassment" });
+
         }
     }
 }
