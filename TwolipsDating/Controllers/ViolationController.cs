@@ -38,7 +38,7 @@ namespace TwolipsDating.Controllers
                         parameters: new { violationTypeId = violationTypeId, content = content, authorUserId = authorUserId }
                     );
 
-                    return Json(new { success = false, ErrorMessages.ReviewViolationNotSaved });
+                    return Json(new { success = false, error = ErrorMessages.ReviewViolationNotSaved });
                 }
             }
             catch (DbUpdateException e)

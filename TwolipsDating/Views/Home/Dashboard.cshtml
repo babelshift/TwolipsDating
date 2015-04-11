@@ -28,10 +28,16 @@
                     @Html.TextAreaFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "form-control" })
                 </div>
                 @Html.HiddenFor(m => m.CurrentUserId)
+                <div id="violation-error" class="alert alert-danger" role="alert">
+                    <p id="violation-error-text">Something happened which prevented your violation from being submitted.</p>
+                </div>
+                <div id="violation-success" class="alert alert-success" role="alert">
+                    <p>Thanks for the report! You can close this popup now.</p>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button onclick="onAddReviewViolation(event, this)" type="button" data-dismiss="modal" class="btn btn-primary">Submit</button>
+                <button id="button-violation-close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="button-violation-submit" onclick="onAddReviewViolation(event, this)" type="button" class="btn btn-primary">Submit</button>
             </div>
         </div>
     </div>
@@ -112,19 +118,31 @@
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action("addReviewViolation", "violation")',
-                data: json,
+                data: json, 
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
                     if (data.success) {
-                        // show success box somewhere (next to report button?)
+                        $('#violation-success').show();
+                        $('#button-violation-submit').hide();
                     } else {
-                        // show error box somewhere (next to report button?)
+                        $('#violation-error').show();
+                        $('#violation-error-text').text(data.error);
                     }
                 }
             });
         }
 
         $(document).ready(function () {
+            $('#violation-error').hide();
+            $('#violation-success').hide();
+            
+            $('#modalReviewViolation').on('hide.bs.modal', function (event) {
+                $('#violation-error').hide();
+                $('#violation-success').hide();
+                $('#button-violation-submit').show();
+                $('#WriteReviewViolation_ViolationContent').val('');
+            });
+
             $('#modalReviewViolation').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
                 var recipient = button.data('review-author'); // Extract info from data-* attributes
