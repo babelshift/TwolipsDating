@@ -15,10 +15,35 @@ namespace TwolipsDating.Utilities
         {
             if (profile != null && profile.UserImage != null)
             {
-                return String.Format("{0}/{1}", cdn, profile.UserImage.FileName);
+                return GetImagePath(profile.UserImage.FileName);
             }
 
             return String.Empty;
+        }
+
+        public static string GetSenderProfileImagePath(this MessageConversation messageConversation)
+        {
+            if (messageConversation != null && !String.IsNullOrEmpty(messageConversation.SenderProfileImageFileName))
+            {
+                return GetImagePath(messageConversation.SenderProfileImageFileName);
+            }
+
+            return String.Empty;
+        }
+
+        public static string GetReceiverProfileImagePath(this MessageConversation messageConversation)
+        {
+            if (messageConversation != null && !String.IsNullOrEmpty(messageConversation.ReceiverProfileImageFileName))
+            {
+                return GetImagePath(messageConversation.ReceiverProfileImageFileName);
+            }
+
+            return String.Empty;
+        }
+
+        private static string GetImagePath(string fileName)
+        {
+            return String.Format("{0}/{1}", cdn, fileName);
         }
     }
 }

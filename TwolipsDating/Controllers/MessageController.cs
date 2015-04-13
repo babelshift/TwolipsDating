@@ -1,14 +1,13 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using TwolipsDating.Business;
 using TwolipsDating.Models;
-using TwolipsDating.ViewModels;
 using TwolipsDating.Utilities;
-using AutoMapper;
+using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Controllers
 {
@@ -46,7 +45,7 @@ namespace TwolipsDating.Controllers
 
                 viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
-                await SetUnreadCountsInViewBag();
+                await SetUnreadCountsInViewBagAsync();
 
                 return View(viewModel);
             }
@@ -76,7 +75,7 @@ namespace TwolipsDating.Controllers
 
                 viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
-                await SetUnreadCountsInViewBag();
+                await SetUnreadCountsInViewBagAsync();
 
                 return View(viewModel);
             }
@@ -108,14 +107,14 @@ namespace TwolipsDating.Controllers
             {
                 conversation.TargetUserId = message.SenderApplicationUserId;
                 conversation.TargetName = message.SenderName;
-                conversation.TargetProfileImagePath = !String.IsNullOrEmpty(message.SenderProfileImageFileName) ? String.Format("{0}/{1}", CDN, message.SenderProfileImageFileName) : String.Empty;
+                conversation.TargetProfileImagePath = message.GetSenderProfileImagePath();
                 conversation.TargetProfileId = message.SenderProfileId;
             }
             else if (message.SenderApplicationUserId == currentUserId)
             {
                 conversation.TargetUserId = message.ReceiverApplicationUserId;
                 conversation.TargetName = message.ReceiverName;
-                conversation.TargetProfileImagePath = !String.IsNullOrEmpty(message.ReceiverProfileImageFileName) ? String.Format("{0}/{1}", CDN, message.ReceiverProfileImageFileName) : String.Empty;
+                conversation.TargetProfileImagePath = message.GetReceiverProfileImagePath();
                 conversation.TargetProfileId = message.ReceiverProfileId;
             }
 
@@ -135,25 +134,9 @@ namespace TwolipsDating.Controllers
         {
             var currentUserId = await GetCurrentUserIdAsync();
 
-            var messages = await ProfileService.GetMessagesByUserAsync(currentUserId);
+            var messages = await ProfileService.GetMessagesReceivedByUserAsync(currentUserId);
 
-            List<ReceivedMessageViewModel> receivedMessages = new List<ReceivedMessageViewModel>();
-            foreach (var message in messages)
-            {
-                if (message.ReceiverApplicationUserId == currentUserId)
-                {
-                    receivedMessages.Add(new ReceivedMessageViewModel()
-                    {
-                        Id = message.Id,
-                        Body = message.Body,
-                        DateSent = message.DateSent,
-                        SenderName = message.SenderApplicationUser.UserName,
-                        TimeAgo = message.DateSent.GetTimeAgo(),
-                        SenderProfileImagePath = message.SenderApplicationUser.Profile.GetProfileImagePath(),
-                        SenderProfileId = message.SenderApplicationUser.Profile.Id
-                    });
-                }
-            }
+            var receivedMessages = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyCollection<ReceivedMessageViewModel>>(messages);
 
             MessageViewModel viewModel = new MessageViewModel()
             {
@@ -162,7 +145,7 @@ namespace TwolipsDating.Controllers
                 IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId)
             };
 
-            await SetUnreadCountsInViewBag();
+            await SetUnreadCountsInViewBagAsync();
 
             return View("index", viewModel);
         }
@@ -173,23 +156,7 @@ namespace TwolipsDating.Controllers
 
             var messages = await ProfileService.GetMessagesByUserAsync(currentUserId);
 
-            List<SentMessageViewModel> sentMessages = new List<SentMessageViewModel>();
-            foreach (var message in messages)
-            {
-                if (message.SenderApplicationUserId == currentUserId)
-                {
-                    sentMessages.Add(new SentMessageViewModel()
-                    {
-                        Id = message.Id,
-                        Body = message.Body,
-                        DateSent = message.DateSent,
-                        ReceiverName = message.ReceiverApplicationUser.UserName,
-                        TimeAgo = message.DateSent.GetTimeAgo(),
-                        ReceiverProfileImagePath = message.ReceiverApplicationUser.Profile.GetProfileImagePath(),
-                        ReceiverProfileId = message.ReceiverApplicationUser.Profile.Id
-                    });
-                }
-            }
+            var sentMessages = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyCollection<SentMessageViewModel>>(messages);
 
             MessageViewModel viewModel = new MessageViewModel()
             {
@@ -198,7 +165,7 @@ namespace TwolipsDating.Controllers
                 IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId)
             };
 
-            await SetUnreadCountsInViewBag();
+            await SetUnreadCountsInViewBagAsync();
 
             return View("index", viewModel);
         }

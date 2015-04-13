@@ -87,6 +87,24 @@ namespace TwolipsDating
                 .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateSent))
                 .ForMember(dest => dest.MostRecentMessageBody, opts => opts.MapFrom(source => source.Body))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()));
+
+            Mapper.CreateMap<Message, ReceivedMessageViewModel>()
+                .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateSent))
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(source => source.Id))
+                .ForMember(dest => dest.Body, opts => opts.MapFrom(source => source.Body))
+                .ForMember(dest => dest.SenderName, opts => opts.MapFrom(source => source.SenderApplicationUser.UserName))
+                .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()))
+                .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.SenderProfileId, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.Id));
+            
+            Mapper.CreateMap<Message, SentMessageViewModel>()
+                .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateSent))
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(source => source.Id))
+                .ForMember(dest => dest.Body, opts => opts.MapFrom(source => source.Body))
+                .ForMember(dest => dest.ReceiverName, opts => opts.MapFrom(source => source.ReceiverApplicationUser.UserName))
+                .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()))
+                .ForMember(dest => dest.ReceiverProfileImagePath, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.ReceiverProfileId, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Profile.Id));
         }
     }
 }

@@ -115,6 +115,15 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An unknown exception has occurred. Contact support if you need assistance..
+        /// </summary>
+        internal static string UnhandledException {
+            get {
+                return ResourceManager.GetString("UnhandledException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to We already received a violation report by you for this review..
         /// </summary>
         internal static string UserAlreadyReportedReview {

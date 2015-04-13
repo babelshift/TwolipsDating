@@ -14,7 +14,6 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
-using NLog;
 
 namespace TwolipsDating.Controllers
 {
@@ -47,9 +46,7 @@ namespace TwolipsDating.Controllers
                 }
                 else
                 {
-                    Log.Warn(
-                        "SuggestTag",
-                        ErrorMessages.TagSuggestionNotSaved,
+                    Log.Warn("SuggestTag", ErrorMessages.TagSuggestionNotSaved,
                         parameters: new { tagId = id, profileId = profileId, suggestAction = suggestAction }
                     );
 
@@ -58,9 +55,7 @@ namespace TwolipsDating.Controllers
             }
             catch (DbUpdateException e)
             {
-                Log.Error(
-                    "SuggestTag",
-                    e,
+                Log.Error("SuggestTag", e,
                     parameters: new { tagId = id, profileId = profileId, suggestAction = suggestAction }
                 );
 
@@ -398,7 +393,7 @@ namespace TwolipsDating.Controllers
             // set the active tab's content
             SetViewModelBasedOnActiveTab(profile, reviews, viewModel, userImages);
 
-            await SetUnreadCountsInViewBag();
+            await SetUnreadCountsInViewBagAsync();
 
             return View(viewModel);
         }

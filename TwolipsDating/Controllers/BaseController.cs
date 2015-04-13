@@ -16,11 +16,11 @@ namespace TwolipsDating.Controllers
 {
     public class BaseController : Controller
     {
-        protected LogHelper Log { get; private set; }
-
         private readonly string cdn = ConfigurationManager.AppSettings["cdnUrl"];
         private ProfileService profileService = new ProfileService();
-        private ApplicationUserManager _userManager;
+        private ApplicationUserManager userManager;
+
+        protected LogHelper Log { get; private set; }
 
         protected ProfileService ProfileService { get { return profileService; } }
 
@@ -30,11 +30,11 @@ namespace TwolipsDating.Controllers
         {
             get
             {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                return userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
             private set
             {
-                _userManager = value;
+                userManager = value;
             }
         }
 
@@ -55,6 +55,7 @@ namespace TwolipsDating.Controllers
             {
                 return;
             }
+
             filterContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
             filterContext.Result = GetActionResult(filterContext);
@@ -68,7 +69,7 @@ namespace TwolipsDating.Controllers
         {
             if(filterContext.HttpContext.Request.IsAjaxRequest())
             {
-                JsonResult jsonResult = Json(new { success = false, message = "An unhandled exception occurred." });
+                JsonResult jsonResult = Json(new { success = false, message = ErrorMessages.UnhandledException });
                 jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
                 return jsonResult;
             }
@@ -78,7 +79,7 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        protected async Task SetUnreadCountsInViewBag()
+        protected async Task SetUnreadCountsInViewBagAsync()
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -110,10 +111,9 @@ namespace TwolipsDating.Controllers
             return String.Empty;
         }
 
-
         protected void AddError(string errorMessage)
         {
-            ModelState.AddModelError("", errorMessage);
+            ModelState.AddModelError(Guid.NewGuid().ToString(), errorMessage);
         }
 
         protected ActionResult RedirectToIndex(object routeValues = null)
@@ -123,10 +123,10 @@ namespace TwolipsDating.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && _userManager != null)
+            if (disposing && userManager != null)
             {
-                _userManager.Dispose();
-                _userManager = null;
+                userManager.Dispose();
+                userManager = null;
             }
 
             if (disposing && profileService != null)
@@ -137,6 +137,5 @@ namespace TwolipsDating.Controllers
 
             base.Dispose(disposing);
         }
-
     }
 }

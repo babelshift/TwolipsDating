@@ -47,7 +47,7 @@ namespace TwolipsDating.Controllers
 				Email = await UserManager.GetEmailAsync(User.Identity.GetUserId()),
 				UserName = User.Identity.Name
 			};
-			await SetUnreadCountsInViewBag();
+			await SetUnreadCountsInViewBagAsync();
 
 			return View(model);
 		}
@@ -233,7 +233,7 @@ namespace TwolipsDating.Controllers
 					Logins = await UserManager.GetLoginsAsync(User.Identity.GetUserId())
 				}
 			};
-			await SetUnreadCountsInViewBag();
+			await SetUnreadCountsInViewBagAsync();
 			return View(model);
 		}
 
@@ -340,7 +340,7 @@ namespace TwolipsDating.Controllers
 			var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId());
 			var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
 			ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
-			await SetUnreadCountsInViewBag();
+			await SetUnreadCountsInViewBagAsync();
 			return View(new ManageLoginsViewModel
 			{
 				CurrentLogins = userLogins,

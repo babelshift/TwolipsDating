@@ -13,19 +13,19 @@ namespace TwolipsDating.Controllers
 	{
 		public async Task<ActionResult> Terms()
 		{
-			await SetUnreadCountsInViewBag();
+			await SetUnreadCountsInViewBagAsync();
 			return View();
 		}
 
 		public async Task<ActionResult> Privacy()
 		{
-			await SetUnreadCountsInViewBag();
+			await SetUnreadCountsInViewBagAsync();
 			return View();
 		}
 
 		public async Task<ActionResult> Index()
 		{
-			await SetUnreadCountsInViewBag();
+			await SetUnreadCountsInViewBagAsync();
             return View();
         }
     }

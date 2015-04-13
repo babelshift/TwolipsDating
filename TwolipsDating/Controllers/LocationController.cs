@@ -9,12 +9,6 @@ using TwolipsDating.Business;
 
 namespace TwolipsDating.Controllers
 {
-    public class LocationJsonResult
-    {
-        public int CityId { get; set; }
-        public string CityName { get; set; }
-    }
-
     public class LocationController : BaseController
     {
         public async Task<JsonResult> Zip(string id)
