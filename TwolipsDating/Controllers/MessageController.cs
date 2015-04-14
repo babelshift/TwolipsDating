@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using TwolipsDating.Business;
@@ -18,27 +20,34 @@ namespace TwolipsDating.Controllers
         public async Task<ActionResult> Conversation(string id)
         {
             var currentUserId = await GetCurrentUserIdAsync();
+            ConversationViewModel viewModel = new ConversationViewModel();
 
             // if id has a value, look up all messages between the current user and the passed user id
             if (!String.IsNullOrEmpty(id))
             {
+                viewModel.TargetApplicationUserId = id;
+
                 // lookup the profile we are accessing and the messages between the current user and that profile
                 var profileForOtherUser = await ProfileService.GetUserProfileAsync(id);
+
+                if (profileForOtherUser == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+                }
+
                 var messagesBetweenUsers = await ProfileService.GetMessagesBetweenUsersAsync(currentUserId, id);
 
                 // setup the conversation view model
                 var conversationMessages = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyList<ConversationItemViewModel>>(messagesBetweenUsers);
-                ConversationViewModel viewModel = new ConversationViewModel()
-                {
-                    ConversationMessages = conversationMessages,
-                    TargetUserName = profileForOtherUser.ApplicationUser.UserName,
-                    TargetUserAge = profileForOtherUser.Birthday.GetAge(),
-                    TargetUserLocation = profileForOtherUser.City.GetCityAndState(),
-                    TargetProfileId = profileForOtherUser.Id
-                };
+
+                viewModel.ConversationMessages = conversationMessages;
+                viewModel.TargetUserName = profileForOtherUser.ApplicationUser.UserName;
+                viewModel.TargetUserAge = profileForOtherUser.Birthday.GetAge();
+                viewModel.TargetUserLocation = profileForOtherUser.City.GetCityAndState();
+                viewModel.TargetProfileId = profileForOtherUser.Id;
 
                 // if the profile we are looking up has a profile image, set the url it appropriately
-                if(profileForOtherUser.UserImage != null && !String.IsNullOrEmpty(profileForOtherUser.UserImage.FileName))
+                if (profileForOtherUser.UserImage != null && !String.IsNullOrEmpty(profileForOtherUser.UserImage.FileName))
                 {
                     viewModel.TargetProfileImagePath = profileForOtherUser.GetProfileImagePath();
                 }
@@ -52,6 +61,8 @@ namespace TwolipsDating.Controllers
             // otherwise, look up the most recent messages and conversations for the current user
             else
             {
+                viewModel.TargetApplicationUserId = currentUserId;
+
                 // get all messages sent and received by the current user
                 var messagesForUser = await ProfileService.GetMessageConversationsAsync(currentUserId);
 
@@ -70,7 +81,6 @@ namespace TwolipsDating.Controllers
                     UpdateConversationCollection(conversations, conversation, conversationKey);
                 }
 
-                ConversationViewModel viewModel = new ConversationViewModel();
                 viewModel.Conversations = conversations.Values.ToList().AsReadOnly();
 
                 viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
@@ -118,7 +128,7 @@ namespace TwolipsDating.Controllers
                 conversation.TargetProfileId = message.ReceiverProfileId;
             }
 
-            if(message.SenderApplicationUserId == currentUserId)
+            if (message.SenderApplicationUserId == currentUserId)
             {
                 conversation.MostRecentMessageBody = String.Format("You: {0}", conversation.MostRecentMessageBody);
             }
@@ -168,6 +178,57 @@ namespace TwolipsDating.Controllers
             await SetUnreadCountsInViewBagAsync();
 
             return View("index", viewModel);
+        }
+
+
+        protected ActionResult RedirectToConversation(object routeValues = null)
+        {
+            return RedirectToAction("conversation", routeValues);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> Send(ConversationViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToConversation(new { id = viewModel.TargetApplicationUserId });
+            }
+
+            try
+            {
+                string currentUserId = await GetCurrentUserIdAsync();
+
+                bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+
+                if (isCurrentUserEmailConfirmed)
+                {
+                    int changes = await ProfileService.SendMessageAsync(currentUserId, viewModel.TargetApplicationUserId, viewModel.NewMessage);
+
+                    if (changes == 0)
+                    {
+                        Log.Warn(
+                            "SendMessage",
+                            ErrorMessages.MessageNotSent,
+                            new { targetProfileId = viewModel.TargetProfileId, newMessage = viewModel.NewMessage }
+                        );
+
+                        AddError(ErrorMessages.MessageNotSent);
+                    }
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                Log.Error(
+                    "SendMessage",
+                    e,
+                            new { targetProfileId = viewModel.TargetProfileId, newMessage = viewModel.NewMessage }
+                );
+
+                AddError(ErrorMessages.MessageNotSent);
+            }
+
+            return RedirectToConversation(new { id = viewModel.TargetApplicationUserId });
         }
 
         #endregion

@@ -48,6 +48,23 @@
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-body">
+                        @using (Html.BeginForm("send", "message", FormMethod.Post, new { role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary()
+
+                            <div class="form-group">
+                                @Html.TextAreaFor(m => m.NewMessage, new { @class = "form-control" })
+                            </div>
+                            @Html.HiddenFor(m => m.TargetApplicationUserId)
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-xs pull-right">Send</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
                         @for (int i = 0; i < Model.ConversationMessages.Count; i++)
                         {
                             var message = Model.ConversationMessages[i];

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -16,5 +17,11 @@ namespace TwolipsDating.ViewModels
         public int TargetUserAge { get; set; }
         public string TargetUserLocation { get; set; }
         public IReadOnlyList<ConversationItemViewModel> ConversationMessages { get; set; }
+
+        [Required]
+        public string NewMessage { get; set; }
+
+        [Required]
+        public string TargetApplicationUserId { get; set; }
     }
 }
