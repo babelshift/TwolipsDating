@@ -34,6 +34,7 @@ namespace TwolipsDating.ViewModels
         public IReadOnlyCollection<ReviewViewModel> Reviews { get; set; }
         public IReadOnlyCollection<ProfileTagSuggestionViewModel> SuggestedTags { get; set; }
         public IReadOnlyCollection<ProfileTagSuggestionViewModel> AllTags { get; set; }
+        public IReadOnlyCollection<InventoryItemViewModel> InventoryItems { get; set; }
 
         #endregion
 

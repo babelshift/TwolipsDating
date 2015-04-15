@@ -108,7 +108,7 @@ namespace TwolipsDating.Controllers
                 AddError(ErrorMessages.MessageNotSent);
             }
 
-            return RedirectToIndex();
+            return RedirectToIndex(new { id = viewModel.ProfileUserId });
         }
 
         #endregion
@@ -156,7 +156,7 @@ namespace TwolipsDating.Controllers
                 AddError(ErrorMessages.ReviewNotSaved);
             }
 
-            return RedirectToIndex();
+            return RedirectToIndex(new { id = viewModel.ProfileUserId });
         }
 
         #endregion
@@ -250,6 +250,8 @@ namespace TwolipsDating.Controllers
                         CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
                         CloudBlobContainer container = blobClient.GetContainerReference("twolipsdatingcdn");
                         CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
+
+                        blockBlob.Properties.ContentType = uploadedImage.ContentType;
 
                         using (var stream = uploadedImage.InputStream)
                         {
@@ -389,6 +391,9 @@ namespace TwolipsDating.Controllers
             viewModel.UploadImage.ProfileUserId = profile.ApplicationUser.Id;
             viewModel.UploadImage.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
             viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
+
+            var inventoryItems = await ProfileService.GetInventoryAsync(currentUserId);
+            viewModel.InventoryItems = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(inventoryItems);
 
             // set the active tab's content
             SetViewModelBasedOnActiveTab(profile, reviews, viewModel, userImages);

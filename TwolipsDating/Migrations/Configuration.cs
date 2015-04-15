@@ -60,6 +60,11 @@ namespace TwolipsDating.Migrations
                 new ViolationType() { Id = 3, Name = "Advertising" },
                 new ViolationType() { Id = 4, Name = "Harassment" });
 
+            context.Gifts.AddOrUpdate(g => g.Id,
+                new Gift() { Id = 1, Name = "Rose (red)", IconFileName = "RoseRed.png", Description = "A red rose" },
+                new Gift() { Id = 2, Name = "Rose (white)", IconFileName = "RoseWhite.png", Description = "A white rose" },
+                new Gift() { Id = 3, Name = "Dog bone", IconFileName = "DogBone.png", Description = "A tasty dog bone" },
+                new Gift() { Id = 4, Name = "Candy", IconFileName = "Candy.png", Description = "A delicious piece of candy" });
         }
     }
 }

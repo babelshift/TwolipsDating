@@ -105,6 +105,14 @@ namespace TwolipsDating
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()))
                 .ForMember(dest => dest.ReceiverProfileImagePath, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Profile.GetProfileImagePath()))
                 .ForMember(dest => dest.ReceiverProfileId, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Profile.Id));
+            
+            Mapper.CreateMap<InventoryItem, InventoryItemViewModel>()
+                .ForMember(dest => dest.GiftDescription, opts => opts.MapFrom(source => source.Gift.Description))
+                .ForMember(dest => dest.GiftIconFilePath, opts => opts.MapFrom(source => source.Gift.GetIconPath()))
+                .ForMember(dest => dest.GiftId, opts => opts.MapFrom(source => source.GiftId))
+                .ForMember(dest => dest.GiftName, opts => opts.MapFrom(source => source.Gift.Name))
+                .ForMember(dest => dest.InventoryItemId, opts => opts.MapFrom(source => source.InventoryItemId))
+                .ForMember(dest => dest.ItemCount, opts => opts.MapFrom(source => source.ItemCount))
         }
     }
 }

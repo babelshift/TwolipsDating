@@ -323,9 +323,20 @@
     <Compile Include="Migrations\201504080055045_AddReviewViolation.Designer.cs">
       <DependentUpon>201504080055045_AddReviewViolation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504150041246_Gifts.cs" />
+    <Compile Include="Migrations\201504150041246_Gifts.Designer.cs">
+      <DependentUpon>201504150041246_Gifts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504150050245_AddGifts.cs" />
+    <Compile Include="Migrations\201504150050245_AddGifts.Designer.cs">
+      <DependentUpon>201504150050245_AddGifts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
+    <Compile Include="Models\Gift.cs" />
+    <Compile Include="Models\GiftTransactionLog.cs" />
+    <Compile Include="Models\InventoryItem.cs" />
     <Compile Include="Models\MessageConversation.cs" />
     <Compile Include="Models\ReviewViolation.cs" />
     <Compile Include="Models\Tag.cs" />
@@ -340,6 +351,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ErrorMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\GiftExtensions.cs" />
     <Compile Include="Utilities\LogHelper.cs" />
     <Compile Include="Utilities\ProfileExtensions.cs" />
     <Compile Include="Utilities\ReviewExtensions.cs" />
@@ -351,6 +363,7 @@
     <Compile Include="ViewModels\CreateProfileViewModel.cs" />
     <Compile Include="ViewModels\DashboardItemViewModel.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
+    <Compile Include="ViewModels\InventoryItemViewModel.cs" />
     <Compile Include="ViewModels\MessageFeedViewModel.cs" />
     <Compile Include="ViewModels\ProfileFeedViewModel.cs" />
     <Compile Include="ViewModels\ProfileTagSuggestionViewModel.cs" />
@@ -555,6 +568,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504080055045_AddReviewViolation.resx">
       <DependentUpon>201504080055045_AddReviewViolation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504150041246_Gifts.resx">
+      <DependentUpon>201504150041246_Gifts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504150050245_AddGifts.resx">
+      <DependentUpon>201504150050245_AddGifts.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

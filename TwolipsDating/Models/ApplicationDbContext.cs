@@ -31,6 +31,9 @@ namespace TwolipsDating.Models
         public DbSet<MessageConversation> MessageConversations { get; set; }
         public DbSet<ViolationType> ViolationTypes { get; set; }
         public DbSet<ReviewViolation> ReviewViolations { get; set; }
+        public DbSet<Gift> Gifts { get; set; }
+        public DbSet<InventoryItem> InventoryItems { get; set; }
+        public DbSet<GiftTransactionLog> GiftTransactionLog { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -60,6 +63,108 @@ namespace TwolipsDating.Models
             SetupMessageConversations(modelBuilder);
             SetupViolationTypes(modelBuilder);
             SetupReviewViolationEntity(modelBuilder);
+            SetupGifts(modelBuilder);
+            SetupInventoryItems(modelBuilder);
+            SetupGiftTransactionLog(modelBuilder);
+        }
+
+        private void SetupGiftTransactionLog(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GiftTransactionLog>()
+                .HasKey(v => v.GiftTransactionLogId);
+
+            modelBuilder.Entity<GiftTransactionLog>()
+                .Property(v => v.FromUserId)
+                .IsRequired();
+
+            modelBuilder.Entity<GiftTransactionLog>()
+                .Property(v => v.GiftId)
+                .IsRequired();
+
+            modelBuilder.Entity<GiftTransactionLog>()
+                .Property(v => v.ItemCount)
+                .IsRequired();
+
+            modelBuilder.Entity<GiftTransactionLog>()
+                .Property(v => v.ToUserId)
+                .IsRequired();
+
+            modelBuilder.Entity<GiftTransactionLog>()
+                .HasRequired(p => p.FromUser)
+                .WithMany(p => p.ItemsSent)
+                .HasForeignKey(p => p.FromUserId);
+
+            modelBuilder.Entity<GiftTransactionLog>()
+                .HasRequired(p => p.ToUser)
+                .WithMany(p => p.ItemsReceived)
+                .HasForeignKey(p => p.ToUserId);
+
+            modelBuilder.Entity<GiftTransactionLog>()
+                .HasRequired(p => p.Gift)
+                .WithMany(p => p.GiftTransactionLogs)
+                .HasForeignKey(p => p.GiftId);
+        }
+
+        private void SetupInventoryItems(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<InventoryItem>()
+                .HasKey(v => v.InventoryItemId);
+
+            modelBuilder.Entity<InventoryItem>()
+                .Property(v => v.ApplicationUserId)
+                .IsRequired();
+
+            modelBuilder.Entity<InventoryItem>()
+                .Property(v => v.GiftId)
+                .IsRequired();
+
+            modelBuilder.Entity<InventoryItem>()
+                .Property(v => v.ItemCount)
+                .IsRequired();
+
+            modelBuilder.Entity<InventoryItem>()
+                .HasRequired(p => p.Gift)
+                .WithMany(p => p.InventoryItems)
+                .HasForeignKey(p => p.GiftId);
+
+            modelBuilder.Entity<InventoryItem>()
+                .HasRequired(p => p.OwnerUser)
+                .WithMany(p => p.InventoryItems)
+                .HasForeignKey(p => p.ApplicationUserId);
+        }
+
+        private void SetupGifts(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Gift>()
+                .HasKey(v => v.Id);
+
+            modelBuilder.Entity<Gift>()
+                .Property(v => v.Name)
+                .HasMaxLength(64);
+
+            modelBuilder.Entity<Gift>()
+                .Property(v => v.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<Gift>()
+                .Property(v => v.Description)
+                .HasMaxLength(255);
+
+            modelBuilder.Entity<Gift>()
+                .Property(v => v.Description)
+                .IsRequired();
+
+            modelBuilder.Entity<Gift>()
+                .Property(v => v.IconFileName)
+                .HasMaxLength(64);
+
+            modelBuilder.Entity<Gift>()
+                .Property(v => v.IconFileName)
+                .IsRequired();
+
+            modelBuilder.Entity<Gift>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
         }
 
         private static void SetupReviewViolationEntity(DbModelBuilder modelBuilder)

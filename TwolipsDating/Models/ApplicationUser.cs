@@ -32,6 +32,9 @@ namespace TwolipsDating.Models
 		public virtual ICollection<UserImage> UploadedImages { get; set; }
 		public virtual ICollection<TagSuggestion> TagSuggestions { get; set; }
         public virtual ICollection<ReviewViolation> ReviewViolationsAuthored { get; set; }
+        public virtual ICollection<InventoryItem> InventoryItems { get; set; }
+        public virtual ICollection<GiftTransactionLog> ItemsSent { get; set; }
+        public virtual ICollection<GiftTransactionLog> ItemsReceived { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

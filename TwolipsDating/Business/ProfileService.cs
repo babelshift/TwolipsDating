@@ -413,5 +413,15 @@ namespace TwolipsDating.Business
             var results = await messagesBetweenUsers.ToListAsync();
             return results.AsReadOnly();
         }
+
+        public async Task<IReadOnlyCollection<InventoryItem>> GetInventoryAsync(string userId)
+        {
+            var inventory = from inventoryItems in db.InventoryItems
+                            where inventoryItems.ApplicationUserId == userId
+                            select inventoryItems;
+
+            var results = await inventory.ToListAsync();
+            return results.AsReadOnly();
+        }
     }
 }
