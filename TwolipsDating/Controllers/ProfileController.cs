@@ -65,6 +65,54 @@ namespace TwolipsDating.Controllers
 
         #endregion
 
+        #region Send Gifts
+
+        [HttpPost]
+        public async Task<ActionResult> SendGift(ProfileViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToIndex(new { id = viewModel.ProfileId });
+            }
+
+            try
+            {
+                string currentUserId = await GetCurrentUserIdAsync();
+
+                bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+
+                if (isCurrentUserEmailConfirmed)
+                {
+                    int changes = await ProfileService.SendGift(viewModel.CurrentUserId, viewModel.ProfileUserId, viewModel.SendGift.GiftId, viewModel.SendGift.InventoryItemId);
+
+                    if (changes == 0)
+                    {
+                        Log.Warn(
+                            "SendGift",
+                            ErrorMessages.GiftNotSent,
+                            new { currentUserId = currentUserId, profileId = viewModel.ProfileUserId, messageBody = viewModel.SendMessage.MessageBody }
+                        );
+
+                        AddError(ErrorMessages.GiftNotSent);
+                    }
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                Log.Error(
+                    "SendGift",
+                    e,
+                    new { profileId = viewModel.ProfileUserId, messageBody = viewModel.SendMessage.MessageBody }
+                );
+
+                AddError(ErrorMessages.GiftNotSent);
+            }
+
+            return RedirectToIndex(new { id = viewModel.ProfileUserId });
+        }
+
+        #endregion
+
         #region Send Messages
 
         [HttpPost]
@@ -392,8 +440,11 @@ namespace TwolipsDating.Controllers
             viewModel.UploadImage.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
             viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
 
-            var inventoryItems = await ProfileService.GetInventoryAsync(currentUserId);
-            viewModel.InventoryItems = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(inventoryItems);
+            var profileInventoryItems = await ProfileService.GetInventoryAsync(profile.ApplicationUser.Id);
+            viewModel.ProfileInventoryItems = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(profileInventoryItems);
+
+            var viewerInventoryItems = await ProfileService.GetInventoryAsync(currentUserId);
+            viewModel.ViewerInventoryItems = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(viewerInventoryItems);
 
             // set the active tab's content
             SetViewModelBasedOnActiveTab(profile, reviews, viewModel, userImages);

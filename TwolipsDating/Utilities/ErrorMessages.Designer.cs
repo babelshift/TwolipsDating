@@ -61,6 +61,15 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something prevented your gift from being sent. If this continues, contact support..
+        /// </summary>
+        internal static string GiftNotSent {
+            get {
+                return ResourceManager.GetString("GiftNotSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Something prevented your message from being sent. If this continues, contact support..
         /// </summary>
         internal static string MessageNotSent {

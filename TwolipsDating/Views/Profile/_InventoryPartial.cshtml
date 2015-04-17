@@ -1,0 +1,18 @@
+﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.InventoryItemViewModel>
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        for (int i = 0; i < item.ItemCount; i++)
+        {
+            <div class="col-md-2">
+                <img alt="@item.GiftName" title="@item.GiftName" src="@item.GiftIconFilePath" />
+            </div>
+        }
+    }
+}
+else
+{
+    <h4>This user doesn't have any items.</h4>
+}

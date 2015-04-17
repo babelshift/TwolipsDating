@@ -400,6 +400,7 @@
     <Compile Include="ViewModels\ProfileViewModel.cs" />
     <Compile Include="ViewModels\ReceivedMessageViewModel.cs" />
     <Compile Include="ViewModels\ReviewWrittenFeedViewModel.cs" />
+    <Compile Include="ViewModels\SendGiftViewModel.cs" />
     <Compile Include="ViewModels\SendMessageViewModel.cs" />
     <Compile Include="ViewModels\SentMessageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
@@ -521,6 +522,7 @@
     <Content Include="Views\About\Privacy.cshtml" />
     <Content Include="Views\About\Terms.cshtml" />
     <Content Include="Views\Message\Conversation.cshtml" />
+    <Content Include="Views\Profile\_InventoryPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

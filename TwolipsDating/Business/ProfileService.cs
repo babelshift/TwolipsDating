@@ -407,7 +407,7 @@ namespace TwolipsDating.Business
             var messagesBetweenUsers = from messages in db.Messages
                                        where (messages.SenderApplicationUserId == userId && messages.ReceiverApplicationUserId == userId2)
                                        || (messages.SenderApplicationUserId == userId2 && messages.ReceiverApplicationUserId == userId)
-                                       orderby messages.DateSent descending 
+                                       orderby messages.DateSent descending
                                        select messages;
 
             var results = await messagesBetweenUsers.ToListAsync();
@@ -422,6 +422,79 @@ namespace TwolipsDating.Business
 
             var results = await inventory.ToListAsync();
             return results.AsReadOnly();
+        }
+
+        public async Task<int> SendGift(string fromUserId, string toUserId, int giftId, int inventoryItemId)
+        {
+            await RemoveItemFromUserInventory(fromUserId, inventoryItemId);
+
+            await AddItemToUserInventory(toUserId, giftId);
+
+            LogGiftTransaction(fromUserId, toUserId, giftId);
+
+            // how can we do this atomically? stored procedure?
+            return await db.SaveChangesAsync();
+        }
+
+        private void LogGiftTransaction(string fromUserId, string toUserId, int giftId)
+        {
+            // log transaction in gift transaction
+            GiftTransactionLog logItem = new GiftTransactionLog()
+            {
+                DateTransactionOccurred = DateTime.Now,
+                FromUserId = fromUserId,
+                GiftId = giftId,
+                ItemCount = 1,
+                ToUserId = toUserId
+            };
+            db.GiftTransactionLog.Add(logItem);
+        }
+
+        private async Task AddItemToUserInventory(string toUserId, int giftId)
+        {
+            // increase inventory count for to user id
+            var toUserInventoryItem = await (from inventoryItems in db.InventoryItems
+                                             where inventoryItems.ApplicationUserId == toUserId
+                                             where inventoryItems.GiftId == giftId
+                                             select inventoryItems).FirstOrDefaultAsync();
+
+            // if there is an inventory item for this gift, increase the count
+            if (toUserInventoryItem != null)
+            {
+                toUserInventoryItem.ItemCount++;
+            }
+            // else, insert a new inventory item
+            else
+            {
+                InventoryItem newItem = new InventoryItem()
+                {
+                    ApplicationUserId = toUserId,
+                    GiftId = giftId,
+                    ItemCount = 1
+                };
+
+                db.InventoryItems.Add(newItem);
+            }
+        }
+
+        private async Task RemoveItemFromUserInventory(string fromUserId, int inventoryItemId)
+        {
+            // reduce inventory count for from user id
+            var fromUserInventoryItem = await (from inventoryItems in db.InventoryItems
+                                               where inventoryItems.ApplicationUserId == fromUserId
+                                               where inventoryItems.InventoryItemId == inventoryItemId
+                                               select inventoryItems).FirstOrDefaultAsync();
+
+            // if count > 0, reduce the count by 1
+            if (fromUserInventoryItem != null && fromUserInventoryItem.ItemCount > 1)
+            {
+                fromUserInventoryItem.ItemCount--;
+            }
+            // else, delete the entry from the inventory table
+            else
+            {
+                db.InventoryItems.Remove(fromUserInventoryItem);
+            }
         }
     }
 }

@@ -6,10 +6,12 @@ using System.Web;
 
 namespace TwolipsDating.ViewModels
 {
-    public class SendMessageViewModel
+    public class SendGiftViewModel
     {
         [Required]
-        [Display(Name = "Message:")]
-        public string MessageBody { get; set; }
+        public int GiftId { get; set; }
+
+        [Required]
+        public int InventoryItemId { get; set; }
     }
 }

@@ -34,7 +34,8 @@ namespace TwolipsDating.ViewModels
         public IReadOnlyCollection<ReviewViewModel> Reviews { get; set; }
         public IReadOnlyCollection<ProfileTagSuggestionViewModel> SuggestedTags { get; set; }
         public IReadOnlyCollection<ProfileTagSuggestionViewModel> AllTags { get; set; }
-        public IReadOnlyCollection<InventoryItemViewModel> InventoryItems { get; set; }
+        public IReadOnlyCollection<InventoryItemViewModel> ProfileInventoryItems { get; set; }
+        public IReadOnlyCollection<InventoryItemViewModel> ViewerInventoryItems { get; set; }
 
         #endregion
 
@@ -59,6 +60,12 @@ namespace TwolipsDating.ViewModels
         #region Image upload stuff
 
         public UploadImageViewModel UploadImage { get; set; }
+
+        #endregion
+
+        #region Send gift stuff
+
+        public SendGiftViewModel SendGift { get; set; }
 
         #endregion
 

@@ -6,6 +6,44 @@
 
 @if (Model != null && Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileViewMode.ShowProfile)
 {
+    <div class="modal fade" id="modalGift" tabindex="-1" role="dialog" aria-labelledby="modalGiftLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modalReviewLabel">Send gifts to @Model.UserName</h4>
+                </div>
+                @using (Html.BeginForm("sendgift", "profile", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary()
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="row">
+                                @foreach (var item in Model.ViewerInventoryItems)
+                                {
+                                    <div class="col-md-2">
+                                        <a id="@item.InventoryItemId" data-gift-id="@item.GiftId" href="#" onclick="onSelectGiftClick(event, this)">
+                                            <img src="@item.GiftIconFilePath">
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        @Html.HiddenFor(m => m.SendGift.GiftId)
+                        @Html.HiddenFor(m => m.SendGift.InventoryItemId)
+                        @Html.HiddenFor(m => m.ProfileId)
+                        @Html.HiddenFor(m => m.ProfileUserId)
+                        @Html.HiddenFor(m => m.CurrentUserId)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Send gift</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="modalReview" tabindex="-1" role="dialog" aria-labelledby="modalReviewLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -148,6 +186,7 @@
                 {
                     <div class="pull-right">
                         <ul class="nav nav-pills">
+                            <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift"><i class="glyphicon glyphicon-gift"></i>&nbsp;Send Gift</a></li>
                             <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Send Message</a></li>
                             <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review"><i class="glyphicon glyphicon-edit"></i>&nbsp;Write Review</a></li>
                             @*
@@ -315,6 +354,18 @@
                                 <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
                             </li>
                         }
+                        @if (Model.ActiveTab == "inventory")
+                        {
+                            <li role="presentation" class="active">
+                                <a href="@Url.Action("index", new { tab = "inventory" })"><i class="glyphicon glyphicon-gift"></i>&nbsp; Inventory</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li role="presentation">
+                                <a href="@Url.Action("index", new { tab = "inventory" })"><i class="glyphicon glyphicon-gift"></i>&nbsp; Inventory</a>
+                            </li>
+                        }
                         @*
                             <li role="presentation"><a href="#">Achievements</a></li>
                             <li role="presentation"><a href="#">Stats</a></li>
@@ -333,6 +384,10 @@
                     else if (Model.ActiveTab == "reviews")
                     {
                         Html.RenderPartial("_ReviewsPartial", Model.Reviews);
+                    }
+                    else if (Model.ActiveTab == "inventory")
+                    {
+                        Html.RenderPartial("_InventoryPartial", Model.ProfileInventoryItems);
                     }
                 </div>
 
@@ -519,6 +574,17 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
                     }
                 });
             }
+        }
+
+        function onSelectGiftClick(e, obj) {
+            e.preventDefault();
+            var inventoryItemId = $(obj).attr("id");
+            var hiddenSelectedInventoryItemId = $("#SendGift_InventoryItemId");
+            hiddenSelectedInventoryItemId.val(inventoryItemId);
+
+            var giftId = $(obj).attr("data-gift-id");
+            var hiddenSelectedGiftId = $("#SendGift_GiftId");
+            hiddenSelectedGiftId.val(giftId);
         }
 
         function onSelectProfileImageClick(e, obj) {
