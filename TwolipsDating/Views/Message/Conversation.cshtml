@@ -44,10 +44,6 @@
                                 <small>@Model.TargetUserAge&nbsp;&bull;&nbsp;@Model.TargetUserLocation</small>
                             </h3>
                         </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-body">
                         @using (Html.BeginForm("send", "message", FormMethod.Post, new { role = "form" }))
                         {
                             @Html.AntiForgeryToken()

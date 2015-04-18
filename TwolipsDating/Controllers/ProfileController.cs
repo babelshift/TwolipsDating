@@ -72,7 +72,7 @@ namespace TwolipsDating.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToIndex(new { id = viewModel.ProfileId });
+                return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
             }
 
             try
@@ -83,7 +83,7 @@ namespace TwolipsDating.Controllers
 
                 if (isCurrentUserEmailConfirmed)
                 {
-                    int changes = await ProfileService.SendGift(viewModel.CurrentUserId, viewModel.ProfileUserId, viewModel.SendGift.GiftId, viewModel.SendGift.InventoryItemId);
+                    int changes = await ProfileService.SendGift(currentUserId, viewModel.ProfileUserId, viewModel.SendGift.GiftId, viewModel.SendGift.InventoryItemId);
 
                     if (changes == 0)
                     {
@@ -108,7 +108,7 @@ namespace TwolipsDating.Controllers
                 AddError(ErrorMessages.GiftNotSent);
             }
 
-            return RedirectToIndex(new { id = viewModel.ProfileUserId });
+            return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
         }
 
         #endregion
@@ -120,7 +120,7 @@ namespace TwolipsDating.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToIndex(new { id = viewModel.ProfileId });
+                return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
             }
 
             try
@@ -156,7 +156,7 @@ namespace TwolipsDating.Controllers
                 AddError(ErrorMessages.MessageNotSent);
             }
 
-            return RedirectToIndex(new { id = viewModel.ProfileUserId });
+            return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
         }
 
         #endregion
@@ -168,7 +168,7 @@ namespace TwolipsDating.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToIndex();
+                return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
             }
 
             try
@@ -204,7 +204,7 @@ namespace TwolipsDating.Controllers
                 AddError(ErrorMessages.ReviewNotSaved);
             }
 
-            return RedirectToIndex(new { id = viewModel.ProfileUserId });
+            return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
         }
 
         #endregion
@@ -333,7 +333,7 @@ namespace TwolipsDating.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToIndex();
+                return RedirectToIndex(new { tab = viewModel.ActiveTab });
             }
 
             try
@@ -368,7 +368,7 @@ namespace TwolipsDating.Controllers
                 AddError(ErrorMessages.ProfileImageNotChanged);
             }
 
-            return RedirectToIndex();
+            return RedirectToIndex(new { tab = viewModel.ActiveTab });
         }
 
         #endregion

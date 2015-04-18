@@ -30,11 +30,11 @@
                                 }
                             </div>
                         </div>
+                        @Html.HiddenFor(m => m.ActiveTab)
                         @Html.HiddenFor(m => m.SendGift.GiftId)
                         @Html.HiddenFor(m => m.SendGift.InventoryItemId)
                         @Html.HiddenFor(m => m.ProfileId)
                         @Html.HiddenFor(m => m.ProfileUserId)
-                        @Html.HiddenFor(m => m.CurrentUserId)
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -59,18 +59,20 @@
                         <div class="form-group">
                             @Html.LabelFor(m => m.WriteReview.RatingValue, new { @class = "control-label" })
                             <div id="star"></div> <small>(hover and select star)</small>
-                            @Html.HiddenFor(m => m.WriteReview.RatingValue)
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(m => m.WriteReview.ReviewContent, new { @class = "control-label" })
                             @Html.TextAreaFor(m => m.WriteReview.ReviewContent, new { @class = "form-control" })
                         </div>
-                        @Html.HiddenFor(m => m.ProfileUserId)
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Submit review</button>
                     </div>
+                    @Html.HiddenFor(m => m.ProfileId)
+                    @Html.HiddenFor(m => m.ActiveTab)
+                    @Html.HiddenFor(m => m.ProfileUserId)
+                    @Html.HiddenFor(m => m.WriteReview.RatingValue)
                 }
             </div>
         </div>
@@ -90,12 +92,14 @@
                         <div class="form-group">
                             @Html.TextAreaFor(m => m.SendMessage.MessageBody, new { @class = "form-control" })
                         </div>
-                        @Html.HiddenFor(m => m.ProfileUserId)
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Send message</button>
                     </div>
+                    @Html.HiddenFor(m => m.ProfileId)
+                    @Html.HiddenFor(m => m.ActiveTab)
+                    @Html.HiddenFor(m => m.ProfileUserId)
                 }
             </div>
         </div>
@@ -122,15 +126,15 @@
                                 </div>
                             }
                         </div>
-
-                        @Html.HiddenFor(m => m.ProfileUserId)
-                        @Html.HiddenFor(m => m.ProfileId)
-                        @Html.HiddenFor(m => m.ChangeImage.UserImageId)
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">OK</button>
                     </div>
+                    @Html.HiddenFor(m => m.ActiveTab)
+                    @Html.HiddenFor(m => m.ProfileUserId)
+                    @Html.HiddenFor(m => m.ProfileId)
+                    @Html.HiddenFor(m => m.ChangeImage.UserImageId)
                 }
             </div>
         </div>

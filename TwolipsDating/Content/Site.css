@@ -178,6 +178,7 @@ input[type="checkbox"].input-validation-error {
 .conversation-header .circular-image-wrapper {
     width: 64px;
     height: 64px;
+    margin-bottom: 15px;
 }
 
 .circular-image-wrapper {
