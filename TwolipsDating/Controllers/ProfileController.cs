@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.WindowsAzure;
+using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
@@ -433,21 +433,20 @@ namespace TwolipsDating.Controllers
             viewModel.AllTags = await GetAllTagsAndCountsInSystemAsync(tagsSuggestedForProfile); // these are all tags to be displayed in the "suggest" popup
 
             // setup user images and uploads
-            var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);
-            viewModel.UploadImage = new UploadImageViewModel();
-            viewModel.UploadImage.CurrentUserId = currentUserId;
-            viewModel.UploadImage.ProfileUserId = profile.ApplicationUser.Id;
-            viewModel.UploadImage.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
-            viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
 
+            // we only want to lookup user images if the user has selected their own profile or the active tab is pictures
+
+            // setup the inventory
             var profileInventoryItems = await ProfileService.GetInventoryAsync(profile.ApplicationUser.Id);
-            viewModel.ProfileInventoryItems = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(profileInventoryItems);
-
+            viewModel.Inventory = new ProfileInventoryViewModel();
+            viewModel.Inventory.Items = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(profileInventoryItems);
+            viewModel.Inventory.CurrentUserId = currentUserId;
+            viewModel.Inventory.ProfileUserId = profile.ApplicationUser.Id;
             var viewerInventoryItems = await ProfileService.GetInventoryAsync(currentUserId);
             viewModel.ViewerInventoryItems = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(viewerInventoryItems);
 
-            // set the active tab's content
-            SetViewModelBasedOnActiveTab(profile, reviews, viewModel, userImages);
+            // setup viewmodel specific to the actively selected tab
+            await SetViewModelBasedOnActiveTabAsync(profile, viewModel, reviews, currentUserId, profile.ApplicationUser.Id);
 
             await SetUnreadCountsInViewBagAsync();
 
@@ -471,32 +470,49 @@ namespace TwolipsDating.Controllers
             return allTagsInSystem;
         }
 
-        private void SetViewModelBasedOnActiveTab(Models.Profile profile, IReadOnlyCollection<Review> reviews, ProfileViewModel viewModel, IReadOnlyCollection<UserImage> userImages)
+        private async Task SetViewModelBasedOnActiveTabAsync(Models.Profile profile,
+            ProfileViewModel viewModel, 
+            IReadOnlyCollection<Review> reviews,
+            string currentUserId,
+            string profileUserId)
         {
             if (viewModel.ActiveTab == "feed")
             {
+                var userImages = await ProfileService.GetUserImagesAsync(profileUserId);
+                viewModel.UploadImage = new UploadImageViewModel();
+                viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
                 viewModel.Feed = GetUserFeed(profile, reviews, userImages);
+                viewModel.Feed.CurrentUserId = currentUserId;
+                viewModel.Feed.ProfileUserId = profileUserId;
             }
-            else if (viewModel.ActiveTab == "pictures")
+            if (viewModel.ActiveTab == "pictures" || currentUserId == profileUserId)
             {
-                // any picture specific stuff?
+                var userImages = await ProfileService.GetUserImagesAsync(profileUserId);
+                viewModel.UploadImage = new UploadImageViewModel();
+                viewModel.UploadImage.CurrentUserId = currentUserId;
+                viewModel.UploadImage.ProfileUserId = profile.ApplicationUser.Id;
+                viewModel.UploadImage.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+                viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
             }
-            else if (viewModel.ActiveTab == "reviews")
+            if (viewModel.ActiveTab == "reviews")
             {
                 // get the user's reviews
-                viewModel.Reviews = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewViewModel>>(reviews);
+                viewModel.Reviews = new ProfileReviewsViewModel();
+                viewModel.Reviews.Items = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewViewModel>>(reviews);
+                viewModel.Reviews.CurrentUserId = currentUserId;
+                viewModel.Reviews.ProfileUserId = profileUserId;
             }
         }
 
-        private IReadOnlyCollection<ProfileFeedViewModel> GetUserFeed(Models.Profile profile, IReadOnlyCollection<Review> reviews, IReadOnlyCollection<UserImage> uploadedImages)
+        private ProfileFeedViewModel GetUserFeed(Models.Profile profile, IReadOnlyCollection<Review> reviews, IReadOnlyCollection<UserImage> uploadedImages)
         {
-            List<ProfileFeedViewModel> viewModel = new List<ProfileFeedViewModel>();
+            List<ProfileFeedItemViewModel> feedItems = new List<ProfileFeedItemViewModel>();
 
             var reviewFeedViewModel = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewWrittenFeedViewModel>>(reviews);
 
             foreach (var reviewFeed in reviewFeedViewModel)
             {
-                viewModel.Add(new ProfileFeedViewModel()
+                feedItems.Add(new ProfileFeedItemViewModel()
                 {
                     ItemType = DashboardFeedItemType.ReviewWritten,
                     DateOccurred = reviewFeed.DateOccurred,
@@ -508,7 +524,7 @@ namespace TwolipsDating.Controllers
 
             foreach (var uploadedImage in uploadedImagesConsolidated)
             {
-                viewModel.Add(new ProfileFeedViewModel()
+                feedItems.Add(new ProfileFeedItemViewModel()
                 {
                     ItemType = DashboardFeedItemType.UploadedPictures,
                     DateOccurred = uploadedImage.DateOccurred,
@@ -516,7 +532,12 @@ namespace TwolipsDating.Controllers
                 });
             }
 
-            return viewModel.OrderByDescending(v => v.DateOccurred).ToList().AsReadOnly();
+            var orderedFeed = feedItems.OrderByDescending(v => v.DateOccurred).ToList().AsReadOnly();
+            ProfileFeedViewModel viewModel = new ProfileFeedViewModel()
+            {
+                Items = orderedFeed
+            };
+            return viewModel;
         }
 
         private async Task<ActionResult> GetViewModelForProfileCreationAsync()
@@ -542,7 +563,9 @@ namespace TwolipsDating.Controllers
                 countryCollection.Add(country.Id, country.Name);
             }
 
+            string currentUserId = await GetCurrentUserIdAsync();
             viewModel.CreateProfile.Countries = countryCollection;
+            viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
             return View(viewModel);
         }

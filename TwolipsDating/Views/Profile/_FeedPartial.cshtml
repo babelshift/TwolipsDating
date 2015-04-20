@@ -1,20 +1,34 @@
-﻿@model IReadOnlyList<TwolipsDating.ViewModels.ProfileFeedViewModel>
+﻿@model TwolipsDating.ViewModels.ProfileFeedViewModel
 
-@for (int i = 0; i < Model.Count; i++)
+@if (Model.Items.Count > 0)
 {
-    var feedItem = Model[i];
+    for (int i = 0; i < Model.Items.Count; i++)
+    {
+        var feedItem = Model.Items[i];
 
-    if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.UploadedPictures)
-    {
-        Html.RenderPartial("_FeedItemUploadedPicturesPartial", feedItem.UploadedImageFeedItem);
+        if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.UploadedPictures)
+        {
+            Html.RenderPartial("_FeedItemUploadedPicturesPartial", feedItem.UploadedImageFeedItem);
+        }
+        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.ReviewWritten)
+        {
+            Html.RenderPartial("_FeedItemReviewWrittenPartial", feedItem.ReviewWrittenFeedItem);
+        }
+
+        if (i < Model.Items.Count - 1)
+        {
+            <hr />
+        }
     }
-    else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.ReviewWritten)
+}
+else
+{
+    if(Model.CurrentUserId == Model.ProfileUserId)
     {
-        Html.RenderPartial("_FeedItemReviewWrittenPartial", feedItem.ReviewWrittenFeedItem);
+        <h4>You haven't done anything yet. Here's some money. Go see a star war.</h4>
     }
-    
-    if (i < Model.Count - 1)
+    else
     {
-        <hr />
+        <h4>This user hasn't done anything yet. Message him and get things rolling.</h4>
     }
 }

@@ -1,8 +1,8 @@
-﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.InventoryItemViewModel>
+﻿@model TwolipsDating.ViewModels.ProfileInventoryViewModel
 
-@if (Model != null && Model.Count > 0)
+@if (Model != null && Model.Items.Count > 0)
 {
-    foreach (var item in Model)
+    foreach (var item in Model.Items)
     {
         for (int i = 0; i < item.ItemCount; i++)
         {
@@ -14,5 +14,12 @@
 }
 else
 {
-    <h4>This user doesn't have any items.</h4>
+    if (Model.CurrentUserId == Model.ProfileUserId)
+    {
+        <h4>You don't have any items. You should really change that.</h4>
+    }
+    else
+    {
+        <h4>This user doesn't have any items. If you send a gift, they might just return the favor.</h4>
+    }
 }

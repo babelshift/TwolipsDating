@@ -5,9 +5,9 @@ using System.Web;
 
 namespace TwolipsDating.ViewModels
 {
-    public class ProfileFeedViewModel
+    public class ProfileInventoryViewModel
     {
-        public IReadOnlyList<ProfileFeedItemViewModel> Items { get; set; }
+        public IReadOnlyCollection<InventoryItemViewModel> Items { get; set; }
         public string CurrentUserId { get; set; }
         public string ProfileUserId { get; set; }
     }

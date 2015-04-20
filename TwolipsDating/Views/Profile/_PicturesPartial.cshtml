@@ -47,5 +47,12 @@
 }
 else
 {
-    <h4>This user doesn't have any uploaded images yet.</h4>
+    if (Model.CurrentUserId == Model.ProfileUserId)
+    {
+        <h4>You haven't uploaded any images. Just upload something, anything!</h4>
+    }
+    else
+    {
+        <h4>This user hasn't uploaded any images yet. Send him or her a funny picture.</h4>
+    }
 }

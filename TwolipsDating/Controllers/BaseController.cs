@@ -51,6 +51,7 @@ namespace TwolipsDating.Controllers
 
         protected override void OnException(ExceptionContext filterContext)
         {
+#if !DEBUG
             if (filterContext.ExceptionHandled)
             {
                 return;
@@ -63,6 +64,7 @@ namespace TwolipsDating.Controllers
             Log.Error(filterContext.Exception.Message, filterContext.Exception.StackTrace);
 
             filterContext.ExceptionHandled = true;
+#endif
         }
 
         private ActionResult GetActionResult(ExceptionContext filterContext)

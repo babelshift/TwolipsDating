@@ -30,12 +30,12 @@ namespace TwolipsDating.ViewModels
         public string CurrentUserId { get; set; }
         public ProfileViewMode ViewMode { get; set; }
 
-        public IReadOnlyCollection<ProfileFeedViewModel> Feed { get; set; }
-        public IReadOnlyCollection<ReviewViewModel> Reviews { get; set; }
+        public ProfileFeedViewModel Feed { get; set; }
+        public ProfileReviewsViewModel Reviews { get; set; }
+        public ProfileInventoryViewModel Inventory { get; set; }
+        public IReadOnlyCollection<InventoryItemViewModel> ViewerInventoryItems { get; set; }
         public IReadOnlyCollection<ProfileTagSuggestionViewModel> SuggestedTags { get; set; }
         public IReadOnlyCollection<ProfileTagSuggestionViewModel> AllTags { get; set; }
-        public IReadOnlyCollection<InventoryItemViewModel> ProfileInventoryItems { get; set; }
-        public IReadOnlyCollection<InventoryItemViewModel> ViewerInventoryItems { get; set; }
 
         #endregion
 

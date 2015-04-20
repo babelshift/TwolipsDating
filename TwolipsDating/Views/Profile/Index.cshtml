@@ -104,41 +104,44 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalProfileImage" tabindex="-1" role="dialog" aria-labelledby="modalProfileImageLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="modalProfileImageLabel">Select your profile image</h4>
-                </div>
-                @using (Html.BeginForm("changeimage", "profile", FormMethod.Post))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary()
-                    <div class="modal-body">
-                        <div class="row">
-                            @foreach (var userImage in Model.UploadImage.UserImages)
-                            {
-                                <div class="col-xs-6 col-md-3">
-                                    <a id="@userImage.Id" href="#" class="thumbnail" onclick="onSelectProfileImageClick(event, this)">
-                                        <img src="@userImage.Path" style="max-height: 128px;">
-                                    </a>
-                                </div>
-                            }
+    if (Model.ActiveTab == "pictures" || Model.CurrentUserId == Model.ProfileUserId)
+    {
+        <div class="modal fade" id="modalProfileImage" tabindex="-1" role="dialog" aria-labelledby="modalProfileImageLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modalProfileImageLabel">Select your profile image</h4>
+                    </div>
+                    @using (Html.BeginForm("changeimage", "profile", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary()
+                        <div class="modal-body">
+                            <div class="row">
+                                @foreach (var userImage in Model.UploadImage.UserImages)
+                                {
+                                    <div class="col-xs-6 col-md-3">
+                                        <a id="@userImage.Id" href="#" class="thumbnail" onclick="onSelectProfileImageClick(event, this)">
+                                            <img src="@userImage.Path" style="max-height: 128px;">
+                                        </a>
+                                    </div>
+                                }
+                            </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">OK</button>
-                    </div>
-                    @Html.HiddenFor(m => m.ActiveTab)
-                    @Html.HiddenFor(m => m.ProfileUserId)
-                    @Html.HiddenFor(m => m.ProfileId)
-                    @Html.HiddenFor(m => m.ChangeImage.UserImageId)
-                }
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">OK</button>
+                        </div>
+                        @Html.HiddenFor(m => m.ActiveTab)
+                        @Html.HiddenFor(m => m.ProfileUserId)
+                        @Html.HiddenFor(m => m.ProfileId)
+                        @Html.HiddenFor(m => m.ChangeImage.UserImageId)
+                    }
+                </div>
             </div>
         </div>
-    </div>
+    }
     <div class="modal fade" id="modalSuggestTags" tabindex="-1" role="dialog" aria-labelledby="modalSuggestTagsLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -305,7 +308,14 @@
                     }
                     else
                     {
-                        <p>This user doesn't have any tags yet. Suggest some!</p>
+                        if (Model.CurrentUserId == Model.ProfileUserId)
+                        {
+                            <p>You don't have any tags yet. Ask people to suggest some!</p>
+                        }
+                        else
+                        {
+                            <p>This user doesn't have any tags yet. Suggest some!</p>
+                        }
                     }
                     @*
                         <h4><i class="glyphicon glyphicon-book"></i>&nbsp;&nbsp;Badges earned</h4>
@@ -391,7 +401,7 @@
                     }
                     else if (Model.ActiveTab == "inventory")
                     {
-                        Html.RenderPartial("_InventoryPartial", Model.ProfileInventoryItems);
+                        Html.RenderPartial("_InventoryPartial", Model.Inventory);
                     }
                 </div>
 

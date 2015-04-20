@@ -1,10 +1,18 @@
 ﻿@{
-    ViewBag.Title = "Confirm Email";
+    ViewBag.Title = "Your e-mail address is now confirmed!";
 }
 
-<h2>@ViewBag.Title.</h2>
-<div>
-    <p>
-        Thank you for confirming your email. Please @Html.ActionLink("Click here to Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
-    </p>
+<div class="page-header">
+    <h1>@ViewBag.Title</h1>
 </div>
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <p>
+        Please @Html.ActionLink("click here to log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+    </p>
+}
+else
+{
+    <p>Since you're now logged in, please continue to the rest of the community and enjoy!</p>
+}

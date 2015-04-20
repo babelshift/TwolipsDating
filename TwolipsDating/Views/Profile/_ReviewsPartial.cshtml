@@ -1,8 +1,8 @@
-﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.ReviewViewModel>
+﻿@model TwolipsDating.ViewModels.ProfileReviewsViewModel
 
-@if (Model != null && Model.Count > 0)
+@if (Model != null && Model.Items.Count > 0)
 {
-    foreach (var review in Model)
+    foreach (var review in Model.Items)
     {
         if (!String.IsNullOrEmpty(review.ProfileImagePath))
         {
@@ -37,5 +37,12 @@
 }
 else
 {
-    <h4>This user doesn't have any reviews yet.</h4>
+    if (Model.CurrentUserId == Model.ProfileUserId)
+    {
+        <h4>No one has reviewed you yet. If you build it, they will come.</h4>
+    }
+    else
+    {
+        <h4>No one has reviewed this user yet. Why don't you be the first?</h4>
+    }
 }
