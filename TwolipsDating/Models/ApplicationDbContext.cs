@@ -34,6 +34,8 @@ namespace TwolipsDating.Models
         public DbSet<Gift> Gifts { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
         public DbSet<GiftTransactionLog> GiftTransactionLog { get; set; }
+        public DbSet<FavoriteProfile> FavoriteProfiles { get; set; }
+        public DbSet<IgnoredUser> IgnoredUsers { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -66,6 +68,48 @@ namespace TwolipsDating.Models
             SetupGifts(modelBuilder);
             SetupInventoryItems(modelBuilder);
             SetupGiftTransactionLog(modelBuilder);
+            SetupFavoriteProfiles(modelBuilder);
+            SetupIgnoredUsers(modelBuilder);
+        }
+
+        private void SetupIgnoredUsers(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<IgnoredUser>()
+                .HasKey(v => new { v.SourceUserId, v.TargetUserId });
+
+            modelBuilder.Entity<IgnoredUser>()
+                .Property(v => v.DateIgnored)
+                .IsRequired();
+
+            modelBuilder.Entity<IgnoredUser>()
+                .HasRequired(v => v.SourceUser)
+                .WithMany(v => v.IgnoredUsers)
+                .HasForeignKey(v => v.SourceUserId);
+
+            modelBuilder.Entity<IgnoredUser>()
+                .HasRequired(v => v.TargetUser)
+                .WithMany(v => v.IgnoredBy)
+                .HasForeignKey(v => v.TargetUserId);
+        }
+
+        private void SetupFavoriteProfiles(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<FavoriteProfile>()
+                .HasKey(v => new { v.UserId, v.ProfileId });
+
+            modelBuilder.Entity<FavoriteProfile>()
+                .Property(v => v.DateFavorited)
+                .IsRequired();
+
+            modelBuilder.Entity<FavoriteProfile>()
+                .HasRequired(v => v.User)
+                .WithMany(v => v.FavoriteProfiles)
+                .HasForeignKey(v => v.UserId);
+
+            modelBuilder.Entity<FavoriteProfile>()
+                .HasRequired(v => v.Profile)
+                .WithMany(v => v.FavoritedBy)
+                .HasForeignKey(v => v.ProfileId);
         }
 
         private void SetupGiftTransactionLog(DbModelBuilder modelBuilder)

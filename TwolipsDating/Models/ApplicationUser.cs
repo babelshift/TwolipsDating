@@ -35,6 +35,9 @@ namespace TwolipsDating.Models
         public virtual ICollection<InventoryItem> InventoryItems { get; set; }
         public virtual ICollection<GiftTransactionLog> ItemsSent { get; set; }
         public virtual ICollection<GiftTransactionLog> ItemsReceived { get; set; }
+        public virtual ICollection<FavoriteProfile> FavoriteProfiles { get; set; }
+        public virtual ICollection<IgnoredUser> IgnoredUsers { get; set; }
+        public virtual ICollection<IgnoredUser> IgnoredBy { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

@@ -333,11 +333,21 @@
     <Compile Include="Migrations\201504150050245_AddGifts.Designer.cs">
       <DependentUpon>201504150050245_AddGifts.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504200100403_AddFavoriteProfiles.cs" />
+    <Compile Include="Migrations\201504200100403_AddFavoriteProfiles.Designer.cs">
+      <DependentUpon>201504200100403_AddFavoriteProfiles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504200146300_AddIgnoredUsers.cs" />
+    <Compile Include="Migrations\201504200146300_AddIgnoredUsers.Designer.cs">
+      <DependentUpon>201504200146300_AddIgnoredUsers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
+    <Compile Include="Models\FavoriteProfile.cs" />
     <Compile Include="Models\Gift.cs" />
     <Compile Include="Models\GiftTransactionLog.cs" />
+    <Compile Include="Models\IgnoredUser.cs" />
     <Compile Include="Models\InventoryItem.cs" />
     <Compile Include="Models\MessageConversation.cs" />
     <Compile Include="Models\ReviewViolation.cs" />
@@ -588,6 +598,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504150050245_AddGifts.resx">
       <DependentUpon>201504150050245_AddGifts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504200100403_AddFavoriteProfiles.resx">
+      <DependentUpon>201504200100403_AddFavoriteProfiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504200146300_AddIgnoredUsers.resx">
+      <DependentUpon>201504200146300_AddIgnoredUsers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
