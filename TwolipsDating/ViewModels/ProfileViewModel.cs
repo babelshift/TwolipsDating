@@ -37,6 +37,9 @@ namespace TwolipsDating.ViewModels
         public IReadOnlyCollection<ProfileTagSuggestionViewModel> SuggestedTags { get; set; }
         public IReadOnlyCollection<ProfileTagSuggestionViewModel> AllTags { get; set; }
 
+        public bool IsIgnoredByCurrentUser { get; set; }
+        public bool IsFavoritedByCurrentUser { get; set; }
+
         #endregion
 
         #region Write review stuff

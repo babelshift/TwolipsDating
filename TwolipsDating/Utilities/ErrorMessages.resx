@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="FavoriteProfileNotSaved" xml:space="preserve">
+    <value>Something prevented you from toggling the favorite profile status. If this continues, contact support.</value>
+  </data>
   <data name="GiftNotSent" xml:space="preserve">
     <value>Something prevented your gift from being sent. If this continues, contact support.</value>
+  </data>
+  <data name="IgnoredUserNotSaved" xml:space="preserve">
+    <value>Something prevented your from toggling the ignored user status. If this continues, contact support.</value>
   </data>
   <data name="MessageNotSent" xml:space="preserve">
     <value>Something prevented your message from being sent. If this continues, contact support.</value>

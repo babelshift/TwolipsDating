@@ -19,8 +19,78 @@ namespace TwolipsDating.Controllers
 {
     public class ProfileController : BaseController
     {
+        private UserService userService = new UserService();
+
+        #region Toggle Favorite and Ignore
+
+        [HttpPost]
+        public async Task<JsonResult> ToggleFavoriteProfile(string currentUserId, string profileUserId, int profileId)
+        {
+            try
+            {
+                // if user is favoriting his own profile, do nothing
+                if (currentUserId == profileUserId)
+                {
+                    return Json(new { success = false });
+                }
+
+                // if user is not logged in, forbidden
+                // if passed user id is not equal to request current user id, forbidden
+                if (!User.Identity.IsAuthenticated || currentUserId != await GetCurrentUserIdAsync())
+                {
+                    return Json(new { success = false, error = "403 Forbidden" });
+                }
+
+                bool isFavorite = await ProfileService.ToggleFavoriteProfileAsync(currentUserId, profileId);
+
+                return Json(new { success = true, isFavorite = isFavorite });
+            }
+            catch (Exception e)
+            {
+                Log.Error("ToggleFavoriteProfile", e,
+                    parameters: new { currentUserId = currentUserId, profileUserId = profileUserId, profileId = profileId }
+                );
+
+                return Json(new { success = false, error = ErrorMessages.FavoriteProfileNotSaved });
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ToggleIgnoredUser(string currentUserId, string profileUserId)
+        {
+            try
+            {
+                // if user is ignoring himself, do nothing
+                if (currentUserId == profileUserId)
+                {
+                    return Json(new { success = false });
+                }
+
+                // if user is not logged in, forbidden
+                // if passed user id is not equal to request current user id, forbidden
+                if (!User.Identity.IsAuthenticated || currentUserId != await GetCurrentUserIdAsync())
+                {
+                    return Json(new { success = false, error = "403 Forbidden" });
+                }
+
+                bool isIgnored = await ProfileService.ToggleIgnoredUserAsync(currentUserId, profileUserId);
+
+                return Json(new { success = true, isIgnored = isIgnored });
+            }
+            catch (Exception e)
+            {
+                Log.Error("ToggleIgnoredUser", e,
+                    parameters: new { currentUserId = currentUserId, profileUserId = profileUserId }
+                );
+
+                return Json(new { success = false, error = ErrorMessages.IgnoredUserNotSaved });
+            }
+        }
+
+        #endregion
+
         #region Suggest Tags
-        
+
         [HttpPost]
         public async Task<JsonResult> SuggestTag(int id, int profileId, string suggestAction)
         {
@@ -174,7 +244,7 @@ namespace TwolipsDating.Controllers
             try
             {
                 string currentUserId = await GetCurrentUserIdAsync();
-                
+
                 bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
                 if (isCurrentUserEmailConfirmed)
@@ -432,9 +502,9 @@ namespace TwolipsDating.Controllers
             viewModel.SuggestedTags = tagsSuggestedForProfile; // these are the tag suggestions that will be displayed at the profile screen
             viewModel.AllTags = await GetAllTagsAndCountsInSystemAsync(tagsSuggestedForProfile); // these are all tags to be displayed in the "suggest" popup
 
-            // setup user images and uploads
-
-            // we only want to lookup user images if the user has selected their own profile or the active tab is pictures
+            // favorites and ignores
+            viewModel.IsFavoritedByCurrentUser = profile.FavoritedBy.Any(f => f.UserId == currentUserId);
+            viewModel.IsIgnoredByCurrentUser = await userService.IsUserIgnoredByUserAsync(currentUserId, profile.ApplicationUser.Id);
 
             // setup the inventory
             var profileInventoryItems = await ProfileService.GetInventoryAsync(profile.ApplicationUser.Id);
@@ -471,7 +541,7 @@ namespace TwolipsDating.Controllers
         }
 
         private async Task SetViewModelBasedOnActiveTabAsync(Models.Profile profile,
-            ProfileViewModel viewModel, 
+            ProfileViewModel viewModel,
             IReadOnlyCollection<Review> reviews,
             string currentUserId,
             string profileUserId)
@@ -625,5 +695,15 @@ namespace TwolipsDating.Controllers
         }
 
         #endregion
+
+        protected override void Dispose(bool disposing)
+        {
+            if(disposing && userService != null)
+            {
+                userService.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

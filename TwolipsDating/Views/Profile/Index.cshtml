@@ -13,32 +13,41 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="modalReviewLabel">Send gifts to @Model.UserName</h4>
                 </div>
-                @using (Html.BeginForm("sendgift", "profile", FormMethod.Post))
+                @if (Model.ViewerInventoryItems.Count > 0)
                 {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary()
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <div class="row">
-                                @foreach (var item in Model.ViewerInventoryItems)
-                                {
-                                    <div class="col-md-2">
-                                        <a id="@item.InventoryItemId" data-gift-id="@item.GiftId" href="#" onclick="onSelectGiftClick(event, this)">
-                                            <img src="@item.GiftIconFilePath">
-                                        </a>
-                                    </div>
-                                }
+                    using (Html.BeginForm("sendgift", "profile", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary()
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="row">
+                                    @foreach (var item in Model.ViewerInventoryItems)
+                                    {
+                                        <div class="col-md-2">
+                                            <a id="@item.InventoryItemId" data-gift-id="@item.GiftId" href="#" onclick="onSelectGiftClick(event, this)">
+                                                <img src="@item.GiftIconFilePath">
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
                             </div>
+                            @Html.HiddenFor(m => m.ActiveTab)
+                            @Html.HiddenFor(m => m.SendGift.GiftId)
+                            @Html.HiddenFor(m => m.SendGift.InventoryItemId)
+                            @Html.HiddenFor(m => m.ProfileId)
+                            @Html.HiddenFor(m => m.ProfileUserId)
                         </div>
-                        @Html.HiddenFor(m => m.ActiveTab)
-                        @Html.HiddenFor(m => m.SendGift.GiftId)
-                        @Html.HiddenFor(m => m.SendGift.InventoryItemId)
-                        @Html.HiddenFor(m => m.ProfileId)
-                        @Html.HiddenFor(m => m.ProfileUserId)
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Send gift</button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Send gift</button>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="modal-body">
+                        <p>You don't have any items to send. Go get some and come back!</p>
                     </div>
                 }
             </div>
@@ -193,13 +202,21 @@
                 {
                     <div class="pull-right">
                         <ul class="nav nav-pills">
-                            <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift"><i class="glyphicon glyphicon-gift"></i>&nbsp;Send Gift</a></li>
-                            <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Send Message</a></li>
-                            <li role="presentation"><a href="#" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review"><i class="glyphicon glyphicon-edit"></i>&nbsp;Write Review</a></li>
+                            <li role="presentation"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift"><i class="glyphicon glyphicon-gift"></i>&nbsp;Send Gift</button></li>
+                            <li role="presentation"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Send Message</button></li>
+                            <li role="presentation"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review"><i class="glyphicon glyphicon-edit"></i>&nbsp;Write Review</button></li>
+                            <li role="presentation">
+                                <button id="button-toggle-ignored" type="button" class="btn btn-primary" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.CurrentUserId', '@Model.ProfileUserId')">
+                                    <i id="button-toggle-ignored-icon" class="glyphicon glyphicon-volume-up"></i>
+                                </button>
+                            </li>
+                            <li role="presentation">
+                                <button id="button-toggle-favorite" type="button" class="btn btn-primary" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.CurrentUserId', '@Model.ProfileUserId', @Model.ProfileId)">
+                                    <i id="button-toggle-favorite-icon" class="glyphicon glyphicon-heart-empty"></i>
+                                </button>
+                            </li>
                             @*
-                                <li role="presentation"><a href="#" title="Send a gift"><i class="glyphicon glyphicon-gift"></i></a></li>
                                 <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
-                                <li role="presentation"><a href="#" title="Add to ignore"><i class="glyphicon glyphicon-volume-off"></i></a></li>
                             *@
                         </ul>
                     </div>}
@@ -488,6 +505,18 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
 
     <script type="text/javascript">
         $(document).ready(function () {
+            if('@Model.IsFavoritedByCurrentUser' == 'True') {
+                toggleFavoriteProfileIcon(true);
+            } else {
+                toggleFavoriteProfileIcon(false);
+            }
+
+            if('@Model.IsIgnoredByCurrentUser' == 'True') {
+                toggleIgnoredUserIcon(true);
+            } else {
+                toggleIgnoredUserIcon(false);
+            }
+
             // when the page loads, select US country by default, fire change event
             var countrySelect = $("#CreateProfile_SelectedCountryId");
             if (countrySelect != null) {
@@ -623,6 +652,78 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
                         div.fadeOut(300, function () {
                             div.remove();
                         });
+                    } else {
+                        alert(data.error);
+                    }
+                }
+            });
+        }
+
+        function onToggleFavoriteProfile(e, obj, currentUserId, profileUserId, profileId) {
+            e.preventDefault();
+
+            var json = "{\"currentUserId\":\"" + currentUserId + "\", \"profileUserId\":\"" + profileUserId + "\", \"profileId\":" + profileId + "}";
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("toggleFavoriteProfile", "profile")',
+                data: json,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.success) {
+                        toggleFavoriteProfileIcon(data.isFavorite);
+                    } else {
+                        alert(data.error);
+                    }
+                }
+            });
+        }
+
+        function toggleFavoriteProfileIcon(isFavorite) {
+            if (isFavorite) {
+                $("#button-toggle-favorite-icon").removeClass("glyphicon-heart-empty");
+                $("#button-toggle-favorite-icon").addClass("glyphicon-heart");
+                $("#button-toggle-favorite").removeClass("btn-primary");
+                $("#button-toggle-favorite").addClass("btn-success");
+                $("#button-toggle-favorite").attr("title", "Remove from favorites");
+            } else {
+                $("#button-toggle-favorite-icon").removeClass("glyphicon-heart");
+                $("#button-toggle-favorite-icon").addClass("glyphicon-heart-empty");
+                $("#button-toggle-favorite").removeClass("btn-success");
+                $("#button-toggle-favorite").addClass("btn-primary");
+                $("#button-toggle-favorite").attr("title", "Add to favorites");
+            }
+        }
+
+        function toggleIgnoredUserIcon(isIgnored) {
+            if (isIgnored) {
+                $("#button-toggle-ignored-icon").removeClass("glyphicon-volume-up");
+                $("#button-toggle-ignored-icon").addClass("glyphicon-volume-off");
+                $("#button-toggle-ignored").removeClass("btn-primary");
+                $("#button-toggle-ignored").addClass("btn-danger");
+                $("#button-toggle-ignored").attr("title", "Not receiving updates and messages from this user");
+            } else {
+                $("#button-toggle-ignored-icon").removeClass("glyphicon-volume-off");
+                $("#button-toggle-ignored-icon").addClass("glyphicon-volume-up");
+                $("#button-toggle-ignored").removeClass("btn-danger");
+                $("#button-toggle-ignored").addClass("btn-primary");
+                $("#button-toggle-ignored").attr("title", "Receiving updates and messages from this user");
+            }
+        }
+
+        function onToggleIgnoredUser(e, obj, currentUserId, profileUserId) {
+            e.preventDefault();
+
+            var json = "{\"currentUserId\":\"" + currentUserId + "\", \"profileUserId\":\"" + profileUserId + "\"}";
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("toggleIgnoredUser", "profile")',
+                data: json,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.success) {
+                        toggleIgnoredUserIcon(data.isIgnored);
                     } else {
                         alert(data.error);
                     }

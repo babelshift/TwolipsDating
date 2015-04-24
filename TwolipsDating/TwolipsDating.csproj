@@ -262,6 +262,7 @@
     <Compile Include="Business\BaseService.cs" />
     <Compile Include="Business\DashboardService.cs" />
     <Compile Include="Business\ProfileService.cs" />
+    <Compile Include="Business\UserService.cs" />
     <Compile Include="Business\ViolationService.cs" />
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -503,7 +504,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />

@@ -496,5 +496,71 @@ namespace TwolipsDating.Business
                 db.InventoryItems.Remove(fromUserInventoryItem);
             }
         }
+
+        public async Task<bool> ToggleFavoriteProfileAsync(string currentUserId, int profileId)
+        {
+            var favoriteEntity = await (from favoriteProfiles in db.FavoriteProfiles
+                                        where favoriteProfiles.UserId == currentUserId
+                                        where favoriteProfiles.ProfileId == profileId
+                                        select favoriteProfiles).FirstOrDefaultAsync();
+
+            bool isFavorite = false;
+
+            // if there is a favorite profile entity match, remove it
+            if (favoriteEntity != null)
+            {
+                db.FavoriteProfiles.Remove(favoriteEntity);
+            }
+            // else, add it
+            else
+            {
+                FavoriteProfile favoriteProfile = new FavoriteProfile()
+                {
+                    UserId = currentUserId,
+                    ProfileId = profileId,
+                    DateFavorited = DateTime.Now
+                };
+
+                db.FavoriteProfiles.Add(favoriteProfile);
+                isFavorite = true;
+            }
+
+            await db.SaveChangesAsync();
+
+            return isFavorite;
+        }
+
+        public async Task<bool> ToggleIgnoredUserAsync(string sourceUserId, string targetUserId)
+        {
+            var ignoredUserEntity = await (from ignoredUsers in db.IgnoredUsers
+                                        where ignoredUsers.SourceUserId == sourceUserId
+                                        where ignoredUsers.TargetUserId == targetUserId
+                                        select ignoredUsers).FirstOrDefaultAsync();
+
+            bool isIgnored = false;
+
+            // if there is an ignored user entity match, remove it
+            if (ignoredUserEntity != null)
+            {
+                db.IgnoredUsers.Remove(ignoredUserEntity);
+            }
+            // else, add it
+            else
+            {
+                IgnoredUser ignoredUser = new IgnoredUser()
+                {
+                    SourceUserId = sourceUserId,
+                    TargetUserId = targetUserId,
+                    DateIgnored = DateTime.Now
+                };
+
+                db.IgnoredUsers.Add(ignoredUser);
+                isIgnored = true;
+            }
+
+            await db.SaveChangesAsync();
+
+            return isIgnored;
+        }
     }
 }

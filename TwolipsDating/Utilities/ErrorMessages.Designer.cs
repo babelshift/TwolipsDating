@@ -61,11 +61,29 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something prevented you from toggling the favorite profile status. If this continues, contact support..
+        /// </summary>
+        internal static string FavoriteProfileNotSaved {
+            get {
+                return ResourceManager.GetString("FavoriteProfileNotSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Something prevented your gift from being sent. If this continues, contact support..
         /// </summary>
         internal static string GiftNotSent {
             get {
                 return ResourceManager.GetString("GiftNotSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something prevented your from toggling the ignored user status. If this continues, contact support..
+        /// </summary>
+        internal static string IgnoredUserNotSaved {
+            get {
+                return ResourceManager.GetString("IgnoredUserNotSaved", resourceCulture);
             }
         }
         
