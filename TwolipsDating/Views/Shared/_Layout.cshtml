@@ -184,14 +184,6 @@
 
     </script>
     <script type="text/javascript">
-        $(document).ready(function () {
-            var dropdownMain = $("#dropdown-main");
-            if (dropdownMain != null) {
-                dropdownMain.hover(function () {
-                    dropdownMain.toggleClass("open");
-                });
-            }
-        });
         $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) { event.preventDefault(); $(this).ekkoLightbox(); });
     </script>
     @RenderSection("scripts", required: false)

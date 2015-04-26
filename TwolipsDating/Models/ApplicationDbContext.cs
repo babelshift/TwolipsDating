@@ -36,6 +36,9 @@ namespace TwolipsDating.Models
         public DbSet<GiftTransactionLog> GiftTransactionLog { get; set; }
         public DbSet<FavoriteProfile> FavoriteProfiles { get; set; }
         public DbSet<IgnoredUser> IgnoredUsers { get; set; }
+        public DbSet<Quiz> Quizzes { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Answer> Answers { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -70,6 +73,81 @@ namespace TwolipsDating.Models
             SetupGiftTransactionLog(modelBuilder);
             SetupFavoriteProfiles(modelBuilder);
             SetupIgnoredUsers(modelBuilder);
+            SetupQuizzes(modelBuilder);
+            SetupQuestions(modelBuilder);
+            SetupAnswers(modelBuilder);
+        }
+
+        private void SetupAnswers(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Answer>()
+                .HasKey(v => new { v.Id });
+
+            modelBuilder.Entity<Answer>()
+                .Property(v => v.Content)
+                .IsRequired();
+
+            modelBuilder.Entity<Answer>()
+                .Property(v => v.Content)
+                .HasMaxLength(1000);
+
+            modelBuilder.Entity<Answer>()
+                .HasRequired(v => v.Question)
+                .WithMany(v => v.PossibleAnswers)
+                .HasForeignKey(v => v.QuestionId);
+
+            //modelBuilder.Entity<Answer>()
+            //    .HasRequired(v => v.CorrectAnswerForQuestion)
+            //    .WithOptional(v => v.CorrectAnswer);
+        }
+
+        private void SetupQuestions(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Question>()
+                .HasKey(v => new { v.Id });
+
+            modelBuilder.Entity<Question>()
+                .Property(v => v.Content)
+                .IsRequired();
+
+            modelBuilder.Entity<Question>()
+                .Property(v => v.Content)
+                .HasMaxLength(1000);
+
+            //modelBuilder.Entity<Question>()
+            //    .HasOptional(v => v.CorrectAnswer)
+            //    .WithRequired(v => v.CorrectAnswerForQuestion);
+
+            modelBuilder.Entity<Question>()
+                .HasOptional(v => v.Quiz)
+                .WithMany(v => v.Questions)
+                .HasForeignKey(v => v.QuizId);
+        }
+
+        private void SetupQuizzes(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Quiz>()
+                .HasKey(v => new { v.Id });
+
+            modelBuilder.Entity<Quiz>()
+                .Property(v => v.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<Quiz>()
+                .Property(v => v.Description)
+                .IsRequired();
+
+            modelBuilder.Entity<Quiz>()
+                .Property(v => v.DateCreated)
+                .IsRequired();
+
+            modelBuilder.Entity<Quiz>()
+                .Property(v => v.Name)
+                .HasMaxLength(64);
+
+            modelBuilder.Entity<Quiz>()
+                .Property(v => v.Description)
+                .HasMaxLength(255);
         }
 
         private void SetupIgnoredUsers(DbModelBuilder modelBuilder)

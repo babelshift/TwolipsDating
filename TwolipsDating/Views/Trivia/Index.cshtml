@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "twolips - trivia";
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Trivia" })
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 col-md-offset-2">
+        <div class="panel panel-default">
+            <div class="panel-body text-center">
+                <i class="glyphicon glyphicon-refresh"></i>&nbsp;<a href="@Url.Action("random")">Random Questions</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-body text-center">
+                <i class="glyphicon glyphicon-time"></i>&nbsp;<a href="@Url.Action("timed")">Timed Questions</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-md-offset-2">
+        <div class="panel panel-default">
+            <div class="panel-body text-center">
+                <i class="glyphicon glyphicon-king"></i>&nbsp;<a href="@Url.Action("special")">Special Quizzes</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-body text-center">
+                <i class="glyphicon glyphicon-stats"></i>&nbsp;<a href="@Url.Action("stats")">Your Stats</a>
+            </div>
+        </div>
+    </div>
+</div>

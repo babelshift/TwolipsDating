@@ -61,6 +61,15 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something prevented your answer from being submitted. If this continues, contact support..
+        /// </summary>
+        internal static string AnswerNotSubmitted {
+            get {
+                return ResourceManager.GetString("AnswerNotSubmitted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Something prevented you from toggling the favorite profile status. If this continues, contact support..
         /// </summary>
         internal static string FavoriteProfileNotSaved {

@@ -262,6 +262,7 @@
     <Compile Include="Business\BaseService.cs" />
     <Compile Include="Business\DashboardService.cs" />
     <Compile Include="Business\ProfileService.cs" />
+    <Compile Include="Business\TriviaService.cs" />
     <Compile Include="Business\UserService.cs" />
     <Compile Include="Business\ViolationService.cs" />
     <Compile Include="Controllers\AboutController.cs" />
@@ -273,6 +274,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\TriviaController.cs" />
     <Compile Include="Controllers\ViolationController.cs" />
     <Compile Include="Migrations\201503082310198_initial.cs" />
     <Compile Include="Migrations\201503082310198_initial.Designer.cs">
@@ -342,15 +344,34 @@
     <Compile Include="Migrations\201504200146300_AddIgnoredUsers.Designer.cs">
       <DependentUpon>201504200146300_AddIgnoredUsers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504251545050_QuizQuestionAnswer.cs" />
+    <Compile Include="Migrations\201504251545050_QuizQuestionAnswer.Designer.cs">
+      <DependentUpon>201504251545050_QuizQuestionAnswer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504251959286_ChangeQuizAsOptional.cs" />
+    <Compile Include="Migrations\201504251959286_ChangeQuizAsOptional.Designer.cs">
+      <DependentUpon>201504251959286_ChangeQuizAsOptional.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504261507087_ResetQuestionAnswerQuiz.cs" />
+    <Compile Include="Migrations\201504261507087_ResetQuestionAnswerQuiz.Designer.cs">
+      <DependentUpon>201504261507087_ResetQuestionAnswerQuiz.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504261530243_FixingQuestionAnswerRelationship.cs" />
+    <Compile Include="Migrations\201504261530243_FixingQuestionAnswerRelationship.Designer.cs">
+      <DependentUpon>201504261530243_FixingQuestionAnswerRelationship.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
+    <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\FavoriteProfile.cs" />
     <Compile Include="Models\Gift.cs" />
     <Compile Include="Models\GiftTransactionLog.cs" />
     <Compile Include="Models\IgnoredUser.cs" />
     <Compile Include="Models\InventoryItem.cs" />
     <Compile Include="Models\MessageConversation.cs" />
+    <Compile Include="Models\Question.cs" />
+    <Compile Include="Models\Quiz.cs" />
     <Compile Include="Models\ReviewViolation.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\TagSuggestion.cs" />
@@ -370,6 +391,7 @@
     <Compile Include="Utilities\ReviewExtensions.cs" />
     <Compile Include="Utilities\UploadedImageFeedKey.cs" />
     <Compile Include="Utilities\UserImageListExtensions.cs" />
+    <Compile Include="ViewModels\AnswerViewModel.cs" />
     <Compile Include="ViewModels\ChangeProfileImageViewModel.cs" />
     <Compile Include="ViewModels\ConversationItemViewModel.cs" />
     <Compile Include="ViewModels\ConversationViewModel.cs" />
@@ -383,6 +405,7 @@
     <Compile Include="ViewModels\ProfileInventoryViewModel.cs" />
     <Compile Include="ViewModels\ProfileReviewsViewModel.cs" />
     <Compile Include="ViewModels\ProfileTagSuggestionViewModel.cs" />
+    <Compile Include="ViewModels\QuestionViewModel.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -545,10 +568,11 @@
     <Content Include="Views\About\Terms.cshtml" />
     <Content Include="Views\Message\Conversation.cshtml" />
     <Content Include="Views\Profile\_InventoryPartial.cshtml" />
+    <Content Include="Views\Trivia\Index.cshtml" />
+    <Content Include="Views\Trivia\Random.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Violation\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -604,6 +628,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504200146300_AddIgnoredUsers.resx">
       <DependentUpon>201504200146300_AddIgnoredUsers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504251545050_QuizQuestionAnswer.resx">
+      <DependentUpon>201504251545050_QuizQuestionAnswer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504251959286_ChangeQuizAsOptional.resx">
+      <DependentUpon>201504251959286_ChangeQuizAsOptional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504261507087_ResetQuestionAnswerQuiz.resx">
+      <DependentUpon>201504261507087_ResetQuestionAnswerQuiz.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504261530243_FixingQuestionAnswerRelationship.resx">
+      <DependentUpon>201504261530243_FixingQuestionAnswerRelationship.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

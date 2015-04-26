@@ -1,0 +1,79 @@
+﻿@model TwolipsDating.ViewModels.QuestionViewModel
+
+@{
+    ViewBag.Title = "twolips - random trivia";
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Trivia" })
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="success-box" class="alert alert-success hidden">
+                    <p>Correct!</p>
+                </div>
+                <div id="fail-box" class="alert alert-danger hidden">
+                    <p>Incorrect!</p>
+                </div>
+                <p>@Model.Content</p>
+                @foreach (var answer in @Model.Answers)
+                {
+                    <div class="radio">
+                        <label>
+                            @Html.RadioButtonFor(m => m.SelectedAnswerId, answer.AnswerId)
+                            @answer.Content
+                        </label>
+                    </div>
+                }
+                <input id="button-ok" type="button" class="btn btn-primary btn-sm" value="OK" onclick="onSubmitAnswer(event, this)" />
+                @Html.ActionLink("Next >", "random", null, new { id = "button-next", @class = "btn btn-success btn-sm hidden" })
+                @Html.HiddenFor(m => m.QuestionId)
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        function onSubmitAnswer(e, obj) {
+            e.preventDefault();
+
+            $("#success-box").addClass("hidden");
+            $("#button-next").addClass("hidden");
+            $("#fail-box").addClass("hidden");
+            $("#button-ok").removeClass("hidden");
+
+            var questionId = $("#QuestionId").val();
+            var selected = $("input[type='radio'][name='SelectedAnswerId']:checked");
+            var answerId = "";
+            if (selected.length > 0) {
+                answerId = selected.val();
+            }
+
+            var json = "{\"questionId\":" + questionId + ", \"answerId\":" + answerId + "}";
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("submitanswer", "trivia")',
+                data: json,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.success) {
+                        if (data.isAnswerCorrect) {
+                            $("#success-box").removeClass("hidden");
+                            $("#button-next").removeClass("hidden");
+                            $("#button-ok").addClass("hidden");
+                        } else {
+                            $("#fail-box").removeClass("hidden");
+                        }
+                    } else {
+                        alert(data.error);
+                    }
+                }
+            });
+        }
+    </script>
+}
