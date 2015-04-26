@@ -13,11 +13,8 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div id="success-box" class="alert alert-success hidden">
-                    <p>Correct!</p>
-                </div>
-                <div id="fail-box" class="alert alert-danger hidden">
-                    <p>Incorrect!</p>
+                <div id="alert-box" class="alert alert-info">
+                    <p>Select an answer and then press OK. There is no time limit.</p>
                 </div>
                 <p>@Model.Content</p>
                 @foreach (var answer in @Model.Answers)
@@ -30,7 +27,7 @@
                     </div>
                 }
                 <input id="button-ok" type="button" class="btn btn-primary btn-sm" value="OK" onclick="onSubmitAnswer(event, this)" />
-                @Html.ActionLink("Next >", "random", null, new { id = "button-next", @class = "btn btn-success btn-sm hidden" })
+                @Html.ActionLink("Next", "random", null, new { id = "button-next", @class = "btn btn-sm hidden" })
                 @Html.HiddenFor(m => m.QuestionId)
             </div>
         </div>
@@ -41,9 +38,7 @@
         function onSubmitAnswer(e, obj) {
             e.preventDefault();
 
-            $("#success-box").addClass("hidden");
             $("#button-next").addClass("hidden");
-            $("#fail-box").addClass("hidden");
             $("#button-ok").removeClass("hidden");
 
             var questionId = $("#QuestionId").val();
@@ -63,11 +58,25 @@
                 success: function (data) {
                     if (data.success) {
                         if (data.isAnswerCorrect) {
-                            $("#success-box").removeClass("hidden");
+                            $("#alert-box").removeClass("alert-success");
+                            $("#alert-box").removeClass("alert-danger");
+                            $("#alert-box").removeClass("alert-info");
+                            $("#alert-box").addClass("alert-success");
+                            $("#alert-box").html("<p>Correct!</p>");
                             $("#button-next").removeClass("hidden");
+                            $("#button-next").addClass("btn-success");
                             $("#button-ok").addClass("hidden");
+                            $("input[type='radio']").attr("disabled", true);
                         } else {
-                            $("#fail-box").removeClass("hidden");
+                            $("#alert-box").removeClass("alert-success");
+                            $("#alert-box").removeClass("alert-danger");
+                            $("#alert-box").removeClass("alert-info");
+                            $("#alert-box").addClass("alert-danger");
+                            $("#alert-box").html("<p>Incorrect!</p>");
+                            $("#button-next").removeClass("hidden");
+                            $("#button-next").addClass("btn-danger");
+                            $("#button-ok").addClass("hidden");
+                            $("input[type='radio']").attr("disabled", true);
                         }
                     } else {
                         alert(data.error);

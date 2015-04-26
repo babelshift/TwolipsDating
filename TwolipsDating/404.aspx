@@ -12,7 +12,7 @@
     <div style="width: 800px; margin: 0 auto; text-align: center;">
         <br />
         <br />
-        <h2><img src="Content/twolipsicon.png" width="64" height="64" /> twolips dating</h2>
+        <h2><img src="/Content/twolipsicon.png" width="64" height="64" /> twolips dating</h2>
         <br />
         <h3><strong>404 Not Found</strong></h3>
         <h3>We couldn't find what you were looking for. It may or may not exist.</h3>
