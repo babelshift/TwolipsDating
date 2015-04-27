@@ -39,6 +39,7 @@ namespace TwolipsDating.Models
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
+        public DbSet<AnsweredQuestion> AnsweredQuestions { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -76,6 +77,36 @@ namespace TwolipsDating.Models
             SetupQuizzes(modelBuilder);
             SetupQuestions(modelBuilder);
             SetupAnswers(modelBuilder);
+            SetupAnsweredQuestions(modelBuilder);
+        }
+
+        private void SetupAnsweredQuestions(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<AnsweredQuestion>()
+                .HasKey(v => new { v.UserId, v.QuestionId });
+
+            modelBuilder.Entity<AnsweredQuestion>()
+                .Property(v => v.AnswerId)
+                .IsRequired();
+
+            modelBuilder.Entity<AnsweredQuestion>()
+                .Property(v => v.DateAnswered)
+                .IsRequired();
+
+            modelBuilder.Entity<AnsweredQuestion>()
+                .HasRequired(v => v.Answer)
+                .WithMany(v => v.Instances)
+                .HasForeignKey(v => v.AnswerId);
+
+            modelBuilder.Entity<AnsweredQuestion>()
+                .HasRequired(v => v.Question)
+                .WithMany(v => v.AnsweredInstances)
+                .HasForeignKey(v => v.QuestionId);
+
+            modelBuilder.Entity<AnsweredQuestion>()
+                .HasRequired(v => v.User)
+                .WithMany(v => v.AnsweredQuestions)
+                .HasForeignKey(v => v.UserId);
         }
 
         private void SetupAnswers(DbModelBuilder modelBuilder)
@@ -95,10 +126,6 @@ namespace TwolipsDating.Models
                 .HasRequired(v => v.Question)
                 .WithMany(v => v.PossibleAnswers)
                 .HasForeignKey(v => v.QuestionId);
-
-            //modelBuilder.Entity<Answer>()
-            //    .HasRequired(v => v.CorrectAnswerForQuestion)
-            //    .WithOptional(v => v.CorrectAnswer);
         }
 
         private void SetupQuestions(DbModelBuilder modelBuilder)
@@ -114,14 +141,14 @@ namespace TwolipsDating.Models
                 .Property(v => v.Content)
                 .HasMaxLength(1000);
 
-            //modelBuilder.Entity<Question>()
-            //    .HasOptional(v => v.CorrectAnswer)
-            //    .WithRequired(v => v.CorrectAnswerForQuestion);
-
             modelBuilder.Entity<Question>()
                 .HasOptional(v => v.Quiz)
                 .WithMany(v => v.Questions)
                 .HasForeignKey(v => v.QuizId);
+
+            modelBuilder.Entity<Question>()
+                .Property(v => v.Points)
+                .IsRequired();
         }
 
         private void SetupQuizzes(DbModelBuilder modelBuilder)

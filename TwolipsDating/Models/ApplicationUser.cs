@@ -38,6 +38,7 @@ namespace TwolipsDating.Models
         public virtual ICollection<FavoriteProfile> FavoriteProfiles { get; set; }
         public virtual ICollection<IgnoredUser> IgnoredUsers { get; set; }
         public virtual ICollection<IgnoredUser> IgnoredBy { get; set; }
+        public virtual ICollection<AnsweredQuestion> AnsweredQuestions { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

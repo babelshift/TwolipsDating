@@ -360,10 +360,19 @@
     <Compile Include="Migrations\201504261530243_FixingQuestionAnswerRelationship.Designer.cs">
       <DependentUpon>201504261530243_FixingQuestionAnswerRelationship.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504262028325_QuestionsAndTagsRelationship.cs" />
+    <Compile Include="Migrations\201504262028325_QuestionsAndTagsRelationship.Designer.cs">
+      <DependentUpon>201504262028325_QuestionsAndTagsRelationship.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504262343468_QuestionAnswerTracking.cs" />
+    <Compile Include="Migrations\201504262343468_QuestionAnswerTracking.Designer.cs">
+      <DependentUpon>201504262343468_QuestionAnswerTracking.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
     <Compile Include="Models\Answer.cs" />
+    <Compile Include="Models\AnsweredQuestion.cs" />
     <Compile Include="Models\FavoriteProfile.cs" />
     <Compile Include="Models\Gift.cs" />
     <Compile Include="Models\GiftTransactionLog.cs" />
@@ -640,6 +649,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504261530243_FixingQuestionAnswerRelationship.resx">
       <DependentUpon>201504261530243_FixingQuestionAnswerRelationship.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504262028325_QuestionsAndTagsRelationship.resx">
+      <DependentUpon>201504262028325_QuestionsAndTagsRelationship.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504262343468_QuestionAnswerTracking.resx">
+      <DependentUpon>201504262343468_QuestionAnswerTracking.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
