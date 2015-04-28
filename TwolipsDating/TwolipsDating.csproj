@@ -368,6 +368,10 @@
     <Compile Include="Migrations\201504262343468_QuestionAnswerTracking.Designer.cs">
       <DependentUpon>201504262343468_QuestionAnswerTracking.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504272156393_QuestionTypes.cs" />
+    <Compile Include="Migrations\201504272156393_QuestionTypes.Designer.cs">
+      <DependentUpon>201504272156393_QuestionTypes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
@@ -380,6 +384,8 @@
     <Compile Include="Models\InventoryItem.cs" />
     <Compile Include="Models\MessageConversation.cs" />
     <Compile Include="Models\Question.cs" />
+    <Compile Include="Models\QuestionTagCount.cs" />
+    <Compile Include="Models\QuestionType.cs" />
     <Compile Include="Models\Quiz.cs" />
     <Compile Include="Models\ReviewViolation.cs" />
     <Compile Include="Models\Tag.cs" />
@@ -655,6 +661,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504262343468_QuestionAnswerTracking.resx">
       <DependentUpon>201504262343468_QuestionAnswerTracking.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504272156393_QuestionTypes.resx">
+      <DependentUpon>201504272156393_QuestionTypes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

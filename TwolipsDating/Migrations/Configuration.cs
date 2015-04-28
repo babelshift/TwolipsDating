@@ -65,6 +65,10 @@ namespace TwolipsDating.Migrations
                 new Gift() { Id = 2, Name = "Rose (white)", IconFileName = "RoseWhite.png", Description = "A white rose" },
                 new Gift() { Id = 3, Name = "Dog bone", IconFileName = "DogBone.png", Description = "A tasty dog bone" },
                 new Gift() { Id = 4, Name = "Candy", IconFileName = "Candy.png", Description = "A delicious piece of candy" });
+
+            context.QuestionTypes.AddOrUpdate(q => q.Id,
+                new QuestionType() { Id = (int)QuestionTypeValues.Random, Name = "Random" },
+                new QuestionType() { Id = (int)QuestionTypeValues.Timed, Name = "Timed" });
         }
     }
 }

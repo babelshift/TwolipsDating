@@ -24,8 +24,10 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Random()
         {
+            var currentUserId = await GetCurrentUserIdAsync();
+
             // generate a random question with its answers to view
-            Question randomQuestion = await triviaService.GetRandomQuestionAsync();
+            Question randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId);
 
             QuestionViewModel viewModel = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
 
@@ -37,7 +39,13 @@ namespace TwolipsDating.Controllers
         {
             try
             {
+                var currentUserId = await GetCurrentUserIdAsync();
+
+                // check if the supplied answer is correct
                 bool isAnswerCorrect = await triviaService.IsAnswerCorrectAsync(questionId, answerId);
+
+                // log the answer for this user's question history
+                await triviaService.RecordAnsweredQuestionAsync(currentUserId, questionId, answerId, (int)QuestionTypeValues.Random);
 
                 return Json(new { success = true, isAnswerCorrect = isAnswerCorrect });
             }

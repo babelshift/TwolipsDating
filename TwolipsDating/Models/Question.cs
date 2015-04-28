@@ -13,9 +13,11 @@ namespace TwolipsDating.Models
         public int? QuizId { get; set; }
         public int? CorrectAnswerId { get; set; }
         public int Points { get; set; }
+        public int? QuestionTypeId { get; set; }
 
         public virtual Quiz Quiz { get; set; }
         public virtual Answer CorrectAnswer { get; set; }
+        public virtual QuestionType QuestionType { get; set; }
 
         public virtual ICollection<Answer> PossibleAnswers { get; set; }
 

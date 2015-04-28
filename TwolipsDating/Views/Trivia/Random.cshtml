@@ -13,22 +13,29 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div id="alert-box" class="alert alert-info">
-                    <p>Select an answer and then press OK. There is no time limit.</p>
-                </div>
-                <p>@Model.Content</p>
-                @foreach (var answer in @Model.Answers)
+                @if (Model != null)
                 {
-                    <div class="radio">
-                        <label>
-                            @Html.RadioButtonFor(m => m.SelectedAnswerId, answer.AnswerId)
-                            @answer.Content
-                        </label>
+                    <div id="alert-box" class="alert alert-info">
+                        <p>Select an answer and then press OK. There is no time limit.</p>
                     </div>
+                    <p>@Model.Content</p>
+                    foreach (var answer in @Model.Answers)
+                    {
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButtonFor(m => m.SelectedAnswerId, answer.AnswerId)
+                                @answer.Content
+                            </label>
+                        </div>
+                    }
+                    <input id="button-ok" type="button" class="btn btn-primary btn-sm" value="OK" onclick="onSubmitAnswer(event, this)" />
+                    @Html.ActionLink("Next", "random", null, new { id = "button-next", @class = "btn btn-sm hidden" })
+                    @Html.HiddenFor(m => m.QuestionId)
                 }
-                <input id="button-ok" type="button" class="btn btn-primary btn-sm" value="OK" onclick="onSubmitAnswer(event, this)" />
-                @Html.ActionLink("Next", "random", null, new { id = "button-next", @class = "btn btn-sm hidden" })
-                @Html.HiddenFor(m => m.QuestionId)
+                else
+                {
+                    <h4>You're a machine. You've answered every question we have.</h4>
+                }
             </div>
         </div>
     </div>

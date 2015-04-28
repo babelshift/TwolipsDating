@@ -40,6 +40,7 @@ namespace TwolipsDating.Models
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<AnsweredQuestion> AnsweredQuestions { get; set; }
+        public DbSet<QuestionType> QuestionTypes { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -78,6 +79,25 @@ namespace TwolipsDating.Models
             SetupQuestions(modelBuilder);
             SetupAnswers(modelBuilder);
             SetupAnsweredQuestions(modelBuilder);
+            SetupQuestionTypes(modelBuilder);
+        }
+
+        private void SetupQuestionTypes(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<QuestionType>()
+                .HasKey(v => v.Id);
+
+            modelBuilder.Entity<QuestionType>()
+                .Property(v => v.Name)
+                .HasMaxLength(64);
+
+            modelBuilder.Entity<QuestionType>()
+                .Property(v => v.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<QuestionType>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
         }
 
         private void SetupAnsweredQuestions(DbModelBuilder modelBuilder)
@@ -145,6 +165,11 @@ namespace TwolipsDating.Models
                 .HasOptional(v => v.Quiz)
                 .WithMany(v => v.Questions)
                 .HasForeignKey(v => v.QuizId);
+
+            modelBuilder.Entity<Question>()
+                .HasOptional(v => v.QuestionType)
+                .WithMany(v => v.Questions)
+                .HasForeignKey(v => v.QuestionTypeId);
 
             modelBuilder.Entity<Question>()
                 .Property(v => v.Points)
