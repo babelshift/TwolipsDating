@@ -88,6 +88,18 @@ namespace TwolipsDating.Business
             // if user has over 10 points, give them 'Junior' achievement
             // if user has over 25 points, give them 'Average' achievement
             // if user has over 50 points, give them 'Senior' achievement
+            if(points >= 10)
+            {
+
+            }
+            else if(points >= 25)
+            {
+
+            }
+            else if(points >= 50)
+            {
+
+            }
 
             // if user has 5 'intellectual' tag questions answered, give them the 'intellectual' badge
             var tagsForAnsweredQuestions = await GetTagsForAnsweredQuestionsAsync(userId, questionTypeId);

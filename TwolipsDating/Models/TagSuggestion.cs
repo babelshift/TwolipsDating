@@ -12,8 +12,8 @@ namespace TwolipsDating.Models
 		public string SuggestingUserId { get; set; }
 		public DateTime DateSuggested { get; set; }
 
-		public Profile Profile { get; set; }
-		public Tag Tag { get; set; }
-		public ApplicationUser SuggestingUser { get; set; }
+		public virtual Profile Profile { get; set; }
+        public virtual Tag Tag { get; set; }
+        public virtual ApplicationUser SuggestingUser { get; set; }
 	}
 }

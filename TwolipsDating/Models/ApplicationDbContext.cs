@@ -41,6 +41,7 @@ namespace TwolipsDating.Models
         public DbSet<Answer> Answers { get; set; }
         public DbSet<AnsweredQuestion> AnsweredQuestions { get; set; }
         public DbSet<QuestionType> QuestionTypes { get; set; }
+        public DbSet<TagAward> TagAwards { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -80,6 +81,23 @@ namespace TwolipsDating.Models
             SetupAnswers(modelBuilder);
             SetupAnsweredQuestions(modelBuilder);
             SetupQuestionTypes(modelBuilder);
+            SetupTagAwards(modelBuilder);
+        }
+
+        private void SetupTagAwards(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TagAward>()
+                .HasKey(t => new { t.TagId, t.ProfileId, t.DateSuggested });
+
+            modelBuilder.Entity<TagAward>()
+                .HasRequired(t => t.Profile)
+                .WithMany(t => t.TagAwards)
+                .HasForeignKey(t => t.ProfileId);
+
+            modelBuilder.Entity<TagAward>()
+                .HasRequired(t => t.Tag)
+                .WithMany(t => t.TagAwards)
+                .HasForeignKey(t => t.TagId);
         }
 
         private void SetupQuestionTypes(DbModelBuilder modelBuilder)

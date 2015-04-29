@@ -372,6 +372,10 @@
     <Compile Include="Migrations\201504272156393_QuestionTypes.Designer.cs">
       <DependentUpon>201504272156393_QuestionTypes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504290245145_TagAwards.cs" />
+    <Compile Include="Migrations\201504290245145_TagAwards.Designer.cs">
+      <DependentUpon>201504290245145_TagAwards.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
@@ -389,6 +393,7 @@
     <Compile Include="Models\Quiz.cs" />
     <Compile Include="Models\ReviewViolation.cs" />
     <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\TagAward.cs" />
     <Compile Include="Models\TagSuggestion.cs" />
     <Compile Include="Models\UserImage.cs" />
     <Compile Include="Models\ViolationType.cs" />
@@ -664,6 +669,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504272156393_QuestionTypes.resx">
       <DependentUpon>201504272156393_QuestionTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504290245145_TagAwards.resx">
+      <DependentUpon>201504290245145_TagAwards.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

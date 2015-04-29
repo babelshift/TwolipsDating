@@ -1,6 +1,7 @@
 namespace TwolipsDating.Migrations
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
@@ -61,8 +62,8 @@ namespace TwolipsDating.Migrations
                 new ViolationType() { Id = 4, Name = "Harassment" });
 
             context.Gifts.AddOrUpdate(g => g.Id,
-                new Gift() { Id = 1, Name = "Rose (red)", IconFileName = "RoseRed.png", Description = "A red rose" },
-                new Gift() { Id = 2, Name = "Rose (white)", IconFileName = "RoseWhite.png", Description = "A white rose" },
+                new Gift() { Id = 1, Name = "Rose (red)", IconFileName = "RedRose.png", Description = "A red rose" },
+                new Gift() { Id = 2, Name = "Rose (white)", IconFileName = "WhiteRose.png", Description = "A white rose" },
                 new Gift() { Id = 3, Name = "Dog bone", IconFileName = "DogBone.png", Description = "A tasty dog bone" },
                 new Gift() { Id = 4, Name = "Candy", IconFileName = "Candy.png", Description = "A delicious piece of candy" });
 
