@@ -42,6 +42,9 @@ namespace TwolipsDating.Models
         public DbSet<AnsweredQuestion> AnsweredQuestions { get; set; }
         public DbSet<QuestionType> QuestionTypes { get; set; }
         public DbSet<TagAward> TagAwards { get; set; }
+        public DbSet<Milestone> Milestones { get; set; }
+        public DbSet<MilestoneAchievement> MilestoneAchievements { get; set; }
+        public DbSet<MilestoneType> MilestoneTypes { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -82,12 +85,64 @@ namespace TwolipsDating.Models
             SetupAnsweredQuestions(modelBuilder);
             SetupQuestionTypes(modelBuilder);
             SetupTagAwards(modelBuilder);
+            SetupMilestones(modelBuilder);
+            SetupMilestoneAchievements(modelBuilder);
+            SetupMilestoneTypes(modelBuilder);
+        }
+
+        private void SetupMilestones(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Milestone>()
+                .HasKey(t => t.Id);
+
+            modelBuilder.Entity<Milestone>()
+                .HasRequired(t => t.MilestoneType)
+                .WithMany(t => t.Milestones)
+                .HasForeignKey(t => t.MilestoneTypeId);
+        }
+
+        private void SetupMilestoneAchievements(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<MilestoneAchievement>()
+                .HasKey(t => new { t.MilestoneId, t.UserId });
+
+            modelBuilder.Entity<MilestoneAchievement>()
+                .Property(t => t.DateAchieved)
+                .IsRequired();
+
+            modelBuilder.Entity<MilestoneAchievement>()
+                .HasRequired(t => t.Milestone)
+                .WithMany(t => t.MilestonesAchieved)
+                .HasForeignKey(t => t.MilestoneId);
+
+            modelBuilder.Entity<MilestoneAchievement>()
+                .HasRequired(t => t.User)
+                .WithMany(t => t.MilestonesAchieved)
+                .HasForeignKey(t => t.UserId);
+        }
+
+        private void SetupMilestoneTypes(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<MilestoneType>()
+                .HasKey(t => t.Id);
+
+            modelBuilder.Entity<MilestoneType>()
+                .Property(v => v.Name)
+                .HasMaxLength(64);
+
+            modelBuilder.Entity<MilestoneType>()
+                .Property(v => v.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<MilestoneType>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
         }
 
         private void SetupTagAwards(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TagAward>()
-                .HasKey(t => new { t.TagId, t.ProfileId, t.DateSuggested });
+                .HasKey(t => new { t.TagId, t.ProfileId, t.DateAwarded });
 
             modelBuilder.Entity<TagAward>()
                 .HasRequired(t => t.Profile)

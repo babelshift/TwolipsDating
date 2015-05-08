@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using Dapper;
 using System.Data.SqlClient;
+using System.Collections.ObjectModel;
 
 namespace TwolipsDating.Business
 {
@@ -63,9 +64,10 @@ namespace TwolipsDating.Business
             }
         }
 
-        internal async Task<int> RecordAnsweredQuestionAsync(string userId, int questionId, int answerId, int questionTypeId)
+        internal async Task<int> RecordAnsweredQuestionAsync(string userId, int profileId, int questionId, int answerId, int questionTypeId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
+            Debug.Assert(profileId > 0);
             Debug.Assert(questionId > 0);
             Debug.Assert(answerId > 0);
             Debug.Assert(questionTypeId > 0);
@@ -82,29 +84,96 @@ namespace TwolipsDating.Business
             db.AnsweredQuestions.Add(answeredQuestion);
             int changes = await db.SaveChangesAsync();
 
-            // check if the user has hit an achievement or milestone
+            // get the user's question points
+            int points = await GetUsersQuestionPointsAsync(userId, questionTypeId);
 
-            int points = await CalculateUserPointsAsync(userId, questionTypeId);
-            // if user has over 10 points, give them 'Junior' achievement
-            // if user has over 25 points, give them 'Average' achievement
-            // if user has over 50 points, give them 'Senior' achievement
-            if(points >= 10)
+            // get the question milestones
+            var milestones = await GetMilestonesAsync();
+
+            // check if user has already achieved the milestone
+            var milestoneIdsAchieved = await GetMilestoneIdsAchievedAsync(userId);
+            foreach (var milestone in milestones)
             {
-
+                // if the milestone is a question answered type and the user has enough points to satisfy the milestone
+                if (milestone.MilestoneTypeId == (int)MilestoneTypeValues.QuestionAnsweredCorrectly 
+                    && points > milestone.PointsRequired)
+                {
+                    // if the user has not achieved this milestone
+                    int milestoneIdAchieved = 0;
+                    if (!milestoneIdsAchieved.TryGetValue(milestone.Id, out milestoneIdAchieved))
+                    {
+                        // award the milestone
+                        await AwardMilestoneToUserAsync(userId, milestoneIdAchieved);
+                    }
+                }
             }
-            else if(points >= 25)
-            {
 
-            }
-            else if(points >= 50)
-            {
+            // get the user's total points (questions, quizzes, games)
+            // do something if they hit a total milestone
 
-            }
-
-            // if user has 5 'intellectual' tag questions answered, give them the 'intellectual' badge
+            // if user has 5 tag questions answered, give them the 'intellectual' badge
             var tagsForAnsweredQuestions = await GetTagsForAnsweredQuestionsAsync(userId, questionTypeId);
 
+            foreach (var tag in tagsForAnsweredQuestions)
+            {
+                if (tag.Count % 5 == 0) // multiple of 5 = award the tag
+                {
+                    await AwardTagToProfileAsync(profileId, tag.TagId);
+                }
+            }
+
             return changes;
+        }
+
+        private async Task<int> AwardMilestoneToUserAsync(string userId, int milestoneId)
+        {
+            MilestoneAchievement achievement = new MilestoneAchievement()
+            {
+                UserId = userId,
+                MilestoneId = milestoneId,
+                DateAchieved = DateTime.Now
+            };
+
+            db.MilestoneAchievements.Add(achievement);
+
+            return await db.SaveChangesAsync();
+        }
+
+        private async Task<IReadOnlyDictionary<int, int>> GetMilestoneIdsAchievedAsync(string userId)
+        {
+            var milestonesAchieved = from milestoneAchieved in db.MilestoneAchievements
+                                     where milestoneAchieved.UserId == userId
+                                     select milestoneAchieved.MilestoneId;
+
+            var results = await milestonesAchieved.ToDictionaryAsync(t => t);
+
+            return new ReadOnlyDictionary<int, int>(results);
+        }
+
+        private async Task<IReadOnlyCollection<Milestone>> GetMilestonesAsync()
+        {
+            var milestones = from milestone in db.Milestones
+                             select milestone;
+
+            var results = await milestones.ToListAsync();
+
+            return results.AsReadOnly();
+        }
+
+        private async Task<int> AwardTagToProfileAsync(int profileId, int tagId)
+        {
+            Debug.Assert(profileId > 0);
+            Debug.Assert(tagId > 0);
+
+            TagAward tagAward = new TagAward()
+            {
+                DateAwarded = DateTime.Now,
+                ProfileId = profileId,
+                TagId = tagId
+            };
+
+            db.TagAwards.Add(tagAward);
+            return await db.SaveChangesAsync();
         }
 
         private async Task<IReadOnlyCollection<QuestionTagCount>> GetTagsForAnsweredQuestionsAsync(string userId, int questionTypeId)
@@ -128,7 +197,7 @@ namespace TwolipsDating.Business
             return results.ToList().AsReadOnly();
         }
 
-        internal async Task<int> CalculateUserPointsAsync(string userId, int questionTypeId)
+        internal async Task<int> GetUsersQuestionPointsAsync(string userId, int questionTypeId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(questionTypeId > 0);

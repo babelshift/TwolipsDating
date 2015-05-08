@@ -30,6 +30,28 @@ namespace TwolipsDating.Business
             return result.AsReadOnly();
         }
 
+        public async Task<IReadOnlyCollection<ProfileTagAwardViewModel>> GetTagsAwardedToProfileAsync(int profileId)
+        {
+            Debug.Assert(profileId > 0);
+
+            var tagsAwarded = from tagAward in db.TagAwards
+                              where tagAward.ProfileId == profileId
+                              join tag in db.Tags on tagAward.TagId equals tag.TagId
+                              group tagAward by new { tagAward.TagId, tag.Name, tagAward.ProfileId }
+                                  into grouping
+                                  select new ProfileTagAwardViewModel()
+                                  {
+                                      TagCount = grouping.Count(),
+                                      TagId = grouping.Key.TagId,
+                                      TagName = grouping.Key.Name
+                                  };
+
+
+            var results = await tagsAwarded.ToListAsync();
+
+            return results;
+        }
+
         public async Task<IReadOnlyCollection<ProfileTagSuggestionViewModel>> GetTagsSuggestedForProfileAsync(string userId, int profileId)
         {
             Debug.Assert(profileId > 0);
@@ -39,6 +61,7 @@ namespace TwolipsDating.Business
 
             // this will return tag suggestions with an identifier which shows if the passed userId was the one who suggested that tag
             var firstQuery = from tagSuggestion in db.TagSuggestions
+
                              from tag in db.Tags
                              where tag.TagId == tagSuggestion.TagId
                              where tagSuggestion.ProfileId == profileId
@@ -533,9 +556,9 @@ namespace TwolipsDating.Business
         public async Task<bool> ToggleIgnoredUserAsync(string sourceUserId, string targetUserId)
         {
             var ignoredUserEntity = await (from ignoredUsers in db.IgnoredUsers
-                                        where ignoredUsers.SourceUserId == sourceUserId
-                                        where ignoredUsers.TargetUserId == targetUserId
-                                        select ignoredUsers).FirstOrDefaultAsync();
+                                           where ignoredUsers.SourceUserId == sourceUserId
+                                           where ignoredUsers.TargetUserId == targetUserId
+                                           select ignoredUsers).FirstOrDefaultAsync();
 
             bool isIgnored = false;
 

@@ -9,7 +9,7 @@ namespace TwolipsDating.Models
     {
         public int ProfileId { get; set; }
         public int TagId { get; set; }
-        public DateTime DateSuggested { get; set; }
+        public DateTime DateAwarded { get; set; }
 
         public virtual Profile Profile { get; set; }
         public virtual Tag Tag { get; set; }

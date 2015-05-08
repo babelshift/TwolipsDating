@@ -41,11 +41,13 @@ namespace TwolipsDating.Controllers
             {
                 var currentUserId = await GetCurrentUserIdAsync();
 
+                var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
+
                 // check if the supplied answer is correct
                 bool isAnswerCorrect = await triviaService.IsAnswerCorrectAsync(questionId, answerId);
 
                 // log the answer for this user's question history
-                await triviaService.RecordAnsweredQuestionAsync(currentUserId, questionId, answerId, (int)QuestionTypeValues.Random);
+                await triviaService.RecordAnsweredQuestionAsync(currentUserId, currentUserProfile.Id, questionId, answerId, (int)QuestionTypeValues.Random);
 
                 return Json(new { success = true, isAnswerCorrect = isAnswerCorrect });
             }

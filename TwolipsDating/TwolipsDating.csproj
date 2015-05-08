@@ -376,6 +376,14 @@
     <Compile Include="Migrations\201504290245145_TagAwards.Designer.cs">
       <DependentUpon>201504290245145_TagAwards.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504292118346_FixTagAwardDate.cs" />
+    <Compile Include="Migrations\201504292118346_FixTagAwardDate.Designer.cs">
+      <DependentUpon>201504292118346_FixTagAwardDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505072312020_Milestones.cs" />
+    <Compile Include="Migrations\201505072312020_Milestones.Designer.cs">
+      <DependentUpon>201505072312020_Milestones.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
@@ -387,6 +395,9 @@
     <Compile Include="Models\IgnoredUser.cs" />
     <Compile Include="Models\InventoryItem.cs" />
     <Compile Include="Models\MessageConversation.cs" />
+    <Compile Include="Models\Milestone.cs" />
+    <Compile Include="Models\MilestoneAchievement.cs" />
+    <Compile Include="Models\MilestoneType.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\QuestionTagCount.cs" />
     <Compile Include="Models\QuestionType.cs" />
@@ -424,6 +435,7 @@
     <Compile Include="ViewModels\ProfileFeedViewModel.cs" />
     <Compile Include="ViewModels\ProfileInventoryViewModel.cs" />
     <Compile Include="ViewModels\ProfileReviewsViewModel.cs" />
+    <Compile Include="ViewModels\ProfileTagAwardViewModel.cs" />
     <Compile Include="ViewModels\ProfileTagSuggestionViewModel.cs" />
     <Compile Include="ViewModels\QuestionViewModel.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
@@ -672,6 +684,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504290245145_TagAwards.resx">
       <DependentUpon>201504290245145_TagAwards.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504292118346_FixTagAwardDate.resx">
+      <DependentUpon>201504292118346_FixTagAwardDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505072312020_Milestones.resx">
+      <DependentUpon>201505072312020_Milestones.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

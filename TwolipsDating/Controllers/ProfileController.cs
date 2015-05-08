@@ -490,7 +490,6 @@ namespace TwolipsDating.Controllers
 
         private async Task<ActionResult> ShowUserProfileAsync(string tab, string currentUserId, Models.Profile profile)
         {
-            var tagsSuggestedForProfile = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profile.Id);
             var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profile.ApplicationUser.Id);
 
             var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
@@ -499,8 +498,12 @@ namespace TwolipsDating.Controllers
             viewModel.CurrentUserId = currentUserId;
             viewModel.AverageRatingValue = reviews.AverageRating();
             viewModel.ViewMode = ProfileViewModel.ProfileViewMode.ShowProfile;
+
+            // tag suggestions and awards
+            var tagsSuggestedForProfile = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profile.Id);
             viewModel.SuggestedTags = tagsSuggestedForProfile; // these are the tag suggestions that will be displayed at the profile screen
             viewModel.AllTags = await GetAllTagsAndCountsInSystemAsync(tagsSuggestedForProfile); // these are all tags to be displayed in the "suggest" popup
+            viewModel.AwardedTags = await ProfileService.GetTagsAwardedToProfileAsync(profile.Id);
 
             // favorites and ignores
             viewModel.IsFavoritedByCurrentUser = profile.FavoritedBy.Any(f => f.UserId == currentUserId);

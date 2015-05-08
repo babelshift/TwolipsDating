@@ -36,6 +36,7 @@ namespace TwolipsDating.ViewModels
         public IReadOnlyCollection<InventoryItemViewModel> ViewerInventoryItems { get; set; }
         public IReadOnlyCollection<ProfileTagSuggestionViewModel> SuggestedTags { get; set; }
         public IReadOnlyCollection<ProfileTagSuggestionViewModel> AllTags { get; set; }
+        public IReadOnlyCollection<ProfileTagAwardViewModel> AwardedTags { get; set; }
 
         public bool IsIgnoredByCurrentUser { get; set; }
         public bool IsFavoritedByCurrentUser { get; set; }
