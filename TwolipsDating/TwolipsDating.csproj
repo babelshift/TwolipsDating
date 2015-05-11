@@ -399,7 +399,7 @@
     <Compile Include="Models\MilestoneAchievement.cs" />
     <Compile Include="Models\MilestoneType.cs" />
     <Compile Include="Models\Question.cs" />
-    <Compile Include="Models\QuestionTagCount.cs" />
+    <Compile Include="Models\QuestionTagPoints.cs" />
     <Compile Include="Models\QuestionType.cs" />
     <Compile Include="Models\Quiz.cs" />
     <Compile Include="Models\ReviewViolation.cs" />

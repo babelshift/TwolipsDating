@@ -5,9 +5,9 @@ using System.Web;
 
 namespace TwolipsDating.Models
 {
-    public class QuestionTagCount
+    public class QuestionTagPoints
     {
         public int TagId { get; set; }
-        public int Count { get; set; }
+        public int Points { get; set; }
     }
 }
