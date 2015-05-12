@@ -30,6 +30,13 @@ namespace TwolipsDating.Utilities
             logger.Error(logMessage.ToString());
         }
 
+        public void Info(string message)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(message));
+
+            logger.Info(message);
+        }
+
         public void Warn(string actionName, string message, object parameters = null)
         {
             Debug.Assert(!String.IsNullOrEmpty(actionName));
@@ -67,6 +74,11 @@ namespace TwolipsDating.Utilities
             if(e.InnerException != null)
             {
                 logMessage.AppendFormat(", InnerMessage: {0}", e.InnerException.Message);
+
+                if(e.InnerException.InnerException != null)
+                {
+                    logMessage.AppendFormat(", InnerInnerMessage: {0}", e.InnerException.Message);
+                }
             }
 
             if (parameters != null)
@@ -75,7 +87,7 @@ namespace TwolipsDating.Utilities
                 Type anonType = parameters.GetType();
                 foreach (var property in anonType.GetProperties())
                 {
-                    logMessage.AppendFormat("{0}: {1}", property.Name, property.GetValue(parameters, null));
+                    logMessage.AppendFormat("{0}: {1}, ", property.Name, property.GetValue(parameters, null));
                 }
                 logMessage.Append("]");
             }

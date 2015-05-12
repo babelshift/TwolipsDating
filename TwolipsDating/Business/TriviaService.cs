@@ -80,6 +80,17 @@ namespace TwolipsDating.Business
             // award the user any question-related milestones
             await HandleQuestionMilestonesAsync(userId, points);
 
+            // award the user any tags for question-related points
+            await HandleQuestionPointAwards(userId, profileId);
+
+            // get the user's total points (questions, quizzes, games)
+            // do something if they hit a total milestone
+
+            return changes;
+        }
+
+        private async Task HandleQuestionPointAwards(string userId, int profileId)
+        {
             // get a collection of all tags and associated point sums for the user
             var tagsForAnsweredQuestions = await GetTagsForAnsweredQuestionsAsync(userId);
 
@@ -96,16 +107,11 @@ namespace TwolipsDating.Business
                 int numberOfTagsToAward = supposedTagAwardCount - actualTagAwardCount;
 
                 // award the proper number of tags the user deserves
-                for(int i = 0; i < numberOfTagsToAward; i++)
+                for (int i = 0; i < numberOfTagsToAward; i++)
                 {
                     await AwardTagToProfileAsync(profileId, tag.TagId);
                 }
             }
-
-            // get the user's total points (questions, quizzes, games)
-            // do something if they hit a total milestone
-
-            return changes;
         }
 
         private async Task<int> SaveAnswerAsync(string userId, int questionId, int answerId)
@@ -282,7 +288,9 @@ namespace TwolipsDating.Business
 
         private async Task<IEnumerable<T>> QueryAsync<T>(string sql, object parameters)
         {
-            using (SqlConnection connection = new SqlConnection(db.Database.Connection.ConnectionString))
+            string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 var results = await db.Database.Connection.QueryAsync<T>(sql, parameters);
