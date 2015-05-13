@@ -1,6 +1,9 @@
---drop procedure dbo.InsertQuestion
+drop procedure dbo.InsertQuestion
+go
 create procedure dbo.InsertQuestion
 @content varchar(255),
+@points int,
+@questionTypeId int,
 @answers dbo.AnswerType readonly
 as
 	declare @latestQuestionId int
@@ -9,7 +12,7 @@ as
 	
 	-- insert the question
 	insert into dbo.Questions(Content, Points, QuestionTypeId)
-	values(@content, 3, 1);
+	values(@content, @points, @questionTypeId);
 
 	-- get the question's id
 	select @latestQuestionId = SCOPE_IDENTITY();

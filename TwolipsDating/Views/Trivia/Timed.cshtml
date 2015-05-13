@@ -1,0 +1,135 @@
+﻿@model TwolipsDating.ViewModels.QuestionViewModel
+
+@{
+    ViewBag.Title = "twolips - timed trivia";
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Trivia" })
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @if (Model != null)
+                {
+                    <div id="alert-box" class="alert alert-info">
+                        <p>Select an answer and then press OK.</p>
+                        <p id="timer-label">10</p>
+                    </div>
+                    <p>@Model.Content</p>
+                    foreach (var answer in @Model.Answers)
+                    {
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButtonFor(m => m.SelectedAnswerId, answer.AnswerId)
+                                @answer.Content
+                            </label>
+                        </div>
+                    }
+                    <input id="button-ok" type="button" class="btn btn-primary btn-sm" value="OK" onclick="onSubmitAnswer(event, this)" />
+                    @Html.ActionLink("Next", "timed", null, new { id = "button-next", @class = "btn btn-sm hidden" })
+                    @Html.HiddenFor(m => m.QuestionId)
+                }
+                else
+                {
+                    <h4>You're a machine. You've answered every question we have.</h4>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("starttimedquestion", "trivia")',
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var dateUtcNow = new Date(data.year, data.month, data.day, data.hours, data.minutes, data.seconds, data.milliseconds);
+                    interval = setInterval(tickCountDown, 1000);
+                }
+            });
+        });
+
+        var interval;
+
+        function tickCountDown() {
+            var secondsLeft = $("#timer-label").text();
+            secondsLeft = secondsLeft - 1;
+            $("#timer-label").text(secondsLeft);
+
+            if (secondsLeft == 0) {
+                $("#alert-box").removeClass("alert-success");
+                $("#alert-box").removeClass("alert-danger");
+                $("#alert-box").removeClass("alert-info");
+                $("#alert-box").addClass("alert-danger");
+                $("#alert-box").html("<p>You ran out of time!</p>");
+                $("#button-next").removeClass("hidden");
+                $("#button-next").addClass("btn-danger");
+                $("#button-ok").addClass("hidden");
+                $("input[type='radio']").attr("disabled", true);
+                stopCountdown();
+            }
+        }
+
+        function stopCountdown() {
+            clearInterval(interval);
+        }
+
+        function onSubmitAnswer(e, obj) {
+            e.preventDefault();
+
+            $("#button-next").addClass("hidden");
+            $("#button-ok").removeClass("hidden");
+
+            var questionId = $("#QuestionId").val();
+            var selected = $("input[type='radio'][name='SelectedAnswerId']:checked");
+            var answerId = "";
+            if (selected.length > 0) {
+                answerId = selected.val();
+            }
+
+            var json = "{\"questionId\":" + questionId + ", \"answerId\":" + answerId + "}";
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("submittimedanswer", "trivia")',
+                data: json,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    stopCountdown();
+
+                    if (data.success) {
+                        if (data.isAnswerCorrect) {
+                            $("#alert-box").removeClass("alert-success");
+                            $("#alert-box").removeClass("alert-danger");
+                            $("#alert-box").removeClass("alert-info");
+                            $("#alert-box").addClass("alert-success");
+                            $("#alert-box").html("<p>Correct!</p>");
+                            $("#button-next").removeClass("hidden");
+                            $("#button-next").addClass("btn-success");
+                            $("#button-ok").addClass("hidden");
+                            $("input[type='radio']").attr("disabled", true);
+                        } else {
+                            $("#alert-box").removeClass("alert-success");
+                            $("#alert-box").removeClass("alert-danger");
+                            $("#alert-box").removeClass("alert-info");
+                            $("#alert-box").addClass("alert-danger");
+                            $("#alert-box").html("<p>Incorrect!</p>");
+                            $("#button-next").removeClass("hidden");
+                            $("#button-next").addClass("btn-danger");
+                            $("#button-ok").addClass("hidden");
+                            $("input[type='radio']").attr("disabled", true);
+                        }
+                    } else {
+                        alert(data.error);
+                    }
+                }
+            });
+        }
+    </script>
+}

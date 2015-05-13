@@ -602,6 +602,7 @@
     <Content Include="Views\Profile\_InventoryPartial.cshtml" />
     <Content Include="Views\Trivia\Index.cshtml" />
     <Content Include="Views\Trivia\Random.cshtml" />
+    <Content Include="Views\Trivia\Timed.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

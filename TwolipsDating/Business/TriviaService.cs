@@ -18,7 +18,7 @@ namespace TwolipsDating.Business
         /// Returns a random question that the user has not answered yet
         /// </summary>
         /// <returns></returns>
-        internal async Task<Question> GetRandomQuestionAsync(string userId)
+        internal async Task<Question> GetRandomQuestionAsync(string userId, int questionTypeId)
         {
             var questionsAlreadyAnswered = await (from questions in db.AnsweredQuestions
                                                   where questions.UserId == userId
@@ -27,7 +27,7 @@ namespace TwolipsDating.Business
             var questionList = await (from questions in db.Questions
                                       where !questionsAlreadyAnswered.Contains(questions.Id)
                                       where questions.QuestionTypeId.HasValue
-                                      where questions.QuestionTypeId.Value == (int)QuestionTypeValues.Random
+                                      where questions.QuestionTypeId.Value == questionTypeId
                                       select questions).ToListAsync();
 
             // there are no more questions that can be answered
