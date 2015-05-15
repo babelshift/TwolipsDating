@@ -122,6 +122,11 @@ namespace TwolipsDating
             Mapper.CreateMap<Answer, AnswerViewModel>()
                 .ForMember(dest => dest.AnswerId, opts => opts.MapFrom(source => source.Id))
                 .ForMember(dest => dest.Content, opts => opts.MapFrom(source => source.Content));
+
+            Mapper.CreateMap<Quiz, QuizOverviewViewModel>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(source => source.Id))
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(source => source.Name))
+                .ForMember(dest => dest.Points, opts => opts.MapFrom(source => source.Points));
         }
     }
 }

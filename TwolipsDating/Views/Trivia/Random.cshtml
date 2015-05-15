@@ -16,7 +16,7 @@
                 @if (Model != null)
                 {
                     <div id="alert-box" class="alert alert-info">
-                        <p>Select an answer and then press OK. There is no time limit.</p>
+                        <h4>Select an answer and then press OK. There is no time limit.</h4>
                     </div>
                     <p>@Model.Content</p>
                     foreach (var answer in @Model.Answers)
@@ -69,7 +69,7 @@
                             $("#alert-box").removeClass("alert-danger");
                             $("#alert-box").removeClass("alert-info");
                             $("#alert-box").addClass("alert-success");
-                            $("#alert-box").html("<p>Correct!</p>");
+                            $("#alert-box").html("<h4>Correct!</h4>");
                             $("#button-next").removeClass("hidden");
                             $("#button-next").addClass("btn-success");
                             $("#button-ok").addClass("hidden");
@@ -79,7 +79,7 @@
                             $("#alert-box").removeClass("alert-danger");
                             $("#alert-box").removeClass("alert-info");
                             $("#alert-box").addClass("alert-danger");
-                            $("#alert-box").html("<p>Incorrect!</p>");
+                            $("#alert-box").html("<h4>Incorrect!</h4>");
                             $("#button-next").removeClass("hidden");
                             $("#button-next").addClass("btn-danger");
                             $("#button-ok").addClass("hidden");

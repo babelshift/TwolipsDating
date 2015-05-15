@@ -81,7 +81,7 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        protected async Task SetUnreadCountsInViewBagAsync()
+        protected async Task SetHeaderCounts()
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -92,6 +92,7 @@ namespace TwolipsDating.Controllers
                 ViewBag.GiftCount = 0;
                 ViewBag.UnreadMessageCount = unreadMessageCount;
                 ViewBag.UnreadNotificationCount = unreadMessageCount;
+                ViewBag.PointsCount = 1000;
             }
         }
 

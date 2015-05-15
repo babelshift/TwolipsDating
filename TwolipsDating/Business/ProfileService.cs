@@ -11,6 +11,12 @@ namespace TwolipsDating.Business
 {
     public class ProfileService : BaseService
     {
+        public async Task<UserStatsViewModel> GetProfileStats(int profileId)
+        {
+            // total points
+            //int points = from totalPoints in db.AnsweredQuestions
+        }
+
         public async Task<int> DeleteUserImage(int userImageId)
         {
             Debug.Assert(userImageId > 0);

@@ -39,14 +39,22 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        // GET: Trivia
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View();
+            await SetHeaderCounts();
+
+            var quizzes = await triviaService.GetQuizzesAsync();
+
+            TriviaMenuViewModel viewModel = new TriviaMenuViewModel();
+            viewModel.Quizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(quizzes);
+
+            return View(viewModel);
         }
 
         public async Task<ActionResult> Random()
         {
+            await SetHeaderCounts();
+
             var currentUserId = await GetCurrentUserIdAsync();
 
             // generate a random question with its answers to view
@@ -59,6 +67,8 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Timed()
         {
+            await SetHeaderCounts();
+
             var currentUserId = await GetCurrentUserIdAsync();
 
             // generate a random question with its answers to view
@@ -157,6 +167,13 @@ namespace TwolipsDating.Controllers
                 seconds = questionStartTime.Second,
                 milliseconds = questionStartTime.Millisecond
             }, JsonRequestBehavior.AllowGet);
+        }
+
+        public async Task<ActionResult> Quiz(int quizId)
+        {
+            await SetHeaderCounts();
+
+            return View();
         }
 
         protected override void Dispose(bool disposing)

@@ -384,6 +384,10 @@
     <Compile Include="Migrations\201505072312020_Milestones.Designer.cs">
       <DependentUpon>201505072312020_Milestones.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505150025301_QuizPoints.cs" />
+    <Compile Include="Migrations\201505150025301_QuizPoints.Designer.cs">
+      <DependentUpon>201505150025301_QuizPoints.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
@@ -438,6 +442,7 @@
     <Compile Include="ViewModels\ProfileTagAwardViewModel.cs" />
     <Compile Include="ViewModels\ProfileTagSuggestionViewModel.cs" />
     <Compile Include="ViewModels\QuestionViewModel.cs" />
+    <Compile Include="ViewModels\QuizOverviewViewModel.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -476,9 +481,11 @@
     <Compile Include="ViewModels\SentMessageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\TagViewModel.cs" />
+    <Compile Include="ViewModels\TriviaMenuViewModel.cs" />
     <Compile Include="ViewModels\UploadedImageFeedViewModel.cs" />
     <Compile Include="ViewModels\UploadImageViewModel.cs" />
     <Compile Include="ViewModels\UserImageViewModel.cs" />
+    <Compile Include="ViewModels\UserStatsViewModel.cs" />
     <Compile Include="ViewModels\WriteReviewViewModel.cs" />
     <Compile Include="ViewModels\WriteReviewViolationViewModel.cs" />
   </ItemGroup>
@@ -691,6 +698,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505072312020_Milestones.resx">
       <DependentUpon>201505072312020_Milestones.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505150025301_QuizPoints.resx">
+      <DependentUpon>201505150025301_QuizPoints.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -521,7 +521,7 @@ namespace TwolipsDating.Controllers
             // setup viewmodel specific to the actively selected tab
             await SetViewModelBasedOnActiveTabAsync(profile, viewModel, reviews, currentUserId, profile.ApplicationUser.Id);
 
-            await SetUnreadCountsInViewBagAsync();
+            await SetHeaderCounts();
 
             return View(viewModel);
         }

@@ -47,6 +47,11 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li>
+                            <a href="@Url.Action("points", "account")" title="Points">
+                                <i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;&nbsp;@ViewBag.PointsCount
+                            </a>
+                        </li>
+                        <li>
                             <a href="@Url.Action("received", "message")" title="Messages">
                                 <i class="glyphicon glyphicon-inbox"></i>&nbsp;&nbsp;@ViewBag.UnreadMessageCount
                             </a>

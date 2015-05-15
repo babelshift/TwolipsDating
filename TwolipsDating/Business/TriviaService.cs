@@ -14,6 +14,16 @@ namespace TwolipsDating.Business
 {
     internal class TriviaService : BaseService
     {
+        internal async Task<IReadOnlyCollection<Quiz>> GetQuizzesAsync()
+        {
+            var quizzes = from quiz in db.Quizzes
+                          select quiz;
+
+            var results = await quizzes.ToListAsync();
+
+            return results.AsReadOnly();
+        }
+
         /// <summary>
         /// Returns a random question that the user has not answered yet
         /// </summary>
