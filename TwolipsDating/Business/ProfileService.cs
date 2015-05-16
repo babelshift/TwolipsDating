@@ -11,10 +11,77 @@ namespace TwolipsDating.Business
 {
     public class ProfileService : BaseService
     {
-        public async Task<UserStatsViewModel> GetProfileStats(int profileId)
+        public async Task<UserStatsViewModel> GetUserStatsAsync(string userId)
         {
+            UserStatsViewModel viewModel = new UserStatsViewModel();
+
             // total points
-            //int points = from totalPoints in db.AnsweredQuestions
+            // question points + quiz points
+            viewModel.TotalPoints =
+                await (from answeredQuestion in db.AnsweredQuestions
+                       join question in db.Questions on answeredQuestion.QuestionId equals question.Id
+                       join answer in db.Answers on question.CorrectAnswerId equals answer.Id
+                       where answeredQuestion.UserId == userId
+                       select question.Points).SumAsync();
+
+            viewModel.QuestionsAnswered =
+                await (from answeredQuestion in db.AnsweredQuestions
+                       where answeredQuestion.UserId == userId
+                       select answeredQuestion).CountAsync();
+
+            viewModel.QuestionsAnsweredCorrectly =
+                await (from answeredQuestion in db.AnsweredQuestions
+                       join question in db.Questions on answeredQuestion.QuestionId equals question.Id
+                       join answer in db.Answers on question.CorrectAnswerId equals answer.Id
+                       where answeredQuestion.UserId == userId
+                       select question).CountAsync();
+
+            viewModel.RandomQuestionsAnswered =
+                await (from answeredQuestion in db.AnsweredQuestions
+                       join question in db.Questions on answeredQuestion.QuestionId equals question.Id
+                       where answeredQuestion.UserId == userId
+                       where question.QuestionTypeId == (int)QuestionTypeValues.Random
+                       select answeredQuestion).CountAsync();
+
+            viewModel.RandomQuestionsAnsweredCorrectly =
+                await (from answeredQuestion in db.AnsweredQuestions
+                       join question in db.Questions on answeredQuestion.QuestionId equals question.Id
+                       join answer in db.Answers on question.CorrectAnswerId equals answer.Id
+                       where answeredQuestion.UserId == userId
+                       where question.QuestionTypeId == (int)QuestionTypeValues.Random
+                       select question).CountAsync();
+
+            viewModel.TimedQuestionsAnswered =
+                await (from answeredQuestion in db.AnsweredQuestions
+                       join question in db.Questions on answeredQuestion.QuestionId equals question.Id
+                       where answeredQuestion.UserId == userId
+                       where question.QuestionTypeId == (int)QuestionTypeValues.Timed
+                       select answeredQuestion).CountAsync();
+
+            viewModel.TimedQuestionsAnsweredCorrectly =
+                await (from answeredQuestion in db.AnsweredQuestions
+                       join question in db.Questions on answeredQuestion.QuestionId equals question.Id
+                       join answer in db.Answers on question.CorrectAnswerId equals answer.Id
+                       where answeredQuestion.UserId == userId
+                       where question.QuestionTypeId == (int)QuestionTypeValues.Timed
+                       select question).CountAsync();
+
+            viewModel.QuizQuestionsAnswered =
+                await (from answeredQuestion in db.AnsweredQuestions
+                       join question in db.Questions on answeredQuestion.QuestionId equals question.Id
+                       where answeredQuestion.UserId == userId
+                       where question.QuestionTypeId == (int)QuestionTypeValues.Quiz
+                       select answeredQuestion).CountAsync();
+
+            viewModel.QuizQuestionsAnsweredCorrectly =
+                await (from answeredQuestion in db.AnsweredQuestions
+                       join question in db.Questions on answeredQuestion.QuestionId equals question.Id
+                       join answer in db.Answers on question.CorrectAnswerId equals answer.Id
+                       where answeredQuestion.UserId == userId
+                       where question.QuestionTypeId == (int)QuestionTypeValues.Quiz
+                       select question).CountAsync();
+
+            return viewModel;
         }
 
         public async Task<int> DeleteUserImage(int userImageId)

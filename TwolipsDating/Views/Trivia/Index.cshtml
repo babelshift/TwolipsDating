@@ -35,7 +35,7 @@
             <div class="list-group">
                 @foreach (var quiz in Model.Quizzes)
                 {
-                    <a href="#" class="list-group-item"><span class="badge">@quiz.Points points</span>@quiz.Name</a>
+                    <a href="@Url.Action("quiz", new { id = quiz.Id })" class="list-group-item"><span class="badge">@quiz.Points points</span>@quiz.Name</a>
                 }
             </div>
         </div>
@@ -46,16 +46,16 @@
                 <i class="glyphicon glyphicon-stats"></i>&nbsp;<a href="@Url.Action("stats")">Your Stats</a>
             </div>
             <ul class="list-group">
-                <li class="list-group-item">Total Points<span class="badge">30</span></li>
-                <li class="list-group-item">Questions Answered<span class="badge">100</span></li>
-                <li class="list-group-item">Questions Answered Correctly<span class="badge">30</span></li>
-                <li class="list-group-item">Random Questions Answered<span class="badge">30</span></li>
-                <li class="list-group-item">Random Questions Answered Correctly<span class="badge">30</span></li>
-                <li class="list-group-item">Timed Questions Answered<span class="badge">30</span></li>
-                <li class="list-group-item">Timed Questions Answered Correctly<span class="badge">30</span></li>
-                <li class="list-group-item">Quiz Questions Answered<span class="badge">30</span></li>
-                <li class="list-group-item">Quiz Questions Answered Correctly<span class="badge">30</span></li>
-                <li class="list-group-item">Quizzes Completed<span class="badge">30</span></li>
+                <li class="list-group-item">Total Points<span class="badge">@Model.UserStats.TotalPoints</span></li>
+                <li class="list-group-item">Questions Answered<span class="badge">@Model.UserStats.QuestionsAnswered</span></li>
+                <li class="list-group-item">Questions Answered Correctly<span class="badge">@Model.UserStats.QuestionsAnsweredCorrectly</span></li>
+                <li class="list-group-item">Random Questions Answered<span class="badge">@Model.UserStats.RandomQuestionsAnswered</span></li>
+                <li class="list-group-item">Random Questions Answered Correctly<span class="badge">@Model.UserStats.RandomQuestionsAnsweredCorrectly</span></li>
+                <li class="list-group-item">Timed Questions Answered<span class="badge">@Model.UserStats.TimedQuestionsAnswered</span></li>
+                <li class="list-group-item">Timed Questions Answered Correctly<span class="badge">@Model.UserStats.TimedQuestionsAnsweredCorrectly</span></li>
+                <li class="list-group-item">Quiz Questions Answered<span class="badge">@Model.UserStats.QuizQuestionsAnswered</span></li>
+                <li class="list-group-item">Quiz Questions Answered Correctly<span class="badge">@Model.UserStats.QuizQuestionsAnsweredCorrectly</span></li>
+                <li class="list-group-item">Quizzes Completed<span class="badge">@Model.UserStats.QuizzesCompleted</span></li>
             </ul>
         </div>
     </div>

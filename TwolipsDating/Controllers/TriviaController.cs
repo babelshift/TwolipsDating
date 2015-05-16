@@ -48,6 +48,10 @@ namespace TwolipsDating.Controllers
             TriviaMenuViewModel viewModel = new TriviaMenuViewModel();
             viewModel.Quizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(quizzes);
 
+            var currentUserId = await GetCurrentUserIdAsync();
+            //var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
+            viewModel.UserStats = await ProfileService.GetUserStatsAsync(currentUserId);
+
             return View(viewModel);
         }
 
@@ -58,7 +62,7 @@ namespace TwolipsDating.Controllers
             var currentUserId = await GetCurrentUserIdAsync();
 
             // generate a random question with its answers to view
-            Question randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Random);
+            var randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Random);
 
             QuestionViewModel viewModel = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
 
@@ -169,11 +173,25 @@ namespace TwolipsDating.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public async Task<ActionResult> Quiz(int quizId)
+        public async Task<ActionResult> Quiz(int id)
         {
             await SetHeaderCounts();
 
-            return View();
+            var currentUserId = await GetCurrentUserIdAsync();
+
+            // get a random question that has not yet been answered for the quiz
+            var randomQuizQuestion = await triviaService.GetRandomQuizQuestionAsync(currentUserId, id);
+
+            QuizQuestionViewModel viewModel = Mapper.Map<Question, QuizQuestionViewModel>(randomQuizQuestion);
+
+            if(viewModel == null)
+            {
+                viewModel = new QuizQuestionViewModel();
+                viewModel.QuizId = id;
+            }
+
+
+            return View(viewModel);
         }
 
         protected override void Dispose(bool disposing)

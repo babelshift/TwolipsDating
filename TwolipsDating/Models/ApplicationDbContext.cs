@@ -235,11 +235,6 @@ namespace TwolipsDating.Models
                 .HasMaxLength(1000);
 
             modelBuilder.Entity<Question>()
-                .HasOptional(v => v.Quiz)
-                .WithMany(v => v.Questions)
-                .HasForeignKey(v => v.QuizId);
-
-            modelBuilder.Entity<Question>()
                 .HasOptional(v => v.QuestionType)
                 .WithMany(v => v.Questions)
                 .HasForeignKey(v => v.QuestionTypeId);

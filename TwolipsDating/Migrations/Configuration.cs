@@ -69,7 +69,8 @@ namespace TwolipsDating.Migrations
 
             context.QuestionTypes.AddOrUpdate(q => q.Id,
                 new QuestionType() { Id = (int)QuestionTypeValues.Random, Name = "Random" },
-                new QuestionType() { Id = (int)QuestionTypeValues.Timed, Name = "Timed" });
+                new QuestionType() { Id = (int)QuestionTypeValues.Timed, Name = "Timed" },
+                new QuestionType() { Id = (int)QuestionTypeValues.Quiz, Name = "Quiz" });
 
             context.MilestoneTypes.AddOrUpdate(m => m.Id,
                 new MilestoneType() { Id = (int)MilestoneTypeValues.QuestionAnsweredCorrectly, Name = "Question Answered Correctly" },

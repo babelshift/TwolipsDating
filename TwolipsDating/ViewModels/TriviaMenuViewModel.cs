@@ -8,5 +8,6 @@ namespace TwolipsDating.ViewModels
     public class TriviaMenuViewModel
     {
         public IReadOnlyCollection<QuizOverviewViewModel> Quizzes { get; set; }
+        public UserStatsViewModel UserStats { get; set; }
     }
 }

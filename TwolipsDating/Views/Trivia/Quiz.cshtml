@@ -1,0 +1,95 @@
+﻿@model TwolipsDating.ViewModels.QuizQuestionViewModel
+
+@{
+    ViewBag.Title = "twolips - quiz";
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Trivia" })
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @if (Model != null)
+                {
+                    <div id="alert-box" class="alert alert-info">
+                        <h4>Select an answer and then press OK. There is no time limit.</h4>
+                    </div>
+                    <p>@Model.Content</p>
+                    foreach (var answer in @Model.Answers)
+                    {
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButtonFor(m => m.SelectedAnswerId, answer.AnswerId)
+                                @answer.Content
+                            </label>
+                        </div>
+                    }
+                    <input id="button-ok" type="button" class="btn btn-primary btn-sm" value="OK" onclick="onSubmitAnswer(event, this)" />
+                    @Html.ActionLink("Next", "quiz", new { id = Model.QuizId }, new { id = "button-next", @class = "btn btn-sm hidden" })
+                    @Html.HiddenFor(m => m.QuestionId)
+                }
+                else
+                {
+                    <h4>You've completed this quiz.</h4>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        function onSubmitAnswer(e, obj) {
+            e.preventDefault();
+
+            $("#button-next").addClass("hidden");
+            $("#button-ok").removeClass("hidden");
+
+            var questionId = $("#QuestionId").val();
+            var selected = $("input[type='radio'][name='SelectedAnswerId']:checked");
+            var answerId = "";
+            if (selected.length > 0) {
+                answerId = selected.val();
+            }
+
+            var json = "{\"questionId\":" + questionId + ", \"answerId\":" + answerId + "}";
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("submitanswer", "trivia")',
+                data: json,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.success) {
+                        if (data.isAnswerCorrect) {
+                            $("#alert-box").removeClass("alert-success");
+                            $("#alert-box").removeClass("alert-danger");
+                            $("#alert-box").removeClass("alert-info");
+                            $("#alert-box").addClass("alert-success");
+                            $("#alert-box").html("<h4>Correct!</h4>");
+                            $("#button-next").removeClass("hidden");
+                            $("#button-next").addClass("btn-success");
+                            $("#button-ok").addClass("hidden");
+                            $("input[type='radio']").attr("disabled", true);
+                        } else {
+                            $("#alert-box").removeClass("alert-success");
+                            $("#alert-box").removeClass("alert-danger");
+                            $("#alert-box").removeClass("alert-info");
+                            $("#alert-box").addClass("alert-danger");
+                            $("#alert-box").html("<h4>Incorrect!</h4>");
+                            $("#button-next").removeClass("hidden");
+                            $("#button-next").addClass("btn-danger");
+                            $("#button-ok").addClass("hidden");
+                            $("input[type='radio']").attr("disabled", true);
+                        }
+                    } else {
+                        alert(data.error);
+                    }
+                }
+            });
+        }
+    </script>
+}

@@ -9,7 +9,8 @@ namespace TwolipsDating.Models
     public enum QuestionTypeValues
     {
         Random = 1,
-        Timed = 2
+        Timed = 2,
+        Quiz = 3
     }
 
     public class QuestionType

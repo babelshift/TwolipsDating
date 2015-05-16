@@ -10,12 +10,10 @@ namespace TwolipsDating.Models
     {
         public int Id { get; set; }
         public string Content { get; set; }
-        public int? QuizId { get; set; }
         public int? CorrectAnswerId { get; set; }
         public int Points { get; set; }
         public int? QuestionTypeId { get; set; }
 
-        public virtual Quiz Quiz { get; set; }
         public virtual Answer CorrectAnswer { get; set; }
         public virtual QuestionType QuestionType { get; set; }
 
@@ -24,5 +22,7 @@ namespace TwolipsDating.Models
         public virtual ICollection<Tag> Tags { get; set; }
 
         public virtual ICollection<AnsweredQuestion> AnsweredInstances { get; set; }
+
+        public virtual ICollection<Quiz> Quizzes { get; set; }
     }
 }
