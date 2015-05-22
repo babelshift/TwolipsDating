@@ -1,4 +1,4 @@
-﻿@model TwolipsDating.ViewModels.QuizQuestionViewModel
+﻿@model TwolipsDating.ViewModels.QuizViewModel
 
 @{
     ViewBag.Title = "twolips - quiz";
@@ -7,34 +7,66 @@
 <div class="panel panel-default">
     <div class="panel-body">
         @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Trivia" })
+        <div class="pull-right">
+            <h4>You're viewing the quiz: <strong>@Model.QuizName</strong></h4>
+        </div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-body">
-                @if (Model != null)
+                @if (Model != null && Model.Questions != null && Model.Questions.Count > 0)
                 {
-                    <div id="alert-box" class="alert alert-info">
-                        <h4>Select an answer and then press OK. There is no time limit.</h4>
-                    </div>
-                    <p>@Model.Content</p>
-                    foreach (var answer in @Model.Answers)
+                    using (Html.BeginForm("quiz", "trivia", FormMethod.Post, new { role = "form" }))
                     {
-                        <div class="radio">
-                            <label>
-                                @Html.RadioButtonFor(m => m.SelectedAnswerId, answer.AnswerId)
-                                @answer.Content
-                            </label>
-                        </div>
+                        if (Model.IsAlreadyCompleted)
+                        {
+                            <div id="alert-box" class="alert alert-success">
+                                <h4>You've already completed this quiz. View your selected answers below.</h4>
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="alert-box" class="alert alert-info">
+                                <h4>Select answers to all questions and then press OK. There is no time limit.</h4>
+                            </div>
+                        }
+
+                        for (int i = 0; i < Model.Questions.Count; i++)
+                        {
+                            var question = Model.Questions[i];
+                            <p>@question.Content</p>
+                            foreach (var answer in question.Answers)
+                            {
+                                <div class="radio">
+                                    <label>
+                                        @if (!Model.Questions[i].IsAlreadyAnswered)
+                                        {
+                                            @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId)
+                                        }
+                                        else
+                                        {
+                                            @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { disabled = "disabled" })
+                                        }
+                                        @answer.Content
+                                    </label>
+                                </div>
+                            }
+                            @Html.HiddenFor(m => Model.Questions[i].QuestionId)
+                            <hr />
+                        }
+
+                        if (!Model.IsAlreadyCompleted)
+                        {
+                            <input id="button-submit" type="submit" class="btn btn-sm btn-primary" value="OK" />
+                        }
+                        @Html.HiddenFor(m => m.QuizId)
                     }
-                    <input id="button-ok" type="button" class="btn btn-primary btn-sm" value="OK" onclick="onSubmitAnswer(event, this)" />
-                    @Html.ActionLink("Next", "quiz", new { id = Model.QuizId }, new { id = "button-next", @class = "btn btn-sm hidden" })
-                    @Html.HiddenFor(m => m.QuestionId)
                 }
                 else
                 {
-                    <h4>You've completed this quiz.</h4>
+                    <h4>Something went wrong, and the quiz can't be loaded.</h4>
                 }
             </div>
         </div>

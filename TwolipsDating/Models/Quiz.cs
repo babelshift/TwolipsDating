@@ -14,5 +14,6 @@ namespace TwolipsDating.Models
         public int Points { get; set; }
 
         public virtual ICollection<Question> Questions { get; set; }
+        public virtual ICollection<CompletedQuiz> CompletedByUsers { get; set; }
     }
 }

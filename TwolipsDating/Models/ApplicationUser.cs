@@ -40,6 +40,7 @@ namespace TwolipsDating.Models
         public virtual ICollection<IgnoredUser> IgnoredBy { get; set; }
         public virtual ICollection<AnsweredQuestion> AnsweredQuestions { get; set; }
         public virtual ICollection<MilestoneAchievement> MilestonesAchieved { get; set; }
+        public virtual ICollection<CompletedQuiz> CompletedQuizzes { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

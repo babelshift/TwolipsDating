@@ -92,11 +92,8 @@ namespace TwolipsDating.Controllers
 
                 var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
 
-                // check if the supplied answer is correct
-                bool isAnswerCorrect = await triviaService.IsAnswerCorrectAsync(questionId, answerId);
-
                 // log the answer for this user's question history
-                await triviaService.RecordAnsweredQuestionAsync(currentUserId, currentUserProfile.Id, questionId, answerId, (int)QuestionTypeValues.Random);
+                bool isAnswerCorrect = await triviaService.RecordAnsweredQuestionAsync(currentUserId, currentUserProfile.Id, questionId, answerId, (int)QuestionTypeValues.Random);
 
                 return Json(new { success = true, isAnswerCorrect = isAnswerCorrect });
             }
@@ -128,11 +125,8 @@ namespace TwolipsDating.Controllers
 
                         var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
 
-                        // check if the supplied answer is correct
-                        bool isAnswerCorrect = await triviaService.IsAnswerCorrectAsync(questionId, answerId);
-
                         // log the answer for this user's question history
-                        await triviaService.RecordAnsweredQuestionAsync(currentUserId, currentUserProfile.Id, questionId, answerId, (int)QuestionTypeValues.Timed);
+                        bool isAnswerCorrect = await triviaService.RecordAnsweredQuestionAsync(currentUserId, currentUserProfile.Id, questionId, answerId, (int)QuestionTypeValues.Timed);
 
                         return Json(new { success = true, isAnswerCorrect = isAnswerCorrect });
                     }
@@ -179,19 +173,73 @@ namespace TwolipsDating.Controllers
 
             var currentUserId = await GetCurrentUserIdAsync();
 
-            // get a random question that has not yet been answered for the quiz
-            var randomQuizQuestion = await triviaService.GetRandomQuizQuestionAsync(currentUserId, id);
+            var quiz = await triviaService.GetQuizAsync(id);
 
-            QuizQuestionViewModel viewModel = Mapper.Map<Question, QuizQuestionViewModel>(randomQuizQuestion);
+            // check if the quiz has already been completed by the user
+            bool isAlreadyCompleted = await triviaService.IsQuizAlreadyCompletedAsync(currentUserId, quiz.Id);
 
-            if(viewModel == null)
+            List<QuestionViewModel> questionListViewModel = new List<QuestionViewModel>();
+            // if it has already been completed, get answered questions for quiz and user
+            if(isAlreadyCompleted)
             {
-                viewModel = new QuizQuestionViewModel();
-                viewModel.QuizId = id;
+                // get the already answered questions for this quiz
+                var answeredQuizQuestions = await triviaService.GetAnsweredQuizQuestions(currentUserId, id);
+
+                // get the list of all possible questions for this quiz
+                var quizQuestions = await triviaService.GetQuizQuestionsAsync(id);
+                questionListViewModel = Mapper.Map<IReadOnlyCollection<Question>, List<QuestionViewModel>>(quizQuestions);
+
+                // match up the already selected answers with the questions for this quiz
+                foreach (var questionViewModel in questionListViewModel)
+                {
+                    var answeredQuizQuestion = answeredQuizQuestions[questionViewModel.QuestionId];
+                    questionViewModel.SelectedAnswerId = answeredQuizQuestion.AnswerId;
+                    questionViewModel.IsAlreadyAnswered = true;
+                }
+            }
+            // if it hasn't been completed, get unanswered questions for quiz
+            else
+            {
+                var quizQuestions = await triviaService.GetQuizQuestionsAsync(id);
+                questionListViewModel = Mapper.Map<IReadOnlyCollection<Question>, List<QuestionViewModel>>(quizQuestions);
             }
 
+            QuizViewModel viewModel = new QuizViewModel()
+            {
+                Questions = questionListViewModel,
+                QuizName = quiz.Name,
+                QuizId = id,
+                IsAlreadyCompleted = isAlreadyCompleted
+            };
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Quiz(QuizViewModel viewModel)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            string currentUserId = await GetCurrentUserIdAsync();
+            var profile = await ProfileService.GetUserProfileAsync(currentUserId);
+
+            // loop through questions and record answers
+            foreach (var question in viewModel.Questions)
+            {
+                bool isAnswerCorrect = await triviaService.RecordAnsweredQuestionAsync(
+                    currentUserId, 
+                    profile.Id, 
+                    question.QuestionId, 
+                    question.SelectedAnswerId.Value, 
+                    (int)QuestionTypeValues.Quiz);
+            }
+
+            int count = await triviaService.SetQuizAsCompleted(currentUserId, viewModel.QuizId);
+
+            return RedirectToAction("quiz", new { id = viewModel.QuizId });
         }
 
         protected override void Dispose(bool disposing)

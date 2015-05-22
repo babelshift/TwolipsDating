@@ -392,11 +392,16 @@
     <Compile Include="Migrations\201505152215020_QuestionsOnManyQuizzes.Designer.cs">
       <DependentUpon>201505152215020_QuestionsOnManyQuizzes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505210211275_CompletedQuizzes.cs" />
+    <Compile Include="Migrations\201505210211275_CompletedQuizzes.Designer.cs">
+      <DependentUpon>201505210211275_CompletedQuizzes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\AnsweredQuestion.cs" />
+    <Compile Include="Models\CompletedQuiz.cs" />
     <Compile Include="Models\FavoriteProfile.cs" />
     <Compile Include="Models\Gift.cs" />
     <Compile Include="Models\GiftTransactionLog.cs" />
@@ -447,7 +452,7 @@
     <Compile Include="ViewModels\ProfileTagSuggestionViewModel.cs" />
     <Compile Include="ViewModels\QuestionViewModel.cs" />
     <Compile Include="ViewModels\QuizOverviewViewModel.cs" />
-    <Compile Include="ViewModels\QuizQuestionViewModel.cs" />
+    <Compile Include="ViewModels\QuizViewModel.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -710,6 +715,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505152215020_QuestionsOnManyQuizzes.resx">
       <DependentUpon>201505152215020_QuestionsOnManyQuizzes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505210211275_CompletedQuizzes.resx">
+      <DependentUpon>201505210211275_CompletedQuizzes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

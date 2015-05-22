@@ -14,6 +14,17 @@ namespace TwolipsDating.Business
 {
     internal class TriviaService : BaseService
     {
+        internal async Task<Quiz> GetQuizAsync(int quizId)
+        {
+            Debug.Assert(quizId > 0);
+
+            var quizResult = from quiz in db.Quizzes
+                             where quiz.Id == quizId
+                             select quiz;
+
+            return await quizResult.FirstOrDefaultAsync();
+        }
+
         internal async Task<IReadOnlyCollection<Quiz>> GetQuizzesAsync()
         {
             var quizzes = from quiz in db.Quizzes
@@ -24,43 +35,38 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        internal async Task<Question> GetRandomQuizQuestionAsync(string userId, int quizId)
+        internal async Task<IReadOnlyCollection<Question>> GetQuizQuestionsAsync(int quizId)
         {
-            return await GetRandomQuestionAsync(userId, (int)QuestionTypeValues.Quiz, quizId);
+            Debug.Assert(quizId > 0);
+
+            var questionList = await (from questions in db.Questions
+                                      from quiz in db.Quizzes
+                                      where questions.QuestionTypeId.HasValue
+                                      where questions.QuestionTypeId.Value == (int)QuestionTypeValues.Quiz
+                                      where quiz.Id == quizId
+                                      select questions).ToListAsync();
+
+            return questionList;
         }
 
         /// <summary>
         /// Returns a random question that the user has not answered yet
         /// </summary>
         /// <returns></returns>
-        internal async Task<Question> GetRandomQuestionAsync(string userId, int questionTypeId, int? quizId = null)
+        internal async Task<Question> GetRandomQuestionAsync(string userId, int questionTypeId)
         {
-            List<int> questionsAlreadyAnswered = new List<int>();
-            List<Question> questionList = new List<Question>();
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+            Debug.Assert(questionTypeId > 0);
 
-            questionsAlreadyAnswered = await (from questions in db.AnsweredQuestions
-                                              where questions.UserId == userId
-                                              select questions.QuestionId).ToListAsync();
+            var questionsAlreadyAnswered = await (from questions in db.AnsweredQuestions
+                                                  where questions.UserId == userId
+                                                  select questions.QuestionId).ToListAsync();
 
-            if (quizId.HasValue)
-            {
-                questionList = await (from questions in db.Questions
-                                      from quiz in db.Quizzes
-                                      where !questionsAlreadyAnswered.Contains(questions.Id)
-                                      where questions.QuestionTypeId.HasValue
-                                      where questions.QuestionTypeId.Value == questionTypeId
-                                      where quiz.Id == quizId
-                                      select questions).ToListAsync();
-            }
-            else
-            {
-                questionList = await (from questions in db.Questions
+            var questionList = await (from questions in db.Questions
                                       where !questionsAlreadyAnswered.Contains(questions.Id)
                                       where questions.QuestionTypeId.HasValue
                                       where questions.QuestionTypeId.Value == questionTypeId
                                       select questions).ToListAsync();
-            }
-
 
             // there are no more questions that can be answered
             if (questionList.Count == 0)
@@ -94,13 +100,16 @@ namespace TwolipsDating.Business
             }
         }
 
-        internal async Task<int> RecordAnsweredQuestionAsync(string userId, int profileId, int questionId, int answerId, int questionTypeId)
+        internal async Task<bool> RecordAnsweredQuestionAsync(string userId, int profileId, int questionId, int answerId, int questionTypeId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(profileId > 0);
             Debug.Assert(questionId > 0);
             Debug.Assert(answerId > 0);
             Debug.Assert(questionTypeId > 0);
+
+            // check if the supplied answer is correct
+            bool isAnswerCorrect = await IsAnswerCorrectAsync(questionId, answerId);
 
             int changes = await SaveAnswerAsync(userId, questionId, answerId);
 
@@ -116,11 +125,14 @@ namespace TwolipsDating.Business
             // get the user's total points (questions, quizzes, games)
             // do something if they hit a total milestone
 
-            return changes;
+            return isAnswerCorrect;
         }
 
         private async Task HandleQuestionPointAwards(string userId, int profileId)
         {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+            Debug.Assert(profileId > 0);
+
             // get a collection of all tags and associated point sums for the user
             var tagsForAnsweredQuestions = await GetTagsForAnsweredQuestionsAsync(userId);
 
@@ -146,6 +158,10 @@ namespace TwolipsDating.Business
 
         private async Task<int> SaveAnswerAsync(string userId, int questionId, int answerId)
         {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+            Debug.Assert(questionId > 0);
+            Debug.Assert(answerId > 0);
+
             // log the answered question
             AnsweredQuestion answeredQuestion = new AnsweredQuestion()
             {
@@ -162,6 +178,9 @@ namespace TwolipsDating.Business
 
         private async Task<int> GetUsersAwardedTagCountForTag(int profileId, int tagId)
         {
+            Debug.Assert(tagId > 0);
+            Debug.Assert(profileId > 0);
+
             var tagAwards = from tagAward in db.TagAwards
                             where tagAward.TagId == tagId
                             where tagAward.ProfileId == profileId
@@ -172,6 +191,8 @@ namespace TwolipsDating.Business
 
         private async Task HandleQuestionMilestonesAsync(string userId, int points)
         {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
             // get the question milestones
             var milestones = await GetMilestonesAsync();
 
@@ -196,6 +217,9 @@ namespace TwolipsDating.Business
 
         private async Task<int> AwardMilestoneToUserAsync(string userId, int milestoneId)
         {
+            Debug.Assert(milestoneId > 0);
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
             MilestoneAchievement achievement = new MilestoneAchievement()
             {
                 UserId = userId,
@@ -210,6 +234,8 @@ namespace TwolipsDating.Business
 
         private async Task<IReadOnlyDictionary<int, int>> GetMilestoneIdsAchievedAsync(string userId)
         {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
             var milestonesAchieved = from milestoneAchieved in db.MilestoneAchievements
                                      where milestoneAchieved.UserId == userId
                                      select milestoneAchieved.MilestoneId;
@@ -318,6 +344,9 @@ namespace TwolipsDating.Business
 
         private async Task<IEnumerable<T>> QueryAsync<T>(string sql, object parameters)
         {
+            Debug.Assert(!String.IsNullOrEmpty(sql));
+            Debug.Assert(parameters != null);
+
             string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -327,6 +356,56 @@ namespace TwolipsDating.Business
                 connection.Close();
                 return results;
             }
+        }
+
+        internal async Task<IReadOnlyDictionary<int, AnsweredQuestion>> GetAnsweredQuizQuestions(string userId, int quizId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+            Debug.Assert(quizId > 0);
+
+            var answeredQuestions = from answeredQuestion in db.AnsweredQuestions
+                                    join question in db.Questions on answeredQuestion.QuestionId equals question.Id
+                                    from quiz in db.Quizzes
+                                    where question.QuestionTypeId.HasValue
+                                    where question.QuestionTypeId.Value == (int)QuestionTypeValues.Quiz
+                                    where answeredQuestion.UserId == userId
+                                    where quiz.Id == quizId
+                                    select answeredQuestion;
+
+            var result = (await answeredQuestions.ToListAsync())
+                .ToDictionary(a => a.QuestionId, a => a);
+
+            return new ReadOnlyDictionary<int, AnsweredQuestion>(result);
+        }
+
+        internal async Task<int> SetQuizAsCompleted(string userId, int quizId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+            Debug.Assert(quizId > 0);
+
+            CompletedQuiz completedQuiz = new CompletedQuiz()
+            {
+                DateCompleted = DateTime.Now,
+                QuizId = quizId,
+                UserId = userId
+            };
+
+            db.CompletedQuizzes.Add(completedQuiz);
+
+            return await db.SaveChangesAsync();
+        }
+
+        internal async Task<bool> IsQuizAlreadyCompletedAsync(string userId, int quizId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+            Debug.Assert(quizId > 0);
+
+            var completedQuiz = await (from completedQuizzes in db.CompletedQuizzes
+                                       where completedQuizzes.UserId == userId
+                                       where completedQuizzes.QuizId == quizId
+                                       select completedQuizzes).FirstOrDefaultAsync();
+
+            return completedQuiz != null;
         }
     }
 }

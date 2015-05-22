@@ -45,6 +45,7 @@ namespace TwolipsDating.Models
         public DbSet<Milestone> Milestones { get; set; }
         public DbSet<MilestoneAchievement> MilestoneAchievements { get; set; }
         public DbSet<MilestoneType> MilestoneTypes { get; set; }
+        public DbSet<CompletedQuiz> CompletedQuizzes { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -88,6 +89,27 @@ namespace TwolipsDating.Models
             SetupMilestones(modelBuilder);
             SetupMilestoneAchievements(modelBuilder);
             SetupMilestoneTypes(modelBuilder);
+            SetupCompletedQuizzes(modelBuilder);
+        }
+
+        private void SetupCompletedQuizzes(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CompletedQuiz>()
+                .HasKey(t => new { t.UserId, t.QuizId });
+
+            modelBuilder.Entity<CompletedQuiz>()
+                .HasRequired(t => t.Quiz)
+                .WithMany(t => t.CompletedByUsers)
+                .HasForeignKey(t => t.QuizId);
+
+            modelBuilder.Entity<CompletedQuiz>()
+                .HasRequired(t => t.User)
+                .WithMany(t => t.CompletedQuizzes)
+                .HasForeignKey(t => t.UserId);
+
+            modelBuilder.Entity<CompletedQuiz>()
+                .Property(t => t.DateCompleted)
+                .IsRequired();
         }
 
         private void SetupMilestones(DbModelBuilder modelBuilder)

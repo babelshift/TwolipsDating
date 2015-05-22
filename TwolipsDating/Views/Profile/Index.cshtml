@@ -219,7 +219,8 @@
                                 <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
                             *@
                         </ul>
-                    </div>}
+                    </div>
+                }
             }
             else
             {
@@ -298,139 +299,139 @@
                             }
                         </div>
                     }
+                </div>
             </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <p class="panel-title"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tags suggested by users</p>
-            </div>
-            <div class="panel-body">
-                @if (User.Identity.IsAuthenticated && Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
-                {
-                    <a style="display: inline-block" href="#" data-toggle="modal" data-target="#modalSuggestTags" data-keyboard="true">suggest</a>
-                }
-                @if (Model.SuggestedTags != null && Model.SuggestedTags.Count > 0)
-                {
-                    <div class="tags">
-                        @foreach (var tag in Model.SuggestedTags)
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <p class="panel-title"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tags suggested by users</p>
+                </div>
+                <div class="panel-body">
+                    @if (User.Identity.IsAuthenticated && Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
+                    {
+                        <a style="display: inline-block" href="#" data-toggle="modal" data-target="#modalSuggestTags" data-keyboard="true">suggest</a>
+                    }
+                    @if (Model.SuggestedTags != null && Model.SuggestedTags.Count > 0)
+                    {
+                        <div class="tags">
+                            @foreach (var tag in Model.SuggestedTags)
+                            {
+                                if (tag.DidUserSuggest)
+                                {
+                                    <a href="#" class="btn btn-primary btn-xs" title="@tag.TagDescription">
+                                        <span class="badge">@tag.TagCount</span> @tag.TagName
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="#" class="btn btn-default btn-xs" title="@tag.TagDescription">
+                                        <span class="badge">@tag.TagCount</span> @tag.TagName
+                                    </a>
+                                }
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        if (Model.CurrentUserId == Model.ProfileUserId)
                         {
-                            if (tag.DidUserSuggest)
-                            {
-                                <a href="#" class="btn btn-primary btn-xs" title="@tag.TagDescription">
-                                    <span class="badge">@tag.TagCount</span> @tag.TagName
-                                </a>
-                            }
-                            else
-                            {
-                                <a href="#" class="btn btn-default btn-xs" title="@tag.TagDescription">
-                                    <span class="badge">@tag.TagCount</span> @tag.TagName
-                                </a>
-                            }
+                            <p>You don't have any tags yet. Ask people to suggest some!</p>
                         }
-                    </div>
-                }
-                else
-                {
-                    if (Model.CurrentUserId == Model.ProfileUserId)
-                    {
-                        <p>You don't have any tags yet. Ask people to suggest some!</p>
-                    }
-                    else
-                    {
-                        <p>This user doesn't have any tags yet. Suggest some!</p>
-                    }
-                }
-                @*
-                    <h4><i class="glyphicon glyphicon-book"></i>&nbsp;&nbsp;Badges earned</h4>
-                    <span class="label label-danger"><i class="glyphicon glyphicon-apple"></i></span>
-                    <span class="label label-success"><i class="glyphicon glyphicon-music"></i></span>
-                    <span class="label label-info"><i class="glyphicon glyphicon-knight"></i></span>
-                    <span class="label label-info"><i class="glyphicon glyphicon-king"></i></span>
-                    <span class="label label-warning"><i class="glyphicon glyphicon-baby-formula"></i></span>
-                *@
-            </div>
-        </div>
-    </div>
-    <div class="col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <ul class="nav nav-pills">
-                    @if (Model.ActiveTab == "feed")
-                    {
-                        <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
-                        </li>
-                    }
-                    @if (Model.ActiveTab == "pictures")
-                    {
-                        <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
-                        </li>
-                    }
-                    @if (Model.ActiveTab == "reviews")
-                    {
-                        <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
-                        </li>
-                    }
-                    @if (Model.ActiveTab == "inventory")
-                    {
-                        <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "inventory" })"><i class="glyphicon glyphicon-gift"></i>&nbsp; Inventory</a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "inventory" })"><i class="glyphicon glyphicon-gift"></i>&nbsp; Inventory</a>
-                        </li>
+                        else
+                        {
+                            <p>This user doesn't have any tags yet. Suggest some!</p>
+                        }
                     }
                     @*
-                        <li role="presentation"><a href="#">Achievements</a></li>
-                        <li role="presentation"><a href="#">Stats</a></li>
-                        <li role="presentation"><a href="#">Trophy Room</a></li>
+                        <h4><i class="glyphicon glyphicon-book"></i>&nbsp;&nbsp;Badges earned</h4>
+                        <span class="label label-danger"><i class="glyphicon glyphicon-apple"></i></span>
+                        <span class="label label-success"><i class="glyphicon glyphicon-music"></i></span>
+                        <span class="label label-info"><i class="glyphicon glyphicon-knight"></i></span>
+                        <span class="label label-info"><i class="glyphicon glyphicon-king"></i></span>
+                        <span class="label label-warning"><i class="glyphicon glyphicon-baby-formula"></i></span>
                     *@
-                </ul>
-                <hr />
-                @if (Model.ActiveTab == "feed")
-                {
-                    Html.RenderPartial("_FeedPartial", Model.Feed);
-                }
-                else if (Model.ActiveTab == "pictures")
-                {
-                    Html.RenderPartial("_PicturesPartial", Model.UploadImage);
-                }
-                else if (Model.ActiveTab == "reviews")
-                {
-                    Html.RenderPartial("_ReviewsPartial", Model.Reviews);
-                }
-                else if (Model.ActiveTab == "inventory")
-                {
-                    Html.RenderPartial("_InventoryPartial", Model.Inventory);
-                }
+                </div>
             </div>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <ul class="nav nav-pills">
+                        @if (Model.ActiveTab == "feed")
+                        {
+                            <li role="presentation" class="active">
+                                <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li role="presentation">
+                                <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
+                            </li>
+                        }
+                        @if (Model.ActiveTab == "pictures")
+                        {
+                            <li role="presentation" class="active">
+                                <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li role="presentation">
+                                <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
+                            </li>
+                        }
+                        @if (Model.ActiveTab == "reviews")
+                        {
+                            <li role="presentation" class="active">
+                                <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li role="presentation">
+                                <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
+                            </li>
+                        }
+                        @if (Model.ActiveTab == "inventory")
+                        {
+                            <li role="presentation" class="active">
+                                <a href="@Url.Action("index", new { tab = "inventory" })"><i class="glyphicon glyphicon-gift"></i>&nbsp; Inventory</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li role="presentation">
+                                <a href="@Url.Action("index", new { tab = "inventory" })"><i class="glyphicon glyphicon-gift"></i>&nbsp; Inventory</a>
+                            </li>
+                        }
+                        @*
+                            <li role="presentation"><a href="#">Achievements</a></li>
+                            <li role="presentation"><a href="#">Stats</a></li>
+                            <li role="presentation"><a href="#">Trophy Room</a></li>
+                        *@
+                    </ul>
+                    <hr />
+                    @if (Model.ActiveTab == "feed")
+                    {
+                        Html.RenderPartial("_FeedPartial", Model.Feed);
+                    }
+                    else if (Model.ActiveTab == "pictures")
+                    {
+                        Html.RenderPartial("_PicturesPartial", Model.UploadImage);
+                    }
+                    else if (Model.ActiveTab == "reviews")
+                    {
+                        Html.RenderPartial("_ReviewsPartial", Model.Reviews);
+                    }
+                    else if (Model.ActiveTab == "inventory")
+                    {
+                        Html.RenderPartial("_InventoryPartial", Model.Inventory);
+                    }
+                </div>
 
+            </div>
         </div>
     </div>
-</div>
 }
 else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileViewMode.CreateProfile)
 {
