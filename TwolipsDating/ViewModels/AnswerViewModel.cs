@@ -9,5 +9,6 @@ namespace TwolipsDating.ViewModels
     {
         public int AnswerId { get; set; }
         public string Content { get; set; }
+        public bool IsCorrect { get; set; }
     }
 }

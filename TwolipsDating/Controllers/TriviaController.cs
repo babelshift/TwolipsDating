@@ -155,8 +155,8 @@ namespace TwolipsDating.Controllers
             DateTime questionStartTime = DateTime.UtcNow;
             QuestionStartTime = questionStartTime;
 
-            return Json(new 
-            { 
+            return Json(new
+            {
                 day = questionStartTime.Day,
                 month = questionStartTime.Month - 1,
                 year = questionStartTime.Year,
@@ -180,7 +180,7 @@ namespace TwolipsDating.Controllers
 
             List<QuestionViewModel> questionListViewModel = new List<QuestionViewModel>();
             // if it has already been completed, get answered questions for quiz and user
-            if(isAlreadyCompleted)
+            if (isAlreadyCompleted)
             {
                 // get the already answered questions for this quiz
                 var answeredQuizQuestions = await triviaService.GetAnsweredQuizQuestions(currentUserId, id);
@@ -195,6 +195,11 @@ namespace TwolipsDating.Controllers
                     var answeredQuizQuestion = answeredQuizQuestions[questionViewModel.QuestionId];
                     questionViewModel.SelectedAnswerId = answeredQuizQuestion.AnswerId;
                     questionViewModel.IsAlreadyAnswered = true;
+
+                    foreach (var answer in questionViewModel.Answers)
+                    {
+                        answer.IsCorrect = (answer.AnswerId == questionViewModel.CorrectAnswerId);
+                    }
                 }
             }
             // if it hasn't been completed, get unanswered questions for quiz
@@ -218,7 +223,7 @@ namespace TwolipsDating.Controllers
         [HttpPost]
         public async Task<ActionResult> Quiz(QuizViewModel viewModel)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(viewModel);
             }
@@ -230,10 +235,10 @@ namespace TwolipsDating.Controllers
             foreach (var question in viewModel.Questions)
             {
                 bool isAnswerCorrect = await triviaService.RecordAnsweredQuestionAsync(
-                    currentUserId, 
-                    profile.Id, 
-                    question.QuestionId, 
-                    question.SelectedAnswerId.Value, 
+                    currentUserId,
+                    profile.Id,
+                    question.QuestionId,
+                    question.SelectedAnswerId.Value,
                     (int)QuestionTypeValues.Quiz);
             }
 

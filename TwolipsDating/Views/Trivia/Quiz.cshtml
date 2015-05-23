@@ -41,15 +41,27 @@
                             {
                                 <div class="radio">
                                     <label>
-                                        @if (!Model.Questions[i].IsAlreadyAnswered)
-                                        {
-                                            @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId)
-                                        }
-                                        else
+                                        @if (Model.Questions[i].IsAlreadyAnswered)
                                         {
                                             @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { disabled = "disabled" })
                                         }
+                                        else
+                                        {
+                                            @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId)
+                                        }
                                         @answer.Content
+                                        &nbsp;&nbsp;
+                                        @if (Model.Questions[i].IsAlreadyAnswered)
+                                        {
+                                            if (answer.IsCorrect)
+                                            {
+                                                <span class="label label-success">correct</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-danger">incorrect</span>
+                                            }
+                                        }
                                     </label>
                                 </div>
                             }

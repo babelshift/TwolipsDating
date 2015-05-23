@@ -16,6 +16,8 @@ namespace TwolipsDating.ViewModels
         [Required]
         public int? SelectedAnswerId { get; set; }
 
+        public int CorrectAnswerId { get; set; }
+
         public IReadOnlyCollection<AnswerViewModel> Answers { get; set; }
     }
 }

@@ -39,14 +39,16 @@ namespace TwolipsDating.Business
         {
             Debug.Assert(quizId > 0);
 
-            var questionList = await (from questions in db.Questions
-                                      from quiz in db.Quizzes
-                                      where questions.QuestionTypeId.HasValue
-                                      where questions.QuestionTypeId.Value == (int)QuestionTypeValues.Quiz
-                                      where quiz.Id == quizId
-                                      select questions).ToListAsync();
+            var questionList = from questions in db.Questions
+                               from quiz in questions.Quizzes
+                               where questions.QuestionTypeId.HasValue
+                               where questions.QuestionTypeId.Value == (int)QuestionTypeValues.Quiz
+                               where quiz.Id == quizId
+                               select questions;
 
-            return questionList;
+            var results = await questionList.ToListAsync();
+
+            return results.AsReadOnly();
         }
 
         /// <summary>
