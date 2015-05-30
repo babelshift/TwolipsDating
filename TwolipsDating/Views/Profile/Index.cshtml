@@ -290,14 +290,28 @@
                 <div class="panel-body">
                     @if (Model.AwardedTags != null && Model.AwardedTags.Count > 0)
                     {
-                        <div class="tags">
-                            @foreach (var tag in Model.AwardedTags)
-                            {
-                                <a href="#" class="btn btn-default btn-xs" title="@tag.TagDescription">
-                                    <span class="badge">@tag.TagCount</span> @tag.TagName
-                                </a>
-                            }
-                        </div>
+                        if (Model.AwardedTags != null && Model.AwardedTags.Count > 0)
+                        {
+                            <div class="tags">
+                                @foreach (var tag in Model.AwardedTags)
+                                {
+                                    <a href="#" class="btn btn-default btn-xs" title="@tag.TagDescription">
+                                        <span class="badge">@tag.TagCount</span> @tag.TagName
+                                    </a>
+                                }
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        if (Model.CurrentUserId == Model.ProfileUserId)
+                        {
+                            <p>You don't have any awarded tags yet. Go to the trivia section!</p>
+                        }
+                        else
+                        {
+                            <p>This user doesn't have any awarded tags yet. Encourage them to answer some trivia!</p>
+                        }
                     }
                 </div>
             </div>

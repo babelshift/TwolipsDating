@@ -493,7 +493,7 @@ namespace TwolipsDating.Controllers
             var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profile.ApplicationUser.Id);
 
             var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
-            viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+            viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
             viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
             viewModel.CurrentUserId = currentUserId;
             viewModel.AverageRatingValue = reviews.AverageRating();
@@ -564,7 +564,7 @@ namespace TwolipsDating.Controllers
                 viewModel.UploadImage = new UploadImageViewModel();
                 viewModel.UploadImage.CurrentUserId = currentUserId;
                 viewModel.UploadImage.ProfileUserId = profile.ApplicationUser.Id;
-                viewModel.UploadImage.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+                viewModel.UploadImage.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
                 viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
             }
             if (viewModel.ActiveTab == "reviews")
