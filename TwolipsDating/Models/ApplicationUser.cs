@@ -23,6 +23,8 @@ namespace TwolipsDating.Models
 
         public DateTime DateLastLogin { get; set; }
 
+        public int Points { get; set; }
+
         public virtual Profile Profile { get; set; }
 
 		public virtual ICollection<Review> SentReviews { get; set; }

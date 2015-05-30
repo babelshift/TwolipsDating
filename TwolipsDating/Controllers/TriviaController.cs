@@ -196,6 +196,7 @@ namespace TwolipsDating.Controllers
                     questionViewModel.SelectedAnswerId = answeredQuizQuestion.AnswerId;
                     questionViewModel.IsAlreadyAnswered = true;
 
+                    // mark the correct answer to show the user
                     foreach (var answer in questionViewModel.Answers)
                     {
                         answer.IsCorrect = (answer.AnswerId == questionViewModel.CorrectAnswerId);
@@ -229,9 +230,11 @@ namespace TwolipsDating.Controllers
             }
 
             string currentUserId = await GetCurrentUserIdAsync();
+
             var profile = await ProfileService.GetUserProfileAsync(currentUserId);
 
             // loop through questions and record answers
+            int numberOfCorrectAnswers = 0;
             foreach (var question in viewModel.Questions)
             {
                 bool isAnswerCorrect = await triviaService.RecordAnsweredQuestionAsync(
@@ -240,9 +243,14 @@ namespace TwolipsDating.Controllers
                     question.QuestionId,
                     question.SelectedAnswerId.Value,
                     (int)QuestionTypeValues.Quiz);
+
+                if(isAnswerCorrect)
+                {
+                    numberOfCorrectAnswers++;
+                }
             }
 
-            int count = await triviaService.SetQuizAsCompleted(currentUserId, viewModel.QuizId);
+            int count = await triviaService.SetQuizAsCompleted(currentUserId, viewModel.QuizId, numberOfCorrectAnswers);
 
             return RedirectToAction("quiz", new { id = viewModel.QuizId });
         }

@@ -17,12 +17,8 @@ namespace TwolipsDating.Business
 
             // total points
             // question points + quiz points
-            viewModel.TotalPoints =
-                await (from answeredQuestion in db.AnsweredQuestions
-                       join question in db.Questions on answeredQuestion.QuestionId equals question.Id
-                       join answer in db.Answers on question.CorrectAnswerId equals answer.Id
-                       where answeredQuestion.UserId == userId
-                       select question.Points).SumAsync();
+            viewModel.TotalPoints = await (from users in db.Users
+                                           select users.Points).FirstAsync();
 
             viewModel.QuestionsAnswered =
                 await (from answeredQuestion in db.AnsweredQuestions

@@ -396,6 +396,10 @@
     <Compile Include="Migrations\201505210211275_CompletedQuizzes.Designer.cs">
       <DependentUpon>201505210211275_CompletedQuizzes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505231615050_TrackUserPoints.cs" />
+    <Compile Include="Migrations\201505231615050_TrackUserPoints.Designer.cs">
+      <DependentUpon>201505231615050_TrackUserPoints.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
@@ -718,6 +722,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505210211275_CompletedQuizzes.resx">
       <DependentUpon>201505210211275_CompletedQuizzes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505231615050_TrackUserPoints.resx">
+      <DependentUpon>201505231615050_TrackUserPoints.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

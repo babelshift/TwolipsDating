@@ -113,24 +113,45 @@ namespace TwolipsDating.Business
             // check if the supplied answer is correct
             bool isAnswerCorrect = await IsAnswerCorrectAsync(questionId, answerId);
 
-            int changes = await SaveAnswerAsync(userId, questionId, answerId);
+            // save the user's answer to the database
+            SaveAnswer(userId, questionId, answerId);
+
+            // give the player the correct number of points for the question if they got it correct
+            if (isAnswerCorrect)
+            {
+                var user = db.Users.Find(userId);
+                int questionPoints = await GetQuestionPointsAsync(questionId);
+                IncreaseUserPointsAsync(user, questionPoints);
+            }
 
             // get the user's points for all questions
-            int points = await GetUsersQuestionPointsAsync(userId);
+            int pointsForAllQuestions = await GetUsersQuestionPointsAsync(userId);
 
-            // award the user any question-related milestones
-            await HandleQuestionMilestonesAsync(userId, points);
+            // award the user any question-related milestones if they have enough question-related points
+            await HandleQuestionMilestonesAsync(userId, pointsForAllQuestions);
 
             // award the user any tags for question-related points
-            await HandleQuestionPointAwards(userId, profileId);
+            await HandleTagAwards(userId, profileId);
 
             // get the user's total points (questions, quizzes, games)
             // do something if they hit a total milestone
 
+            // save our current transaction for recording the answer
+            int count = await db.SaveChangesAsync();
+
             return isAnswerCorrect;
         }
 
-        private async Task HandleQuestionPointAwards(string userId, int profileId)
+        private async Task<int> GetQuestionPointsAsync(int questionId)
+        {
+            int questionPoints = await (from question in db.Questions
+                                        where question.Id == questionId
+                                        select question.Points).FirstAsync();
+
+            return questionPoints;
+        }
+
+        private async Task HandleTagAwards(string userId, int profileId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(profileId > 0);
@@ -153,12 +174,12 @@ namespace TwolipsDating.Business
                 // award the proper number of tags the user deserves
                 for (int i = 0; i < numberOfTagsToAward; i++)
                 {
-                    await AwardTagToProfileAsync(profileId, tag.TagId);
+                    AwardTagToProfile(profileId, tag.TagId);
                 }
             }
         }
 
-        private async Task<int> SaveAnswerAsync(string userId, int questionId, int answerId)
+        private void SaveAnswer(string userId, int questionId, int answerId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(questionId > 0);
@@ -174,8 +195,6 @@ namespace TwolipsDating.Business
             };
 
             db.AnsweredQuestions.Add(answeredQuestion);
-            int changes = await db.SaveChangesAsync();
-            return changes;
         }
 
         private async Task<int> GetUsersAwardedTagCountForTag(int profileId, int tagId)
@@ -211,13 +230,13 @@ namespace TwolipsDating.Business
                     if (!milestoneIdsAchieved.TryGetValue(milestone.Id, out milestoneIdAchieved))
                     {
                         // award the milestone
-                        await AwardMilestoneToUserAsync(userId, milestone.Id);
+                        AwardMilestoneToUser(userId, milestone.Id);
                     }
                 }
             }
         }
 
-        private async Task<int> AwardMilestoneToUserAsync(string userId, int milestoneId)
+        private void AwardMilestoneToUser(string userId, int milestoneId)
         {
             Debug.Assert(milestoneId > 0);
             Debug.Assert(!String.IsNullOrEmpty(userId));
@@ -230,8 +249,6 @@ namespace TwolipsDating.Business
             };
 
             db.MilestoneAchievements.Add(achievement);
-
-            return await db.SaveChangesAsync();
         }
 
         private async Task<IReadOnlyDictionary<int, int>> GetMilestoneIdsAchievedAsync(string userId)
@@ -257,7 +274,7 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        private async Task<int> AwardTagToProfileAsync(int profileId, int tagId)
+        private void AwardTagToProfile(int profileId, int tagId)
         {
             Debug.Assert(profileId > 0);
             Debug.Assert(tagId > 0);
@@ -270,7 +287,6 @@ namespace TwolipsDating.Business
             };
 
             db.TagAwards.Add(tagAward);
-            return await db.SaveChangesAsync();
         }
 
         private async Task<IReadOnlyCollection<QuestionTagPoints>> GetTagsForAnsweredQuestionsAsync(string userId)
@@ -296,25 +312,10 @@ namespace TwolipsDating.Business
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
-            string sql = @"
-                select sum(points) as points
-                from dbo.AnsweredQuestions as aq
-                inner join dbo.Questions as q on aq.QuestionId = q.Id
-                where aq.UserId = @userId
-            ";
+            int points = await (from users in db.Users
+                                select users.Points).FirstAsync();
 
-            int? points = 0;
-
-            var results = await QueryAsync<int>(sql, new { userId = userId });
-
-            points = results.FirstOrDefault();
-
-            if (!points.HasValue)
-            {
-                points = 0;
-            }
-
-            return points.Value;
+            return points;
         }
 
         internal async Task<int> GetUsersQuestionPointsForTypeAsync(string userId, int questionTypeId)
@@ -344,22 +345,6 @@ namespace TwolipsDating.Business
             return points.Value;
         }
 
-        private async Task<IEnumerable<T>> QueryAsync<T>(string sql, object parameters)
-        {
-            Debug.Assert(!String.IsNullOrEmpty(sql));
-            Debug.Assert(parameters != null);
-
-            string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                var results = await db.Database.Connection.QueryAsync<T>(sql, parameters);
-                connection.Close();
-                return results;
-            }
-        }
-
         internal async Task<IReadOnlyDictionary<int, AnsweredQuestion>> GetAnsweredQuizQuestions(string userId, int quizId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
@@ -380,7 +365,7 @@ namespace TwolipsDating.Business
             return new ReadOnlyDictionary<int, AnsweredQuestion>(result);
         }
 
-        internal async Task<int> SetQuizAsCompleted(string userId, int quizId)
+        internal async Task<int> SetQuizAsCompleted(string userId, int quizId, int numberOfCorrectAnswers)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(quizId > 0);
@@ -394,7 +379,30 @@ namespace TwolipsDating.Business
 
             db.CompletedQuizzes.Add(completedQuiz);
 
+            // if the user got enough questions right, give them points
+            var quiz = await GetQuizAsync(quizId);
+            double percentageOfCorrectQuestions = numberOfCorrectAnswers / quiz.Questions.Count;
+            if (percentageOfCorrectQuestions >= 0.8)
+            {
+                var user = db.Users.Find(userId);
+                IncreaseUserPointsAsync(user, quiz.Points);
+            }
+
             return await db.SaveChangesAsync();
+        }
+
+        private static void IncreaseUserPointsAsync(ApplicationUser user, int points)
+        {
+            user.Points += points;
+        }
+
+        private async Task<int> GetQuizPointsAsync(int quizId)
+        {
+            int points = await (from quizzes in db.Quizzes
+                                where quizzes.Id == quizId
+                                select quizzes.Points).FirstAsync();
+
+            return points;
         }
 
         internal async Task<bool> IsQuizAlreadyCompletedAsync(string userId, int quizId)
