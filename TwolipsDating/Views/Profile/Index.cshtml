@@ -303,13 +303,13 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <p class="panel-title"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tags suggested by users</p>
-                </div>
-                <div class="panel-body">
+                    <p class="panel-title" style="display: inline-block"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tags suggested by users</p>
                     @if (User.Identity.IsAuthenticated && Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
                     {
                         <a style="display: inline-block" href="#" data-toggle="modal" data-target="#modalSuggestTags" data-keyboard="true">suggest</a>
                     }
+                </div>
+                <div class="panel-body">
                     @if (Model.SuggestedTags != null && Model.SuggestedTags.Count > 0)
                     {
                         <div class="tags">

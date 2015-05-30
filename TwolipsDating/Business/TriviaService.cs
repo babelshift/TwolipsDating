@@ -417,5 +417,14 @@ namespace TwolipsDating.Business
 
             return completedQuiz != null;
         }
+
+        internal async Task<IReadOnlyDictionary<int, CompletedQuiz>> GetCompletedQuizzesForUserAsync(string currentUserId)
+        {
+            var completedQuizzes = await (from quizzes in db.CompletedQuizzes
+                                          where quizzes.UserId == currentUserId
+                                          select quizzes).ToDictionaryAsync(q => q.QuizId, q => q);
+
+            return new ReadOnlyDictionary<int, CompletedQuiz>(completedQuizzes);
+        }
     }
 }

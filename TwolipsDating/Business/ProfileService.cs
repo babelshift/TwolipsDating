@@ -77,6 +77,11 @@ namespace TwolipsDating.Business
                        where question.QuestionTypeId == (int)QuestionTypeValues.Quiz
                        select question).CountAsync();
 
+            viewModel.QuizzesCompleted =
+                await (from quizCompletions in db.CompletedQuizzes
+                       where quizCompletions.UserId == userId
+                       select quizCompletions).CountAsync();
+
             return viewModel;
         }
 

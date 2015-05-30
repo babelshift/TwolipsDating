@@ -49,6 +49,16 @@ namespace TwolipsDating.Controllers
             viewModel.Quizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(quizzes);
 
             var currentUserId = await GetCurrentUserIdAsync();
+            var completedQuizzes = await triviaService.GetCompletedQuizzesForUserAsync(currentUserId);
+
+            foreach (var quiz in viewModel.Quizzes)
+            {
+                if(completedQuizzes.Any(q => q.Key == quiz.Id))
+                {
+                    quiz.IsComplete = true;
+                }
+            }
+
             //var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
             viewModel.UserStats = await ProfileService.GetUserStatsAsync(currentUserId);
 

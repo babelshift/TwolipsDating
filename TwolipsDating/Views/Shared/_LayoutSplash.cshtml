@@ -20,12 +20,8 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar navbar-static-top" role="navigation">
-        <div class="container">
-            <div class="navbar-collapse collapse">
-                @Html.Partial("_LoginPartialSplash")
-            </div>
-        </div>
+    <div class="container">
+        @Html.Partial("_LoginPartialSplash")
     </div>
     <div class="container body-content">
         @RenderBody()

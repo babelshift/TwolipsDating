@@ -1,11 +1,11 @@
 ﻿@using Microsoft.AspNet.Identity
 
-<ul class="nav navbar-nav navbar-right" style="padding-right: 60px;">
-    <li>
-        <p class="navbar-text">Already have an account?</p></li>
-    <li>
-        <a href="@Url.Action("login", "account")" id="loginLink" class="navbar-link" title="Your friends are waiting for you">
-            <i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;Sign in
+<div class="pull-right">
+    <h5>
+        Already have an account?
+        <a href="@Url.Action("login", "account")" id="loginLink" title="Your friends are waiting for you">
+            Sign in
         </a>
-    </li>
-</ul>
+    </h5>
+</div>
+<div class="clearfix"></div>
