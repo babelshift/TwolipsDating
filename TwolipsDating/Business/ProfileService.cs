@@ -25,12 +25,10 @@ namespace TwolipsDating.Business
                        where answeredQuestion.UserId == userId
                        select answeredQuestion).CountAsync();
 
-            viewModel.QuestionsAnsweredCorrectly =
-                await (from answeredQuestion in db.AnsweredQuestions
-                       join question in db.Questions on answeredQuestion.QuestionId equals question.Id
-                       join answer in db.Answers on question.CorrectAnswerId equals answer.Id
-                       where answeredQuestion.UserId == userId
-                       select question).CountAsync();
+            viewModel.QuestionsAnsweredCorrectly = await (from answeredQuestion in db.AnsweredQuestions
+                                                          join question in db.Questions on answeredQuestion.AnswerId equals question.CorrectAnswerId
+                                                          where answeredQuestion.UserId == userId
+                                                          select answeredQuestion).CountAsync();
 
             viewModel.RandomQuestionsAnswered =
                 await (from answeredQuestion in db.AnsweredQuestions
@@ -41,8 +39,7 @@ namespace TwolipsDating.Business
 
             viewModel.RandomQuestionsAnsweredCorrectly =
                 await (from answeredQuestion in db.AnsweredQuestions
-                       join question in db.Questions on answeredQuestion.QuestionId equals question.Id
-                       join answer in db.Answers on question.CorrectAnswerId equals answer.Id
+                       join question in db.Questions on answeredQuestion.AnswerId equals question.CorrectAnswerId
                        where answeredQuestion.UserId == userId
                        where question.QuestionTypeId == (int)QuestionTypeValues.Random
                        select question).CountAsync();
@@ -56,8 +53,7 @@ namespace TwolipsDating.Business
 
             viewModel.TimedQuestionsAnsweredCorrectly =
                 await (from answeredQuestion in db.AnsweredQuestions
-                       join question in db.Questions on answeredQuestion.QuestionId equals question.Id
-                       join answer in db.Answers on question.CorrectAnswerId equals answer.Id
+                       join question in db.Questions on answeredQuestion.AnswerId equals question.CorrectAnswerId
                        where answeredQuestion.UserId == userId
                        where question.QuestionTypeId == (int)QuestionTypeValues.Timed
                        select question).CountAsync();
@@ -71,8 +67,7 @@ namespace TwolipsDating.Business
 
             viewModel.QuizQuestionsAnsweredCorrectly =
                 await (from answeredQuestion in db.AnsweredQuestions
-                       join question in db.Questions on answeredQuestion.QuestionId equals question.Id
-                       join answer in db.Answers on question.CorrectAnswerId equals answer.Id
+                       join question in db.Questions on answeredQuestion.AnswerId equals question.CorrectAnswerId
                        where answeredQuestion.UserId == userId
                        where question.QuestionTypeId == (int)QuestionTypeValues.Quiz
                        select question).CountAsync();

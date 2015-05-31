@@ -5,8 +5,8 @@ using System.Web;
 
 namespace TwolipsDating.ViewModels
 {
-    public class DropDownMenuViewModel
+    public class StoreViewModel
     {
-        public ActiveMenuText ActiveMenuText { get; set; }
+        public IReadOnlyCollection<StoreGiftViewModel> StoreGifts { get; set; }
     }
 }

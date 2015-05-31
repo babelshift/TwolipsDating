@@ -1,0 +1,92 @@
+﻿@using TwolipsDating.ViewModels
+@model StoreViewModel
+
+@{
+    ViewBag.Title = "twolips - points store";
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = ActiveMenuText.Store })
+        <div class="pull-right">
+            <ul class="nav nav-pills">
+                <li role="presentation">
+                    <a href="#" title="Profile colors"><i class="glyphicon glyphicon-tint"></i>&nbsp;Colors</a>
+                </li>
+                <li role="presentation">
+                    <a href="#" title="Profile titles"><i class="glyphicon glyphicon-tag"></i>&nbsp;Titles</a>
+                </li>
+                <li role="presentation" class="active">
+                    <a href="#" title="Gifts"><i class="glyphicon glyphicon-gift"></i>&nbsp;Gifts</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="purchase-result" class="alert alert-success alert-dismissible fade in" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <span id="purchase-result-message"></span>
+                </div>
+                @foreach (var gift in Model.StoreGifts)
+                {
+                    <div class="col-sm-2">
+                        <div class="thumbnail">
+                            <img src="@gift.GiftImagePath" alt="@gift.GiftName">
+                            <div class="caption">
+                                <h4>@gift.GiftName</h4>
+                                <p>@gift.GiftDescription</p>
+                                <i class="glyphicon glyphicon-piggy-bank"></i>
+                                @gift.PointPrice&nbsp;
+                                <p class="pull-right">
+                                    <a href="#" onclick="onBuyGift(event, this, @gift.GiftId, '@gift.GiftName')" class="btn btn-primary btn-xs" role="button">
+                                        <i class="glyphicon glyphicon-ok"></i>
+                                        &nbsp;Buy
+                                    </a>
+                                </p>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#purchase-result").hide();
+        });
+
+        function onBuyGift(e, obj, giftId, giftName) {
+            e.preventDefault();
+
+            var json = "{\"giftId\":" + giftId + "}";
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("buygift", "store")',
+                data: json,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if(data.success) {
+                        $("#purchase-result").show();
+                        $("#purchase-result-message").html("You successfully purchased <strong>" + data.count + "x " + giftName + "</strong>.");
+                    }
+                    else {
+                        $("#purchase-result").removeClass("alert-success");
+                        $("#purchase-result").addClass("alert-danger");
+                        $("#purchase-result").show();
+                        $("#purchase-result-message").html("For some reason, you cannot buy that gift.");
+                    }
+                }
+            });
+        }
+    </script>
+}

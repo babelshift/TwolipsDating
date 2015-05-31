@@ -196,7 +196,7 @@
         <div class="panel-body">
             @if (User.Identity.IsAuthenticated)
             {
-                @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Profile" })
+                @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = TwolipsDating.ViewModels.ActiveMenuText.Profile })
 
                 if (Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
                 {

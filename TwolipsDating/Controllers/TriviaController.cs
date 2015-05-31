@@ -41,7 +41,7 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Index()
         {
-            await SetHeaderCounts();
+            await SetHeaderCountsAsync();
 
             var quizzes = await triviaService.GetQuizzesAsync();
 
@@ -67,7 +67,7 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Random()
         {
-            await SetHeaderCounts();
+            await SetHeaderCountsAsync();
 
             var currentUserId = await GetCurrentUserIdAsync();
 
@@ -81,7 +81,7 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Timed()
         {
-            await SetHeaderCounts();
+            await SetHeaderCountsAsync();
 
             var currentUserId = await GetCurrentUserIdAsync();
 
@@ -179,7 +179,7 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Quiz(int id)
         {
-            await SetHeaderCounts();
+            await SetHeaderCountsAsync();
 
             var currentUserId = await GetCurrentUserIdAsync();
 

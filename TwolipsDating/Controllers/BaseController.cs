@@ -81,7 +81,7 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        protected async Task SetHeaderCounts()
+        protected async Task SetHeaderCountsAsync()
         {
             if (User.Identity.IsAuthenticated)
             {

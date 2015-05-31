@@ -6,7 +6,7 @@
 
 <div class="panel panel-default">
     <div class="panel-body">
-        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Trivia" })
+        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = TwolipsDating.ViewModels.ActiveMenuText.Trivia })
         <div class="pull-right">
             <h4>You're viewing the quiz: <strong>@Model.QuizName</strong></h4>
         </div>

@@ -1,4 +1,5 @@
-﻿@model TwolipsDating.ViewModels.DashboardViewModel
+﻿@using TwolipsDating.ViewModels
+@model DashboardViewModel 
 
 @{
     ViewBag.Title = "twolips - your dashboard";
@@ -45,7 +46,7 @@
 
 <div class="panel panel-default">
     <div class="panel-body">
-        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = "Dashboard" })
+        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = ActiveMenuText.Home })
     </div>
 </div>
 

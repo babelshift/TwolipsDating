@@ -13,19 +13,19 @@ namespace TwolipsDating.Controllers
 	{
 		public async Task<ActionResult> Terms()
 		{
-			await SetHeaderCounts();
+			await SetHeaderCountsAsync();
 			return View();
 		}
 
 		public async Task<ActionResult> Privacy()
 		{
-			await SetHeaderCounts();
+			await SetHeaderCountsAsync();
 			return View();
 		}
 
 		public async Task<ActionResult> Index()
 		{
-			await SetHeaderCounts();
+			await SetHeaderCountsAsync();
             return View();
         }
     }

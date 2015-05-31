@@ -262,6 +262,7 @@
     <Compile Include="Business\BaseService.cs" />
     <Compile Include="Business\DashboardService.cs" />
     <Compile Include="Business\ProfileService.cs" />
+    <Compile Include="Business\StoreService.cs" />
     <Compile Include="Business\TriviaService.cs" />
     <Compile Include="Business\UserService.cs" />
     <Compile Include="Business\ViolationService.cs" />
@@ -274,6 +275,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Controllers\TriviaController.cs" />
     <Compile Include="Controllers\ViolationController.cs" />
     <Compile Include="Migrations\201503082310198_initial.cs" />
@@ -400,6 +402,10 @@
     <Compile Include="Migrations\201505231615050_TrackUserPoints.Designer.cs">
       <DependentUpon>201505231615050_TrackUserPoints.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505310514099_PointsPurchases.cs" />
+    <Compile Include="Migrations\201505310514099_PointsPurchases.Designer.cs">
+      <DependentUpon>201505310514099_PointsPurchases.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
@@ -423,6 +429,7 @@
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\TagAward.cs" />
     <Compile Include="Models\TagSuggestion.cs" />
+    <Compile Include="Models\Title.cs" />
     <Compile Include="Models\UserImage.cs" />
     <Compile Include="Models\ViolationType.cs" />
     <Compile Include="Utilities\CityExtensions.cs" />
@@ -439,6 +446,7 @@
     <Compile Include="Utilities\ReviewExtensions.cs" />
     <Compile Include="Utilities\UploadedImageFeedKey.cs" />
     <Compile Include="Utilities\UserImageListExtensions.cs" />
+    <Compile Include="ViewModels\ActiveMenuText.cs" />
     <Compile Include="ViewModels\AnswerViewModel.cs" />
     <Compile Include="ViewModels\ChangeProfileImageViewModel.cs" />
     <Compile Include="ViewModels\ConversationItemViewModel.cs" />
@@ -494,6 +502,8 @@
     <Compile Include="ViewModels\SendMessageViewModel.cs" />
     <Compile Include="ViewModels\SentMessageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\StoreGiftViewModel.cs" />
+    <Compile Include="ViewModels\StoreViewModel.cs" />
     <Compile Include="ViewModels\TagViewModel.cs" />
     <Compile Include="ViewModels\TriviaMenuViewModel.cs" />
     <Compile Include="ViewModels\UploadedImageFeedViewModel.cs" />
@@ -625,6 +635,10 @@
     <Content Include="Views\Trivia\Random.cshtml" />
     <Content Include="Views\Trivia\Timed.cshtml" />
     <Content Include="Views\Trivia\Quiz.cshtml" />
+    <Content Include="Views\Store\Index.cshtml" />
+    <Content Include="Views\Store\Colors.cshtml" />
+    <Content Include="Views\Store\Titles.cshtml" />
+    <Content Include="Views\Store\Gifts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -725,6 +739,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505231615050_TrackUserPoints.resx">
       <DependentUpon>201505231615050_TrackUserPoints.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505310514099_PointsPurchases.resx">
+      <DependentUpon>201505310514099_PointsPurchases.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

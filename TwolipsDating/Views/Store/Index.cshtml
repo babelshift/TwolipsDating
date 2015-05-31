@@ -1,0 +1,30 @@
+﻿@using TwolipsDating.ViewModels
+@model StoreViewModel
+
+@{
+    ViewBag.Title = "twolips - points store";
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = ActiveMenuText.Store })
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p><a href="#">Colors</a></p>
+                <p><a href="#">Titles</a></p>
+                <p><a href="#">Gifts</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+    </script>
+}

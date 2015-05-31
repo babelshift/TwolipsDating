@@ -54,7 +54,7 @@ namespace TwolipsDating.Controllers
 
                 viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
-                await SetHeaderCounts();
+                await SetHeaderCountsAsync();
 
                 return View(viewModel);
             }
@@ -85,7 +85,7 @@ namespace TwolipsDating.Controllers
 
                 viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
-                await SetHeaderCounts();
+                await SetHeaderCountsAsync();
 
                 return View(viewModel);
             }
@@ -155,7 +155,7 @@ namespace TwolipsDating.Controllers
                 IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId)
             };
 
-            await SetHeaderCounts();
+            await SetHeaderCountsAsync();
 
             return View("index", viewModel);
         }
@@ -175,7 +175,7 @@ namespace TwolipsDating.Controllers
                 IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId)
             };
 
-            await SetHeaderCounts();
+            await SetHeaderCountsAsync();
 
             return View("index", viewModel);
         }

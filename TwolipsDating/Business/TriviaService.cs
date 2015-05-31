@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using TwolipsDating.Models;
-using System.Data.Entity;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using Dapper;
-using System.Data.SqlClient;
 using System.Collections.ObjectModel;
+using System.Data.Entity;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using TwolipsDating.Models;
 
 namespace TwolipsDating.Business
 {
