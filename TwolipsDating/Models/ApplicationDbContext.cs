@@ -33,7 +33,7 @@ namespace TwolipsDating.Models
         public DbSet<ReviewViolation> ReviewViolations { get; set; }
         public DbSet<Gift> Gifts { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
-        public DbSet<GiftTransactionLog> GiftTransactionLog { get; set; }
+        public DbSet<GiftTransactionLog> GiftTransactions { get; set; }
         public DbSet<FavoriteProfile> FavoriteProfiles { get; set; }
         public DbSet<IgnoredUser> IgnoredUsers { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
@@ -47,6 +47,7 @@ namespace TwolipsDating.Models
         public DbSet<MilestoneType> MilestoneTypes { get; set; }
         public DbSet<CompletedQuiz> CompletedQuizzes { get; set; }
         public DbSet<Title> Titles { get; set; }
+        public DbSet<StoreTransactionLog> StoreTransactions { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -78,7 +79,7 @@ namespace TwolipsDating.Models
             SetupReviewViolationEntity(modelBuilder);
             SetupGifts(modelBuilder);
             SetupInventoryItems(modelBuilder);
-            SetupGiftTransactionLog(modelBuilder);
+            SetupGiftTransactions(modelBuilder);
             SetupFavoriteProfiles(modelBuilder);
             SetupIgnoredUsers(modelBuilder);
             SetupQuizzes(modelBuilder);
@@ -92,6 +93,31 @@ namespace TwolipsDating.Models
             SetupMilestoneTypes(modelBuilder);
             SetupCompletedQuizzes(modelBuilder);
             SetupTitles(modelBuilder);
+            SetupStoreTransactions(modelBuilder);
+        }
+
+        private void SetupStoreTransactions(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<StoreTransactionLog>()
+                .HasKey(v => v.StoreTransactionLogId);
+
+            modelBuilder.Entity<StoreTransactionLog>()
+                .Property(v => v.GiftId)
+                .IsRequired();
+
+            modelBuilder.Entity<StoreTransactionLog>()
+                .Property(v => v.ItemCount)
+                .IsRequired();
+
+            modelBuilder.Entity<StoreTransactionLog>()
+                .HasRequired(p => p.BuyerUser)
+                .WithMany(p => p.StoreTransactions)
+                .HasForeignKey(p => p.UserId);
+
+            modelBuilder.Entity<StoreTransactionLog>()
+                .HasRequired(p => p.Gift)
+                .WithMany(p => p.StoreTransactions)
+                .HasForeignKey(p => p.GiftId);
         }
 
         private void SetupTitles(DbModelBuilder modelBuilder)
@@ -356,7 +382,7 @@ namespace TwolipsDating.Models
                 .HasForeignKey(v => v.ProfileId);
         }
 
-        private void SetupGiftTransactionLog(DbModelBuilder modelBuilder)
+        private void SetupGiftTransactions(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GiftTransactionLog>()
                 .HasKey(v => v.GiftTransactionLogId);
@@ -389,7 +415,7 @@ namespace TwolipsDating.Models
 
             modelBuilder.Entity<GiftTransactionLog>()
                 .HasRequired(p => p.Gift)
-                .WithMany(p => p.GiftTransactionLogs)
+                .WithMany(p => p.GiftTransactions)
                 .HasForeignKey(p => p.GiftId);
         }
 

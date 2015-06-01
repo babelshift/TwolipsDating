@@ -50,8 +50,19 @@ namespace TwolipsDating.Business
                     db.InventoryItems.Add(item);
                 }
 
+                StoreTransactionLog log = new StoreTransactionLog()
+                {
+                    UserId = userId,
+                    GiftId = giftId,
+                    ItemCount = buyCount,
+                    DateTransactionOccurred = DateTime.Now
+                };
+
+                db.StoreTransactions.Add(log);
+
                 user.Points -= gift.PointPrice * buyCount;
             }
+
             return await db.SaveChangesAsync();
         }
     }

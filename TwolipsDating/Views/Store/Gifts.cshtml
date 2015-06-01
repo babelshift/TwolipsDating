@@ -5,6 +5,28 @@
     ViewBag.Title = "twolips - points store";
 }
 
+<div class="modal fade" id="modalGift" tabindex="-1" role="dialog" aria-labelledby="modalGiftLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modalReviewLabel">Buy a gift</h4>
+            </div>
+            <div class="modal-body">
+                <p>How many of the selected gift do you want to buy?</p>
+                <input type="text" />
+                <div class="alert alert-warning">Clicking OK will immediately buy the item.</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" onclick="onBuyGift(event, this)" class="btn btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <div class="panel panel-default">
     <div class="panel-body">
         @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = ActiveMenuText.Store })
@@ -43,7 +65,7 @@
                                 <i class="glyphicon glyphicon-piggy-bank"></i>
                                 @gift.PointPrice&nbsp;
                                 <p class="pull-right">
-                                    <a href="#" onclick="onBuyGift(event, this, @gift.GiftId, '@gift.GiftName')" class="btn btn-primary btn-xs" role="button">
+                                    <a href="#" data-toggle="modal" data-target="#modalGift" data-keyboard="true" class="btn btn-primary btn-xs" role="button">
                                         <i class="glyphicon glyphicon-ok"></i>
                                         &nbsp;Buy
                                     </a>
@@ -53,6 +75,8 @@
                         </div>
                     </div>
                 }
+                <input type="hidden" id="selectedGiftId" />
+                <input type="hidden" id="selectedGiftName" />
             </div>
         </div>
     </div>
@@ -60,12 +84,15 @@
 
 @section Scripts {
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#purchase-result").hide();
         });
 
-        function onBuyGift(e, obj, giftId, giftName) {
+        function onBuyGift(e, obj) {
             e.preventDefault();
+
+            var giftId = $("#selectedGiftId").val();
+            var giftName = $("#selectedGiftName").val();
 
             var json = "{\"giftId\":" + giftId + "}";
 
@@ -75,7 +102,7 @@
                 data: json,
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
-                    if(data.success) {
+                    if (data.success) {
                         $("#purchase-result").show();
                         $("#purchase-result-message").html("You successfully purchased <strong>" + data.count + "x " + giftName + "</strong>.");
                     }

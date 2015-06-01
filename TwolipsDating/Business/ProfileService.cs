@@ -539,7 +539,7 @@ namespace TwolipsDating.Business
                 ItemCount = 1,
                 ToUserId = toUserId
             };
-            db.GiftTransactionLog.Add(logItem);
+            db.GiftTransactions.Add(logItem);
         }
 
         private async Task AddItemToUserInventory(string toUserId, int giftId)

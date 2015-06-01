@@ -406,6 +406,10 @@
     <Compile Include="Migrations\201505310514099_PointsPurchases.Designer.cs">
       <DependentUpon>201505310514099_PointsPurchases.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505312355148_StoreTransactions.cs" />
+    <Compile Include="Migrations\201505312355148_StoreTransactions.Designer.cs">
+      <DependentUpon>201505312355148_StoreTransactions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
@@ -426,6 +430,7 @@
     <Compile Include="Models\QuestionType.cs" />
     <Compile Include="Models\Quiz.cs" />
     <Compile Include="Models\ReviewViolation.cs" />
+    <Compile Include="Models\StoreTransactionLog.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\TagAward.cs" />
     <Compile Include="Models\TagSuggestion.cs" />
@@ -742,6 +747,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505310514099_PointsPurchases.resx">
       <DependentUpon>201505310514099_PointsPurchases.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505312355148_StoreTransactions.resx">
+      <DependentUpon>201505312355148_StoreTransactions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

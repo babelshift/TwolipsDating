@@ -14,6 +14,7 @@ namespace TwolipsDating.Models
         public int PointPrice { get; set; }
 
         public virtual ICollection<InventoryItem> InventoryItems { get; set; }
-        public virtual ICollection<GiftTransactionLog> GiftTransactionLogs { get; set; }
+        public virtual ICollection<GiftTransactionLog> GiftTransactions { get; set; }
+        public virtual ICollection<StoreTransactionLog> StoreTransactions { get; set; }
     }
 }
