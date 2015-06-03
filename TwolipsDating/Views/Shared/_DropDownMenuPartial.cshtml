@@ -26,10 +26,6 @@
         {
             <i class="glyphicon glyphicon-education"></i>
         }
-        else if (Model.ActiveMenuText == ActiveMenuText.Cart)
-        {
-            <i class="glyphicon glyphicon-shopping-cart"></i>
-        }
         &nbsp;@Model.ActiveMenuText.ToString()&nbsp;<span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu">
@@ -38,7 +34,6 @@
         <li><a href="@Url.Action("received", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Messages</a></li>
         <li><a href="@Url.Action("index", "trivia")"><i class="glyphicon glyphicon-education"></i>&nbsp;Trivia</a></li>
         <li><a href="@Url.Action("index", "store")"><i class="glyphicon glyphicon-blackboard"></i>&nbsp;Store</a></li>
-        <li><a href="@Url.Action("index", "store")"><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp;Cart</a></li>
         @*
             <li><a href="#"><i class="glyphicon glyphicon-search"></i>&nbsp;Search</a></li>
             <li><a href="#"><i class="glyphicon glyphicon-tower"></i>&nbsp;Challenges</a></li>

@@ -10,22 +10,23 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modalReviewLabel">Buy a gift</h4>
+                <h4 class="modal-title" id="modalReviewLabel">Confirm your purchase amount</h4>
             </div>
             <div class="modal-body">
-                <p>How many of the selected gift do you want to buy?</p>
-                <input type="text" />
-                <div class="alert alert-warning">Clicking OK will immediately buy the item.</div>
+                <p>How many <strong><span id="span-gift-name"></span></strong> do you want to buy?</p>
+                <p><input type="text" id="text-gift-count" oninput="onTextGiftCountBlur()" />&nbsp;&times;&nbsp;<i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;<span id="span-gift-price"></span></p>
+                <p id="text-charged">You will be charged <i class="glyphicon glyphicon-piggy-bank"></i><strong> <span id="span-total-price"></span></strong>.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" onclick="onBuyGift(event, this)" class="btn btn-primary">OK</button>
+                <button type="submit" onclick="onBuyGift(event, this)" class="btn btn-primary" data-dismiss="modal">OK</button>
             </div>
+            <input type="hidden" id="hidden-gift-id" />
+            <input type="hidden" id="hidden-gift-name" />
+            <input type="hidden" id="hidden-gift-price" />
         </div>
     </div>
 </div>
-
-
 
 <div class="panel panel-default">
     <div class="panel-body">
@@ -65,7 +66,8 @@
                                 <i class="glyphicon glyphicon-piggy-bank"></i>
                                 @gift.PointPrice&nbsp;
                                 <p class="pull-right">
-                                    <a href="#" data-toggle="modal" data-target="#modalGift" data-keyboard="true" class="btn btn-primary btn-xs" role="button">
+                                    <a href="#" data-toggle="modal" data-target="#modalGift" data-keyboard="true" class="btn btn-primary btn-xs" role="button" 
+                                       data-gift-id="@gift.GiftId" data-gift-name="@gift.GiftName" data-gift-price="@gift.PointPrice">
                                         <i class="glyphicon glyphicon-ok"></i>
                                         &nbsp;Buy
                                     </a>
@@ -75,8 +77,6 @@
                         </div>
                     </div>
                 }
-                <input type="hidden" id="selectedGiftId" />
-                <input type="hidden" id="selectedGiftName" />
             </div>
         </div>
     </div>
@@ -86,15 +86,38 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $("#purchase-result").hide();
+
+            $('#modalGift').on('show.bs.modal', function (event) {
+                $("#text-gift-count").val("");
+                $("#text-charged").hide();
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var giftId = button.data('gift-id'); // Extract info from data-* attributes
+                var giftName = button.data('gift-name');
+                var giftPrice = button.data('gift-price');
+                var modal = $(this);
+                $('#hidden-gift-id').val(giftId);
+                $('#hidden-gift-name').val(giftName);
+                $('#hidden-gift-price').val(giftPrice);
+                $('#span-gift-name').html(giftName);
+                $('#span-gift-price').html(giftPrice);
+            });
         });
+
+        function onTextGiftCountBlur() {
+            $("#text-charged").show();
+            var giftCount = $("#text-gift-count").val();
+            var giftPrice = $("#hidden-gift-price").val();
+            $("#span-total-price").html(giftCount * giftPrice);
+        }
 
         function onBuyGift(e, obj) {
             e.preventDefault();
 
-            var giftId = $("#selectedGiftId").val();
-            var giftName = $("#selectedGiftName").val();
+            var giftId = $("#hidden-gift-id").val();
+            var giftName = $("#hidden-gift-name").val();
+            var giftCount = $("#text-gift-count").val();
 
-            var json = "{\"giftId\":" + giftId + "}";
+            var json = "{\"giftId\":" + giftId + ", \"giftCount\":" + giftCount + "}";
 
             $.ajax({
                 type: 'POST',
@@ -103,11 +126,15 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
                     if (data.success) {
+                        $("#purchase-result").removeClass("alert-success");
+                        $("#purchase-result").removeClass("alert-danger");
+                        $("#purchase-result").addClass("alert-success");
                         $("#purchase-result").show();
                         $("#purchase-result-message").html("You successfully purchased <strong>" + data.count + "x " + giftName + "</strong>.");
                     }
                     else {
                         $("#purchase-result").removeClass("alert-success");
+                        $("#purchase-result").removeClass("alert-danger");
                         $("#purchase-result").addClass("alert-danger");
                         $("#purchase-result").show();
                         $("#purchase-result-message").html("For some reason, you cannot buy that gift.");

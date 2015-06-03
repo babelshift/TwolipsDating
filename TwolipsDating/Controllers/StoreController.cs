@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -34,15 +35,24 @@ namespace TwolipsDating.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> BuyGift(int giftId)
+        public async Task<JsonResult> BuyGift(int giftId, int giftCount)
         {
-            string userId = await GetCurrentUserIdAsync();
+            bool success = false;
 
-            int count = await storeService.BuyGiftAsync(userId, giftId, 1);
+            try
+            {
+                string userId = await GetCurrentUserIdAsync();
 
-            bool success = count > 0;
+                int count = await storeService.BuyGiftAsync(userId, giftId, giftCount);
 
-            return Json(new { success = success, count = 1 });
+                success = count > 0;
+
+                return Json(new { success = success, count = giftCount });
+            }
+            catch (DbUpdateException ex)
+            {
+                return Json(new { success = success });
+            }
         }
     }
 }
