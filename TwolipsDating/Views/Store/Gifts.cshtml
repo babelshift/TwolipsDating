@@ -14,7 +14,7 @@
             </div>
             <div class="modal-body">
                 <p>How many <strong><span id="span-gift-name"></span></strong> do you want to buy?</p>
-                <p><input type="text" id="text-gift-count" oninput="onTextGiftCountBlur()" />&nbsp;&times;&nbsp;<i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;<span id="span-gift-price"></span></p>
+                <p><input type="number" style="width: 75px;" min="1" max="100" id="text-gift-count" oninput="onTextGiftCountBlur()" />&nbsp;&times;&nbsp;<i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;<span id="span-gift-price"></span></p>
                 <p id="text-charged">You will be charged <i class="glyphicon glyphicon-piggy-bank"></i><strong> <span id="span-total-price"></span></strong>.</p>
             </div>
             <div class="modal-footer">
@@ -52,7 +52,6 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="purchase-result" class="alert alert-success alert-dismissible fade in" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <span id="purchase-result-message"></span>
                 </div>
                 @foreach (var gift in Model.StoreGifts)
@@ -116,6 +115,7 @@
             var giftId = $("#hidden-gift-id").val();
             var giftName = $("#hidden-gift-name").val();
             var giftCount = $("#text-gift-count").val();
+            var purchasePointCost = $("#span-total-price").html();
 
             var json = "{\"giftId\":" + giftId + ", \"giftCount\":" + giftCount + "}";
 
@@ -130,14 +130,17 @@
                         $("#purchase-result").removeClass("alert-danger");
                         $("#purchase-result").addClass("alert-success");
                         $("#purchase-result").show();
-                        $("#purchase-result-message").html("You successfully purchased <strong>" + data.count + "x " + giftName + "</strong>.");
+                        $("#purchase-result-message").html("You successfully purchased <strong>" + data.count + "x " + giftName + "</strong> for a total of&nbsp;&nbsp;<strong><i class=\"glyphicon glyphicon-piggy-bank\"/></i> " + purchasePointCost + "</strong>.");
+                        var userPointsCount = $("#span-points-count").html();
+                        var userPointsCountAfterPurchase = userPointsCount - purchasePointCost;
+                        $("#span-points-count").html(userPointsCountAfterPurchase);
                     }
                     else {
                         $("#purchase-result").removeClass("alert-success");
                         $("#purchase-result").removeClass("alert-danger");
                         $("#purchase-result").addClass("alert-danger");
                         $("#purchase-result").show();
-                        $("#purchase-result-message").html("For some reason, you cannot buy that gift.");
+                        $("#purchase-result-message").html("You cannot buy <strong>" + data.count + "x " + giftName + "</strong>.");
                     }
                 }
             });

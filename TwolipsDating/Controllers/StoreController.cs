@@ -41,17 +41,20 @@ namespace TwolipsDating.Controllers
 
             try
             {
-                string userId = await GetCurrentUserIdAsync();
+                if (giftCount > 0 && giftCount <= 100)
+                {
+                    string userId = await GetCurrentUserIdAsync();
 
-                int count = await storeService.BuyGiftAsync(userId, giftId, giftCount);
+                    int count = await storeService.BuyGiftAsync(userId, giftId, giftCount);
 
-                success = count > 0;
+                    success = count > 0;
+                }
 
                 return Json(new { success = success, count = giftCount });
             }
             catch (DbUpdateException ex)
             {
-                return Json(new { success = success });
+                return Json(new { success = success, error = "Failed to purchase the gift. Contact support if you continue seeing this." });
             }
         }
     }
