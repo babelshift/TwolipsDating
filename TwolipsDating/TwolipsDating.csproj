@@ -410,6 +410,22 @@
     <Compile Include="Migrations\201505312355148_StoreTransactions.Designer.cs">
       <DependentUpon>201505312355148_StoreTransactions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506042214294_RemoveIdentityTitleTable.cs" />
+    <Compile Include="Migrations\201506042214294_RemoveIdentityTitleTable.Designer.cs">
+      <DependentUpon>201506042214294_RemoveIdentityTitleTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201506042217490_RemoveIdentityTitleTable2.cs" />
+    <Compile Include="Migrations\201506042217490_RemoveIdentityTitleTable2.Designer.cs">
+      <DependentUpon>201506042217490_RemoveIdentityTitleTable2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201506042221067_InsertTitles.cs" />
+    <Compile Include="Migrations\201506042221067_InsertTitles.Designer.cs">
+      <DependentUpon>201506042221067_InsertTitles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201506051913501_UserTitlesObtainedLog.cs" />
+    <Compile Include="Migrations\201506051913501_UserTitlesObtainedLog.Designer.cs">
+      <DependentUpon>201506051913501_UserTitlesObtainedLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
@@ -436,6 +452,7 @@
     <Compile Include="Models\TagSuggestion.cs" />
     <Compile Include="Models\Title.cs" />
     <Compile Include="Models\UserImage.cs" />
+    <Compile Include="Models\UserTitle.cs" />
     <Compile Include="Models\ViolationType.cs" />
     <Compile Include="Utilities\CityExtensions.cs" />
     <Compile Include="Utilities\ConversationKey.cs" />
@@ -508,6 +525,7 @@
     <Compile Include="ViewModels\SentMessageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\StoreGiftViewModel.cs" />
+    <Compile Include="ViewModels\StoreTitleViewModel.cs" />
     <Compile Include="ViewModels\StoreViewModel.cs" />
     <Compile Include="ViewModels\TagViewModel.cs" />
     <Compile Include="ViewModels\TriviaMenuViewModel.cs" />
@@ -750,6 +768,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505312355148_StoreTransactions.resx">
       <DependentUpon>201505312355148_StoreTransactions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506042214294_RemoveIdentityTitleTable.resx">
+      <DependentUpon>201506042214294_RemoveIdentityTitleTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506042217490_RemoveIdentityTitleTable2.resx">
+      <DependentUpon>201506042217490_RemoveIdentityTitleTable2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506042221067_InsertTitles.resx">
+      <DependentUpon>201506042221067_InsertTitles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506051913501_UserTitlesObtainedLog.resx">
+      <DependentUpon>201506051913501_UserTitlesObtainedLog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

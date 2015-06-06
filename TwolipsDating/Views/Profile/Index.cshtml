@@ -24,10 +24,11 @@
                                 <div class="row">
                                     @foreach (var item in Model.ViewerInventoryItems)
                                     {
-                                        <div class="col-md-2">
+                                        <div class="col-md-2 text-center">
                                             <a id="@item.InventoryItemId" data-gift-id="@item.GiftId" href="#" onclick="onSelectGiftClick(event, this)">
                                                 <img src="@item.GiftIconFilePath">
                                             </a>
+                                            <p class="label label-success">@item.ItemCount</p>
                                         </div>
                                     }
                                 </div>

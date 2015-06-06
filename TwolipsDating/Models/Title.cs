@@ -11,5 +11,7 @@ namespace TwolipsDating.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public int PointPrice { get; set; }
+
+        public virtual ICollection<UserTitle> OwnerUsers { get; set; }
     }
 }

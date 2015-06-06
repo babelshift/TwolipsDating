@@ -48,6 +48,7 @@ namespace TwolipsDating.Models
         public DbSet<CompletedQuiz> CompletedQuizzes { get; set; }
         public DbSet<Title> Titles { get; set; }
         public DbSet<StoreTransactionLog> StoreTransactions { get; set; }
+        public DbSet<UserTitle> UserTitles { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -94,16 +95,37 @@ namespace TwolipsDating.Models
             SetupCompletedQuizzes(modelBuilder);
             SetupTitles(modelBuilder);
             SetupStoreTransactions(modelBuilder);
+            SetupUserTitles(modelBuilder);
+        }
+
+        private void SetupUserTitles(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserTitle>()
+                .HasKey(t => new { t.UserId, t.TitleId });
+
+            modelBuilder.Entity<UserTitle>()
+                .Property(v => v.UserId)
+                .IsRequired();
+
+            modelBuilder.Entity<UserTitle>()
+                .Property(v => v.DateObtained)
+                .IsRequired();
+
+            modelBuilder.Entity<UserTitle>()
+                .HasRequired(v => v.Title)
+                .WithMany(v => v.OwnerUsers)
+                .HasForeignKey(v => v.TitleId);
+
+            modelBuilder.Entity<UserTitle>()
+                .HasRequired(v => v.User)
+                .WithMany(v => v.ObtainedTitles)
+                .HasForeignKey(v => v.UserId);
         }
 
         private void SetupStoreTransactions(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<StoreTransactionLog>()
                 .HasKey(v => v.StoreTransactionLogId);
-
-            modelBuilder.Entity<StoreTransactionLog>()
-                .Property(v => v.GiftId)
-                .IsRequired();
 
             modelBuilder.Entity<StoreTransactionLog>()
                 .Property(v => v.ItemCount)
@@ -140,6 +162,10 @@ namespace TwolipsDating.Models
             modelBuilder.Entity<Title>()
                 .Property(v => v.Description)
                 .IsRequired();
+
+            modelBuilder.Entity<Title>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
         }
 
         private void SetupCompletedQuizzes(DbModelBuilder modelBuilder)

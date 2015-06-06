@@ -62,10 +62,10 @@ namespace TwolipsDating.Migrations
                 new ViolationType() { Id = 4, Name = "Harassment" });
 
             context.Gifts.AddOrUpdate(g => g.Id,
-                new Gift() { Id = 1, Name = "Rose (red)", IconFileName = "RedRose.png", Description = "A red rose" },
-                new Gift() { Id = 2, Name = "Rose (white)", IconFileName = "WhiteRose.png", Description = "A white rose" },
-                new Gift() { Id = 3, Name = "Dog bone", IconFileName = "DogBone.png", Description = "A tasty dog bone" },
-                new Gift() { Id = 4, Name = "Candy", IconFileName = "Candy.png", Description = "A delicious piece of candy" });
+                new Gift() { Id = 1, Name = "Rose (red)", IconFileName = "RedRose.png", Description = "A red rose", PointPrice = 10 },
+                new Gift() { Id = 2, Name = "Rose (white)", IconFileName = "WhiteRose.png", Description = "A white rose", PointPrice = 15 },
+                new Gift() { Id = 3, Name = "Dog bone", IconFileName = "DogBone.png", Description = "A tasty dog bone", PointPrice = 15 },
+                new Gift() { Id = 4, Name = "Candy", IconFileName = "Candy.png", Description = "A delicious piece of candy", PointPrice = 20 });
 
             context.QuestionTypes.AddOrUpdate(q => q.Id,
                 new QuestionType() { Id = (int)QuestionTypeValues.Random, Name = "Random" },
@@ -75,6 +75,12 @@ namespace TwolipsDating.Migrations
             context.MilestoneTypes.AddOrUpdate(m => m.Id,
                 new MilestoneType() { Id = (int)MilestoneTypeValues.QuestionAnsweredCorrectly, Name = "Question Answered Correctly" },
                 new MilestoneType() { Id = (int)MilestoneTypeValues.QuizCompletedSuccessfully, Name = "Quiz Completed Successfully" });
+
+            context.Titles.AddOrUpdate(t => t.Id,
+                new Title() { Id = 1, Name = "Lizard Lord", Description = "King of the lizard creatures.", PointPrice = 10 },
+                new Title() { Id = 2, Name = "Robot Cop", Description = "A robotic police officer different from the popular copyrighted version.", PointPrice = 15 },
+                new Title() { Id = 3, Name = "High Warlord", Description = "Played way too much World of Warcraft.", PointPrice = 25 },
+                new Title() { Id = 4, Name = "Grand Marshal", Description = "Played way too much World of Warcraft.", PointPrice = 25 });
         }
     }
 }

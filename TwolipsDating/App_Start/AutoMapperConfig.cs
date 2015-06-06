@@ -135,6 +135,12 @@ namespace TwolipsDating
                 .ForMember(dest => dest.GiftImagePath, opts => opts.MapFrom(source => source.GetIconPath()))
                 .ForMember(dest => dest.PointPrice, opts => opts.MapFrom(source => source.PointPrice))
                 .ForMember(dest => dest.GiftDescription, opts => opts.MapFrom(source => source.Description));
+
+            Mapper.CreateMap<Title, StoreTitleViewModel>()
+                .ForMember(dest => dest.TitleId, opts => opts.MapFrom(source => source.Id))
+                .ForMember(dest => dest.TitleName, opts => opts.MapFrom(source => source.Name))
+                .ForMember(dest => dest.PointPrice, opts => opts.MapFrom(source => source.PointPrice))
+                .ForMember(dest => dest.TitleDescription, opts => opts.MapFrom(source => source.Description));
         }
     }
 }

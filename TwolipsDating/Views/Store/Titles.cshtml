@@ -1,1 +1,111 @@
-﻿
+﻿@using TwolipsDating.ViewModels
+@model StoreViewModel
+
+@{
+    ViewBag.Title = "twolips - points store";
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = ActiveMenuText.Store })
+        <div class="pull-right">
+            <ul class="nav nav-pills">
+                <li role="presentation">
+                    <a href="#" title="Profile colors"><i class="glyphicon glyphicon-tint"></i>&nbsp;Colors</a>
+                </li>
+                <li role="presentation" class="active">
+                    <a href="@Url.Action("titles")" title="Profile titles"><i class="glyphicon glyphicon-tag"></i>&nbsp;Titles</a>
+                </li>
+                <li role="presentation">
+                    <a href="@Url.Action("gifts")" title="Gifts"><i class="glyphicon glyphicon-gift"></i>&nbsp;Gifts</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="purchase-result" class="alert alert-success alert-dismissible fade in" role="alert">
+                    <span id="purchase-result-message"></span>
+                </div>
+                <table class="table table-hover table-condensed rows-middle">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var title in Model.StoreTitles)
+                        {
+                            if (title.IsAlreadyOwnedByUser)
+                            {
+                                <tr id="table-row-@title.TitleId" class="success">
+                                    <td><button type="button" class="btn btn-xs btn-success" disabled>Already purchased</button></td>
+                                    <td><h4>@title.TitleName</h4></td>
+                                    <td>@title.TitleDescription</td>
+                                    <td><i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;@title.PointPrice</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr id="table-row-@title.TitleId">
+                                    <td><button id="button-buy-@title.TitleId" type="button" class="btn btn-xs btn-primary" onclick="onBuyTitle(event, this, @title.TitleId)">Buy</button></td>
+                                    <td><h4>@title.TitleName</h4></td>
+                                    <td>@title.TitleDescription</td>
+                                    <td><i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;@title.PointPrice</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#purchase-result").hide();
+        });
+
+        function onBuyTitle(e, obj, titleId) {
+            e.preventDefault();
+
+            var json = "{\"titleId\":" + titleId + "}";
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("buytitle", "store")',
+                data: json,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.success) {
+                        var buyButton = $("#button-buy-" + titleId);
+                        buyButton.removeClass("btn-primary");
+                        buyButton.addClass("btn-success");
+                        buyButton.prop("disabled", true);
+                        buyButton.html("Already purchased");
+                        $("#table-row-" + titleId).addClass("success");
+                    }
+                    else {
+                        $("#purchase-result").removeClass("alert-success");
+                        $("#purchase-result").removeClass("alert-danger");
+                        $("#purchase-result").addClass("alert-danger");
+                        $("#purchase-result").show();
+                        $("#purchase-result-message").html("You cannot buy that title.");
+                    }
+                }
+            });
+        }
+    </script>
+}

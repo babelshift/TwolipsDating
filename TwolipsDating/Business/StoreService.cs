@@ -18,13 +18,35 @@ namespace TwolipsDating.Business
             return result.AsReadOnly();
         }
 
+        public async Task<int> BuyTitleAsync(string userId, int titleId)
+        {
+            var title = await db.Titles.FindAsync(titleId);
+            var user = db.Users.Find(userId);
+
+            if (user.Points >= title.PointPrice)
+            {
+                UserTitle userTitle = new UserTitle()
+                {
+                    UserId = userId,
+                    TitleId = titleId,
+                    DateObtained = DateTime.Now
+                };
+
+                db.UserTitles.Add(userTitle);
+
+                user.Points -= title.PointPrice;
+            }
+
+            return await db.SaveChangesAsync();
+        }
+
         public async Task<int> BuyGiftAsync(string userId, int giftId, int buyCount)
         {
             // check price of item and see if the user has enough points to buy the item with the count
             var gift = await db.Gifts.FindAsync(giftId);
             var user = db.Users.Find(userId);
 
-            if(user.Points >= gift.PointPrice * buyCount)
+            if (user.Points >= gift.PointPrice * buyCount)
             {
                 // check if user already has an item of this type
                 var inventoryItem = await (from inventory in db.InventoryItems
@@ -64,6 +86,14 @@ namespace TwolipsDating.Business
             }
 
             return await db.SaveChangesAsync();
+        }
+
+        internal async Task<IReadOnlyCollection<Title>> GetTitlesAsync()
+        {
+            var result = await (from titles in db.Titles
+                                select titles).ToListAsync();
+
+            return result.AsReadOnly();
         }
     }
 }

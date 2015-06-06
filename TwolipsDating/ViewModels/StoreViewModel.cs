@@ -8,5 +8,6 @@ namespace TwolipsDating.ViewModels
     public class StoreViewModel
     {
         public IReadOnlyCollection<StoreGiftViewModel> StoreGifts { get; set; }
+        public IReadOnlyCollection<StoreTitleViewModel> StoreTitles { get; set; }
     }
 }

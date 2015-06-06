@@ -227,3 +227,7 @@ input[readonly] {
     background-color: white !important;
     cursor: text !important;
 }
+
+.rows-middle tbody > tr > td {
+    vertical-align: middle;
+}
