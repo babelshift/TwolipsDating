@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using TwolipsDating.Models;
 
 namespace TwolipsDating.ViewModels
 {
@@ -13,7 +14,8 @@ namespace TwolipsDating.ViewModels
         public string TargetProfileImagePath { get; set; }
         public DateTime DateSent { get; set; }
         public string TimeAgo { get; set; }
-        public int MostRecentMessageUserId { get; set; }
+        public string MostRecentMessageSenderUserId { get; set; }
         public string MostRecentMessageBody { get; set; }
+        public int MostRecentMessageStatusId { get; set; }
     }
 }

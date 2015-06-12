@@ -90,18 +90,37 @@
                         {
                             <div class="conversation-item">
                                 <a href="@Url.Action("conversation", "message", new { id = conversation.TargetUserId })">
-                                    <div class="well well-sm">
-                                        @if (!String.IsNullOrEmpty(conversation.TargetProfileImagePath))
-                                        {
-                                            <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
-                                                <img class=" circular-image" src="@conversation.TargetProfileImagePath" />
-                                            </div>
-                                        }
-                                        <strong>@conversation.TargetName</strong>
-                                        <small> &bull;&nbsp;@conversation.TimeAgo</small>
-                                        <br />
-                                        <small>@conversation.MostRecentMessageBody</small>
-                                    </div>
+                                    @if (conversation.MostRecentMessageSenderUserId != Model.CurrentUserId
+                                        && conversation.MostRecentMessageStatusId == (int)TwolipsDating.Models.MessageStatusValue.Unread)
+                                    {
+                                        <div class="well well-sm" style="border-color: #008CBA; background-color: #efefef">
+                                            @if (!String.IsNullOrEmpty(conversation.TargetProfileImagePath))
+                                            {
+                                                <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
+                                                    <img class="circular-image" src="@conversation.TargetProfileImagePath" />
+                                                </div>
+                                            }
+                                            <strong>@conversation.TargetName</strong>
+                                            <small>&bull;&nbsp;@conversation.TimeAgo&nbsp;</small><i class="pull-right glyphicon glyphicon-envelope"></i>
+                                            <br />
+                                            <small>@conversation.MostRecentMessageBody</small>
+                                        </div>
+                                    }
+                                    else 
+                                    {
+                                        <div class="well well-sm">
+                                            @if (!String.IsNullOrEmpty(conversation.TargetProfileImagePath))
+                                            {
+                                                <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
+                                                    <img class="circular-image" src="@conversation.TargetProfileImagePath" />
+                                                </div>
+                                            }
+                                            <strong>@conversation.TargetName</strong>
+                                            <small>&bull;&nbsp;@conversation.TimeAgo</small>
+                                            <br />
+                                            <small>@conversation.MostRecentMessageBody</small>
+                                        </div>
+                                    }
                                 </a>
                             </div>
                         }

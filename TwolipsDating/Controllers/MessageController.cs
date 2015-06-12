@@ -53,6 +53,7 @@ namespace TwolipsDating.Controllers
                 }
 
                 viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+                viewModel.CurrentUserId = currentUserId;
 
                 await SetHeaderCountsAsync();
 
@@ -84,6 +85,7 @@ namespace TwolipsDating.Controllers
                 viewModel.Conversations = conversations.Values.ToList().AsReadOnly();
 
                 viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+                viewModel.CurrentUserId = currentUserId;
 
                 await SetHeaderCountsAsync();
 

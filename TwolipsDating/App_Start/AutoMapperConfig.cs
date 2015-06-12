@@ -81,11 +81,14 @@ namespace TwolipsDating
                 .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateSent))
                 .ForMember(dest => dest.TargetProfileImagePath, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.GetProfileImagePath()))
                 .ForMember(dest => dest.MostRecentMessageBody, opts => opts.MapFrom(source => source.Body))
+                .ForMember(dest => dest.MostRecentMessageStatusId, opts => opts.MapFrom(source => source.MessageStatusId))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()));
 
             Mapper.CreateMap<MessageConversation, ConversationItemViewModel>()
                 .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateSent))
+                .ForMember(dest => dest.MostRecentMessageSenderUserId, opts => opts.MapFrom(source => source.SenderApplicationUserId))
                 .ForMember(dest => dest.MostRecentMessageBody, opts => opts.MapFrom(source => source.Body))
+                .ForMember(dest => dest.MostRecentMessageStatusId, opts => opts.MapFrom(source => source.MessageStatusId))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()));
 
             Mapper.CreateMap<Message, ReceivedMessageViewModel>()

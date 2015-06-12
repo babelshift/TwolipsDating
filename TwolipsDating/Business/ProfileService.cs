@@ -504,6 +504,18 @@ namespace TwolipsDating.Business
                                        select messages;
 
             var results = await messagesBetweenUsers.ToListAsync();
+
+            // all messages that this user has received in this collection should be marked as read
+            foreach (var message in results)
+            {
+                if(message.ReceiverApplicationUserId == userId)
+                {
+                    message.MessageStatusId = (int)MessageStatusValue.Read;
+                }
+            }
+
+            int changes = await db.SaveChangesAsync();
+
             return results.AsReadOnly();
         }
 
