@@ -89,7 +89,7 @@ namespace TwolipsDating.Controllers
                 var currentUser = await UserManager.FindByIdAsync(currentUserId);
                 int unreadMessageCount = await profileService.GetUnreadMessageCountAsync(currentUserId);
                 ViewBag.UnreadAnnouncementCount = 0;
-                ViewBag.ItemCount = 0;
+                ViewBag.AnnouncementCount = 0;
                 ViewBag.GiftCount = 0;
                 ViewBag.UnreadMessageCount = unreadMessageCount;
                 ViewBag.UnreadNotificationCount = unreadMessageCount;

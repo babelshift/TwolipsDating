@@ -12,7 +12,7 @@ namespace TwolipsDating.ViewModels
         Message,
         Trivia,
         Store,
-        Settings,
+        Account,
         Cart
     }
 }

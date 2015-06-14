@@ -14,7 +14,7 @@
         {
             <i class="glyphicon glyphicon-user"></i>
         }
-        else if (Model.ActiveMenuText == ActiveMenuText.Settings)
+        else if (Model.ActiveMenuText == ActiveMenuText.Account)
         {
             <i class="glyphicon glyphicon-cog"></i>
         }
@@ -31,7 +31,7 @@
     <ul class="dropdown-menu" role="menu">
         <li><a href="@Url.Action("index", "home")"><i class="glyphicon glyphicon-home"></i>&nbsp;Dashboard</a></li>
         <li><a href="@Url.Action("index", "profile", new { id = (int?)null })"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
-        <li><a href="@Url.Action("received", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Messages</a></li>
+        <li><a href="@Url.Action("conversation", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Messages</a></li>
         <li><a href="@Url.Action("index", "trivia")"><i class="glyphicon glyphicon-education"></i>&nbsp;Trivia</a></li>
         <li><a href="@Url.Action("index", "store")"><i class="glyphicon glyphicon-blackboard"></i>&nbsp;Store</a></li>
         @*
@@ -39,6 +39,6 @@
             <li><a href="#"><i class="glyphicon glyphicon-tower"></i>&nbsp;Challenges</a></li>
         *@
         <li class="divider"></li>
-        <li><a href="@Url.Action("index", "manage")"><i class="glyphicon glyphicon-cog"></i>&nbsp;Settings</a></li>
+        <li><a href="@Url.Action("index", "manage")"><i class="glyphicon glyphicon-cog"></i>&nbsp;Account</a></li>
     </ul>
 </div>

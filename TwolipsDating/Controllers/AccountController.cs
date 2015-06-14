@@ -10,12 +10,17 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
+using TwolipsDating.Business;
+using TwolipsDating.ViewModels;
+using AutoMapper;
+using System.Collections.Generic;
 
 namespace TwolipsDating.Controllers
 {
     public class AccountController : BaseController
     {
         private ApplicationSignInManager _signInManager;
+        private UserService userService = new UserService();
 
         public AccountController()
         {
@@ -480,6 +485,23 @@ namespace TwolipsDating.Controllers
         public ActionResult ExternalLoginFailure()
         {
             return View();
+        }
+
+        public async Task<ActionResult> Points()
+        {
+            string userId = await GetCurrentUserIdAsync();
+
+            // get transactions (expenses)
+            var transactions = await userService.GetStoreTransactionsAsync(userId);
+
+            UserPointsViewModel viewModel = new UserPointsViewModel();
+
+            await SetHeaderCountsAsync();
+
+            viewModel.PointsCount = ViewBag.PointsCount;
+            viewModel.StoreTransactions = Mapper.Map<IReadOnlyCollection<StoreTransactionLog>, IReadOnlyCollection<StoreTransactionViewModel>>(transactions);
+
+            return View(viewModel);
         }
 
         protected override void Dispose(bool disposing)

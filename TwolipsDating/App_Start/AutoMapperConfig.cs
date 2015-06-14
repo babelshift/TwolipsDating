@@ -144,6 +144,11 @@ namespace TwolipsDating
                 .ForMember(dest => dest.TitleName, opts => opts.MapFrom(source => source.Name))
                 .ForMember(dest => dest.PointPrice, opts => opts.MapFrom(source => source.PointPrice))
                 .ForMember(dest => dest.TitleDescription, opts => opts.MapFrom(source => source.Description));
+
+            Mapper.CreateMap<StoreTransactionLog, StoreTransactionViewModel>()
+                .ForMember(dest => dest.TransactionDate, opts => opts.MapFrom(source => source.DateTransactionOccurred))
+                .ForMember(dest => dest.ItemName, opts => opts.MapFrom(source => source.Gift.Name))
+                .ForMember(dest => dest.ItemCost, opts => opts.MapFrom(source => source.Gift.PointPrice));
         }
     }
 }

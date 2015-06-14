@@ -1,6 +1,8 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using TwolipsDating.Models;
 
 namespace TwolipsDating.Business
 {
@@ -16,6 +18,16 @@ namespace TwolipsDating.Business
             var result = await ignoredUserEntity.FirstOrDefaultAsync();
 
             return result != null;
+        }
+
+        public async Task<IReadOnlyCollection<StoreTransactionLog>> GetStoreTransactionsAsync(string userId)
+        {
+            var results = await (from transactions in db.StoreTransactions
+                                 where transactions.UserId == userId
+                                 orderby transactions.DateTransactionOccurred descending
+                                 select transactions).ToListAsync();
+
+            return results.AsReadOnly();
         }
     }
 }

@@ -526,12 +526,14 @@
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\StoreGiftViewModel.cs" />
     <Compile Include="ViewModels\StoreTitleViewModel.cs" />
+    <Compile Include="ViewModels\StoreTransactionViewModel.cs" />
     <Compile Include="ViewModels\StoreViewModel.cs" />
     <Compile Include="ViewModels\TagViewModel.cs" />
     <Compile Include="ViewModels\TriviaMenuViewModel.cs" />
     <Compile Include="ViewModels\UploadedImageFeedViewModel.cs" />
     <Compile Include="ViewModels\UploadImageViewModel.cs" />
     <Compile Include="ViewModels\UserImageViewModel.cs" />
+    <Compile Include="ViewModels\UserPointsViewModel.cs" />
     <Compile Include="ViewModels\UserStatsViewModel.cs" />
     <Compile Include="ViewModels\WriteReviewViewModel.cs" />
     <Compile Include="ViewModels\WriteReviewViolationViewModel.cs" />
@@ -662,6 +664,7 @@
     <Content Include="Views\Store\Colors.cshtml" />
     <Content Include="Views\Store\Titles.cshtml" />
     <Content Include="Views\Store\Gifts.cshtml" />
+    <Content Include="Views\Account\Points.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

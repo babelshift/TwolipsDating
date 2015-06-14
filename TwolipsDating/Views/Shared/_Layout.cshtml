@@ -62,10 +62,8 @@
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="@Url.Action("received", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;&nbsp;@ViewBag.UnreadMessageCount unread messages</a></li>
-                                @*
-                                    <li><a href="#"><i class="glyphicon glyphicon-gift"></i>&nbsp;&nbsp;@ViewBag.GiftCount gifts received</a></li>
-                                    <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i>&nbsp;&nbsp;@ViewBag.ItemCount new items</a></li>
-                                *@
+                                <li><a href="#"><i class="glyphicon glyphicon-gift"></i>&nbsp;&nbsp;@ViewBag.GiftCount gifts received</a></li>
+                                <li><a href="#"><i class="glyphicon glyphicon-bullhorn"></i>&nbsp;&nbsp;@ViewBag.AnnouncementCount announcements</a></li>
                             </ul>
                         </li>
                     }

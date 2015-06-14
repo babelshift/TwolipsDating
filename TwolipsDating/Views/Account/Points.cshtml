@@ -1,0 +1,61 @@
+﻿@using TwolipsDating.ViewModels
+@model UserPointsViewModel
+
+@{
+    ViewBag.Title = "twolips - your account and points";
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = ActiveMenuText.Account })
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Your Account</h3>
+            </div>
+            <div class="panel-body">
+                <p>
+                    Your Points Balance:
+                    <span class="pull-right"><strong><i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;@Model.PointsCount</strong></span>
+                </p>
+                <p><a href="#" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add points to your account</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Your Transactions</h3>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Item</th>
+                        <th>Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var transaction in Model.StoreTransactions)
+                    {
+                        <tr>
+                            <td>@transaction.TransactionDate.ToShortDateString()</td>
+                            <td>@transaction.ItemName</td>
+                            <td><i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;@transaction.ItemCost</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+    </script>
+}
