@@ -667,14 +667,5 @@ namespace TwolipsDating.Business
 
             return isIgnored;
         }
-
-        internal async Task<IReadOnlyDictionary<int, UserTitle>> GetTitlesOwnedByUserAsync(string currentUserId)
-        {
-            var purchasedTitles = await (from titles in db.UserTitles
-                                         where titles.UserId == currentUserId
-                                         select titles).ToDictionaryAsync(t => t.TitleId, t => t);
-
-            return new ReadOnlyDictionary<int, UserTitle>(purchasedTitles);
-        }
     }
 }

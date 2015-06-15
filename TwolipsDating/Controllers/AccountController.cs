@@ -21,6 +21,7 @@ namespace TwolipsDating.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private UserService userService = new UserService();
+        private StoreService storeService = new StoreService();
 
         public AccountController()
         {
@@ -499,7 +500,36 @@ namespace TwolipsDating.Controllers
             await SetHeaderCountsAsync();
 
             viewModel.PointsCount = ViewBag.PointsCount;
-            viewModel.StoreTransactions = Mapper.Map<IReadOnlyCollection<StoreTransactionLog>, IReadOnlyCollection<StoreTransactionViewModel>>(transactions);
+            var storeTransactions = Mapper.Map<IReadOnlyCollection<StoreTransactionLog>, List<StoreTransactionViewModel>>(transactions);
+
+            var titles = await userService.GetTitlesOwnedByUserAsync(userId);
+
+            foreach(var title in titles)
+            {
+                storeTransactions.Add(new StoreTransactionViewModel()
+                {
+                    TransactionDate = title.Value.DateObtained,
+                    ItemName = title.Value.Title.Name,
+                    ItemCost = title.Value.Title.PointPrice,
+                    ItemCount = 1,
+                    ItemType = "Title",
+                    TotalCost = title.Value.Title.PointPrice
+                });
+            }
+
+            int totalSpent = 0;
+
+            foreach(var transaction in storeTransactions)
+            {
+                totalSpent += transaction.ItemCost;
+            }
+
+            viewModel.TotalSpent = totalSpent;
+
+            viewModel.StoreTransactions = storeTransactions
+                .OrderByDescending(t => t.TransactionDate)
+                .ToList()
+                .AsReadOnly();
 
             return View(viewModel);
         }

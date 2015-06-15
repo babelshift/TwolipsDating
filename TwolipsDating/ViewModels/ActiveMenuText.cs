@@ -13,6 +13,7 @@ namespace TwolipsDating.ViewModels
         Trivia,
         Store,
         Account,
-        Cart
+        Cart,
+        Points
     }
 }

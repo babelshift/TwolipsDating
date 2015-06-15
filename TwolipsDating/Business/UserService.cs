@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,10 +25,18 @@ namespace TwolipsDating.Business
         {
             var results = await (from transactions in db.StoreTransactions
                                  where transactions.UserId == userId
-                                 orderby transactions.DateTransactionOccurred descending
                                  select transactions).ToListAsync();
 
             return results.AsReadOnly();
+        }
+
+        internal async Task<IReadOnlyDictionary<int, UserTitle>> GetTitlesOwnedByUserAsync(string currentUserId)
+        {
+            var purchasedTitles = await (from titles in db.UserTitles
+                                         where titles.UserId == currentUserId
+                                         select titles).ToDictionaryAsync(t => t.TitleId, t => t);
+
+            return new ReadOnlyDictionary<int, UserTitle>(purchasedTitles);
         }
     }
 }

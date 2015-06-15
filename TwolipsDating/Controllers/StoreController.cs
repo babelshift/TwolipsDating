@@ -15,6 +15,7 @@ namespace TwolipsDating.Controllers
     public class StoreController : BaseController
     {
         private StoreService storeService = new StoreService();
+        private UserService userService = new UserService();
 
         public async Task<ActionResult> Index()
         {
@@ -43,7 +44,7 @@ namespace TwolipsDating.Controllers
             viewModel.StoreTitles = Mapper.Map<IReadOnlyCollection<Title>, IReadOnlyCollection<StoreTitleViewModel>>(titles);
 
             var currentUserId = await GetCurrentUserIdAsync();
-            var titlesOwnedByUser = await ProfileService.GetTitlesOwnedByUserAsync(currentUserId);
+            var titlesOwnedByUser = await userService.GetTitlesOwnedByUserAsync(currentUserId);
 
             foreach (var title in viewModel.StoreTitles)
             {
