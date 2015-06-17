@@ -10,5 +10,7 @@ namespace TwolipsDating.ViewModels
         public IReadOnlyCollection<ReviewViewModel> Items { get; set; }
         public string CurrentUserId { get; set; }
         public string ProfileUserId { get; set; }
+        public int ProfileId { get; set; }
+        public string ProfileUserName { get; set; }
     }
 }

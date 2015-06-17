@@ -20,6 +20,7 @@ namespace TwolipsDating.Controllers
     public class ProfileController : BaseController
     {
         private UserService userService = new UserService();
+        private ViolationService violationService = new ViolationService();
 
         #region Toggle Favorite and Ignore
 
@@ -518,8 +519,12 @@ namespace TwolipsDating.Controllers
             var viewerInventoryItems = await ProfileService.GetInventoryAsync(currentUserId);
             viewModel.ViewerInventoryItems = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(viewerInventoryItems);
 
+            var violationTypes = await violationService.GetViolationTypesAsync();
+            viewModel.WriteReviewViolation = new WriteReviewViolationViewModel();
+            viewModel.WriteReviewViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
+
             // setup viewmodel specific to the actively selected tab
-            await SetViewModelBasedOnActiveTabAsync(profile, viewModel, reviews, currentUserId, profile.ApplicationUser.Id);
+            await SetViewModelBasedOnActiveTabAsync(profile, viewModel, reviews, currentUserId);
 
             await SetHeaderCountsAsync();
 
@@ -546,21 +551,22 @@ namespace TwolipsDating.Controllers
         private async Task SetViewModelBasedOnActiveTabAsync(Models.Profile profile,
             ProfileViewModel viewModel,
             IReadOnlyCollection<Review> reviews,
-            string currentUserId,
-            string profileUserId)
+            string currentUserId)
         {
             if (viewModel.ActiveTab == "feed")
             {
-                var userImages = await ProfileService.GetUserImagesAsync(profileUserId);
+                var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);
                 viewModel.UploadImage = new UploadImageViewModel();
                 viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
                 viewModel.Feed = GetUserFeed(profile, reviews, userImages);
                 viewModel.Feed.CurrentUserId = currentUserId;
-                viewModel.Feed.ProfileUserId = profileUserId;
+                viewModel.Feed.ProfileUserId = profile.ApplicationUser.Id;
+                viewModel.Feed.ProfileUserName = profile.ApplicationUser.UserName;
+                viewModel.Feed.ProfileId = profile.Id;
             }
-            if (viewModel.ActiveTab == "pictures" || currentUserId == profileUserId)
+            if (viewModel.ActiveTab == "pictures" || currentUserId == profile.ApplicationUser.Id)
             {
-                var userImages = await ProfileService.GetUserImagesAsync(profileUserId);
+                var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);
                 viewModel.UploadImage = new UploadImageViewModel();
                 viewModel.UploadImage.CurrentUserId = currentUserId;
                 viewModel.UploadImage.ProfileUserId = profile.ApplicationUser.Id;
@@ -573,7 +579,9 @@ namespace TwolipsDating.Controllers
                 viewModel.Reviews = new ProfileReviewsViewModel();
                 viewModel.Reviews.Items = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewViewModel>>(reviews);
                 viewModel.Reviews.CurrentUserId = currentUserId;
-                viewModel.Reviews.ProfileUserId = profileUserId;
+                viewModel.Reviews.ProfileUserId = profile.ApplicationUser.Id;
+                viewModel.Reviews.ProfileUserName = profile.ApplicationUser.UserName;
+                viewModel.Reviews.ProfileId = profile.Id;
             }
         }
 

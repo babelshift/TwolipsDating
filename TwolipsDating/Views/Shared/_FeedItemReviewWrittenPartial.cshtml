@@ -30,8 +30,8 @@
         &nbsp;&bull;&nbsp;&nbsp;@Model.TimeAgo
     </small>
 </p>
-<p style="margin-top: 5px; " class="pull-right">
-    <a href="#" id="@String.Format("share-profile-link-{0}", Model.TargetProfileId)" class="label label-primary"
+<p style="margin-top: 5px;" class="pull-right">
+    <a href="#" id="@String.Format("share-profile-link-{0}", Model.ReviewId)" class="label label-primary"
        data-trigger="focus" data-html="true" data-toggle="popover" data-placement="bottom">
         <i class="glyphicon glyphicon-share-alt"></i>&nbsp;Share
     </a>
@@ -40,7 +40,7 @@
         <i class="glyphicon glyphicon-alert"></i>&nbsp;Report
     </a>
 </p>
-<div id="@String.Format("share-profile-buttons-popover-{0}", Model.TargetProfileId)" class="hide">
+<div id="@String.Format("share-profile-buttons-popover-{0}", Model.ReviewId)" class="hide">
     <div class="share-buttons">
         <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("index", "profile", new { id = Model.TargetProfileId }, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("index", "profile", new { id = Model.TargetProfileId }, Request.Url.Scheme))"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">

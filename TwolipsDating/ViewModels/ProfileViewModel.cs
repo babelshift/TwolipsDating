@@ -43,6 +43,12 @@ namespace TwolipsDating.ViewModels
 
         #endregion
 
+        #region Report review stuff
+
+        public WriteReviewViolationViewModel WriteReviewViolation { get; set; }
+
+        #endregion
+
         #region Write review stuff
 
         public WriteReviewViewModel WriteReview { get; set; }
