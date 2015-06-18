@@ -61,6 +61,7 @@ namespace TwolipsDating.Controllers
 
             //var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
             viewModel.UserStats = await ProfileService.GetUserStatsAsync(currentUserId);
+            viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
             return View(viewModel);
         }

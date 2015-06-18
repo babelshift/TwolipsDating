@@ -47,39 +47,46 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div id="purchase-result" class="alert alert-success alert-dismissible fade in" role="alert">
-                    <span id="purchase-result-message"></span>
-                </div>
-                @foreach (var gift in Model.StoreGifts)
-                {
-                    <div class="col-sm-2">
-                        <div class="thumbnail">
-                            <img src="@gift.GiftImagePath" alt="@gift.GiftName">
-                            <div class="caption">
-                                <h4>@gift.GiftName</h4>
-                                <p>@gift.GiftDescription</p>
-                                <i class="glyphicon glyphicon-piggy-bank"></i>
-                                @gift.PointPrice&nbsp;
-                                <p class="pull-right">
-                                    <a href="#" data-toggle="modal" data-target="#modalGift" data-keyboard="true" class="btn btn-primary btn-xs" role="button" 
-                                       data-gift-id="@gift.GiftId" data-gift-name="@gift.GiftName" data-gift-price="@gift.PointPrice">
-                                        <i class="glyphicon glyphicon-ok"></i>
-                                        &nbsp;Buy
-                                    </a>
-                                </p>
-                                <div class="clearfix"></div>
+@if (Model.IsCurrentUserEmailConfirmed)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="purchase-result" class="alert alert-success alert-dismissible fade in" role="alert">
+                        <span id="purchase-result-message"></span>
+                    </div>
+                    @foreach (var gift in Model.StoreGifts)
+                    {
+                        <div class="col-sm-2">
+                            <div class="thumbnail">
+                                <img src="@gift.GiftImagePath" alt="@gift.GiftName">
+                                <div class="caption">
+                                    <h4>@gift.GiftName</h4>
+                                    <p>@gift.GiftDescription</p>
+                                    <i class="glyphicon glyphicon-piggy-bank"></i>
+                                    @gift.PointPrice&nbsp;
+                                    <p class="pull-right">
+                                        <a href="#" data-toggle="modal" data-target="#modalGift" data-keyboard="true" class="btn btn-primary btn-xs" role="button"
+                                           data-gift-id="@gift.GiftId" data-gift-name="@gift.GiftName" data-gift-price="@gift.PointPrice">
+                                            <i class="glyphicon glyphicon-ok"></i>
+                                            &nbsp;Buy
+                                        </a>
+                                    </p>
+                                    <div class="clearfix"></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
         </div>
     </div>
-</div>
+}
+else
+{
+    <h4>You need to confirm your email address before you can use the store.</h4>
+}
 
 @section Scripts {
     <script type="text/javascript">

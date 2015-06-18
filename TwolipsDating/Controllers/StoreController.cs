@@ -32,6 +32,9 @@ namespace TwolipsDating.Controllers
             var gifts = await storeService.GetGiftsAsync();
             viewModel.StoreGifts = Mapper.Map<IReadOnlyCollection<Gift>, IReadOnlyCollection<StoreGiftViewModel>>(gifts);
 
+            string currentUserId = await GetCurrentUserIdAsync();
+            viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
+
             return View(viewModel);
         }
 
@@ -44,6 +47,8 @@ namespace TwolipsDating.Controllers
             viewModel.StoreTitles = Mapper.Map<IReadOnlyCollection<Title>, IReadOnlyCollection<StoreTitleViewModel>>(titles);
 
             var currentUserId = await GetCurrentUserIdAsync();
+            viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
+
             var titlesOwnedByUser = await userService.GetTitlesOwnedByUserAsync(currentUserId);
 
             foreach (var title in viewModel.StoreTitles)

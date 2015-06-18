@@ -9,5 +9,6 @@ namespace TwolipsDating.ViewModels
     {
         public IReadOnlyCollection<StoreGiftViewModel> StoreGifts { get; set; }
         public IReadOnlyCollection<StoreTitleViewModel> StoreTitles { get; set; }
+        public bool IsCurrentUserEmailConfirmed { get; set; }
     }
 }

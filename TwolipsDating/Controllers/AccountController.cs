@@ -490,21 +490,48 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Points()
         {
-            string userId = await GetCurrentUserIdAsync();
+            string currentUserId = await GetCurrentUserIdAsync();
 
             // get transactions (expenses)
-            var transactions = await userService.GetStoreTransactionsAsync(userId);
+            var transactions = await userService.GetStoreTransactionsAsync(currentUserId);
 
             UserPointsViewModel viewModel = new UserPointsViewModel();
+            viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
+            viewModel.PointsCount = ViewBag.PointsCount;
+
+            var storeTransactions = Mapper.Map<IReadOnlyCollection<StoreTransactionLog>, List<StoreTransactionViewModel>>(transactions);
+
+            await AddTitlesToStoreTransactions(storeTransactions, currentUserId);
+
+            CalculateTotalPointsSpent(viewModel, storeTransactions);
+
+            viewModel.StoreTransactions = storeTransactions
+                .OrderByDescending(t => t.TransactionDate)
+                .ToList()
+                .AsReadOnly();
 
             await SetHeaderCountsAsync();
 
-            viewModel.PointsCount = ViewBag.PointsCount;
-            var storeTransactions = Mapper.Map<IReadOnlyCollection<StoreTransactionLog>, List<StoreTransactionViewModel>>(transactions);
+            return View(viewModel);
+        }
 
-            var titles = await userService.GetTitlesOwnedByUserAsync(userId);
+        private static void CalculateTotalPointsSpent(UserPointsViewModel viewModel, List<StoreTransactionViewModel> storeTransactions)
+        {
+            int totalSpent = 0;
 
-            foreach(var title in titles)
+            foreach (var transaction in storeTransactions)
+            {
+                totalSpent += transaction.ItemCost;
+            }
+
+            viewModel.TotalSpent = totalSpent;
+        }
+
+        private async Task AddTitlesToStoreTransactions(List<StoreTransactionViewModel> storeTransactions, string currentUserId)
+        {
+            var titles = await userService.GetTitlesOwnedByUserAsync(currentUserId);
+
+            foreach (var title in titles)
             {
                 storeTransactions.Add(new StoreTransactionViewModel()
                 {
@@ -516,22 +543,6 @@ namespace TwolipsDating.Controllers
                     TotalCost = title.Value.Title.PointPrice
                 });
             }
-
-            int totalSpent = 0;
-
-            foreach(var transaction in storeTransactions)
-            {
-                totalSpent += transaction.ItemCost;
-            }
-
-            viewModel.TotalSpent = totalSpent;
-
-            viewModel.StoreTransactions = storeTransactions
-                .OrderByDescending(t => t.TransactionDate)
-                .ToList()
-                .AsReadOnly();
-
-            return View(viewModel);
         }
 
         protected override void Dispose(bool disposing)

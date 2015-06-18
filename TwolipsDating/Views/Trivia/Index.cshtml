@@ -8,62 +8,69 @@
         @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = TwolipsDating.ViewModels.ActiveMenuText.Trivia })
     </div>
 </div>
-<div class="row">
-    <div class="col-md-4 col-md-offset-2">
-        <div class="panel panel-default">
-            <div class="panel-body text-center">
-                <p><i class="glyphicon glyphicon-refresh"></i>&nbsp;<a href="@Url.Action("random")">Random Questions</a></p>
-                <h4><span class="label label-primary">3 points per correct answer</span></h4>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-body text-center">
-                <i class="glyphicon glyphicon-time"></i>&nbsp;<a href="@Url.Action("timed")">Timed Questions</a>
-                <h4><span class="label label-primary">5 points per correct answer</span></h4>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="text-center">
-                    <i class="glyphicon glyphicon-king"></i>&nbsp;Specialized Quizzes
+@if (Model.IsCurrentUserEmailConfirmed)
+{
+    <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    <p><i class="glyphicon glyphicon-refresh"></i>&nbsp;<a href="@Url.Action("random")">Random Questions</a></p>
+                    <h4><span class="label label-primary">3 points per correct answer</span></h4>
                 </div>
             </div>
-            <div class="list-group">
-                @foreach (var quiz in Model.Quizzes)
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    <i class="glyphicon glyphicon-time"></i>&nbsp;<a href="@Url.Action("timed")">Timed Questions</a>
+                    <h4><span class="label label-primary">5 points per correct answer</span></h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="text-center">
+                        <i class="glyphicon glyphicon-king"></i>&nbsp;Specialized Quizzes
+                    </div>
+                </div>
+                <div class="list-group">
+                    @foreach (var quiz in Model.Quizzes)
                 {
                     if (quiz.IsComplete)
                     {
-                        <a href="@Url.Action("quiz", new { id = quiz.Id })" class="list-group-item list-group-item-success">
-                            <span class="badge">Completed</span>@quiz.Name
-                        </a>
+                <a href="@Url.Action("quiz", new { id = quiz.Id })" class="list-group-item list-group-item-success">
+                    <span class="badge">Completed</span>@quiz.Name
+                </a>
                     }
                     else
                     {
-                        <a href="@Url.Action("quiz", new { id = quiz.Id })" class="list-group-item">
-                            <span class="badge">@quiz.Points points</span>@quiz.Name
-                        </a>
+                <a href="@Url.Action("quiz", new { id = quiz.Id })" class="list-group-item">
+                    <span class="badge">@quiz.Points points</span>@quiz.Name
+                </a>
                     }
                 }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    <i class="glyphicon glyphicon-stats"></i>&nbsp;Your Stats
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">Total Points<span class="badge">@Model.UserStats.TotalPoints</span></li>
+                    <li class="list-group-item">Questions Answered<span class="badge">@Model.UserStats.QuestionsAnswered</span></li>
+                    <li class="list-group-item">Questions Answered Correctly<span class="badge">@Model.UserStats.QuestionsAnsweredCorrectly</span></li>
+                    <li class="list-group-item">Random Questions Answered<span class="badge">@Model.UserStats.RandomQuestionsAnswered</span></li>
+                    <li class="list-group-item">Random Questions Answered Correctly<span class="badge">@Model.UserStats.RandomQuestionsAnsweredCorrectly</span></li>
+                    <li class="list-group-item">Timed Questions Answered<span class="badge">@Model.UserStats.TimedQuestionsAnswered</span></li>
+                    <li class="list-group-item">Timed Questions Answered Correctly<span class="badge">@Model.UserStats.TimedQuestionsAnsweredCorrectly</span></li>
+                    <li class="list-group-item">Quiz Questions Answered<span class="badge">@Model.UserStats.QuizQuestionsAnswered</span></li>
+                    <li class="list-group-item">Quiz Questions Answered Correctly<span class="badge">@Model.UserStats.QuizQuestionsAnsweredCorrectly</span></li>
+                    <li class="list-group-item">Quizzes Completed<span class="badge">@Model.UserStats.QuizzesCompleted</span></li>
+                </ul>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-body text-center">
-                <i class="glyphicon glyphicon-stats"></i>&nbsp;Your Stats
-            </div>
-            <ul class="list-group">
-                <li class="list-group-item">Total Points<span class="badge">@Model.UserStats.TotalPoints</span></li>
-                <li class="list-group-item">Questions Answered<span class="badge">@Model.UserStats.QuestionsAnswered</span></li>
-                <li class="list-group-item">Questions Answered Correctly<span class="badge">@Model.UserStats.QuestionsAnsweredCorrectly</span></li>
-                <li class="list-group-item">Random Questions Answered<span class="badge">@Model.UserStats.RandomQuestionsAnswered</span></li>
-                <li class="list-group-item">Random Questions Answered Correctly<span class="badge">@Model.UserStats.RandomQuestionsAnsweredCorrectly</span></li>
-                <li class="list-group-item">Timed Questions Answered<span class="badge">@Model.UserStats.TimedQuestionsAnswered</span></li>
-                <li class="list-group-item">Timed Questions Answered Correctly<span class="badge">@Model.UserStats.TimedQuestionsAnsweredCorrectly</span></li>
-                <li class="list-group-item">Quiz Questions Answered<span class="badge">@Model.UserStats.QuizQuestionsAnswered</span></li>
-                <li class="list-group-item">Quiz Questions Answered Correctly<span class="badge">@Model.UserStats.QuizQuestionsAnsweredCorrectly</span></li>
-                <li class="list-group-item">Quizzes Completed<span class="badge">@Model.UserStats.QuizzesCompleted</span></li>
-            </ul>
-        </div>
-    </div>
-</div>
+}
+else
+{
+    <h4>You need to confirm your email address before you can play trivia.</h4>
+}
