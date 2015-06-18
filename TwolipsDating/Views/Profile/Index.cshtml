@@ -647,6 +647,25 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
             initializeStarRating();
             setupFileUploadText();
 
+            $('#violation-error').hide();
+            $('#violation-success').hide();
+
+            $('#modalReviewViolation').on('hide.bs.modal', function (event) {
+                $('#violation-error').hide();
+                $('#violation-success').hide();
+                $('#button-violation-submit').show();
+                $('#WriteReviewViolation_ViolationContent').val('');
+            });
+
+            $('#modalReviewViolation').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var recipient = button.data('review-author'); // Extract info from data-* attributes
+                var reviewId = button.data('review-id');
+                var modal = $(this);
+                modal.find('#review-author-name').text(recipient)
+                modal.find('#review-id').val(reviewId)
+            });
+
             // loop through all share review links and turn them into valid popovers with share buttons
             $("a[id^='share-profile-link']").popover({
                 content: function () {
