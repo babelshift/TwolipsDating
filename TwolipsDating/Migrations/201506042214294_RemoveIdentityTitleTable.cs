@@ -7,16 +7,10 @@ namespace TwolipsDating.Migrations
     {
         public override void Up()
         {
-            DropPrimaryKey("dbo.Titles");
-            AlterColumn("dbo.Titles", "Id", c => c.Int(nullable: false));
-            AddPrimaryKey("dbo.Titles", "Id");
         }
         
         public override void Down()
         {
-            DropPrimaryKey("dbo.Titles");
-            AlterColumn("dbo.Titles", "Id", c => c.Int(nullable: false, identity: true));
-            AddPrimaryKey("dbo.Titles", "Id");
         }
     }
 }

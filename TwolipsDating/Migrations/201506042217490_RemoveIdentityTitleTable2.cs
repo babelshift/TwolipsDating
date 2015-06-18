@@ -7,12 +7,34 @@ namespace TwolipsDating.Migrations
     {
         public override void Up()
         {
-            this.ChangeIdentity(IdentityChange.SwitchIdentityOff, "dbo.Titles", "Id");
+            DropTable("dbo.Titles");
+
+            CreateTable(
+                "dbo.Titles",
+                c => new
+                {
+                    Id = c.Int(nullable: false, identity: false),
+                    Name = c.String(nullable: false, maxLength: 64),
+                    Description = c.String(nullable: false, maxLength: 255),
+                    PointPrice = c.Int(nullable: false),
+                })
+                .PrimaryKey(t => t.Id);
         }
         
         public override void Down()
         {
-            this.ChangeIdentity(IdentityChange.SwitchIdentityOn, "dbo.Titles", "Id");
+            DropTable("dbo.Titles");
+
+            CreateTable(
+                   "dbo.Titles",
+                   c => new
+                   {
+                       Id = c.Int(nullable: false, identity: true),
+                       Name = c.String(nullable: false, maxLength: 64),
+                       Description = c.String(nullable: false, maxLength: 255),
+                       PointPrice = c.Int(nullable: false),
+                   })
+                   .PrimaryKey(t => t.Id);
         }
     }
 }
