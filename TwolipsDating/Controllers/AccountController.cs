@@ -490,6 +490,8 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Points()
         {
+            await SetHeaderCountsAsync();
+
             string currentUserId = await GetCurrentUserIdAsync();
 
             // get transactions (expenses)
@@ -510,7 +512,6 @@ namespace TwolipsDating.Controllers
                 .ToList()
                 .AsReadOnly();
 
-            await SetHeaderCountsAsync();
 
             return View(viewModel);
         }
