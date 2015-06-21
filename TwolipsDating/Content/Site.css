@@ -231,3 +231,7 @@ input[readonly] {
 .rows-middle tbody > tr > td {
     vertical-align: middle;
 }
+
+.wrap-long-lines {
+    word-wrap: break-word
+}

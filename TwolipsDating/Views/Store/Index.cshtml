@@ -12,12 +12,24 @@
 </div>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-4 text-center">
         <div class="panel panel-default">
             <div class="panel-body">
-                <p><a href="#">Colors</a></p>
-                <p>@Html.ActionLink("Titles", "titles")</p>
-                <p>@Html.ActionLink("Gifts", "gifts")</p>
+                <i class="glyphicon glyphicon-tint"></i> <a href="#">Colors</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-center">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <i class="glyphicon glyphicon-tag"></i> @Html.ActionLink("Titles", "titles")
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-center">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <i class="glyphicon glyphicon-gift"></i> @Html.ActionLink("Gifts", "gifts")
             </div>
         </div>
     </div>

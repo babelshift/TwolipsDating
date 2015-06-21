@@ -17,7 +17,7 @@
         <a href="@Url.Action("index", "profile", new { id = Model.ReceiverProfileId })">@Model.ReceiverUserName</a>
         <small> &bull;&nbsp;@Model.TimeAgo</small>
     </p>
-    <div class="well well-sm">
+    <div class="well well-sm wrap-long-lines">
         <small>@Model.MessageContent</small>
     </div>
 }
@@ -35,7 +35,7 @@ else
         <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId })">@Model.SenderUserName</a> sent you a message
         <small> &bull;&nbsp;@Model.TimeAgo</small>
     </p>
-    <div class="well well-sm">
+    <div class="well well-sm wrap-long-lines">
         <small>@Model.MessageContent</small>
     </div>
 }

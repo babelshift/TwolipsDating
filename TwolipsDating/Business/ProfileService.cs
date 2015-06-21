@@ -531,14 +531,16 @@ namespace TwolipsDating.Business
 
         public async Task<int> SendGift(string fromUserId, string toUserId, int giftId, int inventoryItemId)
         {
-            await RemoveItemFromUserInventory(fromUserId, inventoryItemId);
+            int giftCount = await RemoveItemFromUserInventory(fromUserId, inventoryItemId);
 
             await AddItemToUserInventory(toUserId, giftId);
 
             LogGiftTransaction(fromUserId, toUserId, giftId);
 
             // how can we do this atomically? stored procedure?
-            return await db.SaveChangesAsync();
+            await db.SaveChangesAsync();
+
+            return giftCount;
         }
 
         private void LogGiftTransaction(string fromUserId, string toUserId, int giftId)
@@ -555,7 +557,7 @@ namespace TwolipsDating.Business
             db.GiftTransactions.Add(logItem);
         }
 
-        private async Task AddItemToUserInventory(string toUserId, int giftId)
+        private async Task<int> AddItemToUserInventory(string toUserId, int giftId)
         {
             // increase inventory count for to user id
             var toUserInventoryItem = await (from inventoryItems in db.InventoryItems
@@ -580,9 +582,11 @@ namespace TwolipsDating.Business
 
                 db.InventoryItems.Add(newItem);
             }
+
+            return toUserInventoryItem.ItemCount;
         }
 
-        private async Task RemoveItemFromUserInventory(string fromUserId, int inventoryItemId)
+        private async Task<int> RemoveItemFromUserInventory(string fromUserId, int inventoryItemId)
         {
             // reduce inventory count for from user id
             var fromUserInventoryItem = await (from inventoryItems in db.InventoryItems
@@ -600,6 +604,8 @@ namespace TwolipsDating.Business
             {
                 db.InventoryItems.Remove(fromUserInventoryItem);
             }
+
+            return fromUserInventoryItem.ItemCount;
         }
 
         public async Task<bool> ToggleFavoriteProfileAsync(string currentUserId, int profileId)

@@ -120,6 +120,9 @@
   <data name="AnswerNotSubmitted" xml:space="preserve">
     <value>Something prevented your answer from being submitted. If this continues, contact support.</value>
   </data>
+  <data name="EmailAddressNotConfirmed" xml:space="preserve">
+    <value>You need to confirm your email address first.</value>
+  </data>
   <data name="FavoriteProfileNotSaved" xml:space="preserve">
     <value>Something prevented you from toggling the favorite profile status. If this continues, contact support.</value>
   </data>

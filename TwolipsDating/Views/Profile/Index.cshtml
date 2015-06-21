@@ -4,6 +4,10 @@
     ViewBag.Title = "twolips - your profile";
 }
 
+@Html.HiddenFor(m => m.ActiveTab)
+@Html.HiddenFor(m => m.ProfileId)
+@Html.HiddenFor(m => m.ProfileUserId)
+
 @if (Model != null && Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileViewMode.ShowProfile)
 {
     <div class="modal fade" id="modalReviewViolation" tabindex="-1" role="dialog" aria-labelledby="modalReviewViolationLabel" aria-hidden="true">
@@ -49,39 +53,38 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="modalReviewLabel">Send gifts to @Model.UserName</h4>
+                    <h4 class="modal-title" id="modalReviewLabel">Send gifts to <strong>@Model.UserName</strong></h4>
                 </div>
                 @if (Model.ViewerInventoryItems.Count > 0)
                 {
-                    using (Html.BeginForm("sendgift", "profile", FormMethod.Post))
-                    {
-                        @Html.AntiForgeryToken()
-                        @Html.ValidationSummary()
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <div class="row">
-                                    @foreach (var item in Model.ViewerInventoryItems)
-                                    {
-                                        <div class="col-md-2 text-center">
-                                            <a id="@item.InventoryItemId" data-gift-id="@item.GiftId" href="#" onclick="onSelectGiftClick(event, this)">
-                                                <img src="@item.GiftIconFilePath">
-                                            </a>
-                                            <p class="label label-success">@item.ItemCount</p>
-                                        </div>
-                                    }
-                                </div>
+                    <div class="modal-body">
+                        <h5>Your inventory:</h5>
+                        <div class="form-group">
+                            <div class="row">
+                                @foreach (var item in Model.ViewerInventoryItems)
+                                {
+                                    <div id="@String.Format("gift-image-wrapper-{0}", item.GiftId)" class="col-md-2 text-center">
+                                        <a id="@item.InventoryItemId" data-gift-id="@item.GiftId" href="#" onclick="onSelectGiftClick(event, this)">
+                                            <img src="@item.GiftIconFilePath">
+                                        </a>
+                                        <p id="@String.Format("gift-count-{0}", item.InventoryItemId)" class="bg-info">@item.ItemCount</p>
+                                    </div>
+                                }
                             </div>
-                            @Html.HiddenFor(m => m.ActiveTab)
-                            @Html.HiddenFor(m => m.SendGift.GiftId)
-                            @Html.HiddenFor(m => m.SendGift.InventoryItemId)
-                            @Html.HiddenFor(m => m.ProfileId)
-                            @Html.HiddenFor(m => m.ProfileUserId)
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Send gift</button>
+                        <div id="gift-error" class="alert alert-danger" role="alert">
+                            <p id="gift-error-text">Something happened which prevented your gift from being sent.</p>
                         </div>
-                    }
+                        <div id="gift-success" class="alert alert-success" role="alert">
+                            <p>Gift sent successfully.</p>
+                        </div>
+                        @Html.HiddenFor(m => m.SendGift.GiftId)
+                        @Html.HiddenFor(m => m.SendGift.InventoryItemId)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button id="button-gift-send" type="button" class="btn btn-primary" onclick="onSendGift(event, this)">Send gift</button>
+                    </div>
                 }
                 else
                 {
@@ -97,31 +100,28 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="modalReviewLabel">New review for @Model.UserName</h4>
+                    <h4 class="modal-title" id="modalReviewLabel">New review for <strong>@Model.UserName</strong></h4>
                 </div>
-                @using (Html.BeginForm("writereview", "profile", FormMethod.Post))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary()
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.WriteReview.RatingValue, new { @class = "control-label" })
-                            <div id="star"></div> <small>(hover and select star)</small>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.WriteReview.ReviewContent, new { @class = "control-label" })
-                            @Html.TextAreaFor(m => m.WriteReview.ReviewContent, new { @class = "form-control" })
-                        </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WriteReview.RatingValue, new { @class = "control-label" })
+                        <div id="star"></div> <small>(hover and select star)</small>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit review</button>
+                    <div class="form-group">
+                        @Html.TextAreaFor(m => m.WriteReview.ReviewContent, new { @class = "form-control" })
                     </div>
-                    @Html.HiddenFor(m => m.ProfileId)
-                    @Html.HiddenFor(m => m.ActiveTab)
-                    @Html.HiddenFor(m => m.ProfileUserId)
-                    @Html.HiddenFor(m => m.WriteReview.RatingValue)
-                }
+                    <div id="review-error" class="alert alert-danger" role="alert">
+                        <p id="review-error-text">Something happened which prevented your review from being submitted.</p>
+                    </div>
+                    <div id="review-success" class="alert alert-success" role="alert">
+                        <p>Review submitted successfully. @Html.ActionLink("View reviews", "index", "profile", new { id = Model.ProfileId, tab = Model.ActiveTab }, new { @class = "alert-link" }) for <strong>@Model.UserName</strong>.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="button-review-write" type="button" class="btn btn-primary" onclick="onWriteReview(event, this)">Submit review</button>
+                </div>
+                @Html.HiddenFor(m => m.WriteReview.RatingValue)
             </div>
         </div>
     </div>
@@ -130,25 +130,23 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="modalMessageLabel">New message to @Model.UserName</h4>
+                    <h4 class="modal-title" id="modalMessageLabel">Send messages to <strong>@Model.UserName</strong></h4>
                 </div>
-                @using (Html.BeginForm("sendmessage", "profile", FormMethod.Post))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary()
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.TextAreaFor(m => m.SendMessage.MessageBody, new { @class = "form-control" })
-                        </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.TextAreaFor(m => m.SendMessage.MessageBody, new { @class = "form-control" })
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Send message</button>
+                    <div id="message-error" class="alert alert-danger" role="alert">
+                        <p id="message-error-text">Something happened which prevented your message from being sent.</p>
                     </div>
-                    @Html.HiddenFor(m => m.ProfileId)
-                    @Html.HiddenFor(m => m.ActiveTab)
-                    @Html.HiddenFor(m => m.ProfileUserId)
-                }
+                    <div id="message-success" class="alert alert-success" role="alert">
+                        <p>Message sent successfully. @Html.ActionLink("View conversation", "conversation", "message", new { id = @Model.ProfileUserId }, new { @class = "alert-link" }) with <strong>@Model.UserName</strong>.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="button-message-send" type="button" onclick="onSendMessage(event, this)" class="btn btn-primary">Send message</button>
+                </div>
             </div>
         </div>
     </div>
@@ -181,9 +179,6 @@
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">OK</button>
                         </div>
-                        @Html.HiddenFor(m => m.ActiveTab)
-                        @Html.HiddenFor(m => m.ProfileUserId)
-                        @Html.HiddenFor(m => m.ProfileId)
                         @Html.HiddenFor(m => m.ChangeImage.UserImageId)
                     }
                 </div>
@@ -564,13 +559,117 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
     @Scripts.Render("~/bundles/jqueryval")
 
     <script type="text/javascript">
+        $(document).ready(function () {
+            toggleFavoriteIcon();
+            toggleIgnoredIcon();
+            selectUnitedStates();
+            initializeStarRating();
+            setupFileUploadText();
+            setupReportViolation();
+            setupMessageSend();
+            setupGiftSend();
+            setupReviewWrite();
+
+            // loop through all share review links and turn them into valid popovers with share buttons
+            $("a[id^='share-profile-link']").popover({
+                content: function () {
+                    var match = $(this).attr('id').match(new RegExp(/[0-9 -()+]+$/)); // extract the review ID
+                    var shareButtonsDiv = "#share-profile-buttons-popover-" + match[0];
+                    var clone = $(shareButtonsDiv).clone(true);
+                    var cloneUnhide = clone.removeClass('hide');
+                    return cloneUnhide.html();
+                    //return $(shareButtonsDiv).html();
+                }
+            });
+            $("a[id^='share-profile-link']").click(function (e) {
+                e.preventDefault(); // prevents the page from jumping to the top on click
+            });
+        });
+
+        function onWriteReview(e, obj) {
+            var profileUserId = $('#ProfileUserId').val();
+            var rating = $("#WriteReview_RatingValue").val();
+            var reviewContent = $("#WriteReview_ReviewContent").val();
+
+            if (reviewContent != null && reviewContent.length > 0) {
+
+                var json = "{\"profileUserId\":\"" + profileUserId + "\", \"rating\":" + rating + ", \"reviewContent\":\"" + reviewContent + "\"}";
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("writeReview", "profile")',
+                    data: json,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data.success) {
+                            $('#review-success').show();
+                            $('#WriteReview_ReviewContent').val('');
+                        } else {
+                            $('#review-error').show();
+                            $('#review-error-text').text(data.error);
+                        }
+                    }
+                });
+            }
+        }
+
+        function onSendGift(e, obj) {
+            var profileUserId = $('#ProfileUserId').val();
+            var giftId = $('#SendGift_GiftId').val();
+            var inventoryItemId = $('#SendGift_InventoryItemId').val();
+
+            var json = "{\"profileUserId\":\"" + profileUserId + "\", \"giftId\":" + giftId + ", \"inventoryItemId\":" + inventoryItemId + "}";
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("sendGift", "profile")',
+                data: json,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.success) {
+                        $('#gift-success').show();
+                        var messageBody = $('#SendMessage_MessageBody').val('');
+                        $("#gift-count-" + inventoryItemId).text(data.giftCount);
+                    } else {
+                        $('#gift-error').show();
+                        $('#gift-error-text').text(data.error);
+                    }
+                }
+            });
+        }
+
+        function onSendMessage(e, obj) {
+            var profileUserId = $('#ProfileUserId').val();
+            var messageBody = $('#SendMessage_MessageBody').val();
+
+            if (messageBody != null && messageBody.length > 0) {
+                var json = "{\"profileUserId\":\"" + profileUserId + "\", \"messageBody\":\"" + messageBody + "\"}";
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("sendMessage", "profile")',
+                    data: json,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data.success) {
+                            $('#message-success').show();
+                            $('#SendMessage_MessageBody').val('');
+                        } else {
+                            $('#message-error').show();
+                            $('#message-error-text').text(data.error);
+                        }
+                    }
+                });
+            }
+        }
+
         function onAddReviewViolation(e, obj) {
             var reviewId = $('#review-id').val();
             var violationTypeId = $('#WriteReviewViolation_ViolationTypeId').val();
             var authorUserId = $('#CurrentUserId').val();
             var content = $('#WriteReviewViolation_ViolationContent').val();
 
-            json = "{\"reviewId\":" + reviewId + ", \"violationTypeId\":" + violationTypeId + ", \"authorUserId\":\"" + authorUserId + "\", \"content\":\"" + content + "\"}";
+            var json = "{\"reviewId\":" + reviewId + ", \"violationTypeId\":" + violationTypeId + ", \"authorUserId\":\"" + authorUserId + "\", \"content\":\"" + content + "\"}";
 
             $.ajax({
                 type: 'POST',
@@ -640,13 +739,7 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
             });
         }
 
-        $(document).ready(function () {
-            toggleFavoriteIcon();
-            toggleIgnoredIcon();
-            selectUnitedStates();
-            initializeStarRating();
-            setupFileUploadText();
-
+        function setupReportViolation() {
             $('#violation-error').hide();
             $('#violation-success').hide();
 
@@ -665,22 +758,42 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
                 modal.find('#review-author-name').text(recipient)
                 modal.find('#review-id').val(reviewId)
             });
+        }
 
-            // loop through all share review links and turn them into valid popovers with share buttons
-            $("a[id^='share-profile-link']").popover({
-                content: function () {
-                    var match = $(this).attr('id').match(new RegExp(/[0-9 -()+]+$/)); // extract the review ID
-                    var shareButtonsDiv = "#share-profile-buttons-popover-" + match[0];
-                    var clone = $(shareButtonsDiv).clone(true);
-                    var cloneUnhide = clone.removeClass('hide');
-                    return cloneUnhide.html();
-                    //return $(shareButtonsDiv).html();
-                }
+        function setupMessageSend() {
+            $('#message-error').hide();
+            $('#message-success').hide();
+
+            $('#modalMessage').on('hide.bs.modal', function (event) {
+                $('#message-error').hide();
+                $('#message-success').hide();
+                $('#button-message-send').show();
+                $('#SendMessage_MessageBody').val('');
             });
-            $("a[id^='share-profile-link']").click(function (e) {
-                e.preventDefault(); // prevents the page from jumping to the top on click
+        }
+
+        function setupGiftSend() {
+            $('#gift-error').hide();
+            $('#gift-success').hide();
+
+            $('#modalGift').on('hide.bs.modal', function (event) {
+                $('#gift-error').hide();
+                $('#gift-success').hide();
+                $('#button-gift-send').show();
             });
-        });
+        }
+
+        function setupReviewWrite() {
+            $('#review-error').hide();
+            $('#review-success').hide();
+
+            $('#modalReview').on('hide.bs.modal', function (event) {
+                $('#review-error').hide();
+                $('#review-success').hide();
+                $('#button-review-write').show();
+                $('#WriteReview_ReviewContent').val('');
+            });
+        }
 
         // handle file selection text updating
         $(document).on('change', '.btn-file :file', function () {
@@ -762,6 +875,9 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
             var giftId = $(obj).attr("data-gift-id");
             var hiddenSelectedGiftId = $("#SendGift_GiftId");
             hiddenSelectedGiftId.val(giftId);
+
+            $("div[id^='gift-image-wrapper']").css("background-color", "transparent");
+            $(obj).parent().css("background-color", "#eeeeee");
         }
 
         function onSelectProfileImageClick(e, obj) {

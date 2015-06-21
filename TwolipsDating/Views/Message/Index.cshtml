@@ -63,7 +63,7 @@
                                     <a href="@Url.Action("index", "profile", new { id = message.SenderProfileId })">@message.SenderName</a>
                                     <small> &bull;&nbsp;@message.TimeAgo</small>
                                 </p>
-                                <div class="well well-sm">
+                                <div class="well well-sm wrap-long-lines">
                                     <small>@message.Body</small>
                                 </div>
                             }
@@ -92,7 +92,7 @@
                                     <a href="@Url.Action("index", "profile", new { id = message.ReceiverProfileId })">@message.ReceiverName</a>
                                     <small> &bull;&nbsp;@message.TimeAgo</small>
                                 </p>
-                                <div class="well well-sm">
+                                <div class="well well-sm wrap-long-lines">
                                     <small>@message.Body</small>
                                 </div>
                             }

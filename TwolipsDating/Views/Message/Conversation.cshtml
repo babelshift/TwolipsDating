@@ -93,7 +93,7 @@
                                     @if (conversation.MostRecentMessageSenderUserId != Model.CurrentUserId
                                         && conversation.MostRecentMessageStatusId == (int)TwolipsDating.Models.MessageStatusValue.Unread)
                                     {
-                                        <div class="well well-sm" style="border-color: #008CBA; background-color: #efefef; word-wrap: break-word">
+                                        <div class="well well-sm wrap-long-lines" style="border-color: #008CBA; background-color: #efefef;">
                                             @if (!String.IsNullOrEmpty(conversation.TargetProfileImagePath))
                                             {
                                                 <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
@@ -108,7 +108,7 @@
                                     }
                                     else 
                                     {
-                                        <div class="well well-sm" style="word-wrap: break-word">
+                                        <div class="well well-sm wrap-long-lines">
                                             @if (!String.IsNullOrEmpty(conversation.TargetProfileImagePath))
                                             {
                                                 <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">

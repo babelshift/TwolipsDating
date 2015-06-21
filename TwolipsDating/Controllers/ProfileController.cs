@@ -139,33 +139,23 @@ namespace TwolipsDating.Controllers
         #region Send Gifts
 
         [HttpPost]
-        public async Task<ActionResult> SendGift(ProfileViewModel viewModel)
+        public async Task<JsonResult> SendGift(string profileUserId, int giftId, int inventoryItemId)
         {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
-            }
+            string currentUserId = await GetCurrentUserIdAsync();
 
             try
             {
-                string currentUserId = await GetCurrentUserIdAsync();
-
                 bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
                 if (isCurrentUserEmailConfirmed)
                 {
-                    int changes = await ProfileService.SendGift(currentUserId, viewModel.ProfileUserId, viewModel.SendGift.GiftId, viewModel.SendGift.InventoryItemId);
+                    int giftCount = await ProfileService.SendGift(currentUserId, profileUserId, giftId, inventoryItemId);
 
-                    if (changes == 0)
-                    {
-                        Log.Warn(
-                            "SendGift",
-                            ErrorMessages.GiftNotSent,
-                            new { currentUserId = currentUserId, profileId = viewModel.ProfileUserId, messageBody = viewModel.SendMessage.MessageBody }
-                        );
-
-                        AddError(ErrorMessages.GiftNotSent);
-                    }
+                    return Json(new { success = true, giftCount = giftCount });
+                }
+                else
+                {
+                    return Json(new { success = false, error = ErrorMessages.EmailAddressNotConfirmed });
                 }
             }
             catch (DbUpdateException e)
@@ -173,13 +163,11 @@ namespace TwolipsDating.Controllers
                 Log.Error(
                     "SendGift",
                     e,
-                    new { profileId = viewModel.ProfileUserId, messageBody = viewModel.SendMessage.MessageBody }
+                    new { currentUserId = currentUserId, profileUserId = profileUserId, giftId = giftId, inventoryItemId = inventoryItemId }
                 );
 
-                AddError(ErrorMessages.GiftNotSent);
+                return Json(new { success = false, error = ErrorMessages.GiftNotSent });
             }
-
-            return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
         }
 
         #endregion
@@ -187,33 +175,37 @@ namespace TwolipsDating.Controllers
         #region Send Messages
 
         [HttpPost]
-        public async Task<ActionResult> SendMessage(ProfileViewModel viewModel)
+        public async Task<JsonResult> SendMessage(string profileUserId, string messageBody)
         {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
-            }
+            string currentUserId = await GetCurrentUserIdAsync();
 
             try
             {
-                string currentUserId = await GetCurrentUserIdAsync();
 
                 bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
                 if (isCurrentUserEmailConfirmed)
                 {
-                    int changes = await ProfileService.SendMessageAsync(currentUserId, viewModel.ProfileUserId, viewModel.SendMessage.MessageBody);
+                    int changes = await ProfileService.SendMessageAsync(currentUserId, profileUserId, messageBody);
 
-                    if (changes == 0)
+                    if (changes > 0)
+                    {
+                        return Json(new { success = true });
+                    }
+                    else
                     {
                         Log.Warn(
                             "SendMessage",
                             ErrorMessages.MessageNotSent,
-                            new { currentUserId = currentUserId, profileId = viewModel.ProfileUserId, messageBody = viewModel.SendMessage.MessageBody }
+                            new { currentUserId = currentUserId, profileId = profileUserId, messageBody = messageBody }
                         );
 
-                        AddError(ErrorMessages.MessageNotSent);
+                        return Json(new { success = false, error = ErrorMessages.MessageNotSent });
                     }
+                }
+                else
+                {
+                    return Json(new { success = false, error = ErrorMessages.EmailAddressNotConfirmed });
                 }
             }
             catch (DbUpdateException e)
@@ -221,13 +213,11 @@ namespace TwolipsDating.Controllers
                 Log.Error(
                     "SendMessage",
                     e,
-                    new { profileId = viewModel.ProfileUserId, messageBody = viewModel.SendMessage.MessageBody }
+                    new { currentUserId = currentUserId, profileId = profileUserId, messageBody = messageBody }
                 );
 
-                AddError(ErrorMessages.MessageNotSent);
+                return Json(new { success = false, error = ErrorMessages.MessageNotSent });
             }
-
-            return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
         }
 
         #endregion
@@ -235,13 +225,8 @@ namespace TwolipsDating.Controllers
         #region Write Reviews
 
         [HttpPost]
-        public async Task<ActionResult> WriteReview(ProfileViewModel viewModel)
+        public async Task<JsonResult> WriteReview(string profileUserId, int rating, string reviewContent)
         {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
-            }
-
             try
             {
                 string currentUserId = await GetCurrentUserIdAsync();
@@ -250,18 +235,26 @@ namespace TwolipsDating.Controllers
 
                 if (isCurrentUserEmailConfirmed)
                 {
-                    int changes = await ProfileService.WriteReviewAsync(currentUserId, viewModel.ProfileUserId, viewModel.WriteReview.ReviewContent, viewModel.WriteReview.RatingValue);
+                    int changes = await ProfileService.WriteReviewAsync(currentUserId, profileUserId, reviewContent, rating);
 
-                    if (changes == 0)
+                    if (changes > 0)
+                    {
+                        return Json(new { success = true });
+                    }
+                    else
                     {
                         Log.Warn(
                             "WriteReview",
                             ErrorMessages.ReviewNotSaved,
-                            parameters: new { profileId = viewModel.ProfileUserId, reviewContent = viewModel.WriteReview.ReviewContent, ratingValue = viewModel.WriteReview.RatingValue }
+                            parameters: new { profileId = profileUserId, reviewContent = reviewContent, ratingValue = rating }
                         );
 
-                        AddError(ErrorMessages.ReviewNotSaved);
+                        return Json(new { success = false, error = ErrorMessages.ReviewNotSaved });
                     }
+                }
+                else
+                {
+                    return Json(new { success = false, error = ErrorMessages.EmailAddressNotConfirmed });
                 }
             }
             catch (DbUpdateException e)
@@ -269,13 +262,11 @@ namespace TwolipsDating.Controllers
                 Log.Error(
                     "WriteReview",
                     e,
-                    parameters: new { profileId = viewModel.ProfileUserId, reviewContent = viewModel.WriteReview.ReviewContent, ratingValue = viewModel.WriteReview.RatingValue }
+                    parameters: new { profileId = profileUserId, reviewContent = reviewContent, ratingValue = rating }
                 );
 
-                AddError(ErrorMessages.ReviewNotSaved);
+                return Json(new { success = false, error = ErrorMessages.ReviewNotSaved });
             }
-
-            return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
         }
 
         #endregion
@@ -709,7 +700,7 @@ namespace TwolipsDating.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            if(disposing && userService != null)
+            if (disposing && userService != null)
             {
                 userService.Dispose();
             }
