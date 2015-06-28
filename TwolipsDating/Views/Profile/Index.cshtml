@@ -58,13 +58,12 @@
                 @if (Model.ViewerInventoryItems.Count > 0)
                 {
                     <div class="modal-body">
-                        <h5>Your inventory:</h5>
                         <div class="form-group">
                             <div class="row">
                                 @foreach (var item in Model.ViewerInventoryItems)
                                 {
                                     <div id="@String.Format("gift-image-wrapper-{0}", item.GiftId)" class="col-md-2 text-center">
-                                        <a id="@item.InventoryItemId" data-gift-id="@item.GiftId" href="#" onclick="onSelectGiftClick(event, this)">
+                                        <a id="@item.InventoryItemId" data-gift-name="@item.GiftName" data-gift-id="@item.GiftId" href="#" onclick="onSelectGiftClick(event, this)">
                                             <img src="@item.GiftIconFilePath">
                                         </a>
                                         <p id="@String.Format("gift-count-{0}", item.InventoryItemId)" class="bg-info">@item.ItemCount</p>
@@ -78,8 +77,17 @@
                         <div id="gift-success" class="alert alert-success" role="alert">
                             <p>Gift sent successfully.</p>
                         </div>
+                        <table id="gift-send-log" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Gifts successfully sent so far:</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                         @Html.HiddenFor(m => m.SendGift.GiftId)
                         @Html.HiddenFor(m => m.SendGift.InventoryItemId)
+                        <input type="hidden" id="selected-gift-name" />
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -139,13 +147,23 @@
                     <div id="message-error" class="alert alert-danger" role="alert">
                         <p id="message-error-text">Something happened which prevented your message from being sent.</p>
                     </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button id="button-message-send" type="button" onclick="onSendMessage(event, this)" class="btn btn-primary">Send message</button>
+                    </div>
+                    <div class="clearfix"></div>
+                    <br />
                     <div id="message-success" class="alert alert-success" role="alert">
                         <p>Message sent successfully. @Html.ActionLink("View conversation", "conversation", "message", new { id = @Model.ProfileUserId }, new { @class = "alert-link" }) with <strong>@Model.UserName</strong>.</p>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button id="button-message-send" type="button" onclick="onSendMessage(event, this)" class="btn btn-primary">Send message</button>
+                    <table id="message-send-log" class="table wrap-long-lines-table">
+                        <thead>
+                            <tr>
+                                <th>Messages successfully sent so far:</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -617,6 +635,7 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
             var profileUserId = $('#ProfileUserId').val();
             var giftId = $('#SendGift_GiftId').val();
             var inventoryItemId = $('#SendGift_InventoryItemId').val();
+            var giftName = $("#selected-gift-name").val();
 
             var json = "{\"profileUserId\":\"" + profileUserId + "\", \"giftId\":" + giftId + ", \"inventoryItemId\":" + inventoryItemId + "}";
 
@@ -627,9 +646,11 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
                     if (data.success) {
+                        $('#gift-send-log').show();
                         $('#gift-success').show();
                         var messageBody = $('#SendMessage_MessageBody').val('');
                         $("#gift-count-" + inventoryItemId).text(data.giftCount);
+                        $("#gift-send-log tr:last").after("<tr><td>" + giftName + " sent successfully.</td></tr>");
                     } else {
                         $('#gift-error').show();
                         $('#gift-error-text').text(data.error);
@@ -652,8 +673,10 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
                     contentType: 'application/json; charset=utf-8',
                     success: function (data) {
                         if (data.success) {
+                            $('#message-send-log').show();
                             $('#message-success').show();
                             $('#SendMessage_MessageBody').val('');
+                            $("#message-send-log tr:last").after("<tr><td>" + messageBody + "</td></tr>");
                         } else {
                             $('#message-error').show();
                             $('#message-error-text').text(data.error);
@@ -773,6 +796,7 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
         }
 
         function setupGiftSend() {
+            $('#gift-send-log').hide();
             $('#gift-error').hide();
             $('#gift-success').hide();
 
@@ -868,6 +892,7 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
 
         function onSelectGiftClick(e, obj) {
             e.preventDefault();
+
             var inventoryItemId = $(obj).attr("id");
             var hiddenSelectedInventoryItemId = $("#SendGift_InventoryItemId");
             hiddenSelectedInventoryItemId.val(inventoryItemId);
@@ -875,6 +900,10 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
             var giftId = $(obj).attr("data-gift-id");
             var hiddenSelectedGiftId = $("#SendGift_GiftId");
             hiddenSelectedGiftId.val(giftId);
+
+            var giftName = $(obj).attr("data-gift-name");
+            var hiddenSelectedGiftName = $("#selected-gift-name");
+            hiddenSelectedGiftName.val(giftName);
 
             $("div[id^='gift-image-wrapper']").css("background-color", "transparent");
             $(obj).parent().css("background-color", "#eeeeee");

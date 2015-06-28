@@ -233,5 +233,13 @@ input[readonly] {
 }
 
 .wrap-long-lines {
-    word-wrap: break-word
+    word-wrap: break-word;
+}
+
+.wrap-long-lines-table {
+    table-layout: fixed; width: 100%;
+}
+
+.wrap-long-lines-table td {
+    word-wrap: break-word;
 }
