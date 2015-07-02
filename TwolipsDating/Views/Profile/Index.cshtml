@@ -71,6 +71,12 @@
                                 }
                             </div>
                         </div>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button id="button-gift-send" type="button" class="btn btn-primary" onclick="onSendGift(event, this)">Send gift</button>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
                         <div id="gift-error" class="alert alert-danger" role="alert">
                             <p id="gift-error-text">Something happened which prevented your gift from being sent.</p>
                         </div>
@@ -88,10 +94,6 @@
                         @Html.HiddenFor(m => m.SendGift.GiftId)
                         @Html.HiddenFor(m => m.SendGift.InventoryItemId)
                         <input type="hidden" id="selected-gift-name" />
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button id="button-gift-send" type="button" class="btn btn-primary" onclick="onSendGift(event, this)">Send gift</button>
                     </div>
                 }
                 else
@@ -501,6 +503,14 @@
 }
 else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileViewMode.CreateProfile)
 {
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @if (User.Identity.IsAuthenticated)
+            {
+                @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = TwolipsDating.ViewModels.ActiveMenuText.Profile })
+            }
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
@@ -784,6 +794,7 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
         }
 
         function setupMessageSend() {
+            $('#message-send-log').hide();
             $('#message-error').hide();
             $('#message-success').hide();
 

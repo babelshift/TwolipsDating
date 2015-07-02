@@ -20,7 +20,7 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -34,6 +34,22 @@
                 @Html.ActionLink("twolips dating", "index", "home", null, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
+                <ul id="navbar-main" class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-search"></i>&nbsp;Explore <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.Action("index", "home")"><i class="glyphicon glyphicon-home"></i>&nbsp;Dashboard</a></li>
+                            <li><a href="@Url.Action("index", "profile", new { id = (int?)null })"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
+                            <li><a href="@Url.Action("conversation", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Messages</a></li>
+                            <li><a href="@Url.Action("index", "trivia")"><i class="glyphicon glyphicon-education"></i>&nbsp;Trivia</a></li>
+                            <li class="divider"></li>
+                            <li><a href="@Url.Action("index", "store")"><i class="glyphicon glyphicon-blackboard"></i>&nbsp;Store</a></li>
+                            <li><a href="@Url.Action("points", "account")"><i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;Points</a></li>
+                            <li class="divider"></li>
+                            <li><a href="@Url.Action("index", "manage")"><i class="glyphicon glyphicon-cog"></i>&nbsp;Account</a></li>
+                        </ul>
+                    </li>
+                </ul>
                 @Html.Partial("_LoginPartial")
                 <ul class="nav navbar-nav navbar-right">
                     @*
@@ -188,6 +204,28 @@
     </script>
     <script type="text/javascript">
         $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) { event.preventDefault(); $(this).ekkoLightbox(); });
+
+        var isScrolledDown = false;
+
+        $(document).ready(function () {
+            var topMenu = $("#navbar-main");
+            topMenu.hide();
+
+            $(window).bind('scroll', function () {
+
+                if ($(window).scrollTop() > 85) {
+                    if (!isScrolledDown) {
+                        isScrolledDown = true;
+                        topMenu.show();
+                    }
+                } else if ($(window).scrollTop() <= 85) {
+                    if (isScrolledDown) {
+                        isScrolledDown = false;
+                        topMenu.hide();
+                    }
+                }
+            });
+        });
     </script>
     @RenderSection("scripts", required: false)
 </body>

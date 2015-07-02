@@ -3,6 +3,10 @@
     min-height: 100%;
 }
 
+.body-content {
+    padding-top: 65px;
+}
+
 body {
     margin-bottom: 217px;
     padding-bottom: 25px;

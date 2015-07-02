@@ -211,7 +211,6 @@ namespace TwolipsDating.Controllers
     <p><small>Twolips Dating, Orlando, FL, USA</small></p>
 </div>
 ";
-
                 await UserManager.SendEmailAsync(user.Id, mailSubject, mailBody);
             }
 
@@ -251,6 +250,16 @@ namespace TwolipsDating.Controllers
                 return View("Error");
             }
             var result = await UserManager.ConfirmEmailAsync(userId, code);
+
+            if(result.Succeeded)
+            {
+                IdentityMessage message = new IdentityMessage();
+                message.Destination = "admin@twolipsdating.com";
+                message.Subject = "A new user has confirmed their e-mail address";
+                message.Body = String.Format("UserId = {0}", userId);
+                await UserManager.EmailService.SendAsync(message);
+            }
+
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
