@@ -81,6 +81,12 @@ namespace TwolipsDating.Migrations
                 new Title() { Id = 2, Name = "Robot Cop", Description = "A robotic police officer different from the popular copyrighted version.", PointPrice = 15 },
                 new Title() { Id = 3, Name = "High Warlord", Description = "Played way too much World of Warcraft.", PointPrice = 25 },
                 new Title() { Id = 4, Name = "Grand Marshal", Description = "Played way too much World of Warcraft.", PointPrice = 25 });
+
+            context.NotificationTypes.AddOrUpdate(t => t.Id,
+                new NotificationType() { Id = (int)NotificationTypeValues.Message, Name = "Message" },
+                new NotificationType() { Id = (int)NotificationTypeValues.Gift, Name = "Gift" },
+                new NotificationType() { Id = (int)NotificationTypeValues.Achievement, Name = "Achievement" },
+                new NotificationType() { Id = (int)NotificationTypeValues.Announcement, Name = "Announcement" });
         }
     }
 }

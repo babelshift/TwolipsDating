@@ -426,6 +426,10 @@
     <Compile Include="Migrations\201506051913501_UserTitlesObtainedLog.Designer.cs">
       <DependentUpon>201506051913501_UserTitlesObtainedLog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507031956591_AddNotifications.cs" />
+    <Compile Include="Migrations\201507031956591_AddNotifications.Designer.cs">
+      <DependentUpon>201507031956591_AddNotifications.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
@@ -441,6 +445,8 @@
     <Compile Include="Models\Milestone.cs" />
     <Compile Include="Models\MilestoneAchievement.cs" />
     <Compile Include="Models\MilestoneType.cs" />
+    <Compile Include="Models\Notification.cs" />
+    <Compile Include="Models\NotificationType.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\QuestionTagPoints.cs" />
     <Compile Include="Models\QuestionType.cs" />
@@ -783,6 +789,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506051913501_UserTitlesObtainedLog.resx">
       <DependentUpon>201506051913501_UserTitlesObtainedLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507031956591_AddNotifications.resx">
+      <DependentUpon>201507031956591_AddNotifications.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

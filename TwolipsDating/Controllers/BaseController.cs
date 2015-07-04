@@ -87,12 +87,9 @@ namespace TwolipsDating.Controllers
             {
                 string currentUserId = await GetCurrentUserIdAsync();
                 var currentUser = await UserManager.FindByIdAsync(currentUserId);
-                int unreadMessageCount = await profileService.GetUnreadMessageCountAsync(currentUserId);
-                ViewBag.UnreadAnnouncementCount = 0;
-                ViewBag.AnnouncementCount = 0;
-                ViewBag.GiftCount = 0;
-                ViewBag.UnreadMessageCount = unreadMessageCount;
-                ViewBag.UnreadNotificationCount = unreadMessageCount;
+                ViewBag.AnnouncementNotificationCount = await ProfileService.GetNotificationCountAsync(currentUserId, (int)NotificationTypeValues.Announcement);
+                ViewBag.GiftNotificationCount = await ProfileService.GetNotificationCountAsync(currentUserId, (int)NotificationTypeValues.Gift);
+                ViewBag.MessageNotificationCount = await ProfileService.GetNotificationCountAsync(currentUserId, (int)NotificationTypeValues.Message);
                 ViewBag.PointsCount = currentUser.Points;
             }
         }

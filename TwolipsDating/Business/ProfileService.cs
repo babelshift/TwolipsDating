@@ -330,6 +330,15 @@ namespace TwolipsDating.Business
                 return 0;
             }
 
+            CreateMessage(senderUserId, receiverUserId, body);
+
+            CreateNotification(receiverUserId);
+
+            return await db.SaveChangesAsync();
+        }
+
+        private void CreateMessage(string senderUserId, string receiverUserId, string body)
+        {
             Message message = db.Messages.Create();
 
             ApplicationUser senderUser = new ApplicationUser() { Id = senderUserId };
@@ -345,6 +354,21 @@ namespace TwolipsDating.Business
             message.MessageStatusId = (int)MessageStatusValue.Unread;
 
             db.Messages.Add(message);
+        }
+
+        private void CreateNotification(string receiverUserId)
+        {
+            Notification notification = db.Notifications.Create();
+
+            notification.ApplicationUserId = receiverUserId;
+            notification.NotificationTypeId = (int)NotificationTypeValues.Message;
+
+            db.Notifications.Add(notification);
+        }
+
+        public async Task<int> DeleteNotifications(string userId, int notificationTypeId)
+        {
+            db.Notifications.RemoveRange(db.Notifications.Where(n => n.ApplicationUserId == userId && n.NotificationTypeId == notificationTypeId));
             return await db.SaveChangesAsync();
         }
 
@@ -433,15 +457,16 @@ namespace TwolipsDating.Business
             return await db.SaveChangesAsync();
         }
 
-        public async Task<int> GetUnreadMessageCountAsync(string userId)
+        public async Task<int> GetNotificationCountAsync(string userId, int notificationTyepid)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
-            int unreadMessageCount = await (from messages in db.Messages
-                                            where messages.ReceiverApplicationUserId == userId
-                                            where messages.MessageStatusId == (int)MessageStatusValue.Unread
-                                            select messages).CountAsync();
-            return unreadMessageCount;
+            int notificationCount = await (from notifications in db.Notifications
+                                           where notifications.NotificationTypeId == notificationTyepid
+                                           where notifications.ApplicationUserId == userId
+                                           select notifications).CountAsync();
+
+            return notificationCount;
         }
 
         public async Task<IReadOnlyCollection<Message>> GetMessagesByUserAsync(string userId)
@@ -508,7 +533,7 @@ namespace TwolipsDating.Business
             // all messages that this user has received in this collection should be marked as read
             foreach (var message in results)
             {
-                if(message.ReceiverApplicationUserId == userId)
+                if (message.ReceiverApplicationUserId == userId)
                 {
                     message.MessageStatusId = (int)MessageStatusValue.Read;
                 }

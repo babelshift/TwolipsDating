@@ -179,27 +179,42 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="modalProfileImageLabel">Select your profile image</h4>
                     </div>
-                    @using (Html.BeginForm("changeimage", "profile", FormMethod.Post))
+                    @if (Model.UploadImage.UserImages.Count > 0)
                     {
-                        @Html.AntiForgeryToken()
-                        @Html.ValidationSummary()
-                        <div class="modal-body">
-                            <div class="row">
-                                @foreach (var userImage in Model.UploadImage.UserImages)
-                                {
-                                    <div class="col-xs-6 col-md-3">
-                                        <a id="@userImage.Id" href="#" class="thumbnail" onclick="onSelectProfileImageClick(event, this)">
-                                            <img src="@userImage.Path" style="max-height: 128px;">
-                                        </a>
-                                    </div>
-                                }
+                        using (Html.BeginForm("changeimage", "profile", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary()
+                            <div class="modal-body">
+                                <div class="row">
+                                    @foreach (var userImage in Model.UploadImage.UserImages)
+                                    {
+                                        <div class="col-xs-6 col-md-3">
+                                            <a id="@userImage.Id" href="#" class="thumbnail" onclick="onSelectProfileImageClick(event, this)">
+                                                <img src="@userImage.Path" style="max-height: 128px;">
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
                             </div>
+                            @Html.HiddenFor(m => m.ChangeImage.UserImageId)
+                            @Html.HiddenFor(m => m.ProfileUserId)
+                            @Html.HiddenFor(m => m.ProfileId)
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">OK</button>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="modal-body">
+                            <h4>You can't change your profile image because you haven't uploaded any images.</h4>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">OK</button>
                         </div>
-                        @Html.HiddenFor(m => m.ChangeImage.UserImageId)
                     }
                 </div>
             </div>

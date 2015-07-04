@@ -26,9 +26,68 @@
 @if (Model.IsCurrentUserEmailConfirmed)
 {
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            @if (Model.ConversationMessages != null && Model.ConversationMessages.Count > 0)
-            {
+        @if (Model.ConversationMessages != null && Model.ConversationMessages.Count > 0)
+        {
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @foreach (var conversation in Model.Conversations)
+                        {
+                            <div class="conversation-item">
+                                <a href="@Url.Action("conversation", "message", new { id = conversation.TargetUserId })">
+                                    @if (conversation.TargetUserId == Model.TargetUserId)
+                                    {
+                                        <div class="well well-sm wrap-long-lines" style="border-color: #008CBA; background-color: #efefef;">
+                                            @if (!String.IsNullOrEmpty(conversation.TargetProfileImagePath))
+                                            {
+                                                <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
+                                                    <img class="circular-image" src="@conversation.TargetProfileImagePath" />
+                                                </div>
+                                            }
+                                            <strong>@conversation.TargetName</strong>
+                                            <small>&bull;&nbsp;@conversation.TimeAgo&nbsp;</small>
+                                            <br />
+                                            <small>@conversation.MostRecentMessageBody</small>
+                                        </div>
+                                    }
+                                    else if (conversation.MostRecentMessageSenderUserId != Model.CurrentUserId
+                                    && conversation.MostRecentMessageStatusId == (int)TwolipsDating.Models.MessageStatusValue.Unread)
+                                    {
+                                        <div class="well well-sm wrap-long-lines" style="border-color: #008CBA; background-color: #efefef;">
+                                            @if (!String.IsNullOrEmpty(conversation.TargetProfileImagePath))
+                                            {
+                                                <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
+                                                    <img class="circular-image" src="@conversation.TargetProfileImagePath" />
+                                                </div>
+                                            }
+                                            <strong>@conversation.TargetName</strong>
+                                            <small>&bull;&nbsp;@conversation.TimeAgo&nbsp;</small><i class="pull-right glyphicon glyphicon-envelope"></i>
+                                            <br />
+                                            <small>@conversation.MostRecentMessageBody</small>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="well well-sm wrap-long-lines">
+                                            @if (!String.IsNullOrEmpty(conversation.TargetProfileImagePath))
+                                            {
+                                                <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
+                                                    <img class="circular-image" src="@conversation.TargetProfileImagePath" />
+                                                </div>
+                                            }
+                                            <strong>@conversation.TargetName</strong>
+                                            <small>&bull;&nbsp;@conversation.TimeAgo</small>
+                                            <br />
+                                            <small>@conversation.MostRecentMessageBody</small>
+                                        </div>
+                                    }
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="conversation-header">
@@ -81,9 +140,11 @@
                         }
                     </div>
                 </div>
-            }
-            else if (Model.Conversations != null && Model.Conversations.Count > 0)
-            {
+            </div>
+        }
+        else if (Model.Conversations != null && Model.Conversations.Count > 0)
+        {
+            <div class="col-md-4">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         @foreach (var conversation in Model.Conversations)
@@ -106,7 +167,7 @@
                                             <small>@conversation.MostRecentMessageBody</small>
                                         </div>
                                     }
-                                    else 
+                                    else
                                     {
                                         <div class="well well-sm wrap-long-lines">
                                             @if (!String.IsNullOrEmpty(conversation.TargetProfileImagePath))
@@ -126,16 +187,23 @@
                         }
                     </div>
                 </div>
-            }
-            else
-            {
-                <div class="panel panel-default">
+            </div>
+            <div class="col-md-8">
+                <div class="panel panel-defult">
                     <div class="panel-body">
-                        <h4>You don't have any recent conversations. Go find someone new and message them!</h4>
+                        <p>Messages go here</p>
                     </div>
                 </div>
-            }
-        </div>
+            </div>
+        }
+        else
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>You don't have any recent conversations. Go find someone new and message them!</h4>
+                </div>
+            </div>
+        }
     </div>
 }
 else

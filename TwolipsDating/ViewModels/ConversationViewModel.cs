@@ -17,6 +17,7 @@ namespace TwolipsDating.ViewModels
         public string TargetProfileImagePath { get; set;}
         public int TargetUserAge { get; set; }
         public string TargetUserLocation { get; set; }
+        public string TargetUserId { get; set; }
         public IReadOnlyList<ConversationItemViewModel> ConversationMessages { get; set; }
 
         [Required]

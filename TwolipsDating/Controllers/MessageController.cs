@@ -22,11 +22,18 @@ namespace TwolipsDating.Controllers
             var currentUserId = await GetCurrentUserIdAsync();
             ConversationViewModel viewModel = new ConversationViewModel();
 
+            viewModel.TargetApplicationUserId = id;
+
+            await GetRecentConversationsAsync(currentUserId, viewModel);
+
+            viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+            viewModel.CurrentUserId = currentUserId;
+
+            await ProfileService.DeleteNotifications(currentUserId, (int)NotificationTypeValues.Message);
+
             // if id has a value, look up all messages between the current user and the passed user id
             if (!String.IsNullOrEmpty(id))
             {
-                viewModel.TargetApplicationUserId = id;
-
                 // lookup the profile we are accessing and the messages between the current user and that profile
                 var profileForOtherUser = await ProfileService.GetUserProfileAsync(id);
 
@@ -36,15 +43,14 @@ namespace TwolipsDating.Controllers
                 }
 
                 var messagesBetweenUsers = await ProfileService.GetMessagesBetweenUsersAsync(currentUserId, id);
-
-                // setup the conversation view model
                 var conversationMessages = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyList<ConversationItemViewModel>>(messagesBetweenUsers);
-
                 viewModel.ConversationMessages = conversationMessages;
+
                 viewModel.TargetUserName = profileForOtherUser.ApplicationUser.UserName;
                 viewModel.TargetUserAge = profileForOtherUser.Birthday.GetAge();
                 viewModel.TargetUserLocation = profileForOtherUser.City.GetCityAndState();
                 viewModel.TargetProfileId = profileForOtherUser.Id;
+                viewModel.TargetUserId = id;
 
                 // if the profile we are looking up has a profile image, set the url it appropriately
                 if (profileForOtherUser.UserImage != null && !String.IsNullOrEmpty(profileForOtherUser.UserImage.FileName))
@@ -52,45 +58,33 @@ namespace TwolipsDating.Controllers
                     viewModel.TargetProfileImagePath = profileForOtherUser.GetProfileImagePath();
                 }
 
-                viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
-                viewModel.CurrentUserId = currentUserId;
-
                 await SetHeaderCountsAsync();
-
-                return View(viewModel);
             }
-            // otherwise, look up the most recent messages and conversations for the current user
-            else
+
+            return View(viewModel);
+        }
+
+        private async Task GetRecentConversationsAsync(string currentUserId, ConversationViewModel viewModel)
+        {
+            // get all messages sent and received by the current user
+            var messagesForUser = await ProfileService.GetMessageConversationsAsync(currentUserId);
+
+            // setup the viewmodel to only include the most recent message from a conversation (like google hangouts home screen)
+            Dictionary<ConversationKey, ConversationItemViewModel> conversations = new Dictionary<ConversationKey, ConversationItemViewModel>();
+            foreach (var message in messagesForUser)
             {
-                viewModel.TargetApplicationUserId = currentUserId;
+                ConversationItemViewModel conversation = GetConversationViewModel(currentUserId, message);
 
-                // get all messages sent and received by the current user
-                var messagesForUser = await ProfileService.GetMessageConversationsAsync(currentUserId);
-
-                // setup the viewmodel to only include the most recent message from a conversation (like google hangouts home screen)
-                Dictionary<ConversationKey, ConversationItemViewModel> conversations = new Dictionary<ConversationKey, ConversationItemViewModel>();
-                foreach (var message in messagesForUser)
+                ConversationKey conversationKey = new ConversationKey()
                 {
-                    ConversationItemViewModel conversation = GetConversationViewModel(currentUserId, message);
+                    ParticipantUserId1 = message.SenderApplicationUserId,
+                    ParticipantUserId2 = message.ReceiverApplicationUserId
+                };
 
-                    ConversationKey conversationKey = new ConversationKey()
-                    {
-                        ParticipantUserId1 = message.SenderApplicationUserId,
-                        ParticipantUserId2 = message.ReceiverApplicationUserId
-                    };
-
-                    UpdateConversationCollection(conversations, conversation, conversationKey);
-                }
-
-                viewModel.Conversations = conversations.Values.ToList().AsReadOnly();
-
-                viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
-                viewModel.CurrentUserId = currentUserId;
-
-                await SetHeaderCountsAsync();
-
-                return View(viewModel);
+                UpdateConversationCollection(conversations, conversation, conversationKey);
             }
+
+            viewModel.Conversations = conversations.Values.ToList().AsReadOnly();
         }
 
         private static void UpdateConversationCollection(Dictionary<ConversationKey, ConversationItemViewModel> conversations, ConversationItemViewModel conversation, ConversationKey conversationHolder)

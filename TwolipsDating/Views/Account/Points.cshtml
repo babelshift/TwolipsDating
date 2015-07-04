@@ -16,72 +16,81 @@
 
 @if (Model.IsCurrentUserEmailConfirmed)
 {
-<div class="row">
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Your Account</h3>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Your Account</h3>
+                </div>
+                <div class="panel-body">
+                    <p>
+                        Your Current Points:
+                        <span class="pull-right text-success"><strong><i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;@Model.PointsCount</strong></span>
+                    </p>
+                    <p>
+                        Total Spent:
+                        <span class="pull-right text-warning"><strong><i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;@Model.TotalSpent</strong></span>
+                    </p>
+                    <p><a href="#" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add points to your account</a></p>
+                </div>
             </div>
-            <div class="panel-body">
-                <p>
-                    Your Current Points:
-                    <span class="pull-right text-success"><strong><i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;@Model.PointsCount</strong></span>
-                </p>
-                <p>
-                    Total Spent:
-                    <span class="pull-right text-warning"><strong><i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;@Model.TotalSpent</strong></span>
-                </p>
-                <p><a href="#" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add points to your account</a></p>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">More Information</h3>
+                </div>
+                <div class="panel-body">
+                    <p>You can add points to your account through purchases, trivia awards, or by receiving gifts from another user.</p>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Help</h3>
+                </div>
+                <div class="panel-body">
+                    <p>Not finding the transaction you need? Do you need help identifying a points-related issue? <a href="mailto:info@twolipsdating.com">Contact support</a> and describe your issue.</p>
+                </div>
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">More Information</h3>
-            </div>
-            <div class="panel-body">
-                <p>You can add points to your account through purchases, trivia awards, or by receiving gifts from another user.</p>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Help</h3>
-            </div>
-            <div class="panel-body">
-                <p>Not finding the transaction you need? Do you need help identifying a points-related issue? <a href="mailto:info@twolipsdating.com">Contact support</a> and describe your issue.</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Your Transactions</h3>
-            </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Item</th>
-                        <th>Amount</th>
-                        <th>Spent</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var transaction in Model.StoreTransactions)
-                    {
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Your Transactions</h3>
+                </div>
+                @if(Model.StoreTransactions.Count > 0)
+                {
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>@transaction.TransactionDate.ToShortDateString()</td>
-                            <td>@transaction.ItemType</td>
-                            <td>@transaction.ItemName</td>
-                            <td>@transaction.ItemCount</td>
-                            <td><i class="glyphicon glyphicon-piggy-bank"></i> @transaction.TotalCost total &bull; <i class="glyphicon glyphicon-piggy-bank"></i> @transaction.ItemCost each</td>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Item</th>
+                            <th>Amount</th>
+                            <th>Spent</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var transaction in Model.StoreTransactions)
+                        {
+                            <tr>
+                                <td>@transaction.TransactionDate.ToShortDateString()</td>
+                                <td>@transaction.ItemType</td>
+                                <td>@transaction.ItemName</td>
+                                <td>@transaction.ItemCount</td>
+                                <td><i class="glyphicon glyphicon-piggy-bank"></i> @transaction.TotalCost total &bull; <i class="glyphicon glyphicon-piggy-bank"></i> @transaction.ItemCost each</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                }
+                else
+                {
+                    <div class="panel-body">
+                        <h4>You don't have any transactions yet. Go buy something from the store.</h4>
+                    </div>
+                }
+            </div>
         </div>
     </div>
-</div>
 }
 else
 {

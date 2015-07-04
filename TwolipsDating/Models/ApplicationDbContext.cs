@@ -49,6 +49,8 @@ namespace TwolipsDating.Models
         public DbSet<Title> Titles { get; set; }
         public DbSet<StoreTransactionLog> StoreTransactions { get; set; }
         public DbSet<UserTitle> UserTitles { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<NotificationType> NotificationTypes { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -96,6 +98,42 @@ namespace TwolipsDating.Models
             SetupTitles(modelBuilder);
             SetupStoreTransactions(modelBuilder);
             SetupUserTitles(modelBuilder);
+            SetupNotifications(modelBuilder);
+            SetupNotificationTypes(modelBuilder);
+        }
+
+        private void SetupNotificationTypes(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<NotificationType>()
+                .HasKey(t => t.Id);
+
+            modelBuilder.Entity<NotificationType>()
+                .Property(v => v.Name)
+                .HasMaxLength(64);
+
+            modelBuilder.Entity<NotificationType>()
+                .Property(v => v.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<NotificationType>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+        }
+
+        private void SetupNotifications(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Notification>()
+                .HasKey(n => n.Id);
+
+            modelBuilder.Entity<Notification>()
+                .HasRequired(n => n.ApplicationUser)
+                .WithMany(n => n.Notifications)
+                .HasForeignKey(n => n.ApplicationUserId);
+
+            modelBuilder.Entity<Notification>()
+                .HasRequired(n => n.NotificationType)
+                .WithMany(n => n.Notifications)
+                .HasForeignKey(n => n.NotificationTypeId);
         }
 
         private void SetupUserTitles(DbModelBuilder modelBuilder)

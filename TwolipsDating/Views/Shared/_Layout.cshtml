@@ -53,11 +53,11 @@
                 @Html.Partial("_LoginPartial")
                 <ul class="nav navbar-nav navbar-right">
                     @*
-                        <li>
-                            <a href="#" title="Announcements">
-                                <i class="glyphicon glyphicon-bullhorn"></i>&nbsp;&nbsp;@ViewBag.UnreadAnnouncementCount
-                            </a>
-                        </li>
+            <li>
+                <a href="#" title="Announcements">
+                    <i class="glyphicon glyphicon-bullhorn"></i>&nbsp;&nbsp;@ViewBag.UnreadAnnouncementCount
+                </a>
+            </li>
                     *@
 
                     @if (User.Identity.IsAuthenticated)
@@ -68,19 +68,19 @@
                             </a>
                         </li>
                         <li>
-                            <a href="@Url.Action("received", "message")" title="Messages">
-                                <i class="glyphicon glyphicon-inbox"></i>&nbsp;&nbsp;@ViewBag.UnreadMessageCount
+                            <a href="@Url.Action("conversation", "message")" title="Unread messages">
+                                <i class="glyphicon glyphicon-envelope"></i>&nbsp;&nbsp;@ViewBag.MessageNotificationCount
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="Notifications">
-                                <i class="glyphicon glyphicon-bell"></i>&nbsp;&nbsp;@ViewBag.UnreadNotificationCount&nbsp;<span class="caret"></span>
+                            <a href="#" title="Received gifts">
+                                <i class="glyphicon glyphicon-gift"></i>&nbsp;&nbsp;@ViewBag.GiftNotificationCount
                             </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="@Url.Action("received", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;&nbsp;@ViewBag.UnreadMessageCount unread messages</a></li>
-                                <li><a href="#"><i class="glyphicon glyphicon-gift"></i>&nbsp;&nbsp;@ViewBag.GiftCount gifts received</a></li>
-                                <li><a href="#"><i class="glyphicon glyphicon-bullhorn"></i>&nbsp;&nbsp;@ViewBag.AnnouncementCount announcements</a></li>
-                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" title="Unread announcements">
+                                <i class="glyphicon glyphicon-bullhorn"></i>&nbsp;&nbsp;@ViewBag.AnnouncementNotificationCount
+                            </a>
                         </li>
                     }
                 </ul>
