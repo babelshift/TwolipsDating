@@ -29,7 +29,7 @@ namespace TwolipsDating.Controllers
             viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
             viewModel.CurrentUserId = currentUserId;
 
-            await ProfileService.DeleteNotifications(currentUserId, (int)NotificationTypeValues.Message);
+            await SetNotificationsAsync();
 
             // if id has a value, look up all messages between the current user and the passed user id
             if (!String.IsNullOrEmpty(id))
@@ -58,7 +58,6 @@ namespace TwolipsDating.Controllers
                     viewModel.TargetProfileImagePath = profileForOtherUser.GetProfileImagePath();
                 }
 
-                await SetHeaderCountsAsync();
             }
 
             return View(viewModel);
@@ -151,7 +150,7 @@ namespace TwolipsDating.Controllers
                 IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId)
             };
 
-            await SetHeaderCountsAsync();
+            await SetNotificationsAsync();
 
             return View("index", viewModel);
         }
@@ -171,7 +170,7 @@ namespace TwolipsDating.Controllers
                 IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId)
             };
 
-            await SetHeaderCountsAsync();
+            await SetNotificationsAsync();
 
             return View("index", viewModel);
         }
@@ -218,7 +217,7 @@ namespace TwolipsDating.Controllers
                 Log.Error(
                     "SendMessage",
                     e,
-                            new { targetProfileId = viewModel.TargetProfileId, newMessage = viewModel.NewMessage }
+                    new { targetProfileId = viewModel.TargetProfileId, newMessage = viewModel.NewMessage }
                 );
 
                 AddError(ErrorMessages.MessageNotSent);

@@ -19,14 +19,14 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Index()
         {
-            await SetHeaderCountsAsync();
+            await SetNotificationsAsync();
 
             return View();
         }
 
         public async Task<ActionResult> Gifts()
         {
-            await SetHeaderCountsAsync();
+            await SetNotificationsAsync();
 
             StoreViewModel viewModel = new StoreViewModel();
             var gifts = await storeService.GetGiftsAsync();
@@ -40,7 +40,7 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Titles()
         {
-            await SetHeaderCountsAsync();
+            await SetNotificationsAsync();
 
             StoreViewModel viewModel = new StoreViewModel();
             var titles = await storeService.GetTitlesAsync();

@@ -49,8 +49,7 @@ namespace TwolipsDating.Models
         public DbSet<Title> Titles { get; set; }
         public DbSet<StoreTransactionLog> StoreTransactions { get; set; }
         public DbSet<UserTitle> UserTitles { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
-        public DbSet<NotificationType> NotificationTypes { get; set; }
+        public DbSet<Announcement> Announcements { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -98,42 +97,21 @@ namespace TwolipsDating.Models
             SetupTitles(modelBuilder);
             SetupStoreTransactions(modelBuilder);
             SetupUserTitles(modelBuilder);
-            SetupNotifications(modelBuilder);
-            SetupNotificationTypes(modelBuilder);
+            SetupAnnouncements(modelBuilder);
         }
 
-        private void SetupNotificationTypes(DbModelBuilder modelBuilder)
+        private void SetupAnnouncements(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<NotificationType>()
-                .HasKey(t => t.Id);
+            modelBuilder.Entity<Announcement>()
+                .HasKey(a => a.Id);
 
-            modelBuilder.Entity<NotificationType>()
-                .Property(v => v.Name)
-                .HasMaxLength(64);
-
-            modelBuilder.Entity<NotificationType>()
-                .Property(v => v.Name)
+            modelBuilder.Entity<Announcement>()
+                .Property(a => a.Content)
                 .IsRequired();
 
-            modelBuilder.Entity<NotificationType>()
-                .Property(v => v.Id)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-        }
-
-        private void SetupNotifications(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Notification>()
-                .HasKey(n => n.Id);
-
-            modelBuilder.Entity<Notification>()
-                .HasRequired(n => n.ApplicationUser)
-                .WithMany(n => n.Notifications)
-                .HasForeignKey(n => n.ApplicationUserId);
-
-            modelBuilder.Entity<Notification>()
-                .HasRequired(n => n.NotificationType)
-                .WithMany(n => n.Notifications)
-                .HasForeignKey(n => n.NotificationTypeId);
+            modelBuilder.Entity<Announcement>()
+                .Property(a => a.Content)
+                .HasMaxLength(1000);
         }
 
         private void SetupUserTitles(DbModelBuilder modelBuilder)

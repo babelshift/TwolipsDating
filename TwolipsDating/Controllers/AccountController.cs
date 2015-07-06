@@ -499,7 +499,7 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Points()
         {
-            await SetHeaderCountsAsync();
+            await SetNotificationsAsync();
 
             string currentUserId = await GetCurrentUserIdAsync();
 

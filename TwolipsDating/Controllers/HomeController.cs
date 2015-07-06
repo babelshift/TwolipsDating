@@ -34,7 +34,7 @@ namespace TwolipsDating.Controllers
 
                 await AddUploadedImagesToFeedAsync(dashboardItems);
 
-                await SetHeaderCountsAsync();
+                await SetNotificationsAsync();
 
                 DashboardViewModel viewModel = new DashboardViewModel();
                 viewModel.CurrentUserId = currentUserId;

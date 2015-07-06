@@ -45,7 +45,6 @@ namespace TwolipsDating.Models
         public virtual ICollection<CompletedQuiz> CompletedQuizzes { get; set; }
         public virtual ICollection<StoreTransactionLog> StoreTransactions { get; set; }
         public virtual ICollection<UserTitle> ObtainedTitles { get; set; }
-        public virtual ICollection<Notification> Notifications { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

@@ -332,8 +332,6 @@ namespace TwolipsDating.Business
 
             CreateMessage(senderUserId, receiverUserId, body);
 
-            CreateNotification(receiverUserId);
-
             return await db.SaveChangesAsync();
         }
 
@@ -354,22 +352,6 @@ namespace TwolipsDating.Business
             message.MessageStatusId = (int)MessageStatusValue.Unread;
 
             db.Messages.Add(message);
-        }
-
-        private void CreateNotification(string receiverUserId)
-        {
-            Notification notification = db.Notifications.Create();
-
-            notification.ApplicationUserId = receiverUserId;
-            notification.NotificationTypeId = (int)NotificationTypeValues.Message;
-
-            db.Notifications.Add(notification);
-        }
-
-        public async Task<int> DeleteNotifications(string userId, int notificationTypeId)
-        {
-            db.Notifications.RemoveRange(db.Notifications.Where(n => n.ApplicationUserId == userId && n.NotificationTypeId == notificationTypeId));
-            return await db.SaveChangesAsync();
         }
 
         public async Task<Profile> GetProfileAsync(int profileId)
@@ -455,18 +437,6 @@ namespace TwolipsDating.Business
 
             db.Profiles.Add(p);
             return await db.SaveChangesAsync();
-        }
-
-        public async Task<int> GetNotificationCountAsync(string userId, int notificationTyepid)
-        {
-            Debug.Assert(!String.IsNullOrEmpty(userId));
-
-            int notificationCount = await (from notifications in db.Notifications
-                                           where notifications.NotificationTypeId == notificationTyepid
-                                           where notifications.ApplicationUserId == userId
-                                           select notifications).CountAsync();
-
-            return notificationCount;
         }
 
         public async Task<IReadOnlyCollection<Message>> GetMessagesByUserAsync(string userId)

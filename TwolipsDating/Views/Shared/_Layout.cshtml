@@ -53,11 +53,11 @@
                 @Html.Partial("_LoginPartial")
                 <ul class="nav navbar-nav navbar-right">
                     @*
-            <li>
-                <a href="#" title="Announcements">
-                    <i class="glyphicon glyphicon-bullhorn"></i>&nbsp;&nbsp;@ViewBag.UnreadAnnouncementCount
-                </a>
-            </li>
+                        <li>
+                            <a href="#" title="Announcements">
+                                <i class="glyphicon glyphicon-bullhorn"></i>&nbsp;&nbsp;@ViewBag.UnreadAnnouncementCount
+                            </a>
+                        </li>
                     *@
 
                     @if (User.Identity.IsAuthenticated)
@@ -78,8 +78,8 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" title="Unread announcements">
-                                <i class="glyphicon glyphicon-bullhorn"></i>&nbsp;&nbsp;@ViewBag.AnnouncementNotificationCount
+                            <a id="popover-announcements" href="#" title="Announcements" data-container="body" data-toggle="popover" data-placement="bottom" role="button" tabindex="0" data-trigger="focus">
+                                <i class="glyphicon glyphicon-bullhorn"></i>&nbsp;&nbsp;@ViewBag.AnnouncementNotificationCount&nbsp;<span class="caret"></span>
                             </a>
                         </li>
                     }
@@ -87,6 +87,21 @@
             </div>
         </div>
     </div>
+    <div id="popover-announcements-content" class="hide">
+        @for (int i = 0; i < ViewBag.Announcements.Count; i++)
+        {
+            var announcement = ViewBag.Announcements[i];
+            if (i == 0)
+            {
+                <p><i class="glyphicon glyphicon-info-sign"></i> @announcement.Content</p>
+            }
+            else
+            {
+                <p><i class="glyphicon glyphicon-info-sign"></i> @announcement.Content</p>
+            }
+        }
+    </div>
+
     <div class="container body-content">
         @RenderBody()
     </div>
@@ -208,6 +223,13 @@
         var isScrolledDown = false;
 
         $(document).ready(function () {
+            $('#popover-announcements').popover({
+                html: true,
+                content: function () {
+                    return $("#popover-announcements-content").html();
+                }
+            });
+
             var topMenu = $("#navbar-main");
             topMenu.hide();
 

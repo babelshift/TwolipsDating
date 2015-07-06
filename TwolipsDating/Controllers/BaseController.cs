@@ -18,6 +18,7 @@ namespace TwolipsDating.Controllers
     {
         private readonly string cdn = ConfigurationManager.AppSettings["cdnUrl"];
         private ProfileService profileService = new ProfileService();
+        private NotificationService notificationService = new NotificationService();
         private ApplicationUserManager userManager;
 
         protected LogHelper Log { get; private set; }
@@ -81,16 +82,18 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        protected async Task SetHeaderCountsAsync()
+        protected async Task SetNotificationsAsync()
         {
             if (User.Identity.IsAuthenticated)
             {
                 string currentUserId = await GetCurrentUserIdAsync();
                 var currentUser = await UserManager.FindByIdAsync(currentUserId);
-                ViewBag.AnnouncementNotificationCount = await ProfileService.GetNotificationCountAsync(currentUserId, (int)NotificationTypeValues.Announcement);
-                ViewBag.GiftNotificationCount = await ProfileService.GetNotificationCountAsync(currentUserId, (int)NotificationTypeValues.Gift);
-                ViewBag.MessageNotificationCount = await ProfileService.GetNotificationCountAsync(currentUserId, (int)NotificationTypeValues.Message);
+                ViewBag.GiftNotificationCount = 0;
+                ViewBag.MessageNotificationCount = await notificationService.GetMessageNotificationCountAsync(currentUserId);
                 ViewBag.PointsCount = currentUser.Points;
+
+                ViewBag.Announcements = await notificationService.GetAnnouncementNotificationsAsync();
+                ViewBag.AnnouncementNotificationCount = ViewBag.Announcements.Count;
             }
         }
 
