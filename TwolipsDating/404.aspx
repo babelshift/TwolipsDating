@@ -6,7 +6,7 @@
 <html>
 <head runat="server">
     <title>404 Not Found</title>
-    <link rel="stylesheet" type="text/css" href="Content/bootstrap-yeti.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/bootstrap-yeti.css" />
 </head>
 <body style="margin: 0; background-color: #fcfcfc;">
     <div style="width: 800px; margin: 0 auto; text-align: center;">

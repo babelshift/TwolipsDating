@@ -87,20 +87,31 @@
             </div>
         </div>
     </div>
-    <div id="popover-announcements-content" class="hide">
-        @for (int i = 0; i < ViewBag.Announcements.Count; i++)
-        {
-            var announcement = ViewBag.Announcements[i];
-            if (i == 0)
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div id="popover-announcements-content" class="hide">
+            @if (ViewBag.Announcements.Count > 0)
             {
-                <p><i class="glyphicon glyphicon-info-sign"></i> @announcement.Content</p>
+                for (int i = 0; i < ViewBag.Announcements.Count; i++)
+                {
+                    var announcement = ViewBag.Announcements[i];
+                    if (i == 0)
+                    {
+                        <p><i class="glyphicon glyphicon-info-sign"></i> @announcement.Content</p>
+                    }
+                    else
+                    {
+                        <p><i class="glyphicon glyphicon-info-sign"></i> @announcement.Content</p>
+                    }
+                }
             }
             else
             {
-                <p><i class="glyphicon glyphicon-info-sign"></i> @announcement.Content</p>
+                <p>Nothing to see here!</p>
             }
-        }
-    </div>
+        </div>
+    }
 
     <div class="container body-content">
         @RenderBody()
