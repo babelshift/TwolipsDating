@@ -575,7 +575,7 @@ namespace TwolipsDating.Business
                     ItemCount = 1
                 };
 
-                db.InventoryItems.Add(newItem);
+                toUserInventoryItem = db.InventoryItems.Add(newItem);
             }
 
             return toUserInventoryItem.ItemCount;
@@ -590,14 +590,15 @@ namespace TwolipsDating.Business
                                                select inventoryItems).FirstOrDefaultAsync();
 
             // if count > 0, reduce the count by 1
-            if (fromUserInventoryItem != null && fromUserInventoryItem.ItemCount > 1)
+            if (fromUserInventoryItem != null)
             {
                 fromUserInventoryItem.ItemCount--;
-            }
-            // else, delete the entry from the inventory table
-            else
-            {
-                db.InventoryItems.Remove(fromUserInventoryItem);
+
+                // if there's no items left for this inventory item, delete it
+                if(fromUserInventoryItem.ItemCount == 0)
+                {
+                    db.InventoryItems.Remove(fromUserInventoryItem);
+                }
             }
 
             return fromUserInventoryItem.ItemCount;

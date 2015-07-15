@@ -8,7 +8,7 @@ namespace TwolipsDating.ViewModels
 {
     public class ConversationViewModel
     {
-        public IReadOnlyCollection<ConversationItemViewModel> Conversations { get; set; }
+        public IReadOnlyList<ConversationItemViewModel> Conversations { get; set; }
 
         public string CurrentUserId { get; set; }
         public bool IsCurrentUserEmailConfirmed { get; set; }

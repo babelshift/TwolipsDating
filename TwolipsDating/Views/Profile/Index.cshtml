@@ -676,6 +676,11 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
                         var messageBody = $('#SendMessage_MessageBody').val('');
                         $("#gift-count-" + inventoryItemId).text(data.giftCount);
                         $("#gift-send-log tr:last").after("<tr><td>" + giftName + " sent successfully.</td></tr>");
+
+                        if (data.giftCount == 0) {
+                            $("#gift-image-wrapper-" + giftId).remove();
+                            clearSelectedGift();
+                        }
                     } else {
                         $('#gift-error').show();
                         $('#gift-error-text').text(data.error);
@@ -914,6 +919,17 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
                     }
                 });
             }
+        }
+
+        function clearSelectedGift() {
+            var hiddenSelectedInventoryItemId = $("#SendGift_InventoryItemId");
+            hiddenSelectedInventoryItemId.val('');
+
+            var hiddenSelectedGiftId = $("#SendGift_GiftId");
+            hiddenSelectedGiftId.val('');
+
+            var hiddenSelectedGiftName = $("#selected-gift-name");
+            hiddenSelectedGiftName.val('');
         }
 
         function onSelectGiftClick(e, obj) {

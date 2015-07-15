@@ -20,49 +20,60 @@ namespace TwolipsDating.Controllers
         public async Task<ActionResult> Conversation(string id)
         {
             var currentUserId = await GetCurrentUserIdAsync();
+
             ConversationViewModel viewModel = new ConversationViewModel();
 
-            viewModel.TargetApplicationUserId = id;
-
+            // get recent conversations for the current user
             await GetRecentConversationsAsync(currentUserId, viewModel);
 
-            viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
-            viewModel.CurrentUserId = currentUserId;
+            // if no target user to view messages with has been specified, just show the first in the list
+            if (String.IsNullOrEmpty(id) && viewModel.Conversations.Count > 0)
+            {
+                id = viewModel.Conversations[0].TargetUserId;
+            }
 
+            // setup the essentials in the viewmodel
+            viewModel.TargetApplicationUserId = id;
+            viewModel.CurrentUserId = currentUserId;
+            viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+
+            // setup notifications in the upper right
             await SetNotificationsAsync();
 
-            // if id has a value, look up all messages between the current user and the passed user id
-            if (!String.IsNullOrEmpty(id))
+            // lookup the profile we are accessing and the messages between the current user and that profile
+            var profileForOtherUser = await ProfileService.GetUserProfileAsync(id);
+            if (profileForOtherUser == null)
             {
-                // lookup the profile we are accessing and the messages between the current user and that profile
-                var profileForOtherUser = await ProfileService.GetUserProfileAsync(id);
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
 
-                if (profileForOtherUser == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-                }
+            // look up conversations between the current user and the selected id
+            var messagesBetweenUsers = await ProfileService.GetMessagesBetweenUsersAsync(currentUserId, id);
+            var conversationMessages = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyList<ConversationItemViewModel>>(messagesBetweenUsers);
+            viewModel.ConversationMessages = conversationMessages;
+            
+            // setup targetted user for which conversations are being looked
+            viewModel.TargetUserName = profileForOtherUser.ApplicationUser.UserName;
+            viewModel.TargetUserAge = profileForOtherUser.Birthday.GetAge();
+            viewModel.TargetUserLocation = profileForOtherUser.City.GetCityAndState();
+            viewModel.TargetProfileId = profileForOtherUser.Id;
+            viewModel.TargetUserId = id;
 
-                var messagesBetweenUsers = await ProfileService.GetMessagesBetweenUsersAsync(currentUserId, id);
-                var conversationMessages = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyList<ConversationItemViewModel>>(messagesBetweenUsers);
-                viewModel.ConversationMessages = conversationMessages;
-
-                viewModel.TargetUserName = profileForOtherUser.ApplicationUser.UserName;
-                viewModel.TargetUserAge = profileForOtherUser.Birthday.GetAge();
-                viewModel.TargetUserLocation = profileForOtherUser.City.GetCityAndState();
-                viewModel.TargetProfileId = profileForOtherUser.Id;
-                viewModel.TargetUserId = id;
-
-                // if the profile we are looking up has a profile image, set the url it appropriately
-                if (profileForOtherUser.UserImage != null && !String.IsNullOrEmpty(profileForOtherUser.UserImage.FileName))
-                {
-                    viewModel.TargetProfileImagePath = profileForOtherUser.GetProfileImagePath();
-                }
-
+            // if the profile we are looking up has a profile image, set the url it appropriately
+            if (profileForOtherUser.UserImage != null && !String.IsNullOrEmpty(profileForOtherUser.UserImage.FileName))
+            {
+                viewModel.TargetProfileImagePath = profileForOtherUser.GetProfileImagePath();
             }
 
             return View(viewModel);
         }
 
+        /// <summary>
+        /// Sets the viewmodel up with the recent conversations that have taken place between the passed current user id
+        /// </summary>
+        /// <param name="currentUserId"></param>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         private async Task GetRecentConversationsAsync(string currentUserId, ConversationViewModel viewModel)
         {
             // get all messages sent and received by the current user
@@ -72,8 +83,10 @@ namespace TwolipsDating.Controllers
             Dictionary<ConversationKey, ConversationItemViewModel> conversations = new Dictionary<ConversationKey, ConversationItemViewModel>();
             foreach (var message in messagesForUser)
             {
-                ConversationItemViewModel conversation = GetConversationViewModel(currentUserId, message);
-
+                ConversationItemViewModel conversation = GetConversationItemViewModel(currentUserId, message);
+                
+                // each conversation is considered unique by the participants
+                // if participant A messages B and B messages A, both messages are part of the same conversation because the participants are the same
                 ConversationKey conversationKey = new ConversationKey()
                 {
                     ParticipantUserId1 = message.SenderApplicationUserId,
@@ -86,6 +99,13 @@ namespace TwolipsDating.Controllers
             viewModel.Conversations = conversations.Values.ToList().AsReadOnly();
         }
 
+        /// <summary>
+        /// Updates the collection of conversations to include the passed conversation if it doesn't already exist in the collection. If the passed conversation item is more
+        /// recent than the existing conversation item in the collection, the existing item is replaced. We do this so that we can display the most recent item of a conversation to the user.
+        /// </summary>
+        /// <param name="conversations"></param>
+        /// <param name="conversation"></param>
+        /// <param name="conversationHolder"></param>
         private static void UpdateConversationCollection(Dictionary<ConversationKey, ConversationItemViewModel> conversations, ConversationItemViewModel conversation, ConversationKey conversationHolder)
         {
             ConversationItemViewModel existingConversation = new ConversationItemViewModel();
@@ -104,31 +124,37 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private ConversationItemViewModel GetConversationViewModel(string currentUserId, MessageConversation message)
+        /// <summary>
+        /// Returns a single conversation item view model based on the backing conversation model.
+        /// </summary>
+        /// <param name="currentUserId"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        private ConversationItemViewModel GetConversationItemViewModel(string currentUserId, MessageConversation message)
         {
-            ConversationItemViewModel conversation = Mapper.Map<MessageConversation, ConversationItemViewModel>(message);
+            ConversationItemViewModel conversationItem = Mapper.Map<MessageConversation, ConversationItemViewModel>(message);
 
             if (message.ReceiverApplicationUserId == currentUserId)
             {
-                conversation.TargetUserId = message.SenderApplicationUserId;
-                conversation.TargetName = message.SenderName;
-                conversation.TargetProfileImagePath = message.GetSenderProfileImagePath();
-                conversation.TargetProfileId = message.SenderProfileId;
+                conversationItem.TargetUserId = message.SenderApplicationUserId;
+                conversationItem.TargetName = message.SenderName;
+                conversationItem.TargetProfileImagePath = message.GetSenderProfileImagePath();
+                conversationItem.TargetProfileId = message.SenderProfileId;
             }
             else if (message.SenderApplicationUserId == currentUserId)
             {
-                conversation.TargetUserId = message.ReceiverApplicationUserId;
-                conversation.TargetName = message.ReceiverName;
-                conversation.TargetProfileImagePath = message.GetReceiverProfileImagePath();
-                conversation.TargetProfileId = message.ReceiverProfileId;
+                conversationItem.TargetUserId = message.ReceiverApplicationUserId;
+                conversationItem.TargetName = message.ReceiverName;
+                conversationItem.TargetProfileImagePath = message.GetReceiverProfileImagePath();
+                conversationItem.TargetProfileId = message.ReceiverProfileId;
             }
 
             if (message.SenderApplicationUserId == currentUserId)
             {
-                conversation.MostRecentMessageBody = String.Format("You: {0}", conversation.MostRecentMessageBody);
+                conversationItem.MostRecentMessageBody = String.Format("You: {0}", conversationItem.MostRecentMessageBody);
             }
 
-            return conversation;
+            return conversationItem;
         }
 
         #endregion
