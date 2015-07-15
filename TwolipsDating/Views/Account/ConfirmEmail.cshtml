@@ -2,17 +2,24 @@
     ViewBag.Title = "Your e-mail address is now confirmed!";
 }
 
-<div class="page-header">
-    <h1>@ViewBag.Title</h1>
-</div>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h3>@ViewBag.Title</h3>
 
-@if (!User.Identity.IsAuthenticated)
-{
-    <p>
-        Please @Html.ActionLink("click here to log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
-    </p>
-}
-else
-{
-    <p>Since you're now logged in, please continue to the rest of the community and enjoy!</p>
-}
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <p>
+                        Please @Html.ActionLink("click here to log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+                    </p>
+                }
+                else
+                {
+                    <p>Since you're now logged in, please continue to the rest of the community and enjoy!</p>
+                    @Html.ActionLink("Create your profile now", "index", "profile", null, new { @class = "btn btn-primary" });
+                }
+            </div>
+        </div>
+    </div>
+</div>

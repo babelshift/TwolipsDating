@@ -450,6 +450,8 @@ namespace TwolipsDating.Controllers
                 // user is viewing a valid profile by id
                 if (profileToBeViewed != null)
                 {
+                    await SetNotificationsAsync();
+
                     return await ShowUserProfileAsync(tab, currentUserId, profileToBeViewed);
                 }
                 // the profile that the user is viewing doesn't exist
@@ -468,6 +470,8 @@ namespace TwolipsDating.Controllers
                 }
 
                 Models.Profile currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
+
+                await SetNotificationsAsync();
 
                 if (currentUserProfile != null)
                 {
@@ -516,8 +520,6 @@ namespace TwolipsDating.Controllers
 
             // setup viewmodel specific to the actively selected tab
             await SetViewModelBasedOnActiveTabAsync(profile, viewModel, reviews, currentUserId);
-
-            await SetNotificationsAsync();
 
             return View(viewModel);
         }

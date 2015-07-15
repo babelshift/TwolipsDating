@@ -28,10 +28,18 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" style="padding-top: 7px; padding-right: 3px;" href="@Url.Action("index", "home")">
+                <a class="navbar-brand" style="padding-top: 7px;" href="@Url.Action("index", "home")">
                     <img alt="twolips dating" src="~/Content/twolipsicon-white.png" width="32" height="32" />
                 </a>
-                @Html.ActionLink("twolips dating", "index", "home", null, new { @class = "navbar-brand" })
+                @using (Html.BeginForm("index", "search", FormMethod.Get, new { @class = "navbar-form navbar-left", role = "search" }))
+                {
+                    <div class="input-group">
+                        @Html.TextBox("userName", null, new { @id = "searchUserName", @class = "form-control", @placeholder = "Find someone..." })
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-sm btn-default" style="line-height: 1.4"><i class="glyphicon glyphicon-search"></i></button>
+                        </span>
+                    </div>
+                }
             </div>
             <div class="navbar-collapse collapse">
                 <ul id="navbar-main" class="nav navbar-nav">
@@ -88,7 +96,7 @@
         </div>
     </div>
 
-    @if (User.Identity.IsAuthenticated)
+    @if (User.Identity.IsAuthenticated && ViewBag != null && ViewBag.Announcements != null)
     {
         <div id="popover-announcements-content" class="hide">
             @if (ViewBag.Announcements.Count > 0)

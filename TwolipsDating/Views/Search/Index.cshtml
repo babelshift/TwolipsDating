@@ -1,0 +1,96 @@
+﻿@model TwolipsDating.ViewModels.SearchResultViewModel
+
+@{
+    ViewBag.Title = "twolips - search results";
+}
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        @using (Html.BeginForm("index", "search", FormMethod.Get, new { role = "search" }))
+        {
+            <div class="input-group">
+                @Html.TextBoxFor(m => m.UserName, null, new { @id = "searchUserName", @class = "form-control", @placeholder = "Search for someone by name..." })
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </span>
+            </div>
+        }
+    </div>
+</div>
+<br />
+@if (Model.SearchResults != null && Model.SearchResults.Count > 0)
+{
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <ul class="list-group">
+                    @foreach (var profile in Model.SearchResults)
+                    {
+                        <li class="list-group-item">
+                            @if (!String.IsNullOrEmpty(profile.ProfileImagePath))
+                            {
+                                <div class="circular-image-wrapper">
+                                    <img class="circular-image" src="@profile.ProfileImagePath" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="circular-image-wrapper">
+                                    <img class="circular-image" src="http://placehold.it/32x32" />
+                                </div>
+                            }
+                            <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px; font-size: 15px">
+                                <a href="@Url.Action("index", "profile", new { id = profile.ProfileId })">@profile.UserName</a>
+                                <small>
+                                    &nbsp;&bull;&nbsp;
+                                    @for (int i = 1; i <= profile.AverageRatingValue; i++)
+                                    {
+                                        <i class="glyphicon glyphicon-star"></i>
+                                    }
+                                    @for (int j = 1; j <= 5 - profile.AverageRatingValue; j++)
+                                    {
+                                        <i class="glyphicon glyphicon-star-empty"></i>
+                                    }
+                                    &nbsp;&bull;&nbsp;
+                                </small>
+                                <span class="label label-default">3 reviews</span>
+                            </p>
+                            <div class="clearfix"></div>
+                            <div class="tags">
+                                <i class="glyphicon glyphicon-tags"></i>
+                                &nbsp;
+                                <a href="#" class="btn btn-default btn-xs"><span class="badge">3</span> intellectual</a>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Improve your search position
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <p><i class="glyphicon glyphicon-chevron-right"></i> Answer trivia questions to gain currency and fame.</p>
+                    <p><i class="glyphicon glyphicon-chevron-right"></i> Purchase items for your inventory to display on your profile.</p>
+                    <p><i class="glyphicon glyphicon-chevron-right"></i> Receive and encourage positive reviews from other users.</p>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Trouble finding something?
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <p><i class="glyphicon glyphicon-chevron-right"></i> Try filtering based on tags that interest you.</p>
+                    <p><i class="glyphicon glyphicon-chevron-right"></i> <a href="mailto:info@twolipsdating.com">Send us feedback</a> on how to improve searches.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}

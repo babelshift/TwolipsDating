@@ -260,6 +260,8 @@ namespace TwolipsDating.Controllers
                 await UserManager.EmailService.SendAsync(message);
             }
 
+            await SetNotificationsAsync();
+
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
