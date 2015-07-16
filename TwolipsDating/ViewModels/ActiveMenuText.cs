@@ -14,6 +14,7 @@ namespace TwolipsDating.ViewModels
         Store,
         Account,
         Cart,
-        Points
+        Points,
+        Search
     }
 }

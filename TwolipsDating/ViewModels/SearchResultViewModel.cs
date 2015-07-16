@@ -9,6 +9,7 @@ namespace TwolipsDating.ViewModels
     {
         public IReadOnlyCollection<ProfileViewModel> SearchResults { get; set; }
 
-        public string UserName { get; set; }
+        public string User { get; set; }
+        public string Tag { get; set; }
     }
 }

@@ -34,7 +34,7 @@
                 @using (Html.BeginForm("index", "search", FormMethod.Get, new { @class = "navbar-form navbar-left", role = "search" }))
                 {
                     <div class="input-group">
-                        @Html.TextBox("userName", null, new { @id = "searchUserName", @class = "form-control", @placeholder = "Find someone..." })
+                        @Html.TextBox("user", null, new { @id = "searchUserName", @class = "form-control", @placeholder = "Find someone..." })
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-sm btn-default" style="line-height: 1.4"><i class="glyphicon glyphicon-search"></i></button>
                         </span>

@@ -29,6 +29,7 @@ namespace TwolipsDating.ViewModels
         public string ProfileImagePath { get; set; }
         public string CurrentUserId { get; set; }
         public ProfileViewMode ViewMode { get; set; }
+        public int ReviewCount { get; set; }
 
         public ProfileFeedViewModel Feed { get; set; }
         public ProfileReviewsViewModel Reviews { get; set; }
