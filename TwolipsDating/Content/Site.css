@@ -247,3 +247,9 @@ input[readonly] {
 .wrap-long-lines-table td {
     word-wrap: break-word;
 }
+
+.overflow-ellipsis {
+    text-overflow: ellipsis;
+    white-space:  nowrap;
+    overflow: hidden;
+}
