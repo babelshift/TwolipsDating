@@ -11,6 +11,8 @@ using System.Configuration;
 using NLog;
 using TwolipsDating.Utilities;
 using System.Net;
+using AutoMapper;
+using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Controllers
 {
@@ -88,12 +90,15 @@ namespace TwolipsDating.Controllers
             {
                 string currentUserId = await GetCurrentUserIdAsync();
                 var currentUser = await UserManager.FindByIdAsync(currentUserId);
-                ViewBag.GiftNotificationCount = 0;
                 ViewBag.MessageNotificationCount = await notificationService.GetMessageNotificationCountAsync(currentUserId);
                 ViewBag.PointsCount = currentUser.Points;
 
                 ViewBag.Announcements = await notificationService.GetAnnouncementNotificationsAsync();
                 ViewBag.AnnouncementNotificationCount = ViewBag.Announcements.Count;
+
+                var gifts = await profileService.GetUnreviewedGiftTransactionsAsync(currentUserId);
+                ViewBag.GiftsReceived = Mapper.Map<IReadOnlyCollection<GiftTransactionLog>, IReadOnlyCollection<GiftTransactionViewModel>>(gifts);
+                ViewBag.GiftNotificationCount = ViewBag.GiftsReceived.Count;
             }
         }
 

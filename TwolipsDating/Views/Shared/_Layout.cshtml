@@ -20,7 +20,7 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar navbar-inverse" role="navigation">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -48,6 +48,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="@Url.Action("index", "home")"><i class="glyphicon glyphicon-home"></i>&nbsp;Dashboard</a></li>
                             <li><a href="@Url.Action("index", "profile", new { id = (int?)null })"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
+                            <li><a href="@Url.Action("index", "search", new { id = (int?)null })"><i class="glyphicon glyphicon-search"></i>&nbsp;Search</a></li>
                             <li><a href="@Url.Action("conversation", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Messages</a></li>
                             <li><a href="@Url.Action("index", "trivia")"><i class="glyphicon glyphicon-education"></i>&nbsp;Trivia</a></li>
                             <li class="divider"></li>
@@ -81,8 +82,8 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" title="Received gifts">
-                                <i class="glyphicon glyphicon-gift"></i>&nbsp;&nbsp;@ViewBag.GiftNotificationCount
+                            <a id="popover-gifts" href="#" title="Received Gifts" data-container="body" data-toggle="popover" data-placement="bottom" role="button" tabindex="1" data-animation="false">
+                                <i class="glyphicon glyphicon-gift"></i>&nbsp;&nbsp;@ViewBag.GiftNotificationCount&nbsp;<span class="caret"></span>
                             </a>
                         </li>
                         <li>
@@ -96,10 +97,52 @@
         </div>
     </div>
 
-    @if (User.Identity.IsAuthenticated && ViewBag != null && ViewBag.Announcements != null)
+    @if (User.Identity.IsAuthenticated && ViewBag != null)
     {
+        <div id="popover-gifts-content" class="hide">
+            <div style="width: 225px;">
+                @if (ViewBag.GiftsReceived != null && ViewBag.GiftsReceived.Count > 0)
+                {
+                    for (int i = 0; i < ViewBag.GiftsReceived.Count; i++)
+                    {
+                        var gift = ViewBag.GiftsReceived[i];
+                        if (!String.IsNullOrEmpty(gift.SenderProfileImagePath))
+                        {
+                            <div class="circular-image-wrapper">
+                                <img class="circular-image" src="@gift.SenderProfileImagePath" />
+                            </div>
+                        }
+                        <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 5px;">
+                            <a href="@Url.Action("index", "profile", new { id = 0 })">@gift.SenderUserName</a>
+                            &nbsp;&bull;&nbsp;
+                        </p>
+                        <div class="circular-image-wrapper">
+                            <img class="circular-image" src="@gift.GiftImagePath" />
+                        </div>
+                        <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 5px;">
+                            <span class="badge">@gift.GiftAmount</span>
+                        </p>
+                        <p style="margin-top: 7px;" class="pull-right">
+                            <a id="@String.Format("remove-gift-notification-{0}", gift.GiftTransactionId)" href="#" title="Remove notification">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </a>
+                        </p>
+                        <div class="clearfix"></div>
+                        <small>@gift.DateTransaction</small>
+                        if (i < ViewBag.GiftsReceived.Count - 1)
+                        {
+                            <hr />
+                        }
+                    }
+                }
+                else
+                {
+                    <p>Nothing to see here!</p>
+                }
+            </div>
+        </div>
         <div id="popover-announcements-content" class="hide">
-            @if (ViewBag.Announcements.Count > 0)
+            @if (ViewBag.Announcements != null && ViewBag.Announcements.Count > 0)
             {
                 for (int i = 0; i < ViewBag.Announcements.Count; i++)
                 {
@@ -246,6 +289,12 @@
                 html: true,
                 content: function () {
                     return $("#popover-announcements-content").html();
+                }
+            });
+            $('#popover-gifts').popover({
+                html: true,
+                content: function () {
+                    return $("#popover-gifts-content").html();
                 }
             });
 

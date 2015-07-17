@@ -153,6 +153,14 @@ namespace TwolipsDating
                 .ForMember(dest => dest.ItemCount, opts => opts.MapFrom(source => source.ItemCount))
                 .ForMember(dest => dest.ItemType, opts => opts.MapFrom(source => "Gift"))
                 .ForMember(dest => dest.TotalCost, opts => opts.MapFrom(source => source.ItemCount * source.Gift.PointPrice));
+
+            Mapper.CreateMap<GiftTransactionLog, GiftTransactionViewModel>()
+                .ForMember(dest => dest.GiftAmount, opts => opts.MapFrom(source => source.ItemCount))
+                .ForMember(dest => dest.GiftImagePath, opts => opts.MapFrom(source => source.Gift.GetIconPath()))
+                .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.FromUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.SenderUserName, opts => opts.MapFrom(source => source.FromUser.UserName))
+                .ForMember(dest => dest.GiftTransactionId, opts => opts.MapFrom(source => source.GiftTransactionLogId))
+                .ForMember(dest => dest.DateTransaction, opts => opts.MapFrom(source => source.DateTransactionOccurred.GetTimeAgo()));
         }
     }
 }

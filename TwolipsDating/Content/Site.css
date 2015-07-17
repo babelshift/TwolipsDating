@@ -4,7 +4,6 @@
 }
 
 .body-content {
-    padding-top: 65px;
 }
 
 body {
@@ -170,14 +169,14 @@ input[type="checkbox"].input-validation-error {
     color: #999;
 }
 
-.conversation-item a { 
+.conversation-item a {
     color: #222;
     text-decoration: none;
 }
 
-.conversation-item a:hover { 
-    color: #222;
-}
+    .conversation-item a:hover {
+        color: #222;
+    }
 
 .conversation-header .circular-image-wrapper {
     width: 64px;
@@ -241,15 +240,46 @@ input[readonly] {
 }
 
 .wrap-long-lines-table {
-    table-layout: fixed; width: 100%;
+    table-layout: fixed;
+    width: 100%;
 }
 
-.wrap-long-lines-table td {
-    word-wrap: break-word;
-}
+    .wrap-long-lines-table td {
+        word-wrap: break-word;
+    }
 
 .overflow-ellipsis {
     text-overflow: ellipsis;
-    white-space:  nowrap;
+    white-space: nowrap;
     overflow: hidden;
+}
+
+.popover {
+    background-color: #fff;
+    color: #222;
+    padding: 0;
+    font-size: 13px;
+}
+
+.popover-title {
+    color: #fff;
+    background-color: #333;
+    border-bottom: 1px solid #ddd;
+}
+
+.popover.bottom > .arrow:after {
+  border-bottom-color: #333;
+}
+
+.popover hr {
+    margin-top: 5px;
+    margin-bottom: 7px;
+    color: #ddd;
+    background-color: #ddd;
+    border-color: #ddd;
+}
+
+.popover-content {
+    overflow-y: scroll;
+    max-height: 300px;
 }

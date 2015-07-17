@@ -446,6 +446,10 @@
     <Compile Include="Migrations\201507051829516_DeleteNotifications.Designer.cs">
       <DependentUpon>201507051829516_DeleteNotifications.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507162125308_AddReviewBooleanToGiftTransactionLog.cs" />
+    <Compile Include="Migrations\201507162125308_AddReviewBooleanToGiftTransactionLog.Designer.cs">
+      <DependentUpon>201507162125308_AddReviewBooleanToGiftTransactionLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
@@ -492,6 +496,7 @@
     <Compile Include="ViewModels\ActiveMenuText.cs" />
     <Compile Include="ViewModels\AnswerViewModel.cs" />
     <Compile Include="ViewModels\ChangeProfileImageViewModel.cs" />
+    <Compile Include="ViewModels\GiftTransactionViewModel.cs" />
     <Compile Include="ViewModels\SearchResultViewModel.cs" />
     <Compile Include="ViewModels\ConversationItemViewModel.cs" />
     <Compile Include="ViewModels\ConversationViewModel.cs" />
@@ -815,6 +820,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507051829516_DeleteNotifications.resx">
       <DependentUpon>201507051829516_DeleteNotifications.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507162125308_AddReviewBooleanToGiftTransactionLog.resx">
+      <DependentUpon>201507162125308_AddReviewBooleanToGiftTransactionLog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -13,6 +13,7 @@ namespace TwolipsDating.Models
         public int GiftId { get; set; }
         public int ItemCount { get; set; }
         public DateTime DateTransactionOccurred { get; set; }
+        public bool IsReviewedByToUser { get; set; }
 
         public virtual ApplicationUser FromUser { get; set; }
         public virtual ApplicationUser ToUser { get; set; }

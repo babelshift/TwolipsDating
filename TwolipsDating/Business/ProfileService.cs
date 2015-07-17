@@ -547,9 +547,20 @@ namespace TwolipsDating.Business
                 FromUserId = fromUserId,
                 GiftId = giftId,
                 ItemCount = 1,
-                ToUserId = toUserId
+                ToUserId = toUserId,
+                IsReviewedByToUser = false
             };
             db.GiftTransactions.Add(logItem);
+        }
+
+        internal async Task<IReadOnlyCollection<GiftTransactionLog>> GetUnreviewedGiftTransactionsAsync(string userId)
+        {
+            var results = await (from transactions in db.GiftTransactions
+                                 where transactions.ToUserId == userId
+                                 where transactions.IsReviewedByToUser == false
+                                 select transactions).ToListAsync();
+
+            return results.AsReadOnly();
         }
 
         private async Task<int> AddItemToUserInventory(string toUserId, int giftId)
