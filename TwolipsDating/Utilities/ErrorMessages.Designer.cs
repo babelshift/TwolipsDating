@@ -61,6 +61,15 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something prevented your gift notifications from being removed. If this continues, contact support..
+        /// </summary>
+        internal static string AllGiftNotificationsNotRemoved {
+            get {
+                return ResourceManager.GetString("AllGiftNotificationsNotRemoved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Something prevented your answer from being submitted. If this continues, contact support..
         /// </summary>
         internal static string AnswerNotSubmitted {
@@ -88,7 +97,7 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Something prevented the notification from being removed. If this continues, contact support..
+        ///   Looks up a localized string similar to Something prevented your gift notification from being removed. If this continues, contact support..
         /// </summary>
         internal static string GiftNotificationNotRemoved {
             get {

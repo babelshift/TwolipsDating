@@ -42,7 +42,7 @@
                 }
             </div>
             <div class="navbar-collapse collapse">
-                <ul id="navbar-main" class="nav navbar-nav">
+                @*<ul id="navbar-main" class="nav navbar-nav">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-search"></i>&nbsp;Explore <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -58,17 +58,9 @@
                             <li><a href="@Url.Action("index", "manage")"><i class="glyphicon glyphicon-cog"></i>&nbsp;Account</a></li>
                         </ul>
                     </li>
-                </ul>
+                </ul>*@
                 @Html.Partial("_LoginPartial")
                 <ul class="nav navbar-nav navbar-right">
-                    @*
-                        <li>
-                            <a href="#" title="Announcements">
-                                <i class="glyphicon glyphicon-bullhorn"></i>&nbsp;&nbsp;@ViewBag.UnreadAnnouncementCount
-                            </a>
-                        </li>
-                    *@
-
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li>
@@ -83,8 +75,9 @@
                         </li>
                         <li>
                             <a id="popover-gifts" href="#" title="Received Gifts" data-container="body" data-toggle="popover" data-placement="bottom" role="button" tabindex="1" data-animation="false">
-                                <i class="glyphicon glyphicon-gift"></i>&nbsp;&nbsp;@ViewBag.GiftNotificationCount&nbsp;<span class="caret"></span>
+                                <i class="glyphicon glyphicon-gift"></i>&nbsp;&nbsp;<span id="span-gift-notification-count">@ViewBag.GiftNotificationCount</span>&nbsp;<span class="caret"></span>
                             </a>
+                            <input id="gift-notification-count" type="hidden" value="@ViewBag.GiftNotificationCount" />
                         </li>
                         <li>
                             <a id="popover-announcements" href="#" title="Announcements" data-container="body" data-toggle="popover" data-placement="bottom" role="button" tabindex="0" data-trigger="focus">
@@ -100,11 +93,11 @@
     @if (User.Identity.IsAuthenticated && ViewBag != null)
     {
         <div id="popover-gifts-content" class="hide">
-            <div style="width: 225px;">
+            <div id="popover-gifts-container" style="width: 225px;">
                 @if (ViewBag.GiftsReceived != null && ViewBag.GiftsReceived.Count > 0)
                 {
                     <p class="pull-right">
-                        <a href="#">Remove all notifications</a>
+                        <a href="#" class="remove-all-gift-notifications">Remove all notifications</a>
                     </p>
                     <div class="clearfix"></div>
                     for (int i = 0; i < ViewBag.GiftsReceived.Count; i++)
@@ -127,7 +120,7 @@
                                 <span class="label label-default">@gift.GiftAmount</span>
                             </p>
                             <p style="margin-top: 7px;" class="pull-right">
-                                <a href="#" data-transaction-id="@gift.GiftTransactionId" title="Remove notification" class="gift-notification">
+                                <a href="#" data-transaction-id="@gift.GiftTransactionId" title="Remove notification" class="remove-gift-notification">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </a>
                             </p>
@@ -211,25 +204,35 @@
 
     </script>
     <script type="text/javascript">
-        $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) { event.preventDefault(); $(this).ekkoLightbox(); });
+    $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) { event.preventDefault(); $(this).ekkoLightbox(); });
 
-        var isScrolledDown = false;
+    var isScrolledDown = false;
 
-        $(document).ready(function () {
-            $('#popover-announcements').popover({
-                html: true,
-                content: function () {
-                    return $("#popover-announcements-content").html();
-                }
-            });
+    $(document).ready(function () {
+        $('#popover-announcements').popover({
+            html: true,
+            content: function () {
+                return $("#popover-announcements-content").html();
+            }
+        });
+
+        $('#popover-gifts').popover({
+            html: true,
+            content: function () {
+                return $("#popover-gifts-content").html();
+            }
+        });
+
+        $("#popover-gifts").on("hidden.bs.popover", function () {
             $('#popover-gifts').popover({
                 html: true,
                 content: function () {
                     return $("#popover-gifts-content").html();
                 }
             });
+        });
 
-            @*var topMenu = $("#navbar-main");
+        @*var topMenu = $("#navbar-main");
                 topMenu.hide();
 
                 $(window).bind('scroll', function () {
@@ -247,37 +250,81 @@
                     }
                 });*@
 
-            $(document).on("click", ".popover .gift-notification", function (e) {
-                e.preventDefault();
+        $(document).on("click", ".popover .remove-all-gift-notifications", function (e) {
+            e.preventDefault();
 
-                var transactionId = $(this).attr("data-transaction-id");
-                var owner = $(this);
+            var owner = $(this);
 
-                json = "{\"giftTransactionId\":" + transactionId + "}";
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("removeAllGiftNotifications", "profile")',
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.success) {
+                        var html = "<p>Nothing to see here.</p>"
 
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("removeGiftNotification", "profile")',
-                    data: json,
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (data) {
-                        if (data.success) {
-                            owner.parent().parent().fadeOut("normal", function () {
-                                var notificationsRemaining = $(".popover .gift-notification").length;
-                                if (notificationsRemaining > 1) {
-                                    $(this).remove();
-                                }
-                                else {
-                                    $(this).parent().html("<p>Nothing to see here.</p>");
-                                }
-                            })
-                        } else {
-                            alert(data.error);
-                        }
+                        // clear out the popover itself
+                        owner.parent().parent().html(html);
+
+                        // clear out the popover's source
+                        $("#popover-gifts-container").html(html);
+
+                        // change indicators on notification button
+                        $("#span-gift-notification-count").text("0");
+                        $("#gift-notification-count").val("0");
+                    } else {
+                        alert(data.error);
                     }
-                });
+                }
             });
         });
+
+        $(document).on("click", ".popover .remove-gift-notification", function (e) {
+            e.preventDefault();
+
+            var transactionId = $(this).attr("data-transaction-id");
+            var owner = $(this);
+
+            json = "{\"giftTransactionId\":" + transactionId + "}";
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("removeGiftNotification", "profile")',
+                data: json,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.success) {
+                        owner.parent().parent().fadeOut("normal", function () {
+                            var notificationsRemaining = $(".popover .remove-gift-notification").length;
+                            if (notificationsRemaining > 1) {
+                                // remove the element from the popover itself
+                                $(this).remove();
+
+                                // remove the element from the popover's source
+                                $("#gift-notification-" + transactionId).remove();
+
+                                // reduce the notification count by 1
+                                var giftNotificationCount = $("#gift-notification-count").val() - 1;
+                                $("#gift-notification-count").val(giftNotificationCount);
+                                $("#span-gift-notification-count").text(giftNotificationCount);
+                            }
+                            else {
+                                var html = "<p>Nothing to see here.</p>"
+
+                                // clear out the popover itself
+                                $(this).parent().html(html);
+
+                                // clear out the popover's source
+                                $("#popover-gifts-container").html(html);
+                            }
+                        })
+                    } else {
+                        alert(data.error);
+                    }
+                }
+            });
+        });
+    });
     </script>
     @RenderSection("scripts", required: false)
 </body>

@@ -606,7 +606,7 @@ namespace TwolipsDating.Business
                 fromUserInventoryItem.ItemCount--;
 
                 // if there's no items left for this inventory item, delete it
-                if(fromUserInventoryItem.ItemCount == 0)
+                if (fromUserInventoryItem.ItemCount == 0)
                 {
                     db.InventoryItems.Remove(fromUserInventoryItem);
                 }
@@ -684,10 +684,26 @@ namespace TwolipsDating.Business
         internal async Task<int> RemoveGiftNotification(string currentUserId, int giftTransactionId)
         {
             var giftTransaction = await db.GiftTransactions.FindAsync(giftTransactionId);
-            if(giftTransaction != null)
+
+            if (giftTransaction != null)
             {
                 giftTransaction.IsReviewedByToUser = true;
             }
+
+            return await db.SaveChangesAsync();
+        }
+
+        internal async Task<int> RemoveAllGiftNotification(string currentUserId)
+        {
+            var results = await (from giftTransactions in db.GiftTransactions
+                                 where giftTransactions.ToUserId == currentUserId
+                                 select giftTransactions).ToListAsync();
+
+            foreach(var giftTransaction in results)
+            {
+                giftTransaction.IsReviewedByToUser = true;
+            }
+
             return await db.SaveChangesAsync();
         }
     }
