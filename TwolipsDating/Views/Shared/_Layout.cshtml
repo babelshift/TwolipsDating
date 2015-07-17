@@ -103,41 +103,46 @@
             <div style="width: 225px;">
                 @if (ViewBag.GiftsReceived != null && ViewBag.GiftsReceived.Count > 0)
                 {
+                    <p class="pull-right">
+                        <a href="#">Remove all notifications</a>
+                    </p>
+                    <div class="clearfix"></div>
                     for (int i = 0; i < ViewBag.GiftsReceived.Count; i++)
                     {
                         var gift = ViewBag.GiftsReceived[i];
-                        if (!String.IsNullOrEmpty(gift.SenderProfileImagePath))
-                        {
+                        <div id="@String.Format("gift-notification-{0}", gift.GiftTransactionId)">
+                            @if (!String.IsNullOrEmpty(gift.SenderProfileImagePath))
+                            {
+                                <div class="circular-image-wrapper">
+                                    <img class="circular-image" src="@gift.SenderProfileImagePath" />
+                                </div>
+                            }
+                            <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 5px;">
+                                <a href="@Url.Action("index", "profile", new { id = 0 })">@gift.SenderUserName</a>
+                            </p>
                             <div class="circular-image-wrapper">
-                                <img class="circular-image" src="@gift.SenderProfileImagePath" />
+                                <img class="circular-image" src="@gift.GiftImagePath" />
                             </div>
-                        }
-                        <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 5px;">
-                            <a href="@Url.Action("index", "profile", new { id = 0 })">@gift.SenderUserName</a>
-                            &nbsp;&bull;&nbsp;
-                        </p>
-                        <div class="circular-image-wrapper">
-                            <img class="circular-image" src="@gift.GiftImagePath" />
+                            <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 5px;">
+                                <span class="label label-default">@gift.GiftAmount</span>
+                            </p>
+                            <p style="margin-top: 7px;" class="pull-right">
+                                <a href="#" data-transaction-id="@gift.GiftTransactionId" title="Remove notification" class="gift-notification">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </a>
+                            </p>
+                            <div class="clearfix"></div>
+                            <small>@gift.DateTransaction</small>
+                            @if (i < ViewBag.GiftsReceived.Count - 1)
+                            {
+                                <hr />
+                            }
                         </div>
-                        <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 5px;">
-                            <span class="badge">@gift.GiftAmount</span>
-                        </p>
-                        <p style="margin-top: 7px;" class="pull-right">
-                            <a id="@String.Format("remove-gift-notification-{0}", gift.GiftTransactionId)" href="#" title="Remove notification">
-                                <i class="glyphicon glyphicon-remove"></i>
-                            </a>
-                        </p>
-                        <div class="clearfix"></div>
-                        <small>@gift.DateTransaction</small>
-                        if (i < ViewBag.GiftsReceived.Count - 1)
-                        {
-                            <hr />
-                        }
                     }
                 }
                 else
                 {
-                    <p>Nothing to see here!</p>
+                    <p>Nothing to see here.</p>
                 }
             </div>
         </div>
@@ -168,80 +173,6 @@
         @RenderBody()
     </div>
     <footer class="footer">
-        @*
-                <div class="footer-top">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <h4>
-                                <a href="@Url.Action("index", "home")"><img src="~/Content/twolipsicon-white.png" width="32" height="32" /></a>  twolips dating
-                            </h4>
-                            <p>Dating shouldn't be a hassle. In fact, it should be fun. Interact with others around here to prove it.</p>
-                            <p>Get started today for free!</p>
-                            <p>Email: <a href="mailto:info@twolipsdating.com">info@twolipsdating.com</a></p>
-                        </div>
-                        <div class="col-md-3">
-                            <h5>About Us</h5>
-                            <hr />
-                            <ul class="list-unstyled">
-                                <li>
-                                    @Html.ActionLink("Who we are", "index", "about")
-                                    <i class="glyphicon glyphicon-chevron-right"></i>
-                                </li>
-                                <li>
-                                    @Html.ActionLink("FAQ", "faq", "help")
-                                    <i class="glyphicon glyphicon-chevron-right"></i>
-                                </li>
-                                <li>
-                                    <a href="mailto:info@twolipsdating.com">Contact Us</a>
-                                    <i class="glyphicon glyphicon-chevron-right"></i>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-3">
-                            <h5>Our Policies</h5>
-                            <hr />
-                            <ul class="list-unstyled">
-                                <li>
-                                    @Html.ActionLink("Privacy policy", "privacy", "about")
-                                    <i class="glyphicon glyphicon-chevron-right"></i>
-                                </li>
-                                <li>
-                                    @Html.ActionLink("Terms of service", "terms", "about")
-                                    <i class="glyphicon glyphicon-chevron-right"></i>
-                                </li>
-                                <li>
-                                    @Html.ActionLink("Content guidelines", "content", "help")
-                                    <i class="glyphicon glyphicon-chevron-right"></i>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-3">
-                            <h5>Useful Links</h5>
-                            <hr />
-                            <ul class="list-unstyled">
-                                <li>
-                                    @Html.ActionLink("Dating tips", "tips", "dating")
-                                    <i class="glyphicon glyphicon-chevron-right"></i>
-                                </li>
-                                <li>
-                                    @Html.ActionLink("Meet people", "meet", "dating")
-                                    <i class="glyphicon glyphicon-chevron-right"></i>
-                                </li>
-                                <li>
-                                    @Html.ActionLink("Grow your network", "network", "dating")
-                                    <i class="glyphicon glyphicon-chevron-right"></i>
-                                </li>
-                                <li>
-                                    @Html.ActionLink("Writing a good review", "advice", "help")
-                                    <i class="glyphicon glyphicon-chevron-right"></i>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        *@
         <div class="footer-bottom">
             <div class="container">
                 <h5 style="display: inline-block">
@@ -298,22 +229,53 @@
                 }
             });
 
-            var topMenu = $("#navbar-main");
-            topMenu.hide();
+            @*var topMenu = $("#navbar-main");
+                topMenu.hide();
 
-            $(window).bind('scroll', function () {
+                $(window).bind('scroll', function () {
 
-                if ($(window).scrollTop() > 85) {
-                    if (!isScrolledDown) {
-                        isScrolledDown = true;
-                        topMenu.show();
+                    if ($(window).scrollTop() > 85) {
+                        if (!isScrolledDown) {
+                            isScrolledDown = true;
+                            topMenu.show();
+                        }
+                    } else if ($(window).scrollTop() <= 85) {
+                        if (isScrolledDown) {
+                            isScrolledDown = false;
+                            topMenu.hide();
+                        }
                     }
-                } else if ($(window).scrollTop() <= 85) {
-                    if (isScrolledDown) {
-                        isScrolledDown = false;
-                        topMenu.hide();
+                });*@
+
+            $(document).on("click", ".popover .gift-notification", function (e) {
+                e.preventDefault();
+
+                var transactionId = $(this).attr("data-transaction-id");
+                var owner = $(this);
+
+                json = "{\"giftTransactionId\":" + transactionId + "}";
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("removeGiftNotification", "profile")',
+                    data: json,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data.success) {
+                            owner.parent().parent().fadeOut("normal", function () {
+                                var notificationsRemaining = $(".popover .gift-notification").length;
+                                if (notificationsRemaining > 1) {
+                                    $(this).remove();
+                                }
+                                else {
+                                    $(this).parent().html("<p>Nothing to see here.</p>");
+                                }
+                            })
+                        } else {
+                            alert(data.error);
+                        }
                     }
-                }
+                });
             });
         });
     </script>

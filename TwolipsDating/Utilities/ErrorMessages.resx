@@ -126,6 +126,9 @@
   <data name="FavoriteProfileNotSaved" xml:space="preserve">
     <value>Something prevented you from toggling the favorite profile status. If this continues, contact support.</value>
   </data>
+  <data name="GiftNotificationNotRemoved" xml:space="preserve">
+    <value>Something prevented the notification from being removed. If this continues, contact support.</value>
+  </data>
   <data name="GiftNotSent" xml:space="preserve">
     <value>Something prevented your gift from being sent. If this continues, contact support.</value>
   </data>

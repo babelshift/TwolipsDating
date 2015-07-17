@@ -680,5 +680,15 @@ namespace TwolipsDating.Business
 
             return isIgnored;
         }
+
+        internal async Task<int> RemoveGiftNotification(string currentUserId, int giftTransactionId)
+        {
+            var giftTransaction = await db.GiftTransactions.FindAsync(giftTransactionId);
+            if(giftTransaction != null)
+            {
+                giftTransaction.IsReviewedByToUser = true;
+            }
+            return await db.SaveChangesAsync();
+        }
     }
 }

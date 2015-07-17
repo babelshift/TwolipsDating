@@ -170,6 +170,38 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<JsonResult> RemoveGiftNotification(int giftTransactionId)
+        {
+            string currentUserId = await GetCurrentUserIdAsync();
+
+            try
+            {
+                bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+
+                if (isCurrentUserEmailConfirmed)
+                {
+                    int result = await ProfileService.RemoveGiftNotification(currentUserId, giftTransactionId);
+
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    return Json(new { success = false, error = ErrorMessages.EmailAddressNotConfirmed });
+                }
+            }
+            catch(DbUpdateException e)
+            {
+                Log.Error(
+                    "RemoveGiftNotification",
+                    e,
+                    new { currentUserId = currentUserId, giftTransactionId = giftTransactionId }
+                );
+
+                return Json(new { success = false, error = ErrorMessages.GiftNotificationNotRemoved });
+            }
+        }
+
         #endregion
 
         #region Send Messages
