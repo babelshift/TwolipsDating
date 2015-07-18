@@ -578,6 +578,21 @@ namespace TwolipsDating.Controllers
             var viewerInventoryItems = await ProfileService.GetInventoryAsync(currentUserId);
             viewModel.ViewerInventoryItems = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(viewerInventoryItems);
 
+            // setup user titles to select
+            // TODO: optimize this
+            var titles = await userService.GetTitlesOwnedByUserAsync(currentUserId);
+            List<TitleViewModel> titleViewModel = new List<TitleViewModel>();
+            foreach(var title in titles)
+            {
+                titleViewModel.Add(new TitleViewModel()
+                {
+                    TitleId = title.Key,
+                    TitleName = title.Value.Title.Name
+                });
+            }
+            viewModel.UserTitles = titleViewModel;
+
+            // setup violation types
             var violationTypes = await violationService.GetViolationTypesAsync();
             viewModel.WriteReviewViolation = new WriteReviewViolationViewModel();
             viewModel.WriteReviewViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
@@ -760,6 +775,42 @@ namespace TwolipsDating.Controllers
             }
 
             return RedirectToIndex();
+        }
+
+        #endregion
+
+        #region Select Title
+
+        [HttpPost]
+        public async Task<ActionResult> SetSelectedTitle(int titleId)
+        {
+            string currentUserId = await GetCurrentUserIdAsync();
+
+            try
+            {
+                bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+
+                if (isCurrentUserEmailConfirmed)
+                {
+                    int result = await ProfileService.SetSelectedTitle(currentUserId, titleId);
+
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    return Json(new { success = false, error = ErrorMessages.EmailAddressNotConfirmed });
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                Log.Error(
+                    "SelectTitle",
+                    e,
+                    new { currentUserId = currentUserId }
+                );
+
+                return Json(new { success = false, error = ErrorMessages.TitleNotSelected });
+            }
         }
 
         #endregion

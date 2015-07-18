@@ -168,4 +168,7 @@
   <data name="AllGiftNotificationsNotRemoved" xml:space="preserve">
     <value>Something prevented your gift notifications from being removed. If this continues, contact support.</value>
   </data>
+  <data name="TitleNotSelected" xml:space="preserve">
+    <value>Something prevented your title from being selected. If this continues, contact support.</value>
+  </data>
 </root>

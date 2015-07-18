@@ -10,6 +10,9 @@ namespace TwolipsDating.Models
 		public Profile()
 		{
 			Tags = new List<Tag>();
+            TagSuggestions = new List<TagSuggestion>();
+            FavoritedBy = new List<FavoriteProfile>();
+            TagAwards = new List<TagAward>();
 		}
 
         public int Id { get; set; }
@@ -18,11 +21,13 @@ namespace TwolipsDating.Models
         public int? ZipCode { get; set; } // not required out of US
         public int CityId { get; set; }
         public int? UserImageId { get; set; }
+        public int? SelectedTitleId { get; set; }
 
         public virtual UserImage UserImage { get; set; }
         public virtual Gender Gender { get; set; }
         public virtual City City { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
+        public virtual Title SelectedTitle { get; set; }
 
 		public virtual ICollection<Tag> Tags { get; set; }
 		public virtual ICollection<TagSuggestion> TagSuggestions { get; set; }

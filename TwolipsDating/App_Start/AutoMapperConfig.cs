@@ -23,7 +23,8 @@ namespace TwolipsDating
                 .ForMember(dest => dest.Location, opts => opts.MapFrom(source => source.City.GetCityAndState()))
                 .ForMember(dest => dest.ProfileId, opts => opts.MapFrom(source => source.Id))
                 .ForMember(dest => dest.ProfileUserId, opts => opts.MapFrom(source => source.ApplicationUser.Id))
-                .ForMember(dest => dest.ProfileImagePath, opts => opts.MapFrom(source => source.GetProfileImagePath()));
+                .ForMember(dest => dest.ProfileImagePath, opts => opts.MapFrom(source => source.GetProfileImagePath()))
+                .ForMember(dest => dest.SelectedTitle, opts => opts.MapFrom(source => source.SelectedTitle != null ? source.SelectedTitle.Name : String.Empty));
 
             Mapper.CreateMap<Review, ReviewViewModel>()
                 .ForMember(dest => dest.ReviewId, opts => opts.MapFrom(source => source.Id))
@@ -161,6 +162,10 @@ namespace TwolipsDating
                 .ForMember(dest => dest.SenderUserName, opts => opts.MapFrom(source => source.FromUser.UserName))
                 .ForMember(dest => dest.GiftTransactionId, opts => opts.MapFrom(source => source.GiftTransactionLogId))
                 .ForMember(dest => dest.DateTransaction, opts => opts.MapFrom(source => source.DateTransactionOccurred.GetTimeAgo()));
+
+            Mapper.CreateMap<Title, TitleViewModel>()
+                .ForMember(dest => dest.TitleId, opts => opts.MapFrom(source => source.Id))
+                .ForMember(dest => dest.TitleName, opts => opts.MapFrom(source => source.Name));
         }
     }
 }

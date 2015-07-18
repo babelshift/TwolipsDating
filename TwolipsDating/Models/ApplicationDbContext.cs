@@ -863,6 +863,11 @@ namespace TwolipsDating.Models
                 .HasKey(p => p.Id);
 
             modelBuilder.Entity<Profile>()
+                .HasOptional(p => p.SelectedTitle)
+                .WithMany(p => p.SelectedByProfiles)
+                .HasForeignKey(p => p.SelectedTitleId);
+
+            modelBuilder.Entity<Profile>()
                 .HasRequired(p => p.Gender)
                 .WithMany(p => p.Profiles)
                 .HasForeignKey(p => p.GenderId);

@@ -19,6 +19,7 @@ namespace TwolipsDating.ViewModels
 
         public bool IsCurrentUserEmailConfirmed { get; set; }
         public string UserName { get; set; }
+        public string SelectedTitle { get; set; }
         public int Age { get; set; }
         public string Gender { get; set; }
         public string Location { get; set; }
@@ -38,6 +39,7 @@ namespace TwolipsDating.ViewModels
         public IReadOnlyCollection<ProfileTagSuggestionViewModel> SuggestedTags { get; set; }
         public IReadOnlyCollection<ProfileTagSuggestionViewModel> AllTags { get; set; }
         public IReadOnlyCollection<ProfileTagAwardViewModel> AwardedTags { get; set; }
+        public IReadOnlyCollection<TitleViewModel> UserTitles { get; set; }
 
         public bool IsIgnoredByCurrentUser { get; set; }
         public bool IsFavoritedByCurrentUser { get; set; }

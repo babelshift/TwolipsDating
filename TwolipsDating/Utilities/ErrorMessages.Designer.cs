@@ -178,6 +178,15 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something prevented your title from being selected. If this continues, contact support..
+        /// </summary>
+        internal static string TitleNotSelected {
+            get {
+                return ResourceManager.GetString("TitleNotSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An unknown exception has occurred. Contact support if you need assistance..
         /// </summary>
         internal static string UnhandledException {

@@ -523,7 +523,6 @@ namespace TwolipsDating.Controllers
                 .ToList()
                 .AsReadOnly();
 
-
             return View(viewModel);
         }
 

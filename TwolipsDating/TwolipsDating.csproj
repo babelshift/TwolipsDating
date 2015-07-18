@@ -450,6 +450,10 @@
     <Compile Include="Migrations\201507162125308_AddReviewBooleanToGiftTransactionLog.Designer.cs">
       <DependentUpon>201507162125308_AddReviewBooleanToGiftTransactionLog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507171853187_SelectTitleOnProfile.cs" />
+    <Compile Include="Migrations\201507171853187_SelectTitleOnProfile.Designer.cs">
+      <DependentUpon>201507171853187_SelectTitleOnProfile.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
@@ -556,6 +560,7 @@
     <Compile Include="ViewModels\StoreTransactionViewModel.cs" />
     <Compile Include="ViewModels\StoreViewModel.cs" />
     <Compile Include="ViewModels\TagViewModel.cs" />
+    <Compile Include="ViewModels\TitleViewModel.cs" />
     <Compile Include="ViewModels\TriviaMenuViewModel.cs" />
     <Compile Include="ViewModels\UploadedImageFeedViewModel.cs" />
     <Compile Include="ViewModels\UploadImageViewModel.cs" />
@@ -823,6 +828,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507162125308_AddReviewBooleanToGiftTransactionLog.resx">
       <DependentUpon>201507162125308_AddReviewBooleanToGiftTransactionLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507171853187_SelectTitleOnProfile.resx">
+      <DependentUpon>201507171853187_SelectTitleOnProfile.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

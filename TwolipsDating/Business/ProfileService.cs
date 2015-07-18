@@ -706,5 +706,20 @@ namespace TwolipsDating.Business
 
             return await db.SaveChangesAsync();
         }
+
+        internal async Task<int> SetSelectedTitle(string currentUserId, int titleId)
+        {
+            var userProfile = db.Users.Find(currentUserId);
+
+            if (userProfile != null)
+            {
+                if (userProfile.Profile != null)
+                {
+                    userProfile.Profile.SelectedTitleId = titleId;
+                }
+            }
+
+            return await db.SaveChangesAsync();
+        }
     }
 }
