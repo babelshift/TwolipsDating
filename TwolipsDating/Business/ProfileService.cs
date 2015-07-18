@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TwolipsDating.Models;
+using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
@@ -709,13 +710,20 @@ namespace TwolipsDating.Business
 
         internal async Task<int> SetSelectedTitle(string currentUserId, int titleId)
         {
-            var userProfile = db.Users.Find(currentUserId);
+            var user = db.Users.Find(currentUserId);
+            bool hasUserObtainedTitle = user.ObtainedTitles.Any(t => t.TitleId == titleId);
 
-            if (userProfile != null)
+            // user hasn't obtained this title, don't let them use it
+            if(!hasUserObtainedTitle)
             {
-                if (userProfile.Profile != null)
+                throw new InvalidOperationException(ErrorMessages.TitleNotObtained);
+            }
+            
+            if (user != null)
+            {
+                if (user.Profile != null)
                 {
-                    userProfile.Profile.SelectedTitleId = titleId;
+                    user.Profile.SelectedTitleId = titleId;
                 }
             }
 

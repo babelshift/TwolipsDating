@@ -190,7 +190,7 @@ namespace TwolipsDating.Controllers
                     return Json(new { success = false, error = ErrorMessages.EmailAddressNotConfirmed });
                 }
             }
-            catch(DbUpdateException e)
+            catch (DbUpdateException e)
             {
                 Log.Error(
                     "RemoveGiftNotification",
@@ -582,7 +582,7 @@ namespace TwolipsDating.Controllers
             // TODO: optimize this
             var titles = await userService.GetTitlesOwnedByUserAsync(currentUserId);
             List<TitleViewModel> titleViewModel = new List<TitleViewModel>();
-            foreach(var title in titles)
+            foreach (var title in titles)
             {
                 titleViewModel.Add(new TitleViewModel()
                 {
@@ -803,14 +803,23 @@ namespace TwolipsDating.Controllers
             }
             catch (DbUpdateException e)
             {
-                Log.Error(
-                    "SelectTitle",
-                    e,
-                    new { currentUserId = currentUserId }
-                );
-
+                LogSelectTitleException(currentUserId, e);
                 return Json(new { success = false, error = ErrorMessages.TitleNotSelected });
             }
+            catch (InvalidOperationException e)
+            {
+                LogSelectTitleException(currentUserId, e);
+                return Json(new { success = false, error = e.Message });
+            }
+        }
+
+        private void LogSelectTitleException(string userId, Exception e)
+        {
+            Log.Error(
+                "SelectTitle",
+                e,
+                new { currentUserId = userId }
+            );
         }
 
         #endregion

@@ -178,6 +178,15 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You cannot select that title because you haven&apos;t obtained it yet..
+        /// </summary>
+        internal static string TitleNotObtained {
+            get {
+                return ResourceManager.GetString("TitleNotObtained", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Something prevented your title from being selected. If this continues, contact support..
         /// </summary>
         internal static string TitleNotSelected {

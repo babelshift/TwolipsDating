@@ -74,13 +74,13 @@
                             </a>
                         </li>
                         <li>
-                            <a id="popover-gifts" href="#" title="Received Gifts" data-container="body" data-toggle="popover" data-placement="bottom" role="button" tabindex="1" data-animation="false">
+                            <a id="popover-gifts" href="#" title="Received Gifts" data-toggle="popover" data-placement="bottom" data-container="body" data-animation="false">
                                 <i class="glyphicon glyphicon-gift"></i>&nbsp;&nbsp;<span id="span-gift-notification-count">@ViewBag.GiftNotificationCount</span>&nbsp;<span class="caret"></span>
                             </a>
                             <input id="gift-notification-count" type="hidden" value="@ViewBag.GiftNotificationCount" />
                         </li>
                         <li>
-                            <a id="popover-announcements" href="#" title="Announcements" data-container="body" data-toggle="popover" data-placement="bottom" role="button" tabindex="0" data-animation="false">
+                            <a id="popover-announcements" href="#" title="Announcements" data-toggle="popover" data-placement="bottom" data-container="body" data-animation="false">
                                 <i class="glyphicon glyphicon-bullhorn"></i>&nbsp;&nbsp;@ViewBag.AnnouncementNotificationCount&nbsp;<span class="caret"></span>
                             </a>
                         </li>
@@ -209,17 +209,39 @@
     var isScrolledDown = false;
 
     $(document).ready(function () {
-        $('#popover-announcements').popover({
-            html: true,
-            content: function () {
-                return $("#popover-announcements-content").html();
+        var announcementPopover = $('#popover-announcements').popover({
+                                    html: true,
+                                    content: function () {
+                                        return $("#popover-announcements-content").html();
+                                    }
+                                });
+        $('#popover-announcements').on("click", function (e) {
+            e.preventDefault();
+        });
+
+        $(document).on("click", function (e) {
+            var isAnnouncementPopover = $(e.target).is(announcementPopover) || $(e.target).closest('#popover-announcements').length > 0;
+            var inAnnouncementPopover = $(e.target).closest('.popover').length > 0;
+            if (!isAnnouncementPopover && !inAnnouncementPopover) {
+                announcementPopover.popover('hide');
             }
         });
 
-        $('#popover-gifts').popover({
-            html: true,
-            content: function () {
-                return $("#popover-gifts-content").html();
+        var giftPopover = $('#popover-gifts').popover({
+                            html: true,
+                            content: function () {
+                                return $("#popover-gifts-content").html();
+                            }
+                        });
+        $('#popover-gifts').on("click", function (e) {
+            e.preventDefault();
+        });
+
+        $(document).on("click", function (e) {
+            var isGiftPopover = $(e.target).is(giftPopover) || $(e.target).closest('#popover-gifts').length > 0;
+            var inGiftPopover = $(e.target).closest('.popover').length > 0;
+            if (isGiftPopover == false && inGiftPopover == false) {
+                giftPopover.popover('hide');
             }
         });
 

@@ -338,17 +338,18 @@
                                 <img src="http://placehold.it/128x128">
                             }
                         }
-                        <h3>
+                        <h3 style="margin-top: 5px">
                             @Model.UserName
-                            <small>
-                                <a id="selected-title" href="#" class="label label-default"
-                                   data-title="Select your title" data-container="body" data-toggle="popover" data-placement="bottom" data-animation="false">@Model.SelectedTitle</a>
-                            </small>
                         </h3>
+                        <h5>
+                            <a id="selected-title" href="#" class="label label-success"
+                               data-title="Select your title" data-container="body" data-toggle="popover" data-placement="bottom"
+                               data-animation="false">@Model.SelectedTitle</a>
+                        </h5>
                         <h5>@Model.Age&nbsp;&bull;&nbsp;@Model.Gender&nbsp;&bull;&nbsp;@Model.Location</h5>
                     </div>
-                    <div class="text-center" style="margin-top: 15px;">
-                        <h4>
+                    <div class="text-center">
+                        <h5>
                             @for (int i = 1; i <= Model.AverageRatingValue; i++)
                             {
                                 <i class="glyphicon glyphicon-star"></i>
@@ -357,7 +358,7 @@
                             {
                                 <i class="glyphicon glyphicon-star-empty"></i>
                             }
-                        </h4>
+                        </h5>
                         @*
                             <p>
                             <span style="margin-right: 10px;">
@@ -622,11 +623,14 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
     <script type="text/javascript">
         $(document).ready(function () {
             // setup the popover which is displayed when the user clicks to select a title
-            $("#selected-title").popover({
-                html: true,
-                content: function () {
-                    return $("#popover-titles-content").html();
-                }
+            var selectedTitlePopover = $("#selected-title").popover({
+                                            html: true,
+                                            content: function () {
+                                                return $("#popover-titles-content").html();
+                                            }
+                                        });
+            $("#selected-title").on("click", function (e) {
+                e.preventDefault();
             });
 
             // when the title to select a popover is hidden, recreate it based on any changes that were made from the user's interaction
@@ -637,6 +641,14 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
                         return $("#popover-titles-content").html();
                     }
                 });
+            });
+
+            $(document).on("click", function (e) {
+                var isSelectedTitlePopover = $(e.target).is(selectedTitlePopover);
+                var inSelectedTitlePopover = $(e.target).closest('.popover').length > 0;
+                if (!isSelectedTitlePopover && !inSelectedTitlePopover) {
+                    selectedTitlePopover.popover('hide');
+                }
             });
 
             // whenever a link is clicked to select a title, perform an AJAX call to change to the user's selection
@@ -652,64 +664,64 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Action("setSelectedTitle", "profile")',
-                        data: json,
-                        contentType: 'application/json; charset=utf-8',
-                        success: function (data) {
-                            if (data.success) {
-                                // change profile's displayed selected title
-                                $("#selected-title").text(titleName);
+                    data: json,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data.success) {
+                            // change profile's displayed selected title
+                            $("#selected-title").text(titleName);
 
-                                // remove all existing checkmarks which indicated the selected title
-                                $('[class^="selected-title-item-check"]').remove();
+                            // remove all existing checkmarks which indicated the selected title
+                            $('[class^="selected-title-item-check"]').remove();
 
-                                // prepend the checkmark before the now selected link
-                                var html = '<i class="selected-title-item-check-' + titleId + ' glyphicon glyphicon-ok"></i>';
-                                $(".select-title-link-" + titleId).before(html);
-                            } else {
-                                alert(data.error);
-                            }
+                            // prepend the checkmark before the now selected link
+                            var html = '<i class="selected-title-item-check-' + titleId + ' glyphicon glyphicon-ok"></i>';
+                            $(".select-title-link-" + titleId).before(html);
+                        } else {
+                            alert(data.error);
                         }
-                    });
-                });
-
-                toggleFavoriteIcon();
-                toggleIgnoredIcon();
-                selectUnitedStates();
-                initializeStarRating();
-                setupFileUploadText();
-                setupReportViolation();
-                setupMessageSend();
-                setupGiftSend();
-                setupReviewWrite();
-
-                // loop through all share review links and turn them into valid popovers with share buttons
-                $("a[id^='share-profile-link']").popover({
-                    content: function () {
-                        var match = $(this).attr('id').match(new RegExp(/[0-9 -()+]+$/)); // extract the review ID
-                        var shareButtonsDiv = "#share-profile-buttons-popover-" + match[0];
-                        var clone = $(shareButtonsDiv).clone(true);
-                        var cloneUnhide = clone.removeClass('hide');
-                        return cloneUnhide.html();
-                        //return $(shareButtonsDiv).html();
                     }
-                });
-                $("a[id^='share-profile-link']").click(function (e) {
-                    e.preventDefault(); // prevents the page from jumping to the top on click
                 });
             });
 
-            function onWriteReview(e, obj) {
-                var profileUserId = $('#ProfileUserId').val();
-                var rating = $("#WriteReview_RatingValue").val();
-                var reviewContent = $("#WriteReview_ReviewContent").val();
+            toggleFavoriteIcon();
+            toggleIgnoredIcon();
+            selectUnitedStates();
+            initializeStarRating();
+            setupFileUploadText();
+            setupReportViolation();
+            setupMessageSend();
+            setupGiftSend();
+            setupReviewWrite();
 
-                if (reviewContent != null && reviewContent.length > 0) {
+            // loop through all share review links and turn them into valid popovers with share buttons
+            $("a[id^='share-profile-link']").popover({
+                content: function () {
+                    var match = $(this).attr('id').match(new RegExp(/[0-9 -()+]+$/)); // extract the review ID
+                    var shareButtonsDiv = "#share-profile-buttons-popover-" + match[0];
+                    var clone = $(shareButtonsDiv).clone(true);
+                    var cloneUnhide = clone.removeClass('hide');
+                    return cloneUnhide.html();
+                    //return $(shareButtonsDiv).html();
+                }
+            });
+            $("a[id^='share-profile-link']").click(function (e) {
+                e.preventDefault(); // prevents the page from jumping to the top on click
+            });
+        });
 
-                    var json = "{\"profileUserId\":\"" + profileUserId + "\", \"rating\":" + rating + ", \"reviewContent\":\"" + reviewContent + "\"}";
+        function onWriteReview(e, obj) {
+            var profileUserId = $('#ProfileUserId').val();
+            var rating = $("#WriteReview_RatingValue").val();
+            var reviewContent = $("#WriteReview_ReviewContent").val();
 
-                    $.ajax({
-                        type: 'POST',
-                        url: '@Url.Action("writeReview", "profile")',
+            if (reviewContent != null && reviewContent.length > 0) {
+
+                var json = "{\"profileUserId\":\"" + profileUserId + "\", \"rating\":" + rating + ", \"reviewContent\":\"" + reviewContent + "\"}";
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("writeReview", "profile")',
                     data: json,
                     contentType: 'application/json; charset=utf-8',
                     success: function (data) {
