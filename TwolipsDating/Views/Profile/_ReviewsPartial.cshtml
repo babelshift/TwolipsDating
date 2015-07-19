@@ -26,7 +26,7 @@
             </small>
         </p>
         <p style="margin-top: 5px;" class="pull-right">
-            <a href="#" id="@String.Format("share-profile-link-{0}", review.ReviewId)" class="label label-primary"
+            <a href="#" id="@String.Format("share-profile-link-{0}", review.ReviewId)" data-review-id="@review.ReviewId" class="label label-primary"
                data-trigger="focus" data-html="true" data-toggle="popover" data-placement="bottom">
                 <i class="glyphicon glyphicon-share-alt"></i>&nbsp;Share
             </a>
