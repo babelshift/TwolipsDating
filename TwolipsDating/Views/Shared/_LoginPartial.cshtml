@@ -12,15 +12,19 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li>
-                        @Html.ActionLink("View your profile", "index", "profile", new { id = (int?)null }, null)
+                        <a href="@Url.Action("index", "profile", new { id = (int?)null })">
+                            <i class="glyphicon glyphicon-user"></i>&nbsp;View your profile
+                        </a>
                     </li>
                     <li>
-                        @Html.ActionLink("Manage your settings", "index", "manage")
+                        <a href="@Url.Action("index", "manage", new { id = (int?)null })">
+                            <i class="glyphicon glyphicon-cog"></i>&nbsp;Manage your settings
+                        </a>
                     </li>
                     <li class="divider"></li>
                     <li>
                         <a href="#" title="Sign out" onclick="document.getElementById('logoutForm').submit()">
-                            Sign out
+                            <i class="glyphicon glyphicon-log-out"></i>&nbsp;Sign out
                         </a>
                     </li>
                 </ul>
