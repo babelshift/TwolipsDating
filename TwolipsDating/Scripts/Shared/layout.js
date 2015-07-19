@@ -26,22 +26,6 @@ function setupPopoverWithContent(elementName, contentFunction) {
             }
         });
     });
-
-    //// we remove handlers first to avoid stacking handlers
-    //$(elementName).off('click.' + elementName);
-    //$(elementName).on('click.' + elementName, function (e) {
-    //    e.preventDefault();
-    //});
-
-    //// we remove handlers first to avoid stacking handlers
-    //$(document).off('click.document.' + elementName);
-    //$(document).on('click.document.' + elementName, function (e) {
-    //    var isPopover = $(e.target).is(popover) || $(e.target).closest(elementName).length > 0;
-    //    var inPopover = $(e.target).closest('.popover').length > 0;
-    //    if (!isPopover && !inPopover) {
-    //        popover.popover('hide');
-    //    }
-    //});
 }
 
 // sets up a popover based on some html

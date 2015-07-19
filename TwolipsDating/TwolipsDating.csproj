@@ -638,6 +638,11 @@
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\Shared\layout.js" />
+    <Content Include="Scripts\Store\gifts.js" />
+    <Content Include="Scripts\Store\titles.js" />
+    <Content Include="Scripts\Trivia\quiz.js" />
+    <Content Include="Scripts\Trivia\random.js" />
+    <Content Include="Scripts\Trivia\timed.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

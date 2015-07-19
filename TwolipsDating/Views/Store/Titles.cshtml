@@ -76,39 +76,5 @@ else
 }
 
 @section Scripts {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#purchase-result").hide();
-        });
-
-        function onBuyTitle(e, obj, titleId) {
-            e.preventDefault();
-
-            var json = "{\"titleId\":" + titleId + "}";
-
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("buytitle", "store")',
-                data: json,
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    if (data.success) {
-                        var buyButton = $("#button-buy-" + titleId);
-                        buyButton.removeClass("btn-primary");
-                        buyButton.addClass("btn-success");
-                        buyButton.prop("disabled", true);
-                        buyButton.html("Already purchased");
-                        $("#table-row-" + titleId).addClass("success");
-                    }
-                    else {
-                        $("#purchase-result").removeClass("alert-success");
-                        $("#purchase-result").removeClass("alert-danger");
-                        $("#purchase-result").addClass("alert-danger");
-                        $("#purchase-result").show();
-                        $("#purchase-result-message").html("You cannot buy that title.");
-                    }
-                }
-            });
-        }
-    </script>
+    <script src="@Url.Content("~/Scripts/Store/titles.js")" type="text/javascript"></script>
 }
