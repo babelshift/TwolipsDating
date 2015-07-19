@@ -4,6 +4,46 @@ $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) {
     $(this).ekkoLightbox();
 });
 
+function setupPopoverWithContent(elementName, contentFunction) {
+    // loop through all share review links and turn them into valid popovers with share buttons
+    $(elementName).each(function () {
+        var popover = $(this).popover({ content: contentFunction });
+
+        var id = $(this).attr('id');
+
+        $(this).off('click.' + id);
+        $(this).on('click.' + id, function (e) {
+            e.preventDefault();
+        });
+
+        // we remove handlers first to avoid stacking handlers
+        $(document).off('click.document.' + id);
+        $(document).on('click.document.' + id, function (e) {
+            var isPopover = $(e.target).is(popover) || $(e.target).closest('#' + id).length > 0;
+            var inPopover = $(e.target).closest('.popover').length > 0;
+            if (!isPopover && !inPopover) {
+                popover.popover('hide');
+            }
+        });
+    });
+
+    //// we remove handlers first to avoid stacking handlers
+    //$(elementName).off('click.' + elementName);
+    //$(elementName).on('click.' + elementName, function (e) {
+    //    e.preventDefault();
+    //});
+
+    //// we remove handlers first to avoid stacking handlers
+    //$(document).off('click.document.' + elementName);
+    //$(document).on('click.document.' + elementName, function (e) {
+    //    var isPopover = $(e.target).is(popover) || $(e.target).closest(elementName).length > 0;
+    //    var inPopover = $(e.target).closest('.popover').length > 0;
+    //    if (!isPopover && !inPopover) {
+    //        popover.popover('hide');
+    //    }
+    //});
+}
+
 // sets up a popover based on some html
 // the popover will take html content, will not jump to the top when clicked, and will dismiss when anything other than the popover is clicked
 function setupHtmlPopover(elementName, contentName) {
