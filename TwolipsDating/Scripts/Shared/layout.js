@@ -13,10 +13,16 @@ function setupHtmlPopover(elementName, contentName) {
             return $(contentName).html();
         }
     });
-    $(elementName).on("click", function (e) {
+
+    // we remove handlers first to avoid stacking handlers
+    $(elementName).off('click.' + elementName);
+    $(elementName).on('click.' + elementName, function (e) {
         e.preventDefault();
     });
-    $(document).on("click", function (e) {
+
+    // we remove handlers first to avoid stacking handlers
+    $(document).off('click.document.' + elementName);
+    $(document).on('click.document.' + elementName, function (e) {
         var isPopover = $(e.target).is(popover) || $(e.target).closest(elementName).length > 0;
         var inPopover = $(e.target).closest('.popover').length > 0;
         if (!isPopover && !inPopover) {

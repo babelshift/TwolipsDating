@@ -1,39 +1,45 @@
 ﻿$(document).ready(function () {
-    // setup the popover for the selected title
-    setupHtmlPopover('#selected-title', '#popover-titles-content');
 
-    // when the title to select a popover is hidden, recreate it based on any changes that were made from the user's interaction
-    $("#selected-title").on("hidden.bs.popover", function () {
+    var profileUserId = $('#ProfileUserId').val();
+    var currentUserId = $('#CurrentUserId').val();
+
+    if (profileUserId == currentUserId) {
+        // setup the popover for the selected title
         setupHtmlPopover('#selected-title', '#popover-titles-content');
-    });
 
-    // whenever a link is clicked to select a title, perform an AJAX call to change to the user's selection
-    $(document).on("click", "[class^=select-title-link]", function (e) {
-        e.preventDefault();
+        // when the title to select a popover is hidden, recreate it based on any changes that were made from the user's interaction
+        $("#selected-title").on("hidden.bs.popover", function () {
+            setupHtmlPopover('#selected-title', '#popover-titles-content');
+        });
 
-        // get the values from the element's attributes
-        var titleId = $(this).attr("data-title-id");
-        var titleName = $(this).attr("data-title-name");
+        // whenever a link is clicked to select a title, perform an AJAX call to change to the user's selection
+        $(document).on("click", "[class^=select-title-link]", function (e) {
+            e.preventDefault();
 
-        var json = "{\"titleId\":" + titleId + "}";
+            // get the values from the element's attributes
+            var titleId = $(this).attr("data-title-id");
+            var titleName = $(this).attr("data-title-name");
 
-        postJson('/profile/setSelectedTitle', json,
-            function (data) {
-                if (data.success) {
-                    // change profile's displayed selected title
-                    $("#selected-title").text(titleName);
+            var json = "{\"titleId\":" + titleId + "}";
 
-                    // remove all existing checkmarks which indicated the selected title
-                    $('[class^="selected-title-item-check"]').remove();
+            postJson('/profile/setSelectedTitle', json,
+                function (data) {
+                    if (data.success) {
+                        // change profile's displayed selected title
+                        $("#selected-title").text(titleName);
 
-                    // prepend the checkmark before the now selected link
-                    var html = '<i class="selected-title-item-check-' + titleId + ' glyphicon glyphicon-ok"></i>';
-                    $(".select-title-link-" + titleId).before(html);
-                } else {
-                    alert(data.error);
-                }
-            });
-    });
+                        // remove all existing checkmarks which indicated the selected title
+                        $('[class^="selected-title-item-check"]').remove();
+
+                        // prepend the checkmark before the now selected link
+                        var html = '<i class="selected-title-item-check-' + titleId + ' glyphicon glyphicon-ok"></i>';
+                        $(".select-title-link-" + titleId).before(html);
+                    } else {
+                        alert(data.error);
+                    }
+                });
+        });
+    }
 
     toggleFavoriteIcon();
     toggleIgnoredIcon();
