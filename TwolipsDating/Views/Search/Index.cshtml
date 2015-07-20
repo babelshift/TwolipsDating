@@ -78,21 +78,23 @@
                                 <span class="label label-default">@profile.ReviewCount reviews</span>
                             </p>
                             <div class="clearfix"></div>
-                            <div class="tags" style="margin-top: 3px;">
-                                <i class="glyphicon glyphicon-tags"></i>
-                                &nbsp;
-                                @foreach (var tag in profile.SuggestedTags)
-                                {
-                                    <a href="@Url.Action("index", "search", new { tag = tag.TagName })" class="btn btn-default btn-xs" title="@String.Format("Search for all profiles tagged with '{0}'", tag.TagName)">
-                                        <span class="badge">@tag.TagCount</span> @tag.TagName
-                                    </a>
-                                }
-                            </div>
+                            @if (profile.SuggestedTags.Count > 0)
+                            {
+                                <div class="tags" style="margin-top: 3px;">
+                                    <i class="glyphicon glyphicon-tags"></i>
+                                    &nbsp;
+                                    @foreach (var tag in profile.SuggestedTags)
+                                    {
+                                        <a href="@Url.Action("index", "search", new { tag = tag.TagName })" class="btn btn-default btn-xs" title="@String.Format("Search for all profiles tagged with '{0}'", tag.TagName)">
+                                            <span class="badge">@tag.TagCount</span> @tag.TagName
+                                        </a>
+                                    }
+                                </div>
+                            }
                         </li>
                     }
                 </ul>
             </div>
-
         </div>
         <div class="col-md-4">
             <div class="panel panel-default">
@@ -102,8 +104,8 @@
                     </h4>
                 </div>
                 <div class="panel-body">
-                    <p><i class="glyphicon glyphicon-chevron-right"></i> Answer trivia questions to gain currency and fame.</p>
-                    <p><i class="glyphicon glyphicon-chevron-right"></i> Purchase items for your inventory to display on your profile.</p>
+                    <p><i class="glyphicon glyphicon-chevron-right"></i> <a href="@Url.Action("index", "trivia")">Answer trivia</a> questions to gain currency and fame.</p>
+                    <p><i class="glyphicon glyphicon-chevron-right"></i> <a href="@Url.Action("index", "store")">Purchase items</a> for your inventory to display on your profile.</p>
                     <p><i class="glyphicon glyphicon-chevron-right"></i> Receive and encourage positive reviews from other users.</p>
                 </div>
             </div>

@@ -13,5 +13,7 @@ namespace TwolipsDating.ViewModels
         public IReadOnlyList<DashboardItemViewModel> Items { get; set; }
 
         public WriteReviewViolationViewModel WriteReviewViolation { get; set; }
+
+        public QuestionViewModel RandomQuestion { get; set; }
     }
 }

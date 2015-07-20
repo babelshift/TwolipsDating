@@ -1,4 +1,71 @@
-﻿function onAddReviewViolation(e, obj) {
+﻿function onNextQuestion(e, obj) {
+    // get a random question
+    get('/trivia/randomJson', function (data) {
+        // show the new question
+        var content = data.Content + ' <small><span class="label label-default"><strong>' + data.Points + ' points</strong></span></small>';
+        $('#random-question-content').html(content);
+        $('#RandomQuestion_QuestionId').val(data.QuestionId);
+
+        // show the new answers
+        var answersHtml = '';
+        data.Answers.forEach(function (item) {
+            answersHtml += '<div class="radio"><label><input id="RandomQuestion_SelectedAnswerId" type="radio" value="' + item.AnswerId + '"'
+            + 'name="RandomQuestion.SelectedAnswerId" data-val-required="The SelectedAnswerId field is required."'
+            + 'data-val-number="The field SelectedAnswerId must be a number." data-val="true"></input>'
+            + item.Content + '</label></div>';
+        });
+        $('#answers').html(answersHtml);
+
+        // reset the OK button
+        $('#result-alert').addClass("hidden");
+        $('#button-next').addClass("hidden");
+        $('#button-ok').removeClass("hidden");
+    });
+}
+
+function onSubmitAnswer(e, obj) {
+    e.preventDefault();
+
+    //$("#button-next").addClass("hidden");
+    //$("#button-ok").removeClass("hidden");
+
+    var questionId = $("#RandomQuestion_QuestionId").val();
+    var selected = $("input[type='radio'][name='RandomQuestion.SelectedAnswerId']:checked");
+    var answerId = "";
+    if (selected.length > 0) {
+        answerId = selected.val();
+    }
+
+    var json = '{"questionId":' + questionId + ', "answerId":' + answerId + '}';
+
+    postJson('/trivia/submitAnswer', json, function (data) {
+        if (data.success) {
+            if (data.isAnswerCorrect) {
+                $("#button-next").removeClass("hidden");
+                $("#button-ok").addClass("hidden");
+                $("input[type='radio']").attr("disabled", true);
+                $("#result-alert").removeClass("alert-success");
+                $("#result-alert").removeClass("alert-danger");
+                $("#result-alert").removeClass("hidden");
+                $("#result-alert").addClass("alert-success");
+                $("#result-alert").text('Correct');
+            } else {
+                $("#button-next").removeClass("hidden");
+                $("#button-ok").addClass("hidden");
+                $("input[type='radio']").attr("disabled", true);
+                $("#result-alert").removeClass("alert-success");
+                $("#result-alert").removeClass("alert-danger");
+                $("#result-alert").removeClass("hidden");
+                $("#result-alert").addClass("alert-danger");
+                $("#result-alert").text('Incorrect');
+            }
+        } else {
+            alert(data.error);
+        }
+    });
+}
+
+function onAddReviewViolation(e, obj) {
     var reviewId = $('#review-id').val();
     var violationTypeId = $('#WriteReviewViolation_ViolationTypeId').val();
     var authorUserId = $('#CurrentUserId').val();

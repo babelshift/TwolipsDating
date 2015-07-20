@@ -66,7 +66,29 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
+        public async Task<JsonResult> RandomJson()
+        {
+            QuestionViewModel viewModel = await GetRandomQuestionViewModel();
+
+            return Json(new 
+            { 
+                QuestionId = viewModel.QuestionId,
+                Content = viewModel.Content,
+                Points = viewModel.Points,
+                IsAlreadyAnswered = viewModel.IsAlreadyAnswered,
+                CorrectAnswerId = viewModel.CorrectAnswerId,
+                Answers = viewModel.Answers
+            }, JsonRequestBehavior.AllowGet);
+        }
+
         public async Task<ActionResult> Random()
+        {
+            QuestionViewModel viewModel = await GetRandomQuestionViewModel();
+
+            return View(viewModel);
+        }
+
+        private async Task<QuestionViewModel> GetRandomQuestionViewModel()
         {
             await SetNotificationsAsync();
 
@@ -76,8 +98,7 @@ namespace TwolipsDating.Controllers
             var randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Random);
 
             QuestionViewModel viewModel = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
-
-            return View(viewModel);
+            return viewModel;
         }
 
         public async Task<ActionResult> Timed()

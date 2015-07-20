@@ -17,6 +17,7 @@ namespace TwolipsDating.Controllers
 
         private DashboardService dashboardService = new DashboardService();
         private ViolationService violationService = new ViolationService();
+        private TriviaService triviaService = new TriviaService();
 
         #endregion
 
@@ -47,6 +48,10 @@ namespace TwolipsDating.Controllers
                 var violationTypes = await violationService.GetViolationTypesAsync();
                 viewModel.WriteReviewViolation = new WriteReviewViolationViewModel();
                 viewModel.WriteReviewViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
+
+                // generate a random question with its answers to view
+                var randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Random);
+                viewModel.RandomQuestion = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
 
                 return View("dashboard", viewModel);
             }
@@ -117,6 +122,11 @@ namespace TwolipsDating.Controllers
             if (disposing && violationService != null)
             {
                 violationService.Dispose();
+            }
+
+            if(disposing && triviaService != null)
+            {
+                triviaService.Dispose();
             }
 
             base.Dispose(disposing);

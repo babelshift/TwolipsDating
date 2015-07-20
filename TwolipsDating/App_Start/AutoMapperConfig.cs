@@ -123,6 +123,7 @@ namespace TwolipsDating
                 .ForMember(dest => dest.QuestionId, opts => opts.MapFrom(source => source.Id))
                 .ForMember(dest => dest.Content, opts => opts.MapFrom(source => source.Content))
                 .ForMember(dest => dest.CorrectAnswerId, opts => opts.MapFrom(source => source.CorrectAnswerId))
+                .ForMember(dest => dest.Points, opts => opts.MapFrom(source => source.Points))
                 .ForMember(dest => dest.Answers, opts => opts.MapFrom(source => source.PossibleAnswers.ToList().AsReadOnly()));
 
             Mapper.CreateMap<Answer, AnswerViewModel>()

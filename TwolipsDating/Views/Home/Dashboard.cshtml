@@ -1,5 +1,5 @@
 ﻿@using TwolipsDating.ViewModels
-@model DashboardViewModel 
+@model DashboardViewModel
 
 @{
     ViewBag.Title = "twolips - your dashboard";
@@ -51,32 +51,70 @@
 </div>
 
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-4">
+        @if (Model.RandomQuestion != null)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <h4 id="random-question-content">@Model.RandomQuestion.Content <small><span class="label label-default"><strong>@Model.RandomQuestion.Points points</strong></span></small></h4>
+                    <div id="answers">
+                        @foreach (var answer in Model.RandomQuestion.Answers)
+                        {
+                            <div class="radio">
+                                <label>
+                                    @Html.RadioButtonFor(m => m.RandomQuestion.SelectedAnswerId, answer.AnswerId)
+                                    @answer.Content
+                                </label>
+                            </div>
+                        }
+                    </div>
+                    <div id="result-alert" class="alert alert-success hidden"></div>
+                    <input id="button-ok" type="button" class="btn btn-primary btn-sm" value="OK" onclick="onSubmitAnswer(event, this)" />
+                    <input id="button-next" type="button" class="btn btn-primary btn-sm hidden" value="Next" onclick="onNextQuestion(event, this)" />
+                    @Html.HiddenFor(m => m.RandomQuestion.QuestionId)
+                </div>
+                <div class="panel-footer">
+                    <div class="text-center">
+                        <a href="@Url.Action("random", "trivia")"><small>See more questions</small></a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-md-8">
         <div class="panel panel-default">
             <div class="panel-body">
                 @if (Model.IsCurrentUserEmailConfirmed)
                 {
-                    for (int i = 0; i < Model.Items.Count; i++)
+                    if (Model.Items.Count > 0)
                     {
-                        var feedItem = Model.Items[i];
+                        for (int i = 0; i < Model.Items.Count; i++)
+                        {
+                            var feedItem = Model.Items[i];
 
-                        if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.Message)
-                        {
-                            Html.RenderPartial("_FeedItemMessagesPartial", feedItem.MessageFeedItem);
-                        }
-                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.UploadedPictures)
-                        {
-                            Html.RenderPartial("_FeedItemUploadedPicturesPartial", feedItem.UploadedImageFeedItem);
-                        }
-                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.ReviewWritten)
-                        {
-                            Html.RenderPartial("_FeedItemReviewWrittenPartial", feedItem.ReviewWrittenFeedItem);
-                        }
+                            if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.Message)
+                            {
+                                Html.RenderPartial("_FeedItemMessagesPartial", feedItem.MessageFeedItem);
+                            }
+                            else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.UploadedPictures)
+                            {
+                                Html.RenderPartial("_FeedItemUploadedPicturesPartial", feedItem.UploadedImageFeedItem);
+                            }
+                            else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.ReviewWritten)
+                            {
+                                Html.RenderPartial("_FeedItemReviewWrittenPartial", feedItem.ReviewWrittenFeedItem);
+                            }
 
-                        if (i < Model.Items.Count - 1)
-                        {
-                            <hr />
+                            if (i < Model.Items.Count - 1)
+                            {
+                                <hr />
+                            }
                         }
+                    }
+                    else
+                    {
+                        <h4>You will start seeing updates here when you send and receive messages or follow user profiles.</h4>
                     }
                 }
                 else
@@ -105,7 +143,6 @@
         </div>
     </div>
 </div>
-
 @section Scripts {
     <script src="@Url.Content("~/Scripts/Home/dashboard.js")" type="text/javascript"></script>
 }
