@@ -99,8 +99,9 @@
             <div id="popover-gifts-container" style="width: 225px;">
                 @if (ViewBag.GiftsReceived != null && ViewBag.GiftsReceived.Count > 0)
                 {
+                    <p class="pull-left"><a href="@Url.Action("index", "profile", new{ tab = "inventory" })">View inventory</a></p>
                     <p class="pull-right">
-                        <a href="#" class="remove-all-gift-notifications">Remove all notifications</a>
+                        <a href="#" class="remove-all-gift-notifications">Remove all</a>
                     </p>
                     <div class="clearfix"></div>
                     for (int i = 0; i < ViewBag.GiftsReceived.Count; i++)

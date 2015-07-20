@@ -28,11 +28,11 @@ namespace TwolipsDating.Controllers
                 string currentUserId = await GetCurrentUserIdAsync();
                 List<DashboardItemViewModel> dashboardItems = new List<DashboardItemViewModel>();
 
-                await AddMessagesToFeedAsync(currentUserId, dashboardItems);
+                //await AddMessagesToFeedAsync(currentUserId, dashboardItems);
 
-                await AddReviewsToFeedAsync(dashboardItems);
+                await AddReviewsToFeedAsync(currentUserId, dashboardItems);
 
-                await AddUploadedImagesToFeedAsync(dashboardItems);
+                await AddUploadedImagesToFeedAsync(currentUserId, dashboardItems);
 
                 await SetNotificationsAsync();
 
@@ -58,9 +58,9 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private async Task AddUploadedImagesToFeedAsync(List<DashboardItemViewModel> dashboardItems)
+        private async Task AddUploadedImagesToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
-            var uploadedImages = await dashboardService.GetRecentlyUploadedImagesAsync();
+            var uploadedImages = await dashboardService.GetRecentFollowerImagesAsync(currentUserId);
 
             var uploadedImagesConsolidated = uploadedImages.GetConsolidatedImagesForFeed();
 
@@ -75,9 +75,9 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private async Task AddReviewsToFeedAsync(List<DashboardItemViewModel> dashboardItems)
+        private async Task AddReviewsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
-            var reviews = await dashboardService.GetRecentlyWrittenReviewsAsync();
+            var reviews = await dashboardService.GetRecentFollowerReviewsAsync(currentUserId);
             var reviewFeedViewModel = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewWrittenFeedViewModel>>(reviews);
 
             foreach (var reviewFeed in reviewFeedViewModel)

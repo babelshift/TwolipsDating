@@ -106,5 +106,20 @@ namespace TwolipsDating.Controllers
                 return Json(new { success = success, error = "Failed to purchase the title. Contact support if you continue seeing this." });
             }
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && storeService != null)
+            {
+                storeService.Dispose();
+            }
+
+            if (disposing && userService != null)
+            {
+                userService.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

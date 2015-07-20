@@ -68,5 +68,15 @@ namespace TwolipsDating.Controllers
 
             return results;
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && searchService != null)
+            {
+                searchService.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

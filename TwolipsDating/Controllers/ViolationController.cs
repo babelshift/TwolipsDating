@@ -52,5 +52,15 @@ namespace TwolipsDating.Controllers
                 return Json(new { success = false, error = ErrorMessages.ReviewViolationNotSaved });
             }
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && violationService != null)
+            {
+                violationService.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }
