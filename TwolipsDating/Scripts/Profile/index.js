@@ -52,18 +52,12 @@
     setupReviewWrite();
 
     // loop through all share review links and turn them into valid popovers with share buttons
-    $("a[id^='share-profile-link']").popover({
-        content: function () {
-            var reviewId = $(this).attr('data-review-id');
-            var shareButtonsDiv = '#share-profile-buttons-popover-' + reviewId;
-            var clone = $(shareButtonsDiv).clone(true);
-            var cloneUnhide = clone.removeClass('hide');
-            return cloneUnhide.html();
-            //return $(shareButtonsDiv).html();
-        }
-    });
-    $("a[id^='share-profile-link']").click(function (e) {
-        e.preventDefault(); // prevents the page from jumping to the top on click
+    setupPopoverWithContent("a[id^='share-profile-link']", function () {
+        var reviewId = $(this).attr('data-review-id'); // extract the review ID
+        var shareButtonsDiv = "#share-profile-buttons-popover-" + reviewId;
+        var clone = $(shareButtonsDiv).clone(true);
+        var cloneUnhide = clone.removeClass('hide');
+        return cloneUnhide.html();
     });
 });
 

@@ -95,35 +95,38 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title text-center">
-                    Quizzes
+        @if (Model.Quizzes != null && Model.Quizzes.Count > 0)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title text-center">
+                        Quizzes
+                    </div>
+                </div>
+                <div class="list-group">
+                    @foreach (var quiz in Model.Quizzes)
+                    {
+                        if (quiz.IsComplete)
+                        {
+                            <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })" class="list-group-item list-group-item-success">
+                                <span class="badge">Completed</span>@quiz.Name
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })" class="list-group-item">
+                                <span class="badge">@quiz.Points points</span>@quiz.Name
+                            </a>
+                        }
+                    }
+                </div>
+                <div class="panel-footer">
+                    <div class="text-center">
+                        <a href="@Url.Action("index", "trivia")"><small>See more quizzes</small></a>
+                    </div>
                 </div>
             </div>
-            <div class="list-group">
-                @foreach (var quiz in Model.Quizzes)
-                {
-                    if (quiz.IsComplete)
-                    {
-                        <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })" class="list-group-item list-group-item-success">
-                            <span class="badge">Completed</span>@quiz.Name
-                        </a>
-                    }
-                    else
-                    {
-                        <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })" class="list-group-item">
-                            <span class="badge">@quiz.Points points</span>@quiz.Name
-                        </a>
-                    }
-                }
-            </div>
-            <div class="panel-footer">
-                <div class="text-center">
-                    <a href="@Url.Action("index", "trivia")"><small>See more quizzes</small></a>
-                </div>
-            </div>
-        </div>
+        }
     </div>
     <div class="col-md-8">
         <div class="panel panel-default">

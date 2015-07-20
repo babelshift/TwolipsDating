@@ -31,7 +31,7 @@
                         Total Spent:
                         <span class="pull-right text-warning"><strong><i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;@Model.TotalSpent</strong></span>
                     </p>
-                    <p><a href="#" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add points to your account</a></p>
+                    @*<p><a href="#" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add points to your account</a></p>*@
                 </div>
             </div>
             <div class="panel panel-default">
@@ -39,7 +39,7 @@
                     <h3 class="panel-title">More Information</h3>
                 </div>
                 <div class="panel-body">
-                    <p>You can add points to your account through purchases, trivia awards, or by receiving gifts from another user.</p>
+                    <p>You can add points to your account through purchases, <a href="@Url.Action("index", "trivia")">answering trivia</a>, or by receiving gifts from another user.</p>
                 </div>
             </div>
             <div class="panel panel-default">
