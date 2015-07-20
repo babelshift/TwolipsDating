@@ -56,8 +56,7 @@
         {
             <div class="panel panel-default">
                 <div class="panel-body">
-
-                    <h4 id="random-question-content">@Model.RandomQuestion.Content <small><span class="label label-default"><strong>@Model.RandomQuestion.Points points</strong></span></small></h4>
+                    <h4 id="random-question-content">@Model.RandomQuestion.Content <small><span class="badge">@Model.RandomQuestion.Points points</span></small></h4>
                     <div id="answers">
                         @foreach (var answer in Model.RandomQuestion.Answers)
                         {
@@ -70,8 +69,8 @@
                         }
                     </div>
                     <div id="result-alert" class="alert alert-success hidden"></div>
-                    <input id="button-ok" type="button" class="btn btn-primary btn-sm" value="OK" onclick="onSubmitAnswer(event, this)" />
-                    <input id="button-next" type="button" class="btn btn-primary btn-sm hidden" value="Next" onclick="onNextQuestion(event, this)" />
+                    <button id="button-ok" type="button" class="btn btn-primary btn-sm" onclick="onSubmitAnswer(event, this)" title="Submit answer"><i class="glyphicon glyphicon-ok"></i> OK</button>
+                    <button id="button-next" type="button" class="btn btn-primary btn-sm hidden" onclick="onNextQuestion(event, this)" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</button>
                     @Html.HiddenFor(m => m.RandomQuestion.QuestionId)
                 </div>
                 <div class="panel-footer">
@@ -81,6 +80,50 @@
                 </div>
             </div>
         }
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title text-center">
+                    Advertisement
+                </div>
+            </div>
+            <div class="panel-body text-center">
+                <img src="http://placehold.it/256x256" />
+            </div>
+            <div class="panel-footer">
+                <div class="text-center">
+                    <a href="#"><small>Learn how to support us without ads</small></a>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title text-center">
+                    Quizzes
+                </div>
+            </div>
+            <div class="list-group">
+                @foreach (var quiz in Model.Quizzes)
+                {
+                    if (quiz.IsComplete)
+                    {
+                        <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })" class="list-group-item list-group-item-success">
+                            <span class="badge">Completed</span>@quiz.Name
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })" class="list-group-item">
+                            <span class="badge">@quiz.Points points</span>@quiz.Name
+                        </a>
+                    }
+                }
+            </div>
+            <div class="panel-footer">
+                <div class="text-center">
+                    <a href="@Url.Action("index", "trivia")"><small>See more quizzes</small></a>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-md-8">
         <div class="panel panel-default">

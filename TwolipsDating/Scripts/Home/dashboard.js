@@ -2,7 +2,7 @@
     // get a random question
     get('/trivia/randomJson', function (data) {
         // show the new question
-        var content = data.Content + ' <small><span class="label label-default"><strong>' + data.Points + ' points</strong></span></small>';
+        var content = data.Content + ' <small><span class="badge">' + data.Points + ' points</span></small>';
         $('#random-question-content').html(content);
         $('#RandomQuestion_QuestionId').val(data.QuestionId);
 

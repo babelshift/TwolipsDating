@@ -15,5 +15,7 @@ namespace TwolipsDating.ViewModels
         public WriteReviewViolationViewModel WriteReviewViolation { get; set; }
 
         public QuestionViewModel RandomQuestion { get; set; }
+
+        public IReadOnlyCollection<QuizOverviewViewModel> Quizzes { get; set; }
     }
 }

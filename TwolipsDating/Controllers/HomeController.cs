@@ -29,7 +29,7 @@ namespace TwolipsDating.Controllers
                 string currentUserId = await GetCurrentUserIdAsync();
                 List<DashboardItemViewModel> dashboardItems = new List<DashboardItemViewModel>();
 
-                //await AddMessagesToFeedAsync(currentUserId, dashboardItems);
+                await AddMessagesToFeedAsync(currentUserId, dashboardItems);
 
                 await AddReviewsToFeedAsync(currentUserId, dashboardItems);
 
@@ -52,6 +52,18 @@ namespace TwolipsDating.Controllers
                 // generate a random question with its answers to view
                 var randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Random);
                 viewModel.RandomQuestion = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
+
+                var quizzes = await triviaService.GetQuizzesAsync();
+                viewModel.Quizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(quizzes);
+                var completedQuizzes = await triviaService.GetCompletedQuizzesForUserAsync(currentUserId);
+
+                foreach (var quiz in viewModel.Quizzes)
+                {
+                    if (completedQuizzes.Any(q => q.Key == quiz.Id))
+                    {
+                        quiz.IsComplete = true;
+                    }
+                }
 
                 return View("dashboard", viewModel);
             }
