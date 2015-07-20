@@ -457,10 +457,10 @@ namespace TwolipsDating.Controllers
                 {
                     UserName = model.UserName,
                     Email = model.Email,
-                    //DateCreated = DateTime.Now,
-                    //DateLastLogin = DateTime.Now,
+                    DateCreated = DateTime.Now,
+                    DateLastLogin = DateTime.Now,
                     //EmailConfirmed = true,
-                    //IsActive = true,
+                    IsActive = true,
                     //DisplayName = model.UserName
                 };
                 var result = await UserManager.CreateAsync(user);
