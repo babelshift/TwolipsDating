@@ -18,14 +18,13 @@ namespace TwolipsDating.Models
         public int Id { get; set; }
         public DateTime Birthday { get; set; }
         public int GenderId { get; set; }
-        public int? ZipCode { get; set; } // not required out of US
-        public int CityId { get; set; }
+        public int? GeoCityId { get; set; }
         public int? UserImageId { get; set; }
         public int? SelectedTitleId { get; set; }
 
         public virtual UserImage UserImage { get; set; }
         public virtual Gender Gender { get; set; }
-        public virtual City City { get; set; }
+        public virtual GeoCity GeoCity { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
         public virtual Title SelectedTitle { get; set; }
 

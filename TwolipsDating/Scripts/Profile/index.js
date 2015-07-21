@@ -1,5 +1,27 @@
 ﻿$(document).ready(function () {
 
+    $("#f_elem_city").autocomplete({
+        source: function (request, response) {
+            $.getJSON(
+               "https://secure.geobytes.com/AutoCompleteCity?callback=?&q=" + request.term,
+               function (data) {
+                   response(data);
+               }
+            );
+        },
+        minLength: 3,
+        select: function (event, ui) {
+            $('#CreateProfile_SelectedLocation').val(ui.item.value);
+        },
+        open: function () {
+            $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+        },
+        close: function () {
+            $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+        }
+    });
+    $("#f_elem_city").autocomplete("option", "delay", 100);
+
     var profileUserId = $('#ProfileUserId').val();
     var currentUserId = $('#CurrentUserId').val();
 
@@ -292,7 +314,7 @@ function onCountrySelected(e, obj) {
 function onCityBlur(e, obj) {
     var city = $(obj).val();
 
-    get('/location/city', function (data) {
+    get('/location/city?id=' + city, function (data) {
         if (data.CityName === '' || data.CityName === null) {
             $("#cityLocationText").html("<small>Are you sure that's a real city?</small>");
             $("#CreateProfile_SelectedCityId").val('');
@@ -307,7 +329,7 @@ function onZipCodeBlur(e, obj) {
     var zipCode = $(obj).val();
 
     if (zipCode.length === 5) {
-        get('/location/zip', function (data) {
+        get('/location/zip?id=' + zipCode, function (data) {
             if (data.CityName === '' || data.CityName === null) {
                 $("#zipCodeLocationText").html("<small>That's a bad zip code.</small>");
                 $("#CreateProfile_SelectedZipCodeId").val('');

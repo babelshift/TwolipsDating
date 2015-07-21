@@ -530,7 +530,7 @@ namespace TwolipsDating.Controllers
                 // user attempting to view base /profile URL but isn't logged in
                 if (String.IsNullOrEmpty(currentUserId))
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+                    return RedirectToAction("login", "account");
                 }
 
                 Models.Profile currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
@@ -696,7 +696,7 @@ namespace TwolipsDating.Controllers
         private async Task<ActionResult> GetViewModelForProfileCreationAsync()
         {
             var genders = await ProfileService.GetGendersAsync();
-            var countries = await ProfileService.GetCountriesAsync();
+            //var countries = await ProfileService.GetCountriesAsync();
 
             ProfileViewModel viewModel = new ProfileViewModel();
             viewModel.ViewMode = ProfileViewModel.ProfileViewMode.CreateProfile;
@@ -710,14 +710,14 @@ namespace TwolipsDating.Controllers
 
             viewModel.CreateProfile.Genders = genderCollection;
 
-            Dictionary<int, string> countryCollection = new Dictionary<int, string>();
-            foreach (var country in countries)
-            {
-                countryCollection.Add(country.Id, country.Name);
-            }
+            //Dictionary<int, string> countryCollection = new Dictionary<int, string>();
+            //foreach (var country in countries)
+            //{
+            //    countryCollection.Add(country.Id, country.Name);
+            //}
 
             string currentUserId = await GetCurrentUserIdAsync();
-            viewModel.CreateProfile.Countries = countryCollection;
+            //viewModel.CreateProfile.Countries = countryCollection;
             viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
             return View(viewModel);
@@ -738,9 +738,19 @@ namespace TwolipsDating.Controllers
             string currentUserId = await GetCurrentUserIdAsync();
             DateTime birthday = new DateTime(viewModel.CreateProfile.BirthYear.Value, viewModel.CreateProfile.BirthMonth.Value, viewModel.CreateProfile.BirthDayOfMonth.Value);
 
+            string[] location = viewModel.CreateProfile.SelectedLocation.Split(',');
+            string cityName = location[0].Trim();
+            string stateAbbreviation = location[1].Trim();
+            string countryName = location[2].Trim();
+
             try
             {
-                int changes = await ProfileService.CreateProfileAsync(viewModel.CreateProfile.SelectedGenderId.Value, viewModel.CreateProfile.SelectedZipCodeId, viewModel.CreateProfile.SelectedCityId.Value, currentUserId, birthday);
+                int changes = await ProfileService.CreateProfileAsync(
+                    viewModel.CreateProfile.SelectedGenderId.Value, 
+                    cityName,
+                    stateAbbreviation,
+                    countryName,
+                    currentUserId, birthday);
 
                 if (changes == 0)
                 {
@@ -750,8 +760,9 @@ namespace TwolipsDating.Controllers
                             currentUserId = currentUserId,
                             birthday = birthday.ToString(),
                             genderId = viewModel.CreateProfile.SelectedGenderId.Value,
-                            zipCodeId = viewModel.CreateProfile.SelectedZipCodeId,
-                            cityid = viewModel.CreateProfile.SelectedCityId.Value
+                            cityName = cityName,
+                            stateAbbreviation = stateAbbreviation,
+                            countryName = countryName
                         }
                     );
 
@@ -766,8 +777,9 @@ namespace TwolipsDating.Controllers
                         currentUserId = currentUserId,
                         birthday = birthday.ToString(),
                         genderId = viewModel.CreateProfile.SelectedGenderId.Value,
-                        zipCodeId = viewModel.CreateProfile.SelectedZipCodeId,
-                        cityid = viewModel.CreateProfile.SelectedCityId.Value
+                        cityName = cityName,
+                        stateAbbreviation = stateAbbreviation,
+                        countryName = countryName
                     }
                 );
 

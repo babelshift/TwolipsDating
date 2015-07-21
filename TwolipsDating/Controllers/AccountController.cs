@@ -484,7 +484,7 @@ namespace TwolipsDating.Controllers
         {
             string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
             var callbackUrl = Url.Action("confirmemail", "account", new { userId = user.Id, code = code }, Request.Url.Scheme);
-            await UserManager.SendEmailAsync(user.Id, confirmEmailSubject, confirmEmailBody);
+            await UserManager.SendEmailAsync(user.Id, confirmEmailSubject, String.Format(confirmEmailBody, callbackUrl));
         }
 
         //

@@ -55,7 +55,7 @@ namespace TwolipsDating.Controllers
             // setup targetted user for which conversations are being looked
             viewModel.TargetUserName = profileForOtherUser.ApplicationUser.UserName;
             viewModel.TargetUserAge = profileForOtherUser.Birthday.GetAge();
-            viewModel.TargetUserLocation = profileForOtherUser.City.GetCityAndState();
+            viewModel.TargetUserLocation = profileForOtherUser.GeoCity.ToFullLocationString();
             viewModel.TargetProfileId = profileForOtherUser.Id;
             viewModel.TargetUserId = id;
 

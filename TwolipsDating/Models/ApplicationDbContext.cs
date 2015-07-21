@@ -18,9 +18,9 @@ namespace TwolipsDating.Models
 
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Gender> Genders { get; set; }
-        public DbSet<Country> Countries { get; set; }
-        public DbSet<City> Cities { get; set; }
-        public DbSet<ZipCode> ZipCodes { get; set; }
+        //public DbSet<Country> Countries { get; set; }
+        //public DbSet<City> Cities { get; set; }
+        //public DbSet<ZipCode> ZipCodes { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<MessageStatus> MessageStatuses { get; set; }
         public DbSet<Review> Reviews { get; set; }
@@ -50,6 +50,9 @@ namespace TwolipsDating.Models
         public DbSet<StoreTransactionLog> StoreTransactions { get; set; }
         public DbSet<UserTitle> UserTitles { get; set; }
         public DbSet<Announcement> Announcements { get; set; }
+        public DbSet<GeoCity> GeoCities { get; set; }
+        public DbSet<GeoState> GeoStates { get; set; }
+        public DbSet<GeoCountry> GeoCountries { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -65,10 +68,10 @@ namespace TwolipsDating.Models
             SetupApplicationUserEntity(modelBuilder);
             SetupProfileEntity(modelBuilder);
             SetupGenderEntity(modelBuilder);
-            SetupCountryEntity(modelBuilder);
-            SetupCityEntity(modelBuilder);
-            SetupUSStateEntity(modelBuilder);
-            SetupZipCodeEntity(modelBuilder);
+            //SetupCountryEntity(modelBuilder);
+            //SetupCityEntity(modelBuilder);
+            //SetupUSStateEntity(modelBuilder);
+            //SetupZipCodeEntity(modelBuilder);
             SetupMessageStatusEntity(modelBuilder);
             SetupMessageEntity(modelBuilder);
             SetupReviewEntity(modelBuilder);
@@ -98,6 +101,61 @@ namespace TwolipsDating.Models
             SetupStoreTransactions(modelBuilder);
             SetupUserTitles(modelBuilder);
             SetupAnnouncements(modelBuilder);
+            SetupGeoCities(modelBuilder);
+            SetupGeoStates(modelBuilder);
+            SetupGeoCountries(modelBuilder);
+        }
+
+        private void SetupGeoCountries(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GeoCountry>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<GeoCountry>()
+                .Property(c => c.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<GeoCountry>()
+                .Property(c => c.Name)
+                .HasMaxLength(255);
+        }
+
+        private void SetupGeoStates(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GeoState>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<GeoState>()
+                .Property(c => c.Abbreviation)
+                .IsRequired();
+
+            modelBuilder.Entity<GeoState>()
+                .Property(c => c.Abbreviation)
+                .HasMaxLength(5);
+
+            modelBuilder.Entity<GeoState>()
+                .HasRequired(c => c.GeoCountry)
+                .WithMany(c => c.GeoStates)
+                .HasForeignKey(c => c.GeoCountryId);
+        }
+
+        private void SetupGeoCities(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GeoCity>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<GeoCity>()
+                .Property(c => c.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<GeoCity>()
+                .Property(c => c.Name)
+                .HasMaxLength(255);
+
+            modelBuilder.Entity<GeoCity>()
+                .HasRequired(c => c.GeoState)
+                .WithMany(c => c.GeoCities)
+                .HasForeignKey(c => c.GeoStateId);
         }
 
         private void SetupAnnouncements(DbModelBuilder modelBuilder)
@@ -741,42 +799,42 @@ namespace TwolipsDating.Models
                 .HasMaxLength(50);
         }
 
-        private void SetupZipCodeEntity(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<ZipCode>()
-                .HasKey(z => z.ZipCodeId);
+        //private void SetupZipCodeEntity(DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<ZipCode>()
+        //        .HasKey(z => z.ZipCodeId);
 
-            modelBuilder.Entity<ZipCode>()
-                .HasRequired(z => z.City)
-                .WithMany(z => z.ZipCodes)
-                .HasForeignKey(z => z.CityId);
+        //    modelBuilder.Entity<ZipCode>()
+        //        .HasRequired(z => z.City)
+        //        .WithMany(z => z.ZipCodes)
+        //        .HasForeignKey(z => z.CityId);
 
-            modelBuilder.Entity<ZipCode>()
-                .Property(z => z.ZipCodeId)
-                .HasMaxLength(5);
-        }
+        //    modelBuilder.Entity<ZipCode>()
+        //        .Property(z => z.ZipCodeId)
+        //        .HasMaxLength(5);
+        //}
 
-        private void SetupUSStateEntity(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<USState>()
-                .HasKey(u => u.Id);
+        //private void SetupUSStateEntity(DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<USState>()
+        //        .HasKey(u => u.Id);
 
-            modelBuilder.Entity<USState>()
-                .Property(u => u.Abbreviation)
-                .IsRequired();
+        //    modelBuilder.Entity<USState>()
+        //        .Property(u => u.Abbreviation)
+        //        .IsRequired();
 
-            modelBuilder.Entity<USState>()
-                .Property(u => u.Name)
-                .IsRequired();
+        //    modelBuilder.Entity<USState>()
+        //        .Property(u => u.Name)
+        //        .IsRequired();
 
-            modelBuilder.Entity<USState>()
-                .Property(u => u.Abbreviation)
-                .HasMaxLength(2);
+        //    modelBuilder.Entity<USState>()
+        //        .Property(u => u.Abbreviation)
+        //        .HasMaxLength(2);
 
-            modelBuilder.Entity<USState>()
-                .Property(u => u.Name)
-                .HasMaxLength(50);
-        }
+        //    modelBuilder.Entity<USState>()
+        //        .Property(u => u.Name)
+        //        .HasMaxLength(50);
+        //}
 
         private void SetupApplicationUserEntity(DbModelBuilder modelBuilder)
         {
@@ -797,43 +855,43 @@ namespace TwolipsDating.Models
                 .IsRequired();
         }
 
-        private void SetupCityEntity(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<City>()
-                .HasKey(c => c.Id);
+        //private void SetupCityEntity(DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<City>()
+        //        .HasKey(c => c.Id);
 
-            modelBuilder.Entity<City>()
-                .HasRequired(c => c.Country)
-                .WithMany(c => c.Cities)
-                .HasForeignKey(c => c.CountryId);
+        //    modelBuilder.Entity<City>()
+        //        .HasRequired(c => c.Country)
+        //        .WithMany(c => c.Cities)
+        //        .HasForeignKey(c => c.CountryId);
 
-            modelBuilder.Entity<City>()
-                .HasOptional(c => c.USState)
-                .WithMany(c => c.Cities)
-                .HasForeignKey(c => c.USStateId);
+        //    modelBuilder.Entity<City>()
+        //        .HasOptional(c => c.USState)
+        //        .WithMany(c => c.Cities)
+        //        .HasForeignKey(c => c.USStateId);
 
-            modelBuilder.Entity<City>()
-                .Property(c => c.Name)
-                .HasMaxLength(255);
+        //    modelBuilder.Entity<City>()
+        //        .Property(c => c.Name)
+        //        .HasMaxLength(255);
 
-            modelBuilder.Entity<City>()
-                .Property(c => c.Name)
-                .IsRequired();
-        }
+        //    modelBuilder.Entity<City>()
+        //        .Property(c => c.Name)
+        //        .IsRequired();
+        //}
 
-        private void SetupCountryEntity(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Country>()
-                .HasKey(c => c.Id);
+        //private void SetupCountryEntity(DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Country>()
+        //        .HasKey(c => c.Id);
 
-            modelBuilder.Entity<Country>()
-                .Property(c => c.Name)
-                .HasMaxLength(255);
+        //    modelBuilder.Entity<Country>()
+        //        .Property(c => c.Name)
+        //        .HasMaxLength(255);
 
-            modelBuilder.Entity<Country>()
-                .Property(c => c.Name)
-                .IsRequired();
-        }
+        //    modelBuilder.Entity<Country>()
+        //        .Property(c => c.Name)
+        //        .IsRequired();
+        //}
 
         private void SetupGenderEntity(DbModelBuilder modelBuilder)
         {
@@ -873,9 +931,9 @@ namespace TwolipsDating.Models
                 .HasForeignKey(p => p.GenderId);
 
             modelBuilder.Entity<Profile>()
-                .HasRequired(p => p.City)
+                .HasRequired(p => p.GeoCity)
                 .WithMany(p => p.Profiles)
-                .HasForeignKey(p => p.CityId);
+                .HasForeignKey(p => p.GeoCityId);
 
             modelBuilder.Entity<Profile>()
                 .Property(p => p.Birthday)

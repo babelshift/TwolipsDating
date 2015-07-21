@@ -24,13 +24,15 @@ namespace TwolipsDating.ViewModels
         public int? SelectedGenderId { get; set; }
 
         [Required]
-        public int? SelectedCountryId { get; set; }
+        public string SelectedLocation { get; set; }
 
-        public int? SelectedZipCodeId { get; set; }
-        public int? SelectedCityId { get; set; }
+        //[Required]
+        //public int? SelectedCountryId { get; set; }
+
+        //public int? SelectedZipCodeId { get; set; }
+        //public int? SelectedCityId { get; set; }
 
         public IDictionary<int, string> Genders { get; set; }
-        public IDictionary<int, string> Countries { get; set; }
-
+        //public IDictionary<int, string> Countries { get; set; }
     }
 }

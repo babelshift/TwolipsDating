@@ -386,58 +386,136 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<Country>> GetCountriesAsync()
-        {
-            var countries = from country in db.Countries
-                            select country;
+        //public async Task<IReadOnlyCollection<Country>> GetCountriesAsync()
+        //{
+        //    var countries = from country in db.Countries
+        //                    select country;
 
-            var results = await countries.ToListAsync();
-            return results.AsReadOnly();
-        }
+        //    var results = await countries.ToListAsync();
+        //    return results.AsReadOnly();
+        //}
 
-        public async Task<City> GetCityByNameAsync(string cityName)
+        //public async Task<City> GetCityByNameAsync(string cityName)
+        //{
+        //    Debug.Assert(!String.IsNullOrEmpty(cityName));
+
+        //    var result = from cities in db.Cities
+        //                 where cities.Name == cityName
+        //                 select cities;
+        //    return await result.FirstOrDefaultAsync();
+        //}
+
+        //public async Task<City> GetCityByZipCodeAsync(string zipCode)
+        //{
+        //    Debug.Assert(!String.IsNullOrEmpty(zipCode));
+
+        //    var result = from zipCodes in db.ZipCodes
+        //                 where zipCodes.ZipCodeId == zipCode
+        //                 select zipCodes.City;
+        //    return await result.FirstOrDefaultAsync();
+        //}
+
+        public async Task<int> CreateProfileAsync(int genderId, string cityName, string stateAbbreviation, string countryName, string userId, DateTime birthday)
         {
             Debug.Assert(!String.IsNullOrEmpty(cityName));
-
-            var result = from cities in db.Cities
-                         where cities.Name == cityName
-                         select cities;
-            return await result.FirstOrDefaultAsync();
-        }
-
-        public async Task<City> GetCityByZipCodeAsync(string zipCode)
-        {
-            Debug.Assert(!String.IsNullOrEmpty(zipCode));
-
-            var result = from zipCodes in db.ZipCodes
-                         where zipCodes.ZipCodeId == zipCode
-                         select zipCodes.City;
-            return await result.FirstOrDefaultAsync();
-        }
-
-        public async Task<int> CreateProfileAsync(int genderId, int? zipCode, int cityId, string userId, DateTime birthday)
-        {
-            if (zipCode.HasValue)
-            {
-                Debug.Assert(zipCode > 0);
-            }
+            Debug.Assert(!String.IsNullOrEmpty(stateAbbreviation));
+            Debug.Assert(!String.IsNullOrEmpty(countryName));
             Debug.Assert(genderId > 0);
-            Debug.Assert(cityId > 0);
             Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            int countryId = await GetGeoCountryIdAsync(countryName);
+            int stateId = await GetGeoStateIdAsync(stateAbbreviation, countryId);
+            int cityId = await GetGeoCityIdAsync(cityName, stateId);
 
             ApplicationUser user = new ApplicationUser() { Id = userId };
 
             db.Users.Attach(user);
 
-            Profile p = db.Profiles.Create();
-            p.Birthday = birthday;
-            p.ApplicationUser = user;
-            p.CityId = cityId;
-            p.GenderId = genderId;
-            p.ZipCode = zipCode;
+            Profile newProfile = db.Profiles.Create();
+            newProfile.Birthday = birthday;
+            newProfile.ApplicationUser = user;
+            newProfile.GeoCityId = cityId;
+            newProfile.GenderId = genderId;
 
-            db.Profiles.Add(p);
+            db.Profiles.Add(newProfile);
             return await db.SaveChangesAsync();
+        }
+
+        private async Task<int> GetGeoCityIdAsync(string cityName, int stateId)
+        {
+            var city = await db.GeoCities.Where(c => c.Name == cityName && c.GeoStateId == stateId).FirstOrDefaultAsync();
+
+            if (city == null)
+            {
+                return await CreateNewGeoCity(cityName, stateId);
+            }
+            else
+            {
+                return city.Id;
+            }
+        }
+
+        private async Task<int> GetGeoStateIdAsync(string stateAbbreviation, int countryId)
+        {
+            var state = await db.GeoStates.Where(s => s.Abbreviation == stateAbbreviation && s.GeoCountryId == countryId).FirstOrDefaultAsync();
+
+            if (state == null)
+            {
+                return await CreateNewGeoState(stateAbbreviation, countryId);
+            }
+            else
+            {
+                return state.Id;
+            }
+        }
+
+        private async Task<int> GetGeoCountryIdAsync(string countryName)
+        {
+            var country = await db.GeoCountries.Where(c => c.Name == countryName).FirstOrDefaultAsync();
+
+            if (country == null)
+            {
+                return await CreateNewGeoCountry(countryName);
+            }
+            else
+            {
+                return country.Id;
+            }
+        }
+
+        private async Task<int> CreateNewGeoCity(string cityName, int stateId)
+        {
+            GeoCity newGeoCity = new GeoCity()
+            {
+                Name = cityName,
+                GeoStateId = stateId
+            };
+            db.GeoCities.Add(newGeoCity);
+            await db.SaveChangesAsync();
+            return newGeoCity.Id;
+        }
+
+        private async Task<int> CreateNewGeoState(string stateAbbreviation, int countryId)
+        {
+            GeoState newGeoState = new GeoState()
+            {
+                Abbreviation = stateAbbreviation,
+                GeoCountryId = countryId
+            };
+            db.GeoStates.Add(newGeoState);
+            await db.SaveChangesAsync();
+            return newGeoState.Id;
+        }
+
+        private async Task<int> CreateNewGeoCountry(string countryName)
+        {
+            GeoCountry newGeoCountry = new GeoCountry()
+            {
+                Name = countryName
+            };
+            db.GeoCountries.Add(newGeoCountry);
+            await db.SaveChangesAsync();
+            return newGeoCountry.Id;
         }
 
         public async Task<IReadOnlyCollection<Message>> GetMessagesByUserAsync(string userId)
@@ -700,7 +778,7 @@ namespace TwolipsDating.Business
                                  where giftTransactions.ToUserId == currentUserId
                                  select giftTransactions).ToListAsync();
 
-            foreach(var giftTransaction in results)
+            foreach (var giftTransaction in results)
             {
                 giftTransaction.IsReviewedByToUser = true;
             }
@@ -714,11 +792,11 @@ namespace TwolipsDating.Business
             bool hasUserObtainedTitle = user.ObtainedTitles.Any(t => t.TitleId == titleId);
 
             // user hasn't obtained this title, don't let them use it
-            if(!hasUserObtainedTitle)
+            if (!hasUserObtainedTitle)
             {
                 throw new InvalidOperationException(ErrorMessages.TitleNotObtained);
             }
-            
+
             if (user != null)
             {
                 if (user.Profile != null)

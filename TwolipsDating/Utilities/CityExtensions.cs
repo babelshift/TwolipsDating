@@ -9,18 +9,13 @@ namespace TwolipsDating.Utilities
 {
     public static class CityExtensions
     {
-        public static string GetCityAndState(this City city)
+        public static string ToFullLocationString(this GeoCity geoCity)
         {
             StringBuilder sb = new StringBuilder();
 
-            if(city != null)
+            if(geoCity != null)
             {
-                sb.Append(city.Name);
-            }
-
-            if (city.USState != null)
-            {
-                sb.AppendFormat(", {0}", city.USState.Abbreviation);
+                sb.AppendFormat("{0}, {1}, {2}", geoCity.Name, geoCity.GeoState.Abbreviation, geoCity.GeoState.GeoCountry.Name);
             }
 
             return sb.ToString();

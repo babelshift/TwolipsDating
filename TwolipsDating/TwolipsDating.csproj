@@ -454,6 +454,18 @@
     <Compile Include="Migrations\201507171853187_SelectTitleOnProfile.Designer.cs">
       <DependentUpon>201507171853187_SelectTitleOnProfile.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507211632012_GeoLocations.cs" />
+    <Compile Include="Migrations\201507211632012_GeoLocations.Designer.cs">
+      <DependentUpon>201507211632012_GeoLocations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507211705269_MigrateProfileToGeoCity.cs" />
+    <Compile Include="Migrations\201507211705269_MigrateProfileToGeoCity.Designer.cs">
+      <DependentUpon>201507211705269_MigrateProfileToGeoCity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507211735250_AddUniqueKeysToGeoLocations.cs" />
+    <Compile Include="Migrations\201507211735250_AddUniqueKeysToGeoLocations.Designer.cs">
+      <DependentUpon>201507211735250_AddUniqueKeysToGeoLocations.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
@@ -462,6 +474,9 @@
     <Compile Include="Models\AnsweredQuestion.cs" />
     <Compile Include="Models\CompletedQuiz.cs" />
     <Compile Include="Models\FavoriteProfile.cs" />
+    <Compile Include="Models\GeoState.cs" />
+    <Compile Include="Models\GeoCountry.cs" />
+    <Compile Include="Models\GeoCity.cs" />
     <Compile Include="Models\Gift.cs" />
     <Compile Include="Models\GiftTransactionLog.cs" />
     <Compile Include="Models\IgnoredUser.cs" />
@@ -527,16 +542,12 @@
     <Compile Include="Migrations\CustomSqlServerMigrationSqlGenerator.cs" />
     <Compile Include="Migrations\MigrationExtensions.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
-    <Compile Include="Models\City.cs" />
-    <Compile Include="Models\Country.cs" />
     <Compile Include="Models\Gender.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\MessageStatus.cs" />
     <Compile Include="Models\Profile.cs" />
     <Compile Include="Models\ReviewRating.cs" />
     <Compile Include="Models\Review.cs" />
-    <Compile Include="Models\USState.cs" />
-    <Compile Include="Models\ZipCode.cs" />
     <Compile Include="Utilities\GuidEncoder.cs" />
     <Compile Include="ViewModels\DropDownMenuViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
@@ -583,6 +594,7 @@
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-yeti.css" />
+    <Content Include="Content\bootstrap-yeti.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\cancel-off.png" />
@@ -590,6 +602,8 @@
     <Content Include="Content\ekko-lightbox.css" />
     <Content Include="Content\fb_16.png" />
     <Content Include="Content\gplus-16.png" />
+    <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\star-half.png" />
     <Content Include="Content\star-off.png" />
     <Content Include="Content\star-on.png" />
@@ -623,6 +637,7 @@
     <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery.raty.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
@@ -839,6 +854,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507171853187_SelectTitleOnProfile.resx">
       <DependentUpon>201507171853187_SelectTitleOnProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507211632012_GeoLocations.resx">
+      <DependentUpon>201507211632012_GeoLocations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507211705269_MigrateProfileToGeoCity.resx">
+      <DependentUpon>201507211705269_MigrateProfileToGeoCity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507211735250_AddUniqueKeysToGeoLocations.resx">
+      <DependentUpon>201507211735250_AddUniqueKeysToGeoLocations.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
