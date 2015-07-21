@@ -59,7 +59,9 @@ namespace TwolipsDating
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()))
                 .ForMember(dest => dest.DateOccurred, opts => opts.MapFrom(source => source.DateSent))
                 .ForMember(dest => dest.SenderProfileId, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.Id))
-                .ForMember(dest => dest.ReceiverProfileId, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Profile.Id));
+                .ForMember(dest => dest.ReceiverProfileId, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Profile.Id))
+                .ForMember(dest => dest.SenderUserId, opts => opts.MapFrom(source => source.SenderApplicationUser.Id))
+                .ForMember(dest => dest.ReceiverUserId, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Id));
 
             Mapper.CreateMap<Review, ReviewWrittenFeedViewModel>()
                 .ForMember(dest => dest.ReviewId, opts => opts.MapFrom(source => source.Id))
