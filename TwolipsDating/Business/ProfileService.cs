@@ -807,5 +807,21 @@ namespace TwolipsDating.Business
 
             return await db.SaveChangesAsync();
         }
+
+        internal async Task<int> LogProfileViewAsync(string viewerUserId, int targetProfileId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(viewerUserId));
+            Debug.Assert(targetProfileId > 0);
+
+            ProfileViewLog newView = new ProfileViewLog()
+            {
+                ViewerUserId = viewerUserId,
+                TargetProfileId = targetProfileId,
+                DateVisited = DateTime.Now
+            };
+
+            db.ProfileViews.Add(newView);
+            return await db.SaveChangesAsync();
+        }
     }
 }

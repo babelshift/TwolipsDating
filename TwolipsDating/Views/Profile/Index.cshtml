@@ -14,55 +14,61 @@
 @if (Model != null && Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileViewMode.ShowProfile)
 {
     <div id="popover-titles-content" class="hide">
-        @foreach (var userTitle in Model.UserTitles)
+        @if (Model.UserTitles != null && Model.UserTitles.Count > 0)
         {
-            <p>
-                @if (userTitle.TitleName == Model.SelectedTitle)
-                {
-                    <i class="@String.Format("selected-title-item-check-{0}", userTitle.TitleId) glyphicon glyphicon-ok"></i>
-                }
-                <a class="@String.Format("select-title-link-{0}", userTitle.TitleId)" href="#" data-title-name="@userTitle.TitleName" data-title-id="@userTitle.TitleId">@userTitle.TitleName</a>
-            </p>
+            foreach (var userTitle in Model.UserTitles)
+            {
+                <p>
+                    @if (userTitle.TitleName == Model.SelectedTitle)
+                    {
+                        <i class="@String.Format("selected-title-item-check-{0}", userTitle.TitleId) glyphicon glyphicon-ok"></i>
+                    }
+                    <a class="@String.Format("select-title-link-{0}", userTitle.TitleId)" href="#" data-title-name="@userTitle.TitleName" data-title-id="@userTitle.TitleId">@userTitle.TitleName</a>
+                </p>
+            }
         }
     </div>
-    <div class="modal fade" id="modalReviewViolation" tabindex="-1" role="dialog" aria-labelledby="modalReviewViolationLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="modalReviewLabel">Submit violation for review</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="review-author-name" class="control-label">Review Author:</label>
-                        <p id="review-author-name"></p>
-                        <input type="hidden" id="review-id" />
+    if (Model.WriteReviewViolation != null && Model.WriteReviewViolation.ViolationTypes != null && Model.WriteReviewViolation.ViolationTypes.Count > 0)
+    {
+        <div class="modal fade" id="modalReviewViolation" tabindex="-1" role="dialog" aria-labelledby="modalReviewViolationLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modalReviewLabel">Submit violation for review</h4>
                     </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.WriteReviewViolation.ViolationTypeId, new { @class = "control-label" })
-                        @Html.DropDownListFor(m => m.WriteReviewViolation.ViolationTypeId,
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="review-author-name" class="control-label">Review Author:</label>
+                            <p id="review-author-name"></p>
+                            <input type="hidden" id="review-id" />
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.WriteReviewViolation.ViolationTypeId, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.WriteReviewViolation.ViolationTypeId,
                         new SelectList(Model.WriteReviewViolation.ViolationTypes, "Key", "Value"),
                         new { @class = "form-control", data_placeholder = "What's the problem?" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "control-label" })
+                            @Html.TextAreaFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "form-control" })
+                        </div>
+                        @Html.HiddenFor(m => m.CurrentUserId)
+                        <div id="violation-error" class="alert alert-danger" role="alert">
+                            <p id="violation-error-text">Something happened which prevented your violation from being submitted.</p>
+                        </div>
+                        <div id="violation-success" class="alert alert-success" role="alert">
+                            <p>Thanks for the report! You can close this popup now.</p>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "control-label" })
-                        @Html.TextAreaFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "form-control" })
+                    <div class="modal-footer">
+                        <button id="button-violation-close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button id="button-violation-submit" onclick="onAddReviewViolation(event, this)" type="button" class="btn btn-primary">Submit</button>
                     </div>
-                    @Html.HiddenFor(m => m.CurrentUserId)
-                    <div id="violation-error" class="alert alert-danger" role="alert">
-                        <p id="violation-error-text">Something happened which prevented your violation from being submitted.</p>
-                    </div>
-                    <div id="violation-success" class="alert alert-success" role="alert">
-                        <p>Thanks for the report! You can close this popup now.</p>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button id="button-violation-close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button id="button-violation-submit" onclick="onAddReviewViolation(event, this)" type="button" class="btn btn-primary">Submit</button>
                 </div>
             </div>
         </div>
-    </div>
+    }
     <div class="modal fade" id="modalGift" tabindex="-1" role="dialog" aria-labelledby="modalGiftLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -70,7 +76,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="modalReviewLabel">Send gifts to <strong>@Model.UserName</strong></h4>
                 </div>
-                @if (Model.ViewerInventoryItems.Count > 0)
+                @if (Model.ViewerInventoryItems != null && Model.ViewerInventoryItems.Count > 0)
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -456,6 +462,7 @@
                     *@
                 </div>
             </div>
+            @Html.Partial("_SidebarAdvertisementPartial")
         </div>
         <div class="col-md-8">
             <div class="panel panel-default">
@@ -592,21 +599,21 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
                                         @Html.HiddenFor(m => m.CreateProfile.SelectedLocation)
                                     </div>
                                     @*<div class="form-group">
-                                        <p class="control-label">Where are you?</p>
-                                        @Html.DropDownListFor(m => m.CreateProfile.SelectedCountryId,
-                            new SelectList(Model.CreateProfile.Countries, "Key", "Value"),
-                            new { @class = "form-control", data_placeholder = "What country are you in?", onchange = "onCountrySelected(event, this)" })
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" id="textBoxZipCode" class="form-control" placeholder="Zip Code (ex. 33777)" onblur="onZipCodeBlur(event, this)" maxlength="5" />
-                                        @Html.HiddenFor(m => m.CreateProfile.SelectedZipCodeId)
-                                        <p id="zipCodeLocationText"></p>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" id="textBoxCity" class="form-control" placeholder="City (ex. London)" onblur="onCityBlur(event, this)" />
-                                        @Html.HiddenFor(m => m.CreateProfile.SelectedCityId)
-                                        <p id="cityLocationText"></p>
-                                    </div>*@
+                                                    <p class="control-label">Where are you?</p>
+                                                    @Html.DropDownListFor(m => m.CreateProfile.SelectedCountryId,
+                                        new SelectList(Model.CreateProfile.Countries, "Key", "Value"),
+                                        new { @class = "form-control", data_placeholder = "What country are you in?", onchange = "onCountrySelected(event, this)" })
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" id="textBoxZipCode" class="form-control" placeholder="Zip Code (ex. 33777)" onblur="onZipCodeBlur(event, this)" maxlength="5" />
+                                                    @Html.HiddenFor(m => m.CreateProfile.SelectedZipCodeId)
+                                                    <p id="zipCodeLocationText"></p>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" id="textBoxCity" class="form-control" placeholder="City (ex. London)" onblur="onCityBlur(event, this)" />
+                                                    @Html.HiddenFor(m => m.CreateProfile.SelectedCityId)
+                                                    <p id="cityLocationText"></p>
+                                                </div>*@
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary pull-right">OK</button>
                                         <div class="clearfix"></div>

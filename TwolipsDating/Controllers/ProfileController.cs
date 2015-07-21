@@ -565,9 +565,12 @@ namespace TwolipsDating.Controllers
             viewModel.AllTags = await GetAllTagsAndCountsInSystemAsync(tagsSuggestedForProfile); // these are all tags to be displayed in the "suggest" popup
             viewModel.AwardedTags = await ProfileService.GetTagsAwardedToProfileAsync(profile.Id);
 
-            // favorites and ignores
-            viewModel.IsFavoritedByCurrentUser = profile.FavoritedBy.Any(f => f.UserId == currentUserId);
-            viewModel.IsIgnoredByCurrentUser = await userService.IsUserIgnoredByUserAsync(currentUserId, profile.ApplicationUser.Id);
+            // favorites and ignores (check for empty so we skip in case of anonymous viewers)
+            if (!String.IsNullOrEmpty(currentUserId))
+            {
+                viewModel.IsFavoritedByCurrentUser = profile.FavoritedBy.Any(f => f.UserId == currentUserId);
+                viewModel.IsIgnoredByCurrentUser = await userService.IsUserIgnoredByUserAsync(currentUserId, profile.ApplicationUser.Id);
+            }
 
             // setup the inventory
             var profileInventoryItems = await ProfileService.GetInventoryAsync(profile.ApplicationUser.Id);
@@ -575,30 +578,50 @@ namespace TwolipsDating.Controllers
             viewModel.Inventory.Items = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(profileInventoryItems);
             viewModel.Inventory.CurrentUserId = currentUserId;
             viewModel.Inventory.ProfileUserId = profile.ApplicationUser.Id;
-            var viewerInventoryItems = await ProfileService.GetInventoryAsync(currentUserId);
-            viewModel.ViewerInventoryItems = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(viewerInventoryItems);
 
-            // setup user titles to select
-            // TODO: optimize this
-            var titles = await userService.GetTitlesOwnedByUserAsync(currentUserId);
-            List<TitleViewModel> titleViewModel = new List<TitleViewModel>();
-            foreach (var title in titles)
+            // anonymous viewers don't have an inventory, so skip this if empty
+            if (!String.IsNullOrEmpty(currentUserId))
             {
-                titleViewModel.Add(new TitleViewModel()
-                {
-                    TitleId = title.Key,
-                    TitleName = title.Value.Title.Name
-                });
+                var viewerInventoryItems = await ProfileService.GetInventoryAsync(currentUserId);
+                viewModel.ViewerInventoryItems = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(viewerInventoryItems);
             }
-            viewModel.UserTitles = titleViewModel;
 
-            // setup violation types
-            var violationTypes = await violationService.GetViolationTypesAsync();
-            viewModel.WriteReviewViolation = new WriteReviewViolationViewModel();
-            viewModel.WriteReviewViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
+            // setup user titles to select (only if the user is viewing their own profile
+            // TODO: optimize this
+            if (currentUserId == profile.ApplicationUser.Id)
+            {
+                var titles = await userService.GetTitlesOwnedByUserAsync(currentUserId);
+                List<TitleViewModel> titleViewModel = new List<TitleViewModel>();
+                foreach (var title in titles)
+                {
+                    titleViewModel.Add(new TitleViewModel()
+                    {
+                        TitleId = title.Key,
+                        TitleName = title.Value.Title.Name
+                    });
+                }
+                viewModel.UserTitles = titleViewModel;
+            }
+            
+            // anonymous viewers can't report violations so don't look any of the types up
+            if (!String.IsNullOrEmpty(currentUserId))
+            {
+                // setup violation types
+                var violationTypes = await violationService.GetViolationTypesAsync();
+                viewModel.WriteReviewViolation = new WriteReviewViolationViewModel();
+                viewModel.WriteReviewViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
+            }
 
             // setup viewmodel specific to the actively selected tab
             await SetViewModelBasedOnActiveTabAsync(profile, viewModel, reviews, currentUserId);
+
+            // log this visit
+            // TODO
+            // don't log anonymous views for now, but think of a way to do so
+            if (!String.IsNullOrEmpty(currentUserId))
+            {
+                await ProfileService.LogProfileViewAsync(currentUserId, viewModel.ProfileId);
+            }
 
             return View(viewModel);
         }

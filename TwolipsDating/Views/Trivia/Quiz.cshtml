@@ -14,7 +14,10 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-4">
+        @Html.Partial("_SidebarAdvertisementPartial")
+    </div>
+    <div class="col-md-8">
         <div class="panel panel-default">
             <div class="panel-body">
                 @if (Model != null && Model.Questions != null && Model.Questions.Count > 0)
@@ -72,7 +75,7 @@
 
                         if (!Model.IsAlreadyCompleted)
                         {
-                            <input id="button-submit" type="submit" class="btn btn-sm btn-primary" value="OK" />
+                            <button id="button-submit" type="submit" class="btn btn-primary btn-sm" onclick="onSubmitAnswer(event, this)" title="Submit answer"><i class="glyphicon glyphicon-ok"></i> OK</button>
                         }
                         @Html.HiddenFor(m => m.QuizId)
                     }

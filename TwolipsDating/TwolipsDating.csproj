@@ -466,6 +466,14 @@
     <Compile Include="Migrations\201507211735250_AddUniqueKeysToGeoLocations.Designer.cs">
       <DependentUpon>201507211735250_AddUniqueKeysToGeoLocations.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507212138345_AddProfileViewLog.cs" />
+    <Compile Include="Migrations\201507212138345_AddProfileViewLog.Designer.cs">
+      <DependentUpon>201507212138345_AddProfileViewLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507212157590_ChangeKeyOnProfileViewLog.cs" />
+    <Compile Include="Migrations\201507212157590_ChangeKeyOnProfileViewLog.Designer.cs">
+      <DependentUpon>201507212157590_ChangeKeyOnProfileViewLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
@@ -485,6 +493,7 @@
     <Compile Include="Models\Milestone.cs" />
     <Compile Include="Models\MilestoneAchievement.cs" />
     <Compile Include="Models\MilestoneType.cs" />
+    <Compile Include="Models\ProfileViewLog.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\QuestionTagPoints.cs" />
     <Compile Include="Models\QuestionType.cs" />
@@ -721,6 +730,8 @@
     <Content Include="Views\Store\Gifts.cshtml" />
     <Content Include="Views\Account\Points.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\Shared\_SidebarAdvertisementPartial.cshtml" />
+    <Content Include="Views\Shared\SidebarQuizzesPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -863,6 +874,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507211735250_AddUniqueKeysToGeoLocations.resx">
       <DependentUpon>201507211735250_AddUniqueKeysToGeoLocations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507212138345_AddProfileViewLog.resx">
+      <DependentUpon>201507212138345_AddProfileViewLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507212157590_ChangeKeyOnProfileViewLog.resx">
+      <DependentUpon>201507212157590_ChangeKeyOnProfileViewLog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

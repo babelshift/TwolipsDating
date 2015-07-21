@@ -10,7 +10,10 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-4">
+        @Html.Partial("_SidebarAdvertisementPartial")
+    </div>
+    <div class="col-md-8">
         <div class="panel panel-default">
             <div class="panel-body">
                 @if (Model != null)
@@ -28,13 +31,13 @@
                             </label>
                         </div>
                     }
-                    <input id="button-ok" type="button" class="btn btn-primary btn-sm" value="OK" onclick="onSubmitAnswer(event, this)" />
-                    @Html.ActionLink("Next", "random", null, new { id = "button-next", @class = "btn btn-sm hidden" })
+                    <button id="button-ok" type="button" class="btn btn-primary btn-sm" onclick="onSubmitAnswer(event, this)" title="Submit answer"><i class="glyphicon glyphicon-ok"></i> OK</button>
+                    <a id="button-next" href="@Url.Action("random", "trivia")" class="btn btn-primary btn-sm hidden" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</a>
                     @Html.HiddenFor(m => m.QuestionId)
                 }
                 else
                 {
-                    <h4>You're a machine. You've answered every question we have.</h4>
+                    <h4>You're a machine. You've answered every random question we have.</h4>
                 }
             </div>
         </div>

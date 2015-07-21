@@ -53,6 +53,7 @@ namespace TwolipsDating.Models
         public DbSet<GeoCity> GeoCities { get; set; }
         public DbSet<GeoState> GeoStates { get; set; }
         public DbSet<GeoCountry> GeoCountries { get; set; }
+        public DbSet<ProfileViewLog> ProfileViews { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -104,6 +105,23 @@ namespace TwolipsDating.Models
             SetupGeoCities(modelBuilder);
             SetupGeoStates(modelBuilder);
             SetupGeoCountries(modelBuilder);
+            SetupProfileViews(modelBuilder);
+        }
+
+        private void SetupProfileViews(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ProfileViewLog>()
+                .HasKey(c => new { c.ViewerUserId, c.TargetProfileId, c.DateVisited });
+
+            modelBuilder.Entity<ProfileViewLog>()
+                .HasRequired(c => c.Profile)
+                .WithMany(c => c.VisitedBy)
+                .HasForeignKey(c => c.TargetProfileId);
+
+            modelBuilder.Entity<ProfileViewLog>()
+                .HasRequired(c => c.ViewerUser)
+                .WithMany(c => c.ProfilesVisited)
+                .HasForeignKey(c => c.ViewerUserId);
         }
 
         private void SetupGeoCountries(DbModelBuilder modelBuilder)
