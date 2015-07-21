@@ -51,89 +51,89 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4">
-        @if (Model.RandomQuestion != null)
-        {
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <h4 id="random-question-content">@Model.RandomQuestion.Content <small><span class="badge">@Model.RandomQuestion.Points points</span></small></h4>
-                    <div id="answers">
-                        @foreach (var answer in Model.RandomQuestion.Answers)
-                        {
-                            <div class="radio">
-                                <label>
-                                    @Html.RadioButtonFor(m => m.RandomQuestion.SelectedAnswerId, answer.AnswerId)
-                                    @answer.Content
-                                </label>
-                            </div>
-                        }
+    @if (Model.IsCurrentUserEmailConfirmed)
+    {
+        <div class="col-md-4">
+            @if (Model.RandomQuestion != null)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4 id="random-question-content">@Model.RandomQuestion.Content <small><span class="badge">@Model.RandomQuestion.Points points</span></small></h4>
+                        <div id="answers">
+                            @foreach (var answer in Model.RandomQuestion.Answers)
+                            {
+                                <div class="radio">
+                                    <label>
+                                        @Html.RadioButtonFor(m => m.RandomQuestion.SelectedAnswerId, answer.AnswerId)
+                                        @answer.Content
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                        <div id="result-alert" class="alert alert-success hidden"></div>
+                        <button id="button-ok" type="button" class="btn btn-primary btn-sm" onclick="onSubmitAnswer(event, this)" title="Submit answer"><i class="glyphicon glyphicon-ok"></i> OK</button>
+                        <button id="button-next" type="button" class="btn btn-primary btn-sm hidden" onclick="onNextQuestion(event, this)" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</button>
+                        @Html.HiddenFor(m => m.RandomQuestion.QuestionId)
                     </div>
-                    <div id="result-alert" class="alert alert-success hidden"></div>
-                    <button id="button-ok" type="button" class="btn btn-primary btn-sm" onclick="onSubmitAnswer(event, this)" title="Submit answer"><i class="glyphicon glyphicon-ok"></i> OK</button>
-                    <button id="button-next" type="button" class="btn btn-primary btn-sm hidden" onclick="onNextQuestion(event, this)" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</button>
-                    @Html.HiddenFor(m => m.RandomQuestion.QuestionId)
-                </div>
-                <div class="panel-footer">
-                    <div class="text-center">
-                        <a href="@Url.Action("random", "trivia")"><small>See more questions</small></a>
+                    <div class="panel-footer">
+                        <div class="text-center">
+                            <a href="@Url.Action("random", "trivia")"><small>See more questions</small></a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title text-center">
-                    Advertisement
-                </div>
-            </div>
-            <div class="panel-body text-center">
-                <img src="http://placehold.it/256x256" />
-            </div>
-            <div class="panel-footer">
-                <div class="text-center">
-                    <a href="#"><small>Learn how to support us without ads</small></a>
-                </div>
-            </div>
-        </div>
-        @if (Model.Quizzes != null && Model.Quizzes.Count > 0)
-        {
+            }
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="panel-title text-center">
-                        Quizzes
+                        Advertisement
                     </div>
                 </div>
-                <div class="list-group">
-                    @foreach (var quiz in Model.Quizzes)
-                    {
-                        if (quiz.IsComplete)
-                        {
-                            <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })" class="list-group-item list-group-item-success">
-                                <span class="badge">Completed</span>@quiz.Name
-                            </a>
-                        }
-                        else
-                        {
-                            <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })" class="list-group-item">
-                                <span class="badge">@quiz.Points points</span>@quiz.Name
-                            </a>
-                        }
-                    }
+                <div class="panel-body text-center">
+                    <img src="http://placehold.it/256x256" />
                 </div>
                 <div class="panel-footer">
                     <div class="text-center">
-                        <a href="@Url.Action("index", "trivia")"><small>See more quizzes</small></a>
+                        <a href="#"><small>Learn how to support us without ads</small></a>
                     </div>
                 </div>
             </div>
-        }
-    </div>
-    <div class="col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                @if (Model.IsCurrentUserEmailConfirmed)
-                {
-                    if (Model.Items.Count > 0)
+            @if (Model.Quizzes != null && Model.Quizzes.Count > 0)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title text-center">
+                            Quizzes
+                        </div>
+                    </div>
+                    <div class="list-group">
+                        @foreach (var quiz in Model.Quizzes)
+                        {
+                            if (quiz.IsComplete)
+                            {
+                                <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })" class="list-group-item list-group-item-success">
+                                    <span class="badge">Completed</span>@quiz.Name
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })" class="list-group-item">
+                                    <span class="badge">@quiz.Points points</span>@quiz.Name
+                                </a>
+                            }
+                        }
+                    </div>
+                    <div class="panel-footer">
+                        <div class="text-center">
+                            <a href="@Url.Action("index", "trivia")"><small>See more quizzes</small></a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @if (Model.Items.Count > 0)
                     {
                         for (int i = 0; i < Model.Items.Count; i++)
                         {
@@ -162,32 +162,37 @@
                     {
                         <h4>You will start seeing updates here when you send and receive messages or follow user profiles.</h4>
                     }
-                }
-                else
-                {
-                    <h4>Before you can view your dashboard, you must confirm your email address.</h4>
-                }
-
-                @*
-                    <p>
-                        <a href="#">jskiles1</a> completed the challenge <a href="#" class="label label-primary">Bring Out Your Dead</a>
-                        <br />
-                        <small>3 minutes ago</small>
-                    </p>
-                    <p>
-                        <a href="#">jskiles1</a> defeated <a href="#">joanne123</a> in a game of <a href="#" class="label label-primary">Chicken</a>
-                        <br />
-                        <small>5 hours ago</small>
-                    </p>
-                    <p>
-                        <a href="#">jskiles1</a> made an announcement: <strong>all I do is win!</strong>
-                        <br />
-                        <small>7 hours ago</small>
-                    </p>
-                *@
+                    @*
+                        <p>
+                            <a href="#">jskiles1</a> completed the challenge <a href="#" class="label label-primary">Bring Out Your Dead</a>
+                            <br />
+                            <small>3 minutes ago</small>
+                        </p>
+                        <p>
+                            <a href="#">jskiles1</a> defeated <a href="#">joanne123</a> in a game of <a href="#" class="label label-primary">Chicken</a>
+                            <br />
+                            <small>5 hours ago</small>
+                        </p>
+                        <p>
+                            <a href="#">jskiles1</a> made an announcement: <strong>all I do is win!</strong>
+                            <br />
+                            <small>7 hours ago</small>
+                        </p>
+                    *@
+                </div>
             </div>
         </div>
-    </div>
+    }
+    else
+    {
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>Before you can view your dashboard, you must confirm your email address.</h4>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 @section Scripts {
     <script src="@Url.Content("~/Scripts/Home/dashboard.js")" type="text/javascript"></script>
