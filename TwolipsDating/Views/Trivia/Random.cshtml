@@ -7,10 +7,23 @@
 <div class="panel panel-default">
     <div class="panel-body">
         @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = TwolipsDating.ViewModels.ActiveMenuText.Trivia })
+        <div class="pull-right">
+            <h4>You're answering a random question</h4>
+        </div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    Create your own questions
+                </h4>
+            </div>
+            <div class="panel-body">
+                Do you have ideas for some good trivia questions? <a href="mailto:info@twolipsdating.com">Contact us</a> to let us know about them. If we approve, you'll see your questions here soon!
+            </div>
+        </div>
         @Html.Partial("_SidebarAdvertisementPartial")
     </div>
     <div class="col-md-8">

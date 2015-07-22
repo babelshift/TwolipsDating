@@ -4,153 +4,196 @@
     ViewBag.Title = "twolips - free online dating entertainment";
 }
 
-<div class="jumbotron">
-    <div class="row" style="background-color: #fff; border-radius: 10px; padding: 15px;">
-        <div class="col-md-6">
-            <div class="text-center">
-                <h1>twolips dating</h1>
-                <img src="~/Content/twolipsicon-white.png" width="125" height="125" />
-                <h2>It's time to meet new people.</h2>
-                <p>Find someone for who they are instead of what they are. Meet people through a variety of activities rather than relying only on matching and messaging.</p>
-            </div>
-        </div>
-        <div class="col-md-5 col-md-offset-1">
-            @using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = "" }, FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
-                <div class="text-center">
-                    <p>Sign up quickly</p>
+<div class="container-fluid" style="background: linear-gradient(#004a60, #008cba); border-bottom: 1px solid #333;">
+    <div class="jumbotron">
+        <div class="container">
+            <div class="row" style="padding: 15px;">
+                <div class="col-md-8" style="vertical-align: middle">
+                    <h1>Meet people, make friends, have fun.</h1>
+                    <h3>Find friends and colleagues through a variety of activities rather than relying only on matching and messaging.</h3>
+                    <hr />
+                    <p><i class="glyphicon glyphicon-piggy-bank"></i> Access is free. Don't pay other services just to message people.</p>
+                    <p><i class="glyphicon glyphicon-book"></i> Use a personalized space to show off your achievements and attract likeminded friends.</p>
+                    <p><i class="glyphicon glyphicon-comment"></i> Write reviews about other users that you've met.</p>
+                    <p><i class="glyphicon glyphicon-gift"></i> Collect gifts, emojis, titles, and profile customizations through trivia and challenges.</p>
                 </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <button style="width: 100%;" type="submit" class="btn btn-default" id="Twitter" name="provider" value="Twitter" title="Log in using your Twitter account">
-                                <img src="~/Content/bird_blue_16.png" />&nbsp;&nbsp;Twitter
-                            </button>
+                <div class="col-md-4">
+                    @using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = "" }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="text-center">
+                            <h3>Sign up quickly</h3>
                         </div>
-                        <div class="col-md-4">
-                            <button style="width: 100%;" type="submit" class="btn btn-default" id="Facebook" name="provider" value="Facebook" title="Log in using your Facebook account">
-                                <img src="~/Content/fb_16.png" />&nbsp;&nbsp;Facebook
-                            </button>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12" style="margin-bottom: 10px;">
+                                    <button style="width: 100%;" type="submit" class="btn btn-info" id="Twitter" name="provider" value="Twitter" title="Log in using your Twitter account">
+                                        <img src="~/Content/bird_blue_16.png" />&nbsp;&nbsp;Twitter
+                                    </button>
+                                </div>
+                                <div class="col-md-12" style="margin-bottom: 10px;">
+                                    <button style="width: 100%;" type="submit" class="btn btn-primary" id="Facebook" name="provider" value="Facebook" title="Log in using your Facebook account">
+                                        <img src="~/Content/fb_16.png" />&nbsp;&nbsp;Facebook
+                                    </button>
+                                </div>
+                                <div class="col-md-12">
+                                    <button style="width: 100%;" type="submit" class="btn btn-danger" id="Google" name="provider" value="Google" title="Log in using your Google account">
+                                        <img src="~/Content/gplus-16.png" />&nbsp;&nbsp;Google
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <button style="width: 100%;" type="submit" class="btn btn-default" id="Google" name="provider" value="Google" title="Log in using your Google account">
-                                <img src="~/Content/gplus-16.png" />&nbsp;&nbsp;Google
-                            </button>
-                        </div>
+                    }
+                    <div class="text-center">
+                        <h3>Or create an account</h3>
                     </div>
+                    @using (Html.BeginForm("register", "account", FormMethod.Post, new { role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary()
+                        <div class="form-group">
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Choose a username" })
+                        </div>
+                        <div class="form-group">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Enter a password" })
+                        </div>
+                        <div class="form-group">
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", @placeholder = "Re-enter the password" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Your email address" })
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-block">
+                                Sign up for twolips dating
+                            </button>
+                        </div>
+                        <small>By clicking "Sign up for Twolips Dating", you are agreeing to the @Html.ActionLink("Terms of Service", "terms", "about") and @Html.ActionLink("Privacy Policy", "privacy", "about").</small>
+                    }
                 </div>
-            }
-            <div class="text-center">
-                <p>Or create an account</p>
             </div>
-            @using (Html.BeginForm("register", "account", FormMethod.Post, new { role = "form" }))
-            {
-                @Html.AntiForgeryToken()
-                @Html.ValidationSummary()
-                <div class="form-group">
-                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Choose a username" })
-                </div>
-                <div class="form-group">
-                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Enter a password" })
-                </div>
-                <div class="form-group">
-                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", @placeholder = "Re-enter the password" })
-                </div>
-                <div class="form-group">
-                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Your email address" })
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success btn-block">
-                        Sign up for twolips dating
-                    </button>
-                </div>
-                <small>By clicking "Sign up for Twolips Dating", you are agreeing to the @Html.ActionLink("Terms of Service", "terms", "about") and @Html.ActionLink("Privacy Policy", "privacy", "about").</small>
-            }
         </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-body text-center">
-                <div class="marketing-panel">
-                    <span class="marketing-icon"><i class="glyphicon glyphicon-book"></i></span>
+<div class="container" style="padding-top: 50px; padding-bottom: 125px">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1>An increasing and growing featureset</h1>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    <div class="marketing-panel">
+                        <span class="marketing-icon"><i class="glyphicon glyphicon-book"></i></span>
+                    </div>
+                    <h3>Maintain your profile</h3>
+                    <p>
+                        Your profile lets others know who you are, what others have said about you, what prizes you've earned, and a lot more. Use this space to attract likeminded friends.
+                    </p>
                 </div>
-                <h3>Maintain your profile</h3>
-                <p>
-                    Your profile lets others know who you are, what others have said about you, what prizes you've earned, and a lot more. Use this space to attract likeminded friends.
-                </p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    <div class="marketing-panel">
+                        <span class="marketing-icon"><i class="glyphicon glyphicon-log-in"></i></span>
+                    </div>
+                    <h3>Get in free</h3>
+                    <p>
+                        Tired of having to pay just to communicate with people? Sick of being nagged to purchase the privilege just to respond? You've come to the right place.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    <div class="marketing-panel">
+                        <span class="marketing-icon"><i class="glyphicon glyphicon-comment"></i></span>
+                    </div>
+                    <h3>Review each other</h3>
+                    <p>
+                        Engage other users by requesting a review of your profile or take the first step by offering a review of another user's profile. By participating in the community, you will earn points, gifts, and titles!
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    <div class="marketing-panel">
+                        <span class="marketing-icon"><i class="glyphicon glyphicon-tags"></i></span>
+                    </div>
+                    <h3>Tag your friends</h3>
+                    <p>
+                        Tag your own profile and offer tag suggestions to other user profiles to help with matching by interests. Earn special tags through challenges and engagements.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    <div class="marketing-panel">
+                        <span class="marketing-icon"><i class="glyphicon glyphicon-gift"></i></span>
+                    </div>
+                    <h3>Collect gifts</h3>
+                    <p>
+                        Participating in certain activities with other users can earn you gifts and titles to decorate your profile. Trade gifts with others to win over your friends!
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    <div class="marketing-panel">
+                        <span class="marketing-icon"><i class="glyphicon glyphicon-stats"></i></span>
+                    </div>
+                    <h3>Show off your stats</h3>
+                    <p>
+                        Your community accomplishments can easily be displayed, searched, and shown off in many different ways. Share your achievements with the rest of the community.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-body text-center">
-                <div class="marketing-panel">
-                    <span class="marketing-icon"><i class="glyphicon glyphicon-log-in"></i></span>
-                </div>
-                <h3>Get in free</h3>
-                <p>
-                    Tired of having to pay just to communicate with people? Sick of being nagged to purchase the privilege just to respond? You've come to the right place.
-                </p>
+</div>
+<div class="container-fluid" style="background-color: #fff; padding-top: 50px; padding-bottom: 125px">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1>Profiles allow you to show off and interact</h1>
+                <img src="~/Content/SplashFeature1.png" style="border: 1px solid #ccc; border-radius: 10px; box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15); max-width: 100%" />
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-body text-center">
-                <div class="marketing-panel">
-                    <span class="marketing-icon"><i class="glyphicon glyphicon-comment"></i></span>
-                </div>
-                <h3>Review each other</h3>
-                <p>
-                    Engage other users by requesting a review of your profile or take the first step by offering a review of a potential date. Earn points, gifts, and badges!
-                </p>
+</div>
+<div class="container" style="padding: 50px 15px 125px 15px">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1>Engage in conversations with other users</h1>
+            <img src="~/Content/SplashFeature2.png" style="border: 1px solid #ccc; border-radius: 10px; box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15); max-width: 100%" />
+        </div>
+    </div>
+</div>
+<div class="container-fluid" style="background-color: #fff; padding-top: 50px; padding-bottom: 125px">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1>Search across profiles with similar tags and names</h1>
+                <img src="~/Content/SplashFeature3.png" style="border: 1px solid #ccc; border-radius: 10px; box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15); max-width: 100%" />
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-body text-center">
-                <div class="marketing-panel">
-                    <span class="marketing-icon"><i class="glyphicon glyphicon-tags"></i></span>
-                </div>
-                <h3>Tag your friends</h3>
-                <h4><span class="label label-success">New</span></h4>
-                <p>
-                    Tag your own profile and offer tag suggestions to other user profiles to help with matching by interests. Earn special tags through challenges and engagements.
-                </p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-body text-center">
-                <div class="marketing-panel">
-                    <span class="marketing-icon"><i class="glyphicon glyphicon-gift"></i></span>
-                </div>
-                <h3>Collect gifts</h3>
-                <h4><span class="label label-success">New</span></h4>
-                <p>
-                    Participating in certain activities with other users can earn you gifts to decorate your profile. Trade gifts with others to win over your friends!
-                </p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-body text-center">
-                <div class="marketing-panel">
-                    <span class="marketing-icon"><i class="glyphicon glyphicon-stats"></i></span>
-                </div>
-                <h3>Show off your stats</h3>
-                <h4><span class="label label-warning">Coming Soon</span></h4>
-                <p>
-                    Your community accomplishments can easily be displayed, searched, and shown off in many different ways. Share your achievements with the rest of the community.
-                </p>
-            </div>
+</div>
+<div class="container" style="padding: 50px 15px 0 15px">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1>Answer timed trivia to show off your knowledge and gain points</h1>
+            <img src="~/Content/SplashFeature4.png" style="border: 1px solid #ccc; border-radius: 10px; box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15); max-width: 100%" />
         </div>
     </div>
 </div>

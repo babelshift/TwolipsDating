@@ -31,7 +31,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" style="padding-top: 7px;" href="@Url.Action("index", "home")">
-                    <img alt="twolips dating" src="~/Content/twolipsicon-white.png" width="32" height="32" />
+                    <img alt="twolips dating" src="~/Content/twolipsicon-white-180x180.png" width="32" height="32" />
                 </a>
                 @if (User.Identity.IsAuthenticated)
                 {
@@ -178,7 +178,7 @@
                     &copy; @DateTime.Now.Year
                 </h5>
                 <h4 style="display: inline-block">
-                    <a href="@Url.Action("index", "home")"><img src="~/Content/twolipsicon-white.png" width="32" height="32" /></a> twolips dating <small>@Html.CurrentVersion()</small>
+                    <a href="@Url.Action("index", "home")"><img src="~/Content/twolipsicon-white-180x180.png" width="32" height="32" /></a> twolips dating <small>@Html.CurrentVersion()</small>
                 </h4>
                 <div style="margin-top: 10px;" class="pull-right">
                     @Html.ActionLink("About", "index", "about")

@@ -22,12 +22,27 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="container">
-        @Html.Partial("_LoginPartialSplash")
+    <div class="navbar navbar-inverse" role="navigation" style="margin-bottom: 0">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" style="padding-top: 7px;" href="@Url.Action("index", "home")">
+                    <img alt="twolips dating" src="~/Content/twolipsicon-white.png" width="32" height="32" />
+                </a>
+                <a href="@Url.Action("index", "home")" class="navbar-brand">
+                    twolips dating
+                </a>
+            </div>
+            <div class="navbar-collapse collapse">
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-    </div>
+    @RenderBody()
     <footer class="footer">
         <div class="footer-bottom">
             <div class="container">
@@ -63,7 +78,6 @@
 
         ga('create', 'UA-55633694-1', 'auto');
         ga('send', 'pageview');
-
     </script>
     @RenderSection("scripts", required: false)
 </body>

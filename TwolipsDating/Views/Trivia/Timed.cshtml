@@ -7,6 +7,9 @@
 <div class="panel panel-default">
     <div class="panel-body">
         @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = TwolipsDating.ViewModels.ActiveMenuText.Trivia })
+        <div class="pull-right">
+            <h4>You're answering a timed question</h4>
+        </div>
     </div>
 </div>
 <div class="row">
@@ -32,7 +35,7 @@
                         </div>
                     }
                     <button id="button-ok" type="button" class="btn btn-primary btn-sm" onclick="onSubmitAnswer(event, this)" title="Submit answer"><i class="glyphicon glyphicon-ok"></i> OK</button>
-                    <a id="button-next" href="@Url.Action("random", "trivia")" class="btn btn-primary btn-sm hidden" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</a>
+                    <a id="button-next" href="@Url.Action("timed", "trivia")" class="btn btn-primary btn-sm hidden" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</a>
                     @Html.HiddenFor(m => m.QuestionId)
                 }
                 else
