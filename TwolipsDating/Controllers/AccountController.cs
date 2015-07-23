@@ -23,31 +23,6 @@ namespace TwolipsDating.Controllers
         private UserService userService = new UserService();
         private StoreService storeService = new StoreService();
 
-        private const string confirmEmailSubject = "Confirm your Twolips Dating account";
-        private const string confirmEmailBody = @"<img src=""http://www.twolipsdating.com/Content/twolipsicon-white.png"" width=""32"" height=""32"" style=""float: left;"" />
-<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 24px; margin-left: 35px;"">
-    Twolips Dating - Find better dates and have a better time.
-</div>
-<br />
-<div style=""border-top: 1px solid #4b4b4b; width: 650px;""></div>
-<div style=""font-family: Helvetica,Arial,sans-serif; margin-left: 25px; width: 500px; margin-bottom: 15px;"">
-    <p style=""font-weight: bold;"">Hello and thank you for registering for Twolips Dating!</p>
-
-    <div style=""font-size: 12px; color: #4b4b4b;"">
-        <p>We're sending you this message to confirm your new account. If you think that this message is not intended for you, please ignore it.</p>
-
-        <p>
-            If you're the right person, please <a href=""{0}"">click here to confirm your account</a> as soon as possible to begin contributing to the community.
-            Please be aware that you will be unable to login and perform certain activities until your account is confirmed.
-        </p>
-    </div>
-</div>
-<div style=""border-top: 1px solid #4b4b4b; width: 650px;""></div>
-<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 12px; margin-left: 25px; width: 500px; margin-top: 7px;"">
-    <a href=""https://www.twolipsdating.com/about/privacy"">Privacy Policy</a> | <a href=""mailto:info@twolipsdating.com"">Contact Us</a> | <a href=""https://www.twolipsdating.com/"">Home</a>
-    <p><small>Twolips Dating, Orlando, FL, USA</small></p>
-</div>";
-
         public AccountController()
         {
         }
@@ -97,6 +72,7 @@ namespace TwolipsDating.Controllers
             user.UserName = GuidEncoder.Encode(user.Id);
             user.Email = String.Format("{0}@disabled.com", user.UserName);
             user.IsActive = false;
+            user.Points = 0;
             IdentityResult updateUserResult = await UserManager.UpdateAsync(user);
             return RedirectToAction("index", "home");
         }
@@ -252,7 +228,7 @@ namespace TwolipsDating.Controllers
             {
                 IdentityMessage message = new IdentityMessage();
                 message.Destination = "admin@twolipsdating.com";
-                message.Subject = "A new user has confirmed their e-mail address";
+                message.Subject = "A user has confirmed their e-mail address";
                 message.Body = String.Format("UserId = {0}", userId);
                 await UserManager.EmailService.SendAsync(message);
             }
@@ -484,7 +460,7 @@ namespace TwolipsDating.Controllers
         {
             string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
             var callbackUrl = Url.Action("confirmemail", "account", new { userId = user.Id, code = code }, Request.Url.Scheme);
-            await UserManager.SendEmailAsync(user.Id, confirmEmailSubject, String.Format(confirmEmailBody, callbackUrl));
+            await UserManager.SendEmailAsync(user.Id, ConfirmationEmailText.Subject, ConfirmationEmailText.GetBody(callbackUrl));
         }
 
         //

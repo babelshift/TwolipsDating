@@ -10,7 +10,7 @@
         @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = TwolipsDating.ViewModels.ActiveMenuText.Account })
         <div class="pull-right">
             <ul class="nav nav-pills">
-                <li role="presentation" class="active">
+                <li role="presentation">
                     <a href="@Url.Action("index", "manage")"><i class="glyphicon glyphicon-user"></i> Profile</a>
                 </li>
                 <li role="presentation" class="active">
@@ -27,7 +27,7 @@
     <div class="col-md-6 col-md-offset-3">
         @if (Model.IndexViewModel.HasPassword)
         {
-            using (Html.BeginForm("ChangePassword", "Manage", FormMethod.Post, new { role = "form" }))
+            using (Html.BeginForm("Settings", "Manage", FormMethod.Post, new { role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 <div class="panel panel-default">

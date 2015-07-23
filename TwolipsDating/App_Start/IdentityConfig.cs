@@ -23,7 +23,7 @@ namespace TwolipsDating
         public Task SendAsync(IdentityMessage message)
         {
             SendGridMessage sgMessage = new SendGridMessage();
-            sgMessage.From = new MailAddress("noreply@twolipsdating.com", "Twolips Dating");
+            sgMessage.From = new MailAddress("noreply@twolipsdating.com", "Twolips Dating team");
             sgMessage.AddTo(message.Destination);
             sgMessage.Subject = message.Subject;
             sgMessage.Html = message.Body;
