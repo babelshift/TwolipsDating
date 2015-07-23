@@ -35,7 +35,7 @@
                 </div>
                 @if (Model.CurrentLogins.Count > 0)
                 {
-                    <h5>Currently registered logins</h5>
+                    <h5>Currently registered logins (click to remove)</h5>
                     <table class="table">
                         <tbody>
                             @foreach (var account in Model.CurrentLogins)
@@ -49,11 +49,31 @@
                                                 @Html.AntiForgeryToken()
                                                 @Html.Hidden("loginProvider", account.LoginProvider)
                                                 @Html.Hidden("providerKey", account.ProviderKey)
-                                                <button type="submit" class="btn btn-default btn-xs" value="Remove" title="Remove this @account.LoginProvider login from your account">
-                                                    <span class="glyphicon glyphicon-remove"></span>
-                                                </button>
-                                                @:&nbsp;
-                                                @account.LoginProvider
+
+                                                if (account.LoginProvider == "Google")
+                                                {
+                                                    <button type="submit" style="width:100%" class="btn btn-danger btn-sm"
+                                                            id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
+                                                            title="Log in using your @account.LoginProvider account">
+                                                        <img src="~/Content/gplus-16.png" /> @account.LoginProvider
+                                                    </button>
+                                                }
+                                                else if (account.LoginProvider == "Twitter")
+                                                {
+                                                    <button type="submit" style="width:100%" class="btn btn-info btn-sm"
+                                                            id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
+                                                            title="Log in using your @account.LoginProvider account">
+                                                        <img src="~/Content/bird_blue_16.png" /> @account.LoginProvider
+                                                    </button>
+                                                }
+                                                else if (account.LoginProvider == "Facebook")
+                                                {
+                                                    <button type="submit" style="width:100%" class="btn btn-primary btn-sm"
+                                                            id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
+                                                            title="Log in using your @account.LoginProvider account">
+                                                        <img src="~/Content/fb_16.png" /> @account.LoginProvider
+                                                    </button>
+                                                }
                                             }
                                         }
                                         else
@@ -69,7 +89,7 @@
                 }
                 @if (Model.OtherLogins.Count > 0)
                 {
-                    <h5>Add another service to log in</h5>
+                    <h5>Add another service to log in (click to add)</h5>
                     using (Html.BeginForm("LinkLogin", "Manage"))
                     {
                         @Html.AntiForgeryToken()
