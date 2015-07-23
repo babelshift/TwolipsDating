@@ -1,82 +1,139 @@
 ﻿@{
-    ViewBag.Title = "Learn more about finding your match";
-    ViewBag.Description = "Twolips Dating is an experimental community where users can meet people through genuine interactions rather than matching algorithms.";
+    ViewBag.Title = "twolips - learn more about who we are";
+    ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
+    ViewBag.ImageUrl = Url.Content("~/Content/twolipsicon-white-180x180.png");
 }
 
 <div class="page-header">
-    <h1>About <small>Twolips Dating</small></h1>
+    <h1>About <small>twolips dating</small></h1>
 </div>
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h4 class="panel-title">What is Twolips Dating?</h4>
+        <h4 class="panel-title">What is twolips dating?</h4>
     </div>
     <div class="panel-body">
-        <p><strong>Too long; didn't read: This is a community created by one person with a mission to improve online dating.</strong></p>
-        <p>
-            This is my experiment. I'm just some guy attempting to change online dating for the better. I want to build a dating community where people meet each other based on merits and traits
-            discovered through real interactions rather than relying on matching algorithms. I feel like the current crop of dating sites (eharmony, okcupid, plenty of fish, and the many others) have the whole "meeting each other" thing backward.
-            Think about it for a minute. When searching for a match, we read through self described characteristics about people as if said characteristics are what makes us attracted to said people.
-            Shouldn't our actions and interactions with people ultimately decide the status of current and future relationships?
-        </p>
-        <p>
-            When signing up for dating services, we're asked to provide a description of what we are. What's your gender? What's your hair color? How old are you? How often do you drink alcohol? Do you like to skateboard?
-            I could keep going with an infinite number of questions, but I'm sure you get the point. These are merely attributes that describe <strong>what</strong> we are and don't provide a potential friend or companion
-            any clue of <strong>who</strong> we are. And that's where I see an opportunity to change some things. I want to build up a community
-            without an intense focus on the various colors of different parts of one's body, their height, how often they read, and other wholly unimportant traits.
-        </p>
-        <p>
-            I say "unimportant" because I think that these self-provided descriptions are secondary to becoming colleagues, acquaintances, friends, or lovers. I'm personally (and I'm sure others are) guilty of
-            avoiding people based on descriptions that don't match our preconceived notions of what we think we want. I've come to believe that it simply isn't fair. It isn't fair to ourselves and it isn't fair to potential friends
-            that we've discarded before giving balanced treatment. Instead of concentrating on these superficial descriptions for purposes of utilizing "advanced proprietary matching algorithms" or some equally
-            fancy title, I want to build a place where people interact with each other to achieve goals together.
-        </p>
-        <p>
-            So where do we begin? Well, I'm in the process of building this site to give people a place where they can show off <strong>who</strong> they are. But what's that really mean? I'm still
-            in the process of figuring it out, but I have some fun ideas. Social networks provide an excellent opportunity for people to interact, communicate, and learn about each other based on a user's actions and networking history.
-            By viewing a user's social profile, it's easy to figure out who someone really is and if we might get along with them. Do you like Teenage Mutant Ninja Turtles? Then you'll probably get along with that
-            person who has a profile picture of April O'Neil. Send him or her a message and review their profile to offer some constructive criticism. Maybe they'll appreciate it enough to reciprocate.
-        </p>
-        <p>
-            That's just the beginning. I want this site to eventually provide opportunities for people to meet through online challenges, games, and other interactive activities. Maybe you'll participate in a two person activity
-            with someone. Further, maybe that person will turn out to be a really good friend that you would have otherwise avoided based on superficial descriptions. Who would have thought that you would be attracted to someone with a clown
-            obsession even though you were traumatized as a kid by clowns?
-        </p>
+        <div class="col-md-3">
+            <p><strong>The "too long; didn't read" summary is available in bold.</strong></p>
+        </div>
+        <div class="col-md-9" style="margin-bottom: 25px">
+            <p>
+                <a href="@Url.Action("register", "account")" class="btn btn-primary">Create an account and get started</a> <small>(for those of you who prefer to learn by doing)</small>
+            </p>
+        </div>
+        <div class="col-md-3">
+            <p><strong>This is a community created by one person with a mission to improve online dating by providing people with services other than messaging and matching.</strong></p>
+        </div>
+        <div class="col-md-9" style="margin-bottom: 25px">
+            <p>
+                We are a group of people attempting to change online dating for the better. We want to build a dating community where people meet each other based on merits and traits
+                discovered through real interactions rather than relying on obscure matching algorithms. We believe that the current crop of dating sites (eharmony, okcupid, plenty of fish, and the many others)
+                have the whole "meeting new people" thing backward. When searching for a match, people read through self described characteristics about others as if said characteristics are what makes us attractive.
+                Shouldn't our actions and interactions with people ultimately decide the status of current and future relationships?
+            </p>
+        </div>
+        <div class="col-md-3">
+            <p><strong>We want people to meet based more on the actions of people in the community rather than their self descriptions.</strong></p>
+        </div>
+        <div class="col-md-9" style="margin-bottom: 25px">
+            <p>
+                When signing up for dating services, people are asked to provide a description of what they are. What's your religion? What's your hair color? Do you read books?
+                How often do you drink alcohol? Do you like to skateboard?
+                You get the point. These are merely attributes that describe <strong>what</strong> someone is and does not provide a potential friend or companion
+                any clue of <strong>who</strong> someone is. And that's where we see an opportunity to change some things. We want to build up a community
+                without an intense focus on the various colors of different parts of one's body, their height, how often they read, and other wholly unimportant traits.
+            </p>
+        </div>
+        <div class="col-md-3">
+            <p><strong>Strong relationships are driven from actions and interactions between people. Self descriptions and reading profiles have many limitations.</strong></p>
+        </div>
+        <div class="col-md-9" style="margin-bottom: 25px">
+            <p>
+                We say "unimportant" because we think that these self-provided descriptions are secondary to becoming colleagues, acquaintances, friends, or lovers. We (at twolips) are personally guilty of
+                avoiding people based on descriptions that don't match our preconceived notions of what we think we want. We've come to believe that it simply isn't fair. It isn't fair to ourselves and it isn't fair to potential friends
+                that we've discarded before giving balanced treatment. Instead of concentrating on these superficial descriptions for purposes of utilizing "advanced proprietary matching algorithms" or some equally
+                fancy title, we want to build a place where people interact with each other to achieve goals together.
+            </p>
+        </div>
+        <div class="col-md-3">
+            <p><strong>This site is still in its early stages and we totally encourage early adopters to help us out. Our goal is to provide fun interactions between people.</strong></p>
+        </div>
+        <div class="col-md-9" style="margin-bottom: 25px">
+            <p>
+                So where do we begin? We're in the process of building this site to give people a place to show off <strong>who</strong> they are. But what's that really mean? We're still
+                in the process of figuring it out, but we have some fun ideas. Social networks provide an excellent opportunity for people to interact, communicate, and learn about each other based on a user's actions and networking history.
+                By viewing a user's social profile littered with achievements and action-driven rewards, it's easy to figure out who someone really is and if we might get along with them.
+            </p>
+        </div>
+        <div class="col-md-3">
+            <p><strong>Help us build a community of challenges, games, and activities to encourage people to meet based on merits and skills.</strong></p>
+        </div>
+        <div class="col-md-9">
+            <p>
+                That's just the beginning. We want this site to eventually provide opportunities for people to meet through online challenges, games, and other interactive activities. Maybe you'll participate in a two person activity
+                with someone. Further, maybe that person will turn out to be a really good friend that you would have otherwise avoided based on superficial descriptions. Who would have thought that you would be attracted to someone with a clown
+                obsession even though you were traumatized as a kid by clowns?
+            </p>
+        </div>
     </div>
 </div>
-
 
 <div class="panel panel-default">
     <div class="panel-heading">
         <h4 class="panel-title">How does it work?</h4>
     </div>
     <div class="panel-body">
-        <p><strong>TL;DR: Sign up for free to maintain a social network profile, participate in community challenges, earn badges/achievements/rewards, and play some games or trivia to meet people through interactions.</strong></p>
-        <p>
-            Many people are already familiar with the whole social networking craze, so I don't need to explain the basics. My current plans are to support common social activities like profiles, uploaded images,
-            private messages, updates, and maybe even thumbs up/downs. That said, I don't want this place to become stuck in the normal mold. I'm planning to introduce some more interactive and collaborative activities in which users
-            can participate in order to get to know someone better. Activities might include individual and group challenges/games, trivia questions, and behavioral questions.
-        </p>
-        <p>
-            Challenges could include something like "review 10 profiles," "upload 10 images," "find all the community hidden secrets," all of which would reward a badges and achievements to be displayed on your profile.
-            For the most part, these are just fun things to collect to encourage engagement throughout the community. At the very least, you would be able to build up a profile which shows that you are dedicated to the
-            community in one way or another. This helps to establish a reputation so that other users know you aren't just a bot, a player, or a fake profile.
-        </p>
-        <p>
-            Games could include basic games like checkers, chess, mini golf, and various card games. I don't envision something to replace much larger social gaming sites, but I think it would be interesting to
-            encourage people to meet each other through some of these games. Relationships built from teamwork and achievements are probably stronger than those built on matching and messaging. That's just my guess, though. Winning
-            games or performing certain ways within a game can earn you badges and achievements to show off in your profile. This could show others that you like to play a certain way or that you're really good at chess (logical).
-        </p>
-        <p>
-            I'd also like to allow people to answer trivia questions (maybe even speed trivia with teams?) in addition to answering some behavioral questions which helps build a more established social profile to show off.
-            I can imagine some features that would tag a user with specific attributes such as "intellectual" or "determined" based on the answers to trivia and behavioral questions. In contrast to simple attributes like
-            hair color and frequency of certain habits, I think that tags based on answers to questions in addition to challenge and game badges can allow users to build up a strong and attractive profile.
-        </p>
-        <p>
-            Without creating an account, you can search and view profiles, but you can't interact with them. If you want to participate in the community, please consider registering an account.
-            All features of the community are free and available to any user who takes the time to register a user account through the account system or through various social networks such as
-            Facebook, Twitter, or Google&#43;.
-        </p>
+        <div class="col-md-3">
+            <p><strong>Sign up for free to maintain a social profile, participate in community challenges, earn tags, achievements, emojis, and points, and play some games or trivia to meet people through interactions.</strong></p>
+        </div>
+        <div class="col-md-9" style="margin-bottom: 25px">
+            <p>
+                Many people are already familiar with the whole social networking craze, so we don't need to explain the basics. Our current plans are to support common social activities like profiles, uploaded images,
+                private messages, updates, and maybe even thumbs up/downs. That said, we don't want this place to become stuck in the normal mold. We're planning to introduce some more interactive and collaborative activities in which users
+                can participate in order to get to know someone better. Activities might include individual and group challenges/games, trivia questions, and behavioral questions.
+            </p>
+        </div>
+        <div class="col-md-3">
+            <p><strong>Participate in community challenges like "review X profiles", "upload X images", and "find all community hidden eggs". Earn rewards and trade with friends.</strong></p>
+        </div>
+        <div class="col-md-9" style="margin-bottom: 25px">
+            <p>
+                Challenges could include something like "review 10 profiles," "upload 10 images," "find all the community hidden secrets," all of which would reward a badges and achievements to be displayed on your profile.
+                For the most part, these are just fun things to collect to encourage engagement throughout the community. At the very least, you would be able to build up a profile which shows that you are dedicated to the
+                community in one way or another. This helps to establish a reputation so that other users know you aren't just a bot, a player, or a fake profile.
+            </p>
+        </div>
+        <div class="col-md-3">
+            <p><strong>Show off your skills in community games and trivia challenges. Prizes can be earned and displayed on your profile to let others know where you stand.</strong></p>
+        </div>
+        <div class="col-md-9" style="margin-bottom: 25px">
+            <p>
+                Games could include basic games like checkers, chess, mini golf, and various card games. We don't envision something to replace much larger social gaming sites, but we think it would be interesting to
+                encourage people to meet each other through some of these games. Relationships built from teamwork and achievements are probably stronger than those built on matching and messaging. That's just our guess, but we intend
+                to experiment and find out. Winning games or performing certain ways within a game can earn you badges and achievements to show off in your profile. This could show others that you like to play a
+                certain way or that you're really good at chess.
+            </p>
+        </div>
+        <div class="col-md-3">
+            <p><strong>Customize your profile by showing off tags, badges, and images that you've earned through trivia challenges to attract likeminded friends.</strong></p>
+        </div>
+        <div class="col-md-9" style="margin-bottom: 25px">
+            <p>
+                We want to allow people to answer trivia questions (maybe even speed trivia with teams?) in addition to answering some behavioral questions which helps build a more established social profile to show off.
+                We can imagine some features that would tag a user with specific attributes such as "intellectual" or "determined" based on the answers to trivia and behavioral questions. In contrast to simple attributes like
+                hair color and frequency of certain habits, we think that tags based on answers to questions in addition to challenge and game badges can allow users to build up a strong and attractive profile.
+            </p>
+        </div>
+        <div class="col-md-3">
+            <p><strong>Consider creating a free account using your social logins or with a twolips account.</strong></p>
+        </div>
+        <div class="col-md-9" style="margin-bottom: 25px">
+            <p>
+                Without creating an account, you can search and view profiles, but you can't interact with them. If you want to participate in the community, please consider registering an account.
+                All features of the community are free and available to any user who takes the time to register a user account through the account system or through various social networks such as
+                Facebook, Twitter, or Google&#43;.
+            </p>
+        </div>
     </div>
 </div>
 
@@ -86,10 +143,10 @@
     </div>
     <div class="panel-body">
         <p>
-            Hopefully the answer to this question is, "because it's fun to use, and I want to meet interesting people." Seriously though, I want to make this place interesting and engaging. You should come here because
-            you want to, not because you have to. I get the feeling that many people use online dating because they feel like there is no other choice on the path towards friendships. It's silly that we force ourselves
-            to use something that we don't find engaging. Come here to talk to dedicated and interesting people. Come here to play some games with people in the hopes that you can meet up with them one day. Build some lasting relationships
-            around real interactions. Most importantly, have fun while doing so.
+            Hopefully the answer to this question is, "because it's fun to use, and I want to meet interesting people." We want to make this place interesting and engaging. You should come here because
+            you want to, not because you have to. We believe that many people use online dating because they feel like there is no other choice on the path towards friendships. It's silly that we force ourselves
+            to use something that we don't find engaging. Come here to talk to dedicated and interesting people. Come here to play some games with people in the hopes that you can meet up with them one day.
+            Build some lasting relationships around real interactions. Most importantly, have fun while doing so.
         </p>
     </div>
 </div>

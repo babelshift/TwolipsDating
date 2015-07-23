@@ -7,19 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
     <link rel="canonical" href="@Request.Url.AbsoluteUri" />
-    <!--[if IE]><link rel="shortcut icon" href="~/Content/twolipsico.ico"><![endif]-->
-    <link rel="icon" href="~/Content/twolipsico.ico">
+    <link rel="shortcut icon" href="~/Content/twolipsico.ico" type="image/x-icon">
     <meta name="description" content="@ViewBag.Description" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:url" content="@Request.Url.AbsoluteUri" />
     <meta property="og:title" content="@ViewBag.Title" />
     <meta property="og:description" content="@ViewBag.Description" />
     <meta property="og:image" content="@ViewBag.ImageUrl" />
-    <meta property="og:site_name" content="Twolips Dating Community" />
+    <meta property="og:site_name" content="twolips dating community" />
     @Styles.Render("~/Content/bootstrap-yeti.min.css")
     @Styles.Render("~/Content/jquery-ui.min.css")
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
     <div class="navbar navbar-inverse" role="navigation" style="margin-bottom: 0">
@@ -68,17 +66,7 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/raty")
     <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")" type="text/javascript"></script>
-    <script>
-        (function (i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-                (i[r].q = i[r].q || []).push(arguments)
-            }, i[r].l = 1 * new Date(); a = s.createElement(o),
-            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-        ga('create', 'UA-55633694-1', 'auto');
-        ga('send', 'pageview');
-    </script>
+    <script src="@Url.Content("~/Scripts/analytics.js")" type="text/javascript"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

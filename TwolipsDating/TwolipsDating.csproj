@@ -614,6 +614,8 @@
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\SplashHowTo1.png" />
+    <Content Include="Content\SplashHowTo2.png" />
+    <Content Include="Content\SplashHowTo3.png" />
     <Content Include="Content\star-half.png" />
     <Content Include="Content\star-off.png" />
     <Content Include="Content\star-on.png" />
@@ -639,6 +641,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\PublishProfiles\twolipsdating.pubxml" />
+    <Content Include="Scripts\analytics.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\ekko-lightbox.js" />
