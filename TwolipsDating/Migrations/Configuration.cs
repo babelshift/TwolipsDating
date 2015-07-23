@@ -19,7 +19,15 @@ namespace TwolipsDating.Migrations
             context.Genders.AddOrUpdate(g => g.Id,
                 new Gender() { Id = 1, Name = "Unknown" },
                 new Gender() { Id = 2, Name = "Man" },
-                new Gender() { Id = 3, Name = "Woman" }
+                new Gender() { Id = 3, Name = "Woman" },
+                new Gender() { Id = 4, Name = "Genderless" },
+                new Gender() { Id = 5, Name = "Hobbit" },
+                new Gender() { Id = 6, Name = "Robot" },
+                new Gender() { Id = 7, Name = "Fembot" },
+                new Gender() { Id = 8, Name = "Troll" },
+                new Gender() { Id = 9, Name = "Ogre" },
+                new Gender() { Id = 10, Name = "Orc" },
+                new Gender() { Id = 11, Name = "Elf" }
             );
 
             context.MessageStatuses.AddOrUpdate(m => m.Id,
@@ -77,10 +85,16 @@ namespace TwolipsDating.Migrations
                 new MilestoneType() { Id = (int)MilestoneTypeValues.QuizCompletedSuccessfully, Name = "Quiz Completed Successfully" });
 
             context.Titles.AddOrUpdate(t => t.Id,
-                new Title() { Id = 1, Name = "Lizard Lord", Description = "King of the lizard creatures.", PointPrice = 10 },
-                new Title() { Id = 2, Name = "Robot Cop", Description = "A robotic police officer different from the popular copyrighted version.", PointPrice = 15 },
-                new Title() { Id = 3, Name = "High Warlord", Description = "Played way too much World of Warcraft.", PointPrice = 25 },
-                new Title() { Id = 4, Name = "Grand Marshal", Description = "Played way too much World of Warcraft.", PointPrice = 25 });
+                new Title() { Id = 1, Name = "Lizard Lord", Description = "King of the lizard creatures.", PointPrice = 100 },
+                new Title() { Id = 2, Name = "Robot Cop", Description = "A robotic police officer different from the popular copyrighted version.", PointPrice = 100 },
+                new Title() { Id = 3, Name = "High Warlord", Description = "Played way too much World of Warcraft.", PointPrice = 200 },
+                new Title() { Id = 4, Name = "Grand Marshal", Description = "Played way too much World of Warcraft.", PointPrice = 200 },
+                new Title() { Id = 5, Name = "General", Description = "Commands a presence on the battlefield.", PointPrice = 200 },
+                new Title() { Id = 6, Name = "Psycho Dentist", Description = "Straps people to a chair and drills for cavities.", PointPrice = 200 },
+                new Title() { Id = 7, Name = "Crazy Cat Lover", Description = "Owns 20 cats and probably doesn't clean up after them.", PointPrice = 200 },
+                new Title() { Id = 8, Name = "The President", Description = "The most powerful person in the world.", PointPrice = 200 },
+                new Title() { Id = 9, Name = "El Guapo", Description = "Devilishly handsome.", PointPrice = 200 }
+            );
         }
     }
 }

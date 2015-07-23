@@ -613,10 +613,7 @@
     <Content Include="Content\gplus-16.png" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.min.css" />
-    <Content Include="Content\SplashFeature1.png" />
-    <Content Include="Content\SplashFeature2.png" />
-    <Content Include="Content\SplashFeature3.png" />
-    <Content Include="Content\SplashFeature4.png" />
+    <Content Include="Content\SplashHowTo1.png" />
     <Content Include="Content\star-half.png" />
     <Content Include="Content\star-off.png" />
     <Content Include="Content\star-on.png" />
