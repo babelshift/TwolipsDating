@@ -1,7 +1,9 @@
 ﻿@model TwolipsDating.Models.IndexViewModel
 
 @{
-    ViewBag.Title = "Manage your profile";
+    ViewBag.Title = "twolips - manage your username and email";
+    ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
+    ViewBag.ImageUrl = Url.Content("~/Content/twolipsicon-white-180x180.png");
 }
 
 <div class="panel panel-default">
@@ -10,13 +12,13 @@
         <div class="pull-right">
             <ul class="nav nav-pills">
                 <li role="presentation" class="active">
-                    @Html.ActionLink("Profile", "index")
+                    <a href="@Url.Action("index", "manage")"><i class="glyphicon glyphicon-user"></i> Profile</a>
                 </li>
                 <li role="presentation">
-                    @Html.ActionLink("Account", "settings")
+                    <a href="@Url.Action("settings", "manage")"><i class="glyphicon glyphicon-cog"></i> Account</a>
                 </li>
                 <li role="presentation">
-                    @Html.ActionLink("Social Logins", "externals")
+                    <a href="@Url.Action("externals", "manage")"><i class="glyphicon glyphicon-log-in"></i> Social Logins</a>
                 </li>
             </ul>
         </div>
@@ -52,7 +54,7 @@
                         @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
                         <p><small>You will sometimes receive communication related to your account. According to our privacy policy, we will not share your information with anyone.</small></p>
                     </div>
-                    <input type="submit" class="btn btn-default btn-sm" value="Save" />
+                    <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-ok"></i> Save changes</button>
                 }
             </div>
         </div>

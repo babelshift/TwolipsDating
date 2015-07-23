@@ -1,7 +1,9 @@
 ﻿@model TwolipsDating.ViewModels.QuestionViewModel
 
 @{
-    ViewBag.Title = "twolips - random trivia";
+    ViewBag.Title = "twolips - answering a random question";
+    ViewBag.Description = Model.Content != null ? Model.Content : "An error occurred while loading the question";
+    ViewBag.ImageUrl = Url.Content("~/Content/twolipsicon-white-180x180.png");
 }
 
 <div class="panel panel-default">

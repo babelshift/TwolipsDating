@@ -10,14 +10,14 @@
         @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = TwolipsDating.ViewModels.ActiveMenuText.Account })
         <div class="pull-right">
             <ul class="nav nav-pills">
-                <li role="presentation">
-                    @Html.ActionLink("Profile", "index")
+                <li role="presentation" class="active">
+                    <a href="@Url.Action("index", "manage")"><i class="glyphicon glyphicon-user"></i> Profile</a>
                 </li>
                 <li role="presentation" class="active">
-                    @Html.ActionLink("Account", "settings")
+                    <a href="@Url.Action("settings", "manage")"><i class="glyphicon glyphicon-cog"></i> Account</a>
                 </li>
                 <li role="presentation">
-                    @Html.ActionLink("Social Logins", "externals")
+                    <a href="@Url.Action("externals", "manage")"><i class="glyphicon glyphicon-log-in"></i> Social Logins</a>
                 </li>
             </ul>
         </div>
@@ -59,7 +59,7 @@
                             @Html.LabelFor(m => m.ChangePasswordViewModel.ConfirmPassword, new { @class = "control-label" })
                             @Html.PasswordFor(m => m.ChangePasswordViewModel.ConfirmPassword, new { @class = "form-control" })
                         </div>
-                        <input type="submit" class="btn btn-default btn-sm" value="Save" />
+                        <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-ok"></i> Save changes</button>
                     </div>
                 </div>
             }
@@ -111,7 +111,7 @@
                 </div>
                 <div class="panel-body">
                     <p><small>This is permanent. Make sure that this is absolutely what you want to do.</small></p>
-                    <input type="submit" class="btn btn-danger btn-sm" value="Delete your account" />
+                    <button type="submit" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-remove"></i> Delete your account</button>
                 </div>
             </div>
         }

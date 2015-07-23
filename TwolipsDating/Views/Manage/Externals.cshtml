@@ -1,19 +1,23 @@
 ﻿@model TwolipsDating.Models.ManageLoginsViewModel
 @using Microsoft.Owin.Security
-
+@{
+    ViewBag.Title = "twolips - manage social logins";
+    ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
+    ViewBag.ImageUrl = Url.Content("~/Content/twolipsicon-white-180x180.png");
+}
 <div class="panel panel-default">
     <div class="panel-body">
         @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = TwolipsDating.ViewModels.ActiveMenuText.Account })
         <div class="pull-right">
             <ul class="nav nav-pills">
                 <li role="presentation">
-                    @Html.ActionLink("Profile", "index")
+                    <a href="@Url.Action("index", "manage")"><i class="glyphicon glyphicon-user"></i> Profile</a>
                 </li>
                 <li role="presentation">
-                    @Html.ActionLink("Account", "settings")
+                    <a href="@Url.Action("settings", "manage")"><i class="glyphicon glyphicon-cog"></i> Account</a>
                 </li>
                 <li role="presentation" class="active">
-                    @Html.ActionLink("Social Logins", "externals")
+                    <a href="@Url.Action("externals", "manage")"><i class="glyphicon glyphicon-log-in"></i> Social Logins</a>
                 </li>
             </ul>
         </div>
@@ -76,13 +80,30 @@
                                 {
                                     <tr>
                                         <td>
-                                            <button type="submit" class="btn btn-default btn-xs"
-                                                    id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType"
-                                                    title="Log in using your @p.Caption account">
-                                                <span class="glyphicon glyphicon-log-in"></span>
-                                            </button>
-                                            &nbsp;
-                                            @p.AuthenticationType
+                                            @if (p.AuthenticationType == "Google")
+                                            {
+                                                <button type="submit" style="width:100%" class="btn btn-danger btn-sm"
+                                                        id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType"
+                                                        title="Log in using your @p.Caption account">
+                                                    <img src="~/Content/gplus-16.png" /> @p.AuthenticationType
+                                                </button>
+                                            }
+                                            else if (p.AuthenticationType == "Twitter")
+                                            {
+                                                <button type="submit" style="width:100%" class="btn btn-info btn-sm"
+                                                        id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType"
+                                                        title="Log in using your @p.Caption account">
+                                                    <img src="~/Content/bird_blue_16.png" /> @p.AuthenticationType
+                                                </button>
+                                            }
+                                            else if (p.AuthenticationType == "Facebook")
+                                            {
+                                                <button type="submit" style="width:100%" class="btn btn-primary btn-sm"
+                                                        id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType"
+                                                        title="Log in using your @p.Caption account">
+                                                    <img src="~/Content/fb_16.png" /> @p.AuthenticationType
+                                                </button>
+                                            }
                                         </td>
                                     </tr>
                                 }
