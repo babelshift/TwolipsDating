@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "twolips - answering a timed question";
-    ViewBag.Description = Model.Content != null ? Model.Content : "An error occurred while loading the question";
+    ViewBag.Description = Model != null && Model.Content != null ? Model.Content : "An error occurred while loading the question";
     ViewBag.ImageUrl = Url.Content("~/Content/twolipsicon-white-180x180.png");
 }
 
@@ -10,13 +10,34 @@
     <div class="panel-body">
         @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = TwolipsDating.ViewModels.ActiveMenuText.Trivia })
         <div class="pull-right">
-            <h4>You're answering a timed question</h4>
+            <ul class="nav nav-pills">
+                <li role="presentation">
+                    <a href="@Url.Action("random", "trivia")" title="Answer random questions"><i class="glyphicon glyphicon-random"></i>&nbsp;Random</a>
+                </li>
+                <li role="presentation" class="active">
+                    <a href="@Url.Action("timed", "trivia")" title="Answer timed questions"><i class="glyphicon glyphicon-time"></i>&nbsp;Timed</a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-4">
-        @Html.Partial("_SidebarAdvertisementPartial")
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    Create your own questions
+                </h4>
+            </div>
+            <div class="panel-body">
+                Do you have ideas for some good trivia questions? <a href="mailto:info@twolipsdating.com">Contact us</a> to let us know about them. If we approve, you'll see your questions here soon!
+            </div>
+        </div>
+        @*@Html.Partial("_SidebarAdvertisementPartial")*@
+        @if (Model != null)
+        {
+            @Html.Partial("_SidebarOthersAnsweredCorrectlyPartial", Model.UsersAnsweredCorrectly)
+        }
     </div>
     <div class="col-md-8">
         <div class="panel panel-default">
@@ -26,7 +47,18 @@
                     <div id="alert-box" class="alert alert-info">
                         <h4>Select an answer and then press OK. You have <span id="timer-label">10</span> seconds remaining.</h4>
                     </div>
-                    <p>@Model.Content</p>
+                    <p>
+                        @Model.Content
+                        &nbsp;
+                        <a id="share-question-link" href="#" class="label label-primary"
+                           data-html="true" data-toggle="popover" data-placement="bottom" data-title="Share" data-animation="false">
+                            <i class="glyphicon glyphicon-share-alt"></i>
+                        </a>
+                        &nbsp;
+                        <a href="#" class="label label-default">
+                            <i class="glyphicon glyphicon-flag"></i>
+                        </a>
+                    </p>
                     foreach (var answer in @Model.Answers)
                     {
                         <div class="radio">
@@ -48,6 +80,24 @@
         </div>
     </div>
 </div>
+
+<div id="share-question-popover" class="hide">
+    <div class="share-buttons">
+        <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("index", "trivia", null, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
+           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+            <img src="~/Content/fb_16.png" alt="Share on Facebook" />
+        </a>
+        <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("{0} {1}", Model.Content, "#trivia")) + "&url=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
+           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=350,width=600');return false;">
+            <img src="~/Content/bird_blue_16.png" alt="Tweet" />
+        </a>
+        <a href="@("https://plus.google.com/share?url=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
+           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+            <img src="~/Content/gplus-16.png" alt="Share on Google+" />
+        </a>
+    </div>
+</div>
+
 @section Scripts {
     <script src="@Url.Content("~/Scripts/Trivia/timed.js")" type="text/javascript"></script>
 }

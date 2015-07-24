@@ -169,6 +169,12 @@ namespace TwolipsDating
             Mapper.CreateMap<Title, TitleViewModel>()
                 .ForMember(dest => dest.TitleId, opts => opts.MapFrom(source => source.Id))
                 .ForMember(dest => dest.TitleName, opts => opts.MapFrom(source => source.Name));
+
+            Mapper.CreateMap<AnsweredQuestion, UserAnsweredQuestionCorrectlyViewModel>()
+                .ForMember(dest => dest.UserName, opts => opts.MapFrom(source => source.User.UserName))
+                .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateAnswered.GetTimeAgo()))
+                .ForMember(dest => dest.ProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.ProfileId, opts => opts.MapFrom(source => source.User.Profile.Id));
         }
     }
 }

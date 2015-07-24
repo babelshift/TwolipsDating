@@ -98,6 +98,12 @@ namespace TwolipsDating.Controllers
             var randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Random);
 
             QuestionViewModel viewModel = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
+
+            if (viewModel != null)
+            {
+                viewModel.UsersAnsweredCorrectly = await GetUsersAnsweredCorrectlyAsync(randomQuestion);
+            }
+
             return viewModel;
         }
 
@@ -112,7 +118,23 @@ namespace TwolipsDating.Controllers
 
             QuestionViewModel viewModel = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
 
+            if (viewModel != null)
+            {
+                viewModel.UsersAnsweredCorrectly = await GetUsersAnsweredCorrectlyAsync(randomQuestion);
+            }
+
             return View(viewModel);
+        }
+
+        private async Task<IReadOnlyCollection<UserAnsweredQuestionCorrectlyViewModel>> GetUsersAnsweredCorrectlyAsync(Question randomQuestion)
+        {
+            if (randomQuestion != null)
+            {
+                var usersAnsweredCorrectly = await triviaService.GetUsersAnsweredCorrectlyAsync(randomQuestion.Id);
+                return Mapper.Map<IReadOnlyCollection<AnsweredQuestion>, IReadOnlyCollection<UserAnsweredQuestionCorrectlyViewModel>>(usersAnsweredCorrectly);
+            }
+
+            return null;
         }
 
         [HttpPost]

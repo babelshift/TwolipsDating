@@ -3,6 +3,13 @@
         var dateUtcNow = new Date(data.year, data.month, data.day, data.hours, data.minutes, data.seconds, data.milliseconds);
         interval = setInterval(tickCountDown, 1000);
     });
+
+    setupPopoverWithContent("#share-question-link", function () {
+        var shareButtonsDiv = "#share-question-popover";
+        var clone = $(shareButtonsDiv).clone(true);
+        var cloneUnhide = clone.removeClass('hide');
+        return cloneUnhide.html();
+    });
 });
 
 var interval;

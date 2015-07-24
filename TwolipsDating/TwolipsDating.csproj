@@ -585,6 +585,7 @@
     <Compile Include="ViewModels\TriviaMenuViewModel.cs" />
     <Compile Include="ViewModels\UploadedImageFeedViewModel.cs" />
     <Compile Include="ViewModels\UploadImageViewModel.cs" />
+    <Compile Include="ViewModels\UserAnsweredQuestionCorrectlyViewModel.cs" />
     <Compile Include="ViewModels\UserImageViewModel.cs" />
     <Compile Include="ViewModels\UserPointsViewModel.cs" />
     <Compile Include="ViewModels\UserStatsViewModel.cs" />
@@ -736,7 +737,9 @@
     <Content Include="Views\Account\Points.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Shared\_SidebarAdvertisementPartial.cshtml" />
-    <Content Include="Views\Shared\SidebarQuizzesPartial.cshtml" />
+    <Content Include="Views\Shared\_SidebarQuizzesPartial.cshtml" />
+    <Content Include="Views\Shared\_ProfileImagePartial.cshtml" />
+    <Content Include="Views\Trivia\_SidebarOthersAnsweredCorrectlyPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

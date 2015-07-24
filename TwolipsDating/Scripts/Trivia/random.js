@@ -1,4 +1,13 @@
-﻿function onSubmitAnswer(e, obj) {
+﻿$(document).ready(function () {
+    setupPopoverWithContent("#share-question-link", function () {
+        var shareButtonsDiv = "#share-question-popover";
+        var clone = $(shareButtonsDiv).clone(true);
+        var cloneUnhide = clone.removeClass('hide');
+        return cloneUnhide.html();
+    });
+});
+
+function onSubmitAnswer(e, obj) {
     e.preventDefault();
 
     $("#button-next").addClass("hidden");
@@ -36,6 +45,7 @@
                 $("#button-ok").addClass("hidden");
                 $("input[type='radio']").attr("disabled", true);
             }
+            $("#button-skip").hide();
         } else {
             alert(data.error);
         }

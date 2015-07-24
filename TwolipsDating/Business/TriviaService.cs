@@ -423,5 +423,16 @@ namespace TwolipsDating.Business
 
             return new ReadOnlyDictionary<int, CompletedQuiz>(completedQuizzes);
         }
+
+        internal async Task<IReadOnlyCollection<AnsweredQuestion>> GetUsersAnsweredCorrectlyAsync(int questionId)
+        {
+            var usersAnsweredCorrectly = from questionsAnswered in db.AnsweredQuestions
+                                         where questionsAnswered.QuestionId == questionId
+                                         join question in db.Questions on questionsAnswered.AnswerId equals question.CorrectAnswerId
+                                         orderby questionsAnswered.DateAnswered descending
+                                         select questionsAnswered;
+
+            return await usersAnsweredCorrectly.ToListAsync();
+        }
     }
 }

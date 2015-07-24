@@ -1,0 +1,14 @@
+﻿@model string
+
+@if (!String.IsNullOrEmpty(Model))
+{
+    <div class="circular-image-wrapper">
+        <img class="circular-image" src="@Model" />
+    </div>
+}
+else
+{
+    <div class="circular-image-wrapper">
+        <img class="circular-image" src="http://placehold.it/32x32" />
+    </div>
+}
