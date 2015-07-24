@@ -78,7 +78,30 @@
                                         }
                                         else
                                         {
-                                            @account.LoginProvider
+                                            if (account.LoginProvider == "Google")
+                                            {
+                                                <button type="button" style="width:100%" class="btn btn-danger btn-sm"
+                                                        id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
+                                                        title="You cannot remove your only login provider" disabled="disabled">
+                                                    <img src="~/Content/gplus-16.png" /> @account.LoginProvider
+                                                </button>
+                                            }
+                                            else if (account.LoginProvider == "Twitter")
+                                            {
+                                                <button type="button" style="width:100%" class="btn btn-info btn-sm"
+                                                        id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
+                                                        title="You cannot remove your only login provider" disabled="disabled">
+                                                    <img src="~/Content/bird_blue_16.png" /> @account.LoginProvider
+                                                </button>
+                                            }
+                                            else if (account.LoginProvider == "Facebook")
+                                            {
+                                                <button type="button" style="width:100%" class="btn btn-primary btn-sm"
+                                                        id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
+                                                        title="You cannot remove your only login provider" disabled="disabled">
+                                                    <img src="~/Content/fb_16.png" /> @account.LoginProvider
+                                                </button>
+                                            }
                                         }
                                     </td>
 

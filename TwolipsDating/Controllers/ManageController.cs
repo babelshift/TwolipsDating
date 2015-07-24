@@ -123,7 +123,7 @@ namespace TwolipsDating.Controllers
             {
                 message = ManageMessageId.Error;
             }
-            return RedirectToAction("ManageLogins", new { Message = message });
+            return RedirectToAction("Externals", new { Message = message });
         }
 
         //
