@@ -101,6 +101,7 @@ namespace TwolipsDating.Controllers
 
             if (viewModel != null)
             {
+                viewModel.QuestionTypeId = (int)QuestionTypeValues.Random;
                 viewModel.UsersAnsweredCorrectly = await GetUsersAnsweredCorrectlyAsync(randomQuestion);
             }
 
@@ -120,6 +121,7 @@ namespace TwolipsDating.Controllers
 
             if (viewModel != null)
             {
+                viewModel.QuestionTypeId = (int)QuestionTypeValues.Timed;
                 viewModel.UsersAnsweredCorrectly = await GetUsersAnsweredCorrectlyAsync(randomQuestion);
             }
 
@@ -147,9 +149,9 @@ namespace TwolipsDating.Controllers
                 var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
 
                 // log the answer for this user's question history
-                bool isAnswerCorrect = await triviaService.RecordAnsweredQuestionAsync(currentUserId, currentUserProfile.Id, questionId, answerId, (int)QuestionTypeValues.Random);
+                int correctAnswerId = await triviaService.RecordAnsweredQuestionAsync(currentUserId, currentUserProfile.Id, questionId, answerId, (int)QuestionTypeValues.Random);
 
-                return Json(new { success = true, isAnswerCorrect = isAnswerCorrect });
+                return Json(new { success = true, correctAnswerId = correctAnswerId });
             }
             catch (Exception e)
             {
@@ -180,9 +182,9 @@ namespace TwolipsDating.Controllers
                         var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
 
                         // log the answer for this user's question history
-                        bool isAnswerCorrect = await triviaService.RecordAnsweredQuestionAsync(currentUserId, currentUserProfile.Id, questionId, answerId, (int)QuestionTypeValues.Timed);
+                        int correctAnswerId = await triviaService.RecordAnsweredQuestionAsync(currentUserId, currentUserProfile.Id, questionId, answerId, (int)QuestionTypeValues.Timed);
 
-                        return Json(new { success = true, isAnswerCorrect = isAnswerCorrect });
+                        return Json(new { success = true, correctAnswerId = correctAnswerId });
                     }
                     else
                     {
@@ -291,14 +293,14 @@ namespace TwolipsDating.Controllers
             int numberOfCorrectAnswers = 0;
             foreach (var question in viewModel.Questions)
             {
-                bool isAnswerCorrect = await triviaService.RecordAnsweredQuestionAsync(
+                int correctAnswerId = await triviaService.RecordAnsweredQuestionAsync(
                     currentUserId,
                     profile.Id,
                     question.QuestionId,
                     question.SelectedAnswerId.Value,
                     (int)QuestionTypeValues.Quiz);
 
-                if(isAnswerCorrect)
+                if(question.SelectedAnswerId.Value == correctAnswerId)
                 {
                     numberOfCorrectAnswers++;
                 }

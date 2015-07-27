@@ -80,7 +80,7 @@ namespace TwolipsDating.Business
             return randomQuestion;
         }
 
-        internal async Task<bool> IsAnswerCorrectAsync(int questionId, int answerId)
+        internal async Task<int> GetCorrectAnswerAsync(int questionId, int answerId)
         {
             Debug.Assert(questionId > 0);
             Debug.Assert(answerId > 0);
@@ -91,15 +91,15 @@ namespace TwolipsDating.Business
 
             if (correctAnswerId.HasValue)
             {
-                return correctAnswerId == answerId;
+                return correctAnswerId.Value;
             }
             else
             {
-                return false;
+                throw new ArgumentException("There is no Question with that ID and Answer ID.");
             }
         }
 
-        internal async Task<bool> RecordAnsweredQuestionAsync(string userId, int profileId, int questionId, int answerId, int questionTypeId)
+        internal async Task<int> RecordAnsweredQuestionAsync(string userId, int profileId, int questionId, int answerId, int questionTypeId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(profileId > 0);
@@ -108,13 +108,13 @@ namespace TwolipsDating.Business
             Debug.Assert(questionTypeId > 0);
 
             // check if the supplied answer is correct
-            bool isAnswerCorrect = await IsAnswerCorrectAsync(questionId, answerId);
+            int correctAnswerId = await GetCorrectAnswerAsync(questionId, answerId);
 
             // save the user's answer to the database
             SaveAnswer(userId, questionId, answerId);
 
             // give the player the correct number of points for the question if they got it correct
-            if (isAnswerCorrect)
+            if (answerId == correctAnswerId)
             {
                 var user = db.Users.Find(userId);
                 int questionPoints = await GetQuestionPointsAsync(questionId);
@@ -136,7 +136,7 @@ namespace TwolipsDating.Business
             // save our current transaction for recording the answer
             int count = await db.SaveChangesAsync();
 
-            return isAnswerCorrect;
+            return correctAnswerId;
         }
 
         private async Task<int> GetQuestionPointsAsync(int questionId)

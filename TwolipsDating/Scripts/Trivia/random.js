@@ -10,21 +10,21 @@
 function onSubmitAnswer(e, obj) {
     e.preventDefault();
 
-    $("#button-next").addClass("hidden");
+    //$("#button-next").addClass("hidden");
     $("#button-ok").removeClass("hidden");
 
     var questionId = $("#QuestionId").val();
-    var selected = $("input[type='radio'][name='SelectedAnswerId']:checked");
-    var answerId = "";
-    if (selected.length > 0) {
-        answerId = selected.val();
-    }
+    var selectedAnswerId = $(obj).attr("data-answer-id"); //$("input[type='radio'][name='SelectedAnswerId']:checked");
+    //var answerId = "";
+    //if (selected.length > 0) {
+    //    answerId = selected.val();
+    //}
 
-    var json = '{"questionId":' + questionId + ', "answerId":' + answerId + '}';
+    var json = '{"questionId":' + questionId + ', "answerId":' + selectedAnswerId + '}';
 
     postJson('/trivia/submitAnswer', json, function (data) {
         if (data.success) {
-            if (data.isAnswerCorrect) {
+            if (data.correctAnswerId == selectedAnswerId) {
                 $("#alert-box").removeClass("alert-success");
                 $("#alert-box").removeClass("alert-danger");
                 $("#alert-box").removeClass("alert-info");
@@ -32,8 +32,9 @@ function onSubmitAnswer(e, obj) {
                 $("#alert-box").html("<h4>Correct!</h4>");
                 $("#button-next").removeClass("hidden");
                 $("#button-next").addClass("btn-success");
-                $("#button-ok").addClass("hidden");
-                $("input[type='radio']").attr("disabled", true);
+                $("#button-skip").addClass("hidden");
+                //$("#button-ok").addClass("hidden");
+                //$("input[type='radio']").attr("disabled", true);
             } else {
                 $("#alert-box").removeClass("alert-success");
                 $("#alert-box").removeClass("alert-danger");
@@ -42,9 +43,19 @@ function onSubmitAnswer(e, obj) {
                 $("#alert-box").html("<h4>Incorrect!</h4>");
                 $("#button-next").removeClass("hidden");
                 $("#button-next").addClass("btn-danger");
-                $("#button-ok").addClass("hidden");
-                $("input[type='radio']").attr("disabled", true);
+                $("#button-skip").addClass("hidden");
+                //$("#button-ok").addClass("hidden");
+                //$("input[type='radio']").attr("disabled", true);
             }
+
+            $(".answer-link").addClass("list-group-item-danger");
+            $("#answer-" + data.correctAnswerId).removeClass("list-group-item-danger");
+            $("#answer-" + data.correctAnswerId).addClass("list-group-item-success");
+
+            $(".icon-incorrect").removeClass("hidden");
+            $("#icon-incorrect-" + data.correctAnswerId).addClass("hidden");
+            $("#icon-correct-" + data.correctAnswerId).removeClass("hidden");
+
             $("#button-skip").hide();
         } else {
             alert(data.error);

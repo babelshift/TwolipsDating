@@ -11,6 +11,7 @@ namespace TwolipsDating.ViewModels
         public int QuestionId { get; set; }
         public string Content { get; set; }
         public int Points { get; set; }
+        public int QuestionTypeId { get; set; }
 
         public bool IsAlreadyAnswered { get; set; }
 

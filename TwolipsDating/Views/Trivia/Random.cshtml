@@ -42,62 +42,34 @@
     <div class="col-md-8">
         <div class="panel panel-default">
             <div class="panel-body">
-                @if (Model != null)
-                {
-                    <div id="alert-box" class="alert alert-info">
-                        <h4>Select an answer and then press OK. There is no time limit.</h4>
-                    </div>
-                    <p>
-                        @Model.Content
-                        &nbsp;
-                        <a id="share-question-link" href="#" class="label label-primary"
-                           data-html="true" data-toggle="popover" data-placement="bottom" data-title="Share" data-animation="false">
-                            <i class="glyphicon glyphicon-share-alt"></i>
-                        </a>
-                        &nbsp;
-                        <a href="#" class="label label-default">
-                            <i class="glyphicon glyphicon-flag"></i>
-                        </a>
-                    </p>
-                    foreach (var answer in @Model.Answers)
-                    {
-                        <div class="radio">
-                            <label>
-                                @Html.RadioButtonFor(m => m.SelectedAnswerId, answer.AnswerId)
-                                @answer.Content
-                            </label>
-                        </div>
-                    }
-                    <button id="button-ok" type="button" class="btn btn-primary btn-sm" onclick="onSubmitAnswer(event, this)" title="Submit answer"><i class="glyphicon glyphicon-ok"></i> OK</button>
-                    <a id="button-skip" href="@Url.Action("random", "trivia")" class="btn btn-default btn-sm" title="Skip this question">Skip <i class="glyphicon glyphicon-chevron-right"></i> </a>
-                    <a id="button-next" href="@Url.Action("random", "trivia")" class="btn btn-primary btn-sm hidden" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</a>
-                    @Html.HiddenFor(m => m.QuestionId)
-                }
-                else
-                {
-                    <h4>You're a machine. You've answered every random question we have.</h4>
-                }
+                <div id="alert-box" class="alert alert-info">
+                    <h4>Select an answer and then press OK. There is no time limit.</h4>
+                </div>
+                @Html.Partial("_QuestionAndAnswerPartial")
             </div>
         </div>
     </div>
 </div>
 
-<div id="share-question-popover" class="hide">
-    <div class="share-buttons">
-        <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("index", "trivia", null, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
-           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-            <img src="~/Content/fb_16.png" alt="Share on Facebook" />
-        </a>
-        <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("{0} {1}", Model.Content, "#trivia")) + "&url=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
-           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=350,width=600');return false;">
-            <img src="~/Content/bird_blue_16.png" alt="Tweet" />
-        </a>
-        <a href="@("https://plus.google.com/share?url=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
-           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-            <img src="~/Content/gplus-16.png" alt="Share on Google+" />
-        </a>
+@if (Model != null)
+{
+    <div id="share-question-popover" class="hide">
+        <div class="share-buttons">
+            <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("index", "trivia", null, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
+               onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                <img src="~/Content/fb_16.png" alt="Share on Facebook" />
+            </a>
+            <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("{0} {1}", Model.Content, "#trivia")) + "&url=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
+               onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=350,width=600');return false;">
+                <img src="~/Content/bird_blue_16.png" alt="Tweet" />
+            </a>
+            <a href="@("https://plus.google.com/share?url=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
+               onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                <img src="~/Content/gplus-16.png" alt="Share on Google+" />
+            </a>
+        </div>
     </div>
-</div>
+}
 
 @section Scripts {
     <script src="@Url.Content("~/Scripts/Trivia/random.js")" type="text/javascript"></script>
