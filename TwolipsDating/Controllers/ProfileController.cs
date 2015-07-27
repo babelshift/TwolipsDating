@@ -511,8 +511,8 @@ namespace TwolipsDating.Controllers
             {
                 Models.Profile profileToBeViewed = await ProfileService.GetProfileAsync(id.Value);
 
-                // user is viewing a valid profile by id
-                if (profileToBeViewed != null)
+                // if the user has a profile and that user isn't inactive, show the profile
+                if (profileToBeViewed != null && profileToBeViewed.ApplicationUser.IsActive)
                 {
                     await SetNotificationsAsync();
 
@@ -560,10 +560,7 @@ namespace TwolipsDating.Controllers
             viewModel.ViewMode = ProfileViewModel.ProfileViewMode.ShowProfile;
 
             // tag suggestions and awards
-            var tagsSuggestedForProfile = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profile.Id);
-            viewModel.SuggestedTags = tagsSuggestedForProfile; // these are the tag suggestions that will be displayed at the profile screen
-            viewModel.AllTags = await GetAllTagsAndCountsInSystemAsync(tagsSuggestedForProfile); // these are all tags to be displayed in the "suggest" popup
-            viewModel.AwardedTags = await ProfileService.GetTagsAwardedToProfileAsync(profile.Id);
+            await SetupProfileTagSuggestions(currentUserId, profile, viewModel);
 
             // favorites and ignores (check for empty so we skip in case of anonymous viewers)
             if (!String.IsNullOrEmpty(currentUserId))
@@ -573,11 +570,7 @@ namespace TwolipsDating.Controllers
             }
 
             // setup the inventory
-            var profileInventoryItems = await ProfileService.GetInventoryAsync(profile.ApplicationUser.Id);
-            viewModel.Inventory = new ProfileInventoryViewModel();
-            viewModel.Inventory.Items = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(profileInventoryItems);
-            viewModel.Inventory.CurrentUserId = currentUserId;
-            viewModel.Inventory.ProfileUserId = profile.ApplicationUser.Id;
+            await SetupProfileInventory(currentUserId, profile, viewModel);
 
             // anonymous viewers don't have an inventory, so skip this if empty
             if (!String.IsNullOrEmpty(currentUserId))
@@ -586,7 +579,7 @@ namespace TwolipsDating.Controllers
                 viewModel.ViewerInventoryItems = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(viewerInventoryItems);
             }
 
-            // setup user titles to select (only if the user is viewing their own profile
+            // setup user titles to select (only if the user is viewing their own profile)
             // TODO: optimize this
             if (currentUserId == profile.ApplicationUser.Id)
             {
@@ -624,6 +617,23 @@ namespace TwolipsDating.Controllers
             }
 
             return View(viewModel);
+        }
+
+        private async Task SetupProfileTagSuggestions(string currentUserId, Models.Profile profile, ProfileViewModel viewModel)
+        {
+            var tagsSuggestedForProfile = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profile.Id);
+            viewModel.SuggestedTags = tagsSuggestedForProfile; // these are the tag suggestions that will be displayed at the profile screen
+            viewModel.AllTags = await GetAllTagsAndCountsInSystemAsync(tagsSuggestedForProfile); // these are all tags to be displayed in the "suggest" popup
+            viewModel.AwardedTags = await ProfileService.GetTagsAwardedToProfileAsync(profile.Id);
+        }
+
+        private async Task SetupProfileInventory(string currentUserId, Models.Profile profile, ProfileViewModel viewModel)
+        {
+            var profileInventoryItems = await ProfileService.GetInventoryAsync(profile.ApplicationUser.Id);
+            viewModel.Inventory = new ProfileInventoryViewModel();
+            viewModel.Inventory.Items = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(profileInventoryItems);
+            viewModel.Inventory.CurrentUserId = currentUserId;
+            viewModel.Inventory.ProfileUserId = profile.ApplicationUser.Id;
         }
 
         private async Task<IReadOnlyCollection<ProfileTagSuggestionViewModel>> GetAllTagsAndCountsInSystemAsync(IReadOnlyCollection<ProfileTagSuggestionViewModel> tagsSuggestedForProfile)

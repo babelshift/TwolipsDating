@@ -48,6 +48,11 @@ namespace TwolipsDating.Controllers
             // lookup the profile we are accessing and the messages between the current user and that profile
             var profileForOtherUser = await ProfileService.GetUserProfileAsync(id);
 
+            if(profileForOtherUser == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+
             // look up conversations between the current user and the selected id
             var messagesBetweenUsers = await ProfileService.GetMessagesBetweenUsersAsync(currentUserId, id);
             var conversationMessages = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyList<ConversationItemViewModel>>(messagesBetweenUsers);

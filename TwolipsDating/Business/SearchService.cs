@@ -14,6 +14,7 @@ namespace TwolipsDating.Business
         {
             var results = await (from profiles in db.Profiles
                                  where profiles.ApplicationUser.UserName.Contains(userName)
+                                 where profiles.ApplicationUser.IsActive
                                  select profiles).ToListAsync();
 
             return results.AsReadOnly();
@@ -24,6 +25,7 @@ namespace TwolipsDating.Business
             var results = await (from profiles in db.Profiles
                                  join tagSuggestions in db.TagSuggestions on profiles.Id equals tagSuggestions.ProfileId
                                  where tagSuggestions.Tag.Name == userName
+                                 where profiles.ApplicationUser.IsActive
                                  select profiles).ToListAsync();
 
             return results.AsReadOnly();

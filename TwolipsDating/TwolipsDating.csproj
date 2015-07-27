@@ -474,6 +474,14 @@
     <Compile Include="Migrations\201507212157590_ChangeKeyOnProfileViewLog.Designer.cs">
       <DependentUpon>201507212157590_ChangeKeyOnProfileViewLog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507271917039_UpdateConversationViewToIncludeUserIsActive.cs" />
+    <Compile Include="Migrations\201507271917039_UpdateConversationViewToIncludeUserIsActive.Designer.cs">
+      <DependentUpon>201507271917039_UpdateConversationViewToIncludeUserIsActive.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507271922391_Reset.cs" />
+    <Compile Include="Migrations\201507271922391_Reset.Designer.cs">
+      <DependentUpon>201507271922391_Reset.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
@@ -887,6 +895,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507212157590_ChangeKeyOnProfileViewLog.resx">
       <DependentUpon>201507212157590_ChangeKeyOnProfileViewLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507271917039_UpdateConversationViewToIncludeUserIsActive.resx">
+      <DependentUpon>201507271917039_UpdateConversationViewToIncludeUserIsActive.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507271922391_Reset.resx">
+      <DependentUpon>201507271922391_Reset.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

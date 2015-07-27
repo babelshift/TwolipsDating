@@ -428,7 +428,9 @@ namespace TwolipsDating.Business
         {
             var usersAnsweredCorrectly = from questionsAnswered in db.AnsweredQuestions
                                          where questionsAnswered.QuestionId == questionId
-                                         join question in db.Questions on questionsAnswered.AnswerId equals question.CorrectAnswerId
+                                         join questions in db.Questions on questionsAnswered.AnswerId equals questions.CorrectAnswerId
+                                         join users in db.Users on questionsAnswered.UserId equals users.Id
+                                         where users.IsActive
                                          orderby questionsAnswered.DateAnswered descending
                                          select questionsAnswered;
 

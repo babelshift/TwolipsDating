@@ -24,6 +24,7 @@ namespace TwolipsDating.Business
             var imagesUploadedByFavorites = from userImages in db.UserImages
                                             join favoritedProfiles in db.FavoriteProfiles on userImages.ApplicationUser.Profile.Id equals favoritedProfiles.ProfileId
                                             where favoritedProfiles.UserId == userId
+                                            where userImages.ApplicationUser.IsActive
                                             select userImages;
 
             var results = await imagesUploadedByFavorites.ToListAsync();
@@ -39,16 +40,18 @@ namespace TwolipsDating.Business
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
-            // get the reviews that were authored by favorites users
+            // get the reviews that were authored by favorited users
             var reviewsWrittenByFavorites = from reviews in db.Reviews
                                             join favoritedProfiles in db.FavoriteProfiles on reviews.AuthorUser.Profile.Id equals favoritedProfiles.ProfileId
                                             where favoritedProfiles.UserId == userId
+                                            where reviews.AuthorUser.IsActive
                                             select reviews;
 
             // get the reviews that were written for the favorited users
             var reviewsWrittenAboutFavorites = from reviews in db.Reviews
                                                join favoritedProfiles in db.FavoriteProfiles on reviews.TargetUser.Profile.Id equals favoritedProfiles.ProfileId
                                                where favoritedProfiles.UserId == userId
+                                               where reviews.TargetUser.IsActive
                                                select reviews;
 
             // union the two sets together and return them

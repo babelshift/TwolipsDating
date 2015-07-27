@@ -282,6 +282,7 @@ namespace TwolipsDating.Business
 
             var reviewsForUser = from reviews in db.Reviews
                                  where reviews.TargetUserId == targetUserId
+                                 where reviews.AuthorUser.IsActive
                                  select reviews;
 
             var results = await reviewsForUser.ToListAsync();
@@ -525,6 +526,8 @@ namespace TwolipsDating.Business
             var userMessages = from messages in db.Messages
                                where messages.ReceiverApplicationUserId == userId
                                || messages.SenderApplicationUserId == userId
+                               where messages.ReceiverApplicationUser.IsActive
+                               && messages.SenderApplicationUser.IsActive
                                select messages;
             var results = await userMessages.ToListAsync();
             return results.AsReadOnly();
@@ -536,6 +539,7 @@ namespace TwolipsDating.Business
 
             var userMessages = from messages in db.Messages
                                where messages.SenderApplicationUserId == userId
+                               where messages.SenderApplicationUser.IsActive
                                select messages;
 
             var results = await userMessages.ToListAsync();
@@ -548,6 +552,7 @@ namespace TwolipsDating.Business
 
             var userMessages = from messages in db.Messages
                                where messages.ReceiverApplicationUserId == userId
+                               where messages.ReceiverApplicationUser.IsActive
                                select messages;
 
             var results = await userMessages.ToListAsync();
@@ -556,11 +561,13 @@ namespace TwolipsDating.Business
 
         public async Task<IReadOnlyCollection<MessageConversation>> GetMessageConversationsAsync(string userId)
         {
-            var messageConversations = from m in db.MessageConversations
-                                       where m.SenderApplicationUserId == userId
-                                       || m.ReceiverApplicationUserId == userId
-                                       orderby m.DateSent descending
-                                       select m;
+            var messageConversations = from messages in db.MessageConversations
+                                       where messages.SenderApplicationUserId == userId
+                                       || messages.ReceiverApplicationUserId == userId
+                                       where messages.IsSenderActive 
+                                       && messages.IsReceiverActive
+                                       orderby messages.DateSent descending
+                                       select messages;
 
             var results = await messageConversations.ToListAsync();
             return results.AsReadOnly();
@@ -574,6 +581,8 @@ namespace TwolipsDating.Business
             var messagesBetweenUsers = from messages in db.Messages
                                        where (messages.SenderApplicationUserId == userId && messages.ReceiverApplicationUserId == userId2)
                                        || (messages.SenderApplicationUserId == userId2 && messages.ReceiverApplicationUserId == userId)
+                                       where messages.SenderApplicationUser.IsActive
+                                       && messages.ReceiverApplicationUser.IsActive
                                        orderby messages.DateSent descending
                                        select messages;
 
