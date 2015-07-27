@@ -106,9 +106,15 @@ input[type="checkbox"].input-validation-error {
 }
 
 .footer-bottom {
-    padding-top: 15px;
-    padding-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 3px;
     background-color: #222;
+}
+
+.footer-bottom-social {
+    padding-top: 8px;
+    padding-bottom: 5px;
+    background-color: #444;
 }
 
 .footer p a {

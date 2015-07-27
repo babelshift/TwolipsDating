@@ -42,15 +42,28 @@
     </div>
     @RenderBody()
     <footer class="footer">
+        <div class="footer-bottom-social">
+            <div class="container">
+                <div style="margin-top: 2px; margin-right: 5px;" class="pull-right">
+                    <div class="fb-follow" data-href="https://www.facebook.com/twolipsdating" data-layout="button" data-show-faces="false"></div>
+                </div>
+                <div style="margin-top: 3px; margin-right: 5px;" class="pull-right">
+                    <a href="https://twitter.com/twolipsdating" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @@twolipsdating</a>
+                </div>
+                <div style="margin-top: 3px; margin-right: 5px;" class="pull-right">
+                    <div class="g-follow" data-annotation="none" data-height="20" data-href="//plus.google.com/u/0/107739194154613628998" data-rel="publisher"></div>
+                </div>
+            </div>
+        </div>
         <div class="footer-bottom">
             <div class="container">
                 <h5 style="display: inline-block">
                     &copy; @DateTime.Now.Year
                 </h5>
                 <h4 style="display: inline-block">
-                    <a href="@Url.Action("index", "home")"><img src="~/Content/twolipsicon-white.png" width="32" height="32" /></a> twolips dating <small>@Html.CurrentVersion()</small>
+                    <a href="@Url.Action("index", "home")"><img src="~/Content/twolipsicon-white-180x180.png" width="32" height="32" /></a> twolips dating <small>@Html.CurrentVersion()</small>
                 </h4>
-                <div style="margin-top: 10px;" class="pull-right">
+                <div style="margin-top: 10px" class="pull-right">
                     @Html.ActionLink("About", "index", "about")
                     <p style="display: inline-block;">&bull;</p>
                     <a href="mailto:info@twolipsdating.com">Contact</a>
@@ -62,6 +75,26 @@
             </div>
         </div>
     </footer>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <div id="fb-root"></div>
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '742385919135029',
+                xfbml: true,
+                version: 'v2.4'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');</script>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/raty")
