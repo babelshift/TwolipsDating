@@ -81,6 +81,7 @@ namespace TwolipsDating.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Random()
         {
             QuestionViewModel viewModel = await GetRandomQuestionViewModel();
@@ -90,7 +91,10 @@ namespace TwolipsDating.Controllers
 
         private async Task<QuestionViewModel> GetRandomQuestionViewModel()
         {
-            await SetNotificationsAsync();
+            if(User.Identity.IsAuthenticated)
+            {
+                await SetNotificationsAsync();
+            }
 
             var currentUserId = await GetCurrentUserIdAsync();
 
@@ -108,9 +112,13 @@ namespace TwolipsDating.Controllers
             return viewModel;
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Timed()
         {
-            await SetNotificationsAsync();
+            if (User.Identity.IsAuthenticated)
+            {
+                await SetNotificationsAsync();
+            }
 
             var currentUserId = await GetCurrentUserIdAsync();
 

@@ -118,12 +118,12 @@
                 </div>
             }
         </div>
-        if (Model.Items.Count > 0)
-        {
-            <div class="col-md-8">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        @for (int i = 0; i < Model.Items.Count; i++)
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @if (Model.Items.Count > 0)
+                    {
+                        for (int i = 0; i < Model.Items.Count; i++)
                         {
                             var feedItem = Model.Items[i];
 
@@ -145,37 +145,31 @@
                                 <hr />
                             }
                         }
-                        @*
-                            <p>
-                                <a href="#">jskiles1</a> completed the challenge <a href="#" class="label label-primary">Bring Out Your Dead</a>
-                                <br />
-                                <small>3 minutes ago</small>
-                            </p>
-                            <p>
-                                <a href="#">jskiles1</a> defeated <a href="#">joanne123</a> in a game of <a href="#" class="label label-primary">Chicken</a>
-                                <br />
-                                <small>5 hours ago</small>
-                            </p>
-                            <p>
-                                <a href="#">jskiles1</a> made an announcement: <strong>all I do is win!</strong>
-                                <br />
-                                <small>7 hours ago</small>
-                            </p>
-                        *@
-                    </div>
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="col-md-8 col-md-offset-2">
-                <div class="panel panel-default">
-                    <div class="panel-body">
+                    }
+                    else
+                    {
                         <h4>You will start seeing updates here when you send and receive messages or follow user profiles.</h4>
-                    </div>
+                    }
+                    @*
+                        <p>
+                            <a href="#">jskiles1</a> completed the challenge <a href="#" class="label label-primary">Bring Out Your Dead</a>
+                            <br />
+                            <small>3 minutes ago</small>
+                        </p>
+                        <p>
+                            <a href="#">jskiles1</a> defeated <a href="#">joanne123</a> in a game of <a href="#" class="label label-primary">Chicken</a>
+                            <br />
+                            <small>5 hours ago</small>
+                        </p>
+                        <p>
+                            <a href="#">jskiles1</a> made an announcement: <strong>all I do is win!</strong>
+                            <br />
+                            <small>7 hours ago</small>
+                        </p>
+                    *@
                 </div>
             </div>
-        }
+        </div>
     }
     else
     {

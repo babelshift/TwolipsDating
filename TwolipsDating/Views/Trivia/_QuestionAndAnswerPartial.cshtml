@@ -16,25 +16,43 @@
     <div class="list-group">
         @foreach (var answer in @Model.Answers)
         {
-            <a href="#" id="@String.Format("answer-{0}", answer.AnswerId)" class="answer-link list-group-item" data-answer-id="@answer.AnswerId" onclick="onSubmitAnswer(event, this)">
-                @answer.Content
-                <span id="@String.Format("icon-correct-{0}", answer.AnswerId)" class="icon-correct pull-right hidden"><i class="glyphicon glyphicon-ok"></i></span>
-                <span id="@String.Format("icon-incorrect-{0}", answer.AnswerId)" class="icon-incorrect pull-right hidden"><i class="glyphicon glyphicon-remove"></i></span>
-            </a>
+            if (User.Identity.IsAuthenticated)
+            {
+                <a href="#" id="@String.Format("answer-{0}", answer.AnswerId)" class="answer-link list-group-item" data-answer-id="@answer.AnswerId" onclick="onSubmitAnswer(event, this)">
+                    @answer.Content
+                    <span id="@String.Format("icon-correct-{0}", answer.AnswerId)" class="icon-correct pull-right hidden"><i class="glyphicon glyphicon-ok"></i></span>
+                    <span id="@String.Format("icon-incorrect-{0}", answer.AnswerId)" class="icon-incorrect pull-right hidden"><i class="glyphicon glyphicon-remove"></i></span>
+                </a>
+            }
+            else
+            {
+                <a href="#" id="@String.Format("answer-{0}", answer.AnswerId)" class="answer-link list-group-item disabled" data-answer-id="@answer.AnswerId">
+                    @answer.Content
+                    <span id="@String.Format("icon-correct-{0}", answer.AnswerId)" class="icon-correct pull-right hidden"><i class="glyphicon glyphicon-ok"></i></span>
+                    <span id="@String.Format("icon-incorrect-{0}", answer.AnswerId)" class="icon-incorrect pull-right hidden"><i class="glyphicon glyphicon-remove"></i></span>
+                </a>
+            }
         }
     </div>
     @*<button id="button-ok" type="button" class="btn btn-primary btn-sm" onclick="onSubmitAnswer(event, this)" title="Submit answer"><i class="glyphicon glyphicon-ok"></i> OK</button>*@
-    if (Model.QuestionTypeId == (int)TwolipsDating.Models.QuestionTypeValues.Random)
+    if (User.Identity.IsAuthenticated)
     {
-        <a id="button-skip" href="@Url.Action("random", "trivia")" class="btn btn-default btn-sm" title="Skip this question">Skip <i class="glyphicon glyphicon-chevron-right"></i> </a>
-        <a id="button-next" href="@Url.Action("random", "trivia")" class="btn btn-primary btn-sm hidden" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</a>
+        if (Model.QuestionTypeId == (int)TwolipsDating.Models.QuestionTypeValues.Random)
+        {
+            <a id="button-skip" href="@Url.Action("random", "trivia")" class="btn btn-default btn-sm" title="Skip this question">Skip <i class="glyphicon glyphicon-chevron-right"></i> </a>
+            <a id="button-next" href="@Url.Action("random", "trivia")" class="btn btn-primary btn-sm hidden" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</a>
+        }
+        else
+        {
+            <a id="button-skip" href="@Url.Action("timed", "trivia")" class="btn btn-default btn-sm" title="Skip this question">Skip <i class="glyphicon glyphicon-chevron-right"></i> </a>
+            <a id="button-next" href="@Url.Action("timed", "trivia")" class="btn btn-primary btn-sm hidden" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</a>
+        }
+        @Html.HiddenFor(m => m.QuestionId)
     }
     else
     {
-        <a id="button-skip" href="@Url.Action("timed", "trivia")" class="btn btn-default btn-sm" title="Skip this question">Skip <i class="glyphicon glyphicon-chevron-right"></i> </a>
-        <a id="button-next" href="@Url.Action("timed", "trivia")" class="btn btn-primary btn-sm hidden" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</a>
+        <a href="@Url.Action("login", "account")" class="btn btn-primary">Log in to answer this question</a>
     }
-    @Html.HiddenFor(m => m.QuestionId)
 }
 else
 {

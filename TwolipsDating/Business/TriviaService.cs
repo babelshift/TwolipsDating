@@ -54,7 +54,7 @@ namespace TwolipsDating.Business
         /// <returns></returns>
         internal async Task<Question> GetRandomQuestionAsync(string userId, int questionTypeId)
         {
-            Debug.Assert(!String.IsNullOrEmpty(userId));
+            //Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(questionTypeId > 0);
 
             var questionsAlreadyAnswered = await (from questions in db.AnsweredQuestions
