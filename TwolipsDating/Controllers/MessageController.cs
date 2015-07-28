@@ -10,6 +10,8 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity;
 
 namespace TwolipsDating.Controllers
 {
@@ -224,7 +226,7 @@ namespace TwolipsDating.Controllers
 
             try
             {
-                string currentUserId = await GetCurrentUserIdAsync();
+                string currentUserId = User.Identity.GetUserId();
 
                 bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 

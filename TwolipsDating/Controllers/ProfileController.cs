@@ -14,6 +14,7 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace TwolipsDating.Controllers
 {
@@ -97,7 +98,7 @@ namespace TwolipsDating.Controllers
         {
             try
             {
-                string currentUserId = await GetCurrentUserIdAsync();
+                string currentUserId = User.Identity.GetUserId();
 
                 int changes = 0;
 
@@ -141,7 +142,7 @@ namespace TwolipsDating.Controllers
         [HttpPost]
         public async Task<JsonResult> SendGift(string profileUserId, int giftId, int inventoryItemId)
         {
-            string currentUserId = await GetCurrentUserIdAsync();
+            string currentUserId = User.Identity.GetUserId();
 
             try
             {
@@ -173,7 +174,7 @@ namespace TwolipsDating.Controllers
         [HttpPost]
         public async Task<JsonResult> RemoveGiftNotification(int giftTransactionId)
         {
-            string currentUserId = await GetCurrentUserIdAsync();
+            string currentUserId = User.Identity.GetUserId();
 
             try
             {
@@ -205,7 +206,7 @@ namespace TwolipsDating.Controllers
         [HttpPost]
         public async Task<JsonResult> RemoveAllGiftNotifications()
         {
-            string currentUserId = await GetCurrentUserIdAsync();
+            string currentUserId = User.Identity.GetUserId();
 
             try
             {
@@ -241,7 +242,7 @@ namespace TwolipsDating.Controllers
         [HttpPost]
         public async Task<JsonResult> SendMessage(string profileUserId, string messageBody)
         {
-            string currentUserId = await GetCurrentUserIdAsync();
+            string currentUserId = User.Identity.GetUserId();
 
             try
             {
@@ -293,7 +294,7 @@ namespace TwolipsDating.Controllers
         {
             try
             {
-                string currentUserId = await GetCurrentUserIdAsync();
+                string currentUserId = User.Identity.GetUserId();
 
                 bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
@@ -340,7 +341,7 @@ namespace TwolipsDating.Controllers
         [HttpPost]
         public async Task<ActionResult> DeleteImage(int id, string fileName, string profileUserId)
         {
-            string currentUserId = await GetCurrentUserIdAsync();
+            string currentUserId = User.Identity.GetUserId();
             bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
             if (profileUserId != currentUserId || !isCurrentUserEmailConfirmed)
             {
@@ -393,7 +394,7 @@ namespace TwolipsDating.Controllers
                 return RedirectToIndex(new { tab = "pictures" });
             }
 
-            string currentUserId = await GetCurrentUserIdAsync();
+            string currentUserId = User.Identity.GetUserId();
             bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
             if (viewModel.ProfileUserId != currentUserId || !isCurrentUserEmailConfirmed)
             {
@@ -464,7 +465,7 @@ namespace TwolipsDating.Controllers
 
             try
             {
-                string currentUserId = await GetCurrentUserIdAsync();
+                string currentUserId = User.Identity.GetUserId();
                 bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
                 if (viewModel.ProfileUserId != currentUserId || !isCurrentUserEmailConfirmed)
                 {
@@ -502,18 +503,24 @@ namespace TwolipsDating.Controllers
         #region Index and Show Profile
 
         [AllowAnonymous]
-        public async Task<ActionResult> Index(int? id = null, string tab = null)
+        public async Task<ActionResult> Index(int? id = null, string seoName = null, string tab = null)
         {
-            string currentUserId = await GetCurrentUserIdAsync();
+            string currentUserId = User.Identity.GetUserId();
 
             // user attempting to view profile based on explicit id
             if (id.HasValue)
             {
-                Models.Profile profileToBeViewed = await ProfileService.GetProfileAsync(id.Value);
+                var profileToBeViewed = await ProfileService.GetProfileAsync(id.Value);
 
                 // if the user has a profile and that user isn't inactive, show the profile
                 if (profileToBeViewed != null && profileToBeViewed.ApplicationUser.IsActive)
                 {
+                    string expectedSeoName = ProfileExtensions.GetSEOProfileName(profileToBeViewed.ApplicationUser.UserName);
+                    if(seoName != expectedSeoName)
+                    {
+                        return RedirectToAction("index", new { id = id, seoName = expectedSeoName });
+                    }
+
                     await SetNotificationsAsync();
 
                     return await ShowUserProfileAsync(tab, currentUserId, profileToBeViewed);
@@ -533,7 +540,7 @@ namespace TwolipsDating.Controllers
                     return RedirectToAction("login", "account");
                 }
 
-                Models.Profile currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
+                var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
 
                 await SetNotificationsAsync();
 
@@ -749,7 +756,7 @@ namespace TwolipsDating.Controllers
             //    countryCollection.Add(country.Id, country.Name);
             //}
 
-            string currentUserId = await GetCurrentUserIdAsync();
+            string currentUserId = User.Identity.GetUserId();
             //viewModel.CreateProfile.Countries = countryCollection;
             viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
@@ -768,7 +775,7 @@ namespace TwolipsDating.Controllers
                 return RedirectToIndex();
             }
 
-            string currentUserId = await GetCurrentUserIdAsync();
+            string currentUserId = User.Identity.GetUserId();
             DateTime birthday = new DateTime(viewModel.CreateProfile.BirthYear.Value, viewModel.CreateProfile.BirthMonth.Value, viewModel.CreateProfile.BirthDayOfMonth.Value);
 
             string[] location = viewModel.CreateProfile.SelectedLocation.Split(',');
@@ -829,7 +836,7 @@ namespace TwolipsDating.Controllers
         [HttpPost]
         public async Task<ActionResult> SetSelectedTitle(int titleId)
         {
-            string currentUserId = await GetCurrentUserIdAsync();
+            string currentUserId = User.Identity.GetUserId();
 
             try
             {

@@ -13,8 +13,15 @@ namespace TwolipsDating
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            routes.MapRoute(
+                name: "DefaultWithSeoName",
+                url: "{controller}/{id}/{seoName}",
+                defaults: new { controller = "Profile", action = "Index", id = UrlParameter.Optional },
+                constraints: new { id = @"^\d+$" }
+            );
+
 			routes.MapRoute(
-				name: "Default1",
+				name: "DefaultWithoutAction",
 				url: "{controller}/{id}",
 				defaults: new { controller = "Profile", action = "Index", id = UrlParameter.Optional },
 				constraints: new { id = @"^\d+$" }

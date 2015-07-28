@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using TwolipsDating.Models;
 
@@ -44,6 +45,27 @@ namespace TwolipsDating.Utilities
         private static string GetImagePath(string fileName)
         {
             return String.Format("{0}/{1}", cdn, fileName);
+        }
+
+        public static string GetSEOProfileName(string userName)
+        {
+            if (String.IsNullOrEmpty(userName))
+            {
+                return String.Empty;
+            }
+
+            string root = String.Format("{0}", userName);
+            return Regex.Replace(root.ToLower().Replace(@"'", String.Empty), @"[^\w]+", "-");
+        }
+
+        public static string ToSEOString(this string s)
+        {
+            if (String.IsNullOrEmpty(s))
+            {
+                return s;
+            }
+
+            return Regex.Replace(s.ToLower().Replace(@"'", String.Empty), @"[^\w]+", "-");
         }
     }
 }

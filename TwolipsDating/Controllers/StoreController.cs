@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace TwolipsDating.Controllers
 {
@@ -32,7 +33,7 @@ namespace TwolipsDating.Controllers
             var gifts = await storeService.GetGiftsAsync();
             viewModel.StoreGifts = Mapper.Map<IReadOnlyCollection<Gift>, IReadOnlyCollection<StoreGiftViewModel>>(gifts);
 
-            string currentUserId = await GetCurrentUserIdAsync();
+            string currentUserId = User.Identity.GetUserId();
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
             return View(viewModel);
@@ -71,7 +72,7 @@ namespace TwolipsDating.Controllers
             {
                 if (giftCount > 0 && giftCount <= 100)
                 {
-                    string currentUserId = await GetCurrentUserIdAsync();
+                    string currentUserId = User.Identity.GetUserId();
 
                     int count = await storeService.BuyGiftAsync(currentUserId, giftId, giftCount);
 
@@ -93,7 +94,7 @@ namespace TwolipsDating.Controllers
 
             try
             {
-                string currentUserId = await GetCurrentUserIdAsync();
+                string currentUserId = User.Identity.GetUserId();
 
                 int count = await storeService.BuyTitleAsync(currentUserId, titleId);
 

@@ -9,6 +9,7 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace TwolipsDating.Controllers
 {
@@ -293,7 +294,7 @@ namespace TwolipsDating.Controllers
                 return View(viewModel);
             }
 
-            string currentUserId = await GetCurrentUserIdAsync();
+            string currentUserId = User.Identity.GetUserId();
 
             var profile = await ProfileService.GetUserProfileAsync(currentUserId);
 

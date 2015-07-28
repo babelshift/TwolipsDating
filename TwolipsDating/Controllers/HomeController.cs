@@ -8,6 +8,7 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace TwolipsDating.Controllers
 {
@@ -26,7 +27,7 @@ namespace TwolipsDating.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                string currentUserId = await GetCurrentUserIdAsync();
+                string currentUserId = User.Identity.GetUserId();
                 List<DashboardItemViewModel> dashboardItems = new List<DashboardItemViewModel>();
 
                 await AddMessagesToFeedAsync(currentUserId, dashboardItems);

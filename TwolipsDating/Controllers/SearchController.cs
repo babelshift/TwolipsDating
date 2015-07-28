@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using TwolipsDating.Business;
 using TwolipsDating.ViewModels;
 using TwolipsDating.Utilities;
+using Microsoft.AspNet.Identity;
 
 namespace TwolipsDating.Controllers
 {
@@ -17,7 +18,7 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Index(string user, string tag)
         {
-            string currentUserId = await GetCurrentUserIdAsync();
+            string currentUserId = User.Identity.GetUserId();
             await SetNotificationsAsync();
 
             SearchResultViewModel viewModel = new SearchResultViewModel();

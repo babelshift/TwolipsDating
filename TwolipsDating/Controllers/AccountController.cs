@@ -506,7 +506,7 @@ namespace TwolipsDating.Controllers
         {
             await SetNotificationsAsync();
 
-            string currentUserId = await GetCurrentUserIdAsync();
+            string currentUserId = User.Identity.GetUserId();
 
             // get transactions (expenses)
             var transactions = await userService.GetStoreTransactionsAsync(currentUserId);

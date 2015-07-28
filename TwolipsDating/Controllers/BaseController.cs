@@ -13,6 +13,7 @@ using TwolipsDating.Utilities;
 using System.Net;
 using AutoMapper;
 using TwolipsDating.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace TwolipsDating.Controllers
 {
@@ -88,7 +89,7 @@ namespace TwolipsDating.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                string currentUserId = await GetCurrentUserIdAsync();
+                string currentUserId = User.Identity.GetUserId();
                 var currentUser = await UserManager.FindByIdAsync(currentUserId);
                 ViewBag.MessageNotificationCount = await notificationService.GetMessageNotificationCountAsync(currentUserId);
                 ViewBag.PointsCount = currentUser.Points;
@@ -102,23 +103,23 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        protected async Task<string> GetCurrentUserIdAsync()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                string currentUserId = String.Empty;
+        //protected async Task<string> GetCurrentUserIdAsync()
+        //{
+        //    if (User.Identity.IsAuthenticated)
+        //    {
+        //        string currentUserId = String.Empty;
 
-                if (Session["CurrentUserId"] == null || String.IsNullOrEmpty(Session["CurrentUserId"].ToString()))
-                {
-                    var currentUser = await UserManager.FindByNameAsync(User.Identity.Name);
-                    Session["CurrentUserId"] = currentUser.Id;
-                }
+        //        if (Session["CurrentUserId"] == null || String.IsNullOrEmpty(Session["CurrentUserId"].ToString()))
+        //        {
+        //            var currentUser = await UserManager.FindByNameAsync(User.Identity.Name);
+        //            Session["CurrentUserId"] = currentUser.Id;
+        //        }
 
-                return Session["CurrentUserId"].ToString();
-            }
+        //        return Session["CurrentUserId"].ToString();
+        //    }
 
-            return String.Empty;
-        }
+        //    return String.Empty;
+        //}
 
         protected void AddError(string errorMessage)
         {
