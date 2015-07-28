@@ -11,7 +11,6 @@ using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity;
 
 namespace TwolipsDating.Controllers
 {
@@ -21,7 +20,7 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Conversation(string id)
         {
-            var currentUserId = await GetCurrentUserIdAsync();
+            var currentUserId = User.Identity.GetUserId();
 
             ConversationViewModel viewModel = new ConversationViewModel();
 
@@ -171,7 +170,7 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Received()
         {
-            var currentUserId = await GetCurrentUserIdAsync();
+            var currentUserId = User.Identity.GetUserId();
 
             var messages = await ProfileService.GetMessagesReceivedByUserAsync(currentUserId);
 
@@ -191,7 +190,7 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Sent()
         {
-            var currentUserId = await GetCurrentUserIdAsync();
+            var currentUserId = User.Identity.GetUserId();
 
             var messages = await ProfileService.GetMessagesByUserAsync(currentUserId);
 

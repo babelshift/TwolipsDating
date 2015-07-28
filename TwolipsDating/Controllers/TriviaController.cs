@@ -49,7 +49,7 @@ namespace TwolipsDating.Controllers
             TriviaMenuViewModel viewModel = new TriviaMenuViewModel();
             viewModel.Quizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(quizzes);
 
-            var currentUserId = await GetCurrentUserIdAsync();
+            var currentUserId = User.Identity.GetUserId();
             var completedQuizzes = await triviaService.GetCompletedQuizzesForUserAsync(currentUserId);
 
             foreach (var quiz in viewModel.Quizzes)
@@ -97,7 +97,7 @@ namespace TwolipsDating.Controllers
                 await SetNotificationsAsync();
             }
 
-            var currentUserId = await GetCurrentUserIdAsync();
+            var currentUserId = User.Identity.GetUserId();
 
             // generate a random question with its answers to view
             var randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Random);
@@ -121,7 +121,7 @@ namespace TwolipsDating.Controllers
                 await SetNotificationsAsync();
             }
 
-            var currentUserId = await GetCurrentUserIdAsync();
+            var currentUserId = User.Identity.GetUserId();
 
             // generate a random question with its answers to view
             Question randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Timed);
@@ -153,7 +153,7 @@ namespace TwolipsDating.Controllers
         {
             try
             {
-                var currentUserId = await GetCurrentUserIdAsync();
+                var currentUserId = User.Identity.GetUserId();
 
                 var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
 
@@ -186,7 +186,7 @@ namespace TwolipsDating.Controllers
 
                     if (didUserAnswerInTime)
                     {
-                        var currentUserId = await GetCurrentUserIdAsync();
+                        var currentUserId = User.Identity.GetUserId();
 
                         var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
 
@@ -236,7 +236,7 @@ namespace TwolipsDating.Controllers
         {
             await SetNotificationsAsync();
 
-            var currentUserId = await GetCurrentUserIdAsync();
+            var currentUserId = User.Identity.GetUserId();
 
             var quiz = await triviaService.GetQuizAsync(id);
 

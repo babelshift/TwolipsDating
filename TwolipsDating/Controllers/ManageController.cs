@@ -49,7 +49,7 @@ namespace TwolipsDating.Controllers
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
-            var currentUser = await GetCurrentUserIdAsync();
+            var currentUser = User.Identity.GetUserId();
             IndexViewModel model = new IndexViewModel()
             {
                 Email = await UserManager.GetEmailAsync(User.Identity.GetUserId()),
@@ -242,7 +242,7 @@ namespace TwolipsDating.Controllers
         // GET: /Manage/ChangePassword
         public async Task<ActionResult> Settings(ManageMessageId? message)
         {
-            var currentUser = await GetCurrentUserIdAsync();
+            var currentUser = User.Identity.GetUserId();
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
@@ -361,7 +361,7 @@ namespace TwolipsDating.Controllers
         // GET: /Manage/ManageLogins
         public async Task<ActionResult> Externals(ManageMessageId? message)
         {
-            var currentUser = await GetCurrentUserIdAsync();
+            var currentUser = User.Identity.GetUserId();
             ViewBag.StatusMessage =
                 message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
                 : message == ManageMessageId.Error ? "An error has occurred."

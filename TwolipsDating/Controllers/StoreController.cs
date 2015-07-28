@@ -47,7 +47,7 @@ namespace TwolipsDating.Controllers
             var titles = await storeService.GetTitlesAsync();
             viewModel.StoreTitles = Mapper.Map<IReadOnlyCollection<Title>, IReadOnlyCollection<StoreTitleViewModel>>(titles);
 
-            var currentUserId = await GetCurrentUserIdAsync();
+            var currentUserId = User.Identity.GetUserId();
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
             var titlesOwnedByUser = await userService.GetTitlesOwnedByUserAsync(currentUserId);

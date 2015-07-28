@@ -38,7 +38,7 @@ namespace TwolipsDating.Controllers
 
                 // if user is not logged in, forbidden
                 // if passed user id is not equal to request current user id, forbidden
-                if (!User.Identity.IsAuthenticated || currentUserId != await GetCurrentUserIdAsync())
+                if (!User.Identity.IsAuthenticated || currentUserId != User.Identity.GetUserId())
                 {
                     return Json(new { success = false, error = "403 Forbidden" });
                 }
@@ -70,7 +70,7 @@ namespace TwolipsDating.Controllers
 
                 // if user is not logged in, forbidden
                 // if passed user id is not equal to request current user id, forbidden
-                if (!User.Identity.IsAuthenticated || currentUserId != await GetCurrentUserIdAsync())
+                if (!User.Identity.IsAuthenticated || currentUserId != User.Identity.GetUserId())
                 {
                     return Json(new { success = false, error = "403 Forbidden" });
                 }
