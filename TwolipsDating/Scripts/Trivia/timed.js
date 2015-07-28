@@ -28,7 +28,7 @@ function tickCountDown() {
         $("#button-next").removeClass("hidden");
         $("#button-next").addClass("btn-danger");
         $("#button-ok").addClass("hidden");
-        $("input[type='radio']").attr("disabled", true);
+        $(".answer-link").addClass("disabled");
         stopCountdown();
     }
 }

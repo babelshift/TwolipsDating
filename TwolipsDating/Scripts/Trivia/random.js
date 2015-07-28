@@ -5,6 +5,10 @@
         var cloneUnhide = clone.removeClass('hide');
         return cloneUnhide.html();
     });
+
+    $(".answer-link").on("click", function (e) {
+        onSubmitAnswer(e, this);
+    });
 });
 
 function onSubmitAnswer(e, obj) {
@@ -49,6 +53,7 @@ function onSubmitAnswer(e, obj) {
             }
 
             $(".answer-link").addClass("list-group-item-danger");
+            $(".answer-link").off();
             $("#answer-" + data.correctAnswerId).removeClass("list-group-item-danger");
             $("#answer-" + data.correctAnswerId).addClass("list-group-item-success");
 

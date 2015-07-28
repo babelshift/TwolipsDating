@@ -18,7 +18,7 @@
         {
             if (User.Identity.IsAuthenticated)
             {
-                <a href="#" id="@String.Format("answer-{0}", answer.AnswerId)" class="answer-link list-group-item" data-answer-id="@answer.AnswerId" onclick="onSubmitAnswer(event, this)">
+                <a href="#" id="@String.Format("answer-{0}", answer.AnswerId)" class="answer-link list-group-item" data-answer-id="@answer.AnswerId">
                     @answer.Content
                     <span id="@String.Format("icon-correct-{0}", answer.AnswerId)" class="icon-correct pull-right hidden"><i class="glyphicon glyphicon-ok"></i></span>
                     <span id="@String.Format("icon-incorrect-{0}", answer.AnswerId)" class="icon-incorrect pull-right hidden"><i class="glyphicon glyphicon-remove"></i></span>
@@ -26,10 +26,8 @@
             }
             else
             {
-                <a href="#" id="@String.Format("answer-{0}", answer.AnswerId)" class="answer-link list-group-item disabled" data-answer-id="@answer.AnswerId">
+                <a href="#" id="@String.Format("answer-{0}", answer.AnswerId)" class="list-group-item disabled">
                     @answer.Content
-                    <span id="@String.Format("icon-correct-{0}", answer.AnswerId)" class="icon-correct pull-right hidden"><i class="glyphicon glyphicon-ok"></i></span>
-                    <span id="@String.Format("icon-incorrect-{0}", answer.AnswerId)" class="icon-incorrect pull-right hidden"><i class="glyphicon glyphicon-remove"></i></span>
                 </a>
             }
         }
