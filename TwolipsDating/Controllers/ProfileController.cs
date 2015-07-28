@@ -150,7 +150,7 @@ namespace TwolipsDating.Controllers
 
                 if (isCurrentUserEmailConfirmed)
                 {
-                    int giftCount = await ProfileService.SendGift(currentUserId, profileUserId, giftId, inventoryItemId);
+                    int giftCount = await ProfileService.SendGiftAsync(currentUserId, profileUserId, giftId, inventoryItemId);
 
                     return Json(new { success = true, giftCount = giftCount });
                 }
@@ -182,7 +182,7 @@ namespace TwolipsDating.Controllers
 
                 if (isCurrentUserEmailConfirmed)
                 {
-                    int result = await ProfileService.RemoveGiftNotification(currentUserId, giftTransactionId);
+                    int result = await ProfileService.RemoveGiftNotificationAsync(currentUserId, giftTransactionId);
 
                     return Json(new { success = true });
                 }
@@ -214,7 +214,7 @@ namespace TwolipsDating.Controllers
 
                 if (isCurrentUserEmailConfirmed)
                 {
-                    int result = await ProfileService.RemoveAllGiftNotification(currentUserId);
+                    int result = await ProfileService.RemoveAllGiftNotificationAsync(currentUserId);
 
                     return Json(new { success = true });
                 }

@@ -38,5 +38,26 @@ namespace TwolipsDating.Business
 
             return new ReadOnlyDictionary<int, UserTitle>(purchasedTitles);
         }
+
+        /// <summary>
+        /// Returns the profile ID of the passed user ID. Returns null if the user has no profile.
+        /// </summary>
+        /// <param name="currentUserId"></param>
+        /// <returns></returns>
+        internal async Task<int?> GetProfileIdAsync(string currentUserId)
+        {
+            var profile = await (from profiles in db.Profiles
+                                 where profiles.ApplicationUser.Id == currentUserId
+                                 select profiles).FirstOrDefaultAsync();
+
+            if(profile != null)
+            {
+                return profile.Id;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

@@ -612,11 +612,11 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        public async Task<int> SendGift(string fromUserId, string toUserId, int giftId, int inventoryItemId)
+        public async Task<int> SendGiftAsync(string fromUserId, string toUserId, int giftId, int inventoryItemId)
         {
-            int giftCount = await RemoveItemFromUserInventory(fromUserId, inventoryItemId);
+            int giftCount = await RemoveItemFromUserInventoryAsync(fromUserId, inventoryItemId);
 
-            await AddItemToUserInventory(toUserId, giftId);
+            await AddItemToUserInventoryAsync(toUserId, giftId);
 
             LogGiftTransaction(fromUserId, toUserId, giftId);
 
@@ -651,7 +651,7 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        private async Task<int> AddItemToUserInventory(string toUserId, int giftId)
+        private async Task<int> AddItemToUserInventoryAsync(string toUserId, int giftId)
         {
             // increase inventory count for to user id
             var toUserInventoryItem = await (from inventoryItems in db.InventoryItems
@@ -680,7 +680,7 @@ namespace TwolipsDating.Business
             return toUserInventoryItem.ItemCount;
         }
 
-        private async Task<int> RemoveItemFromUserInventory(string fromUserId, int inventoryItemId)
+        private async Task<int> RemoveItemFromUserInventoryAsync(string fromUserId, int inventoryItemId)
         {
             // reduce inventory count for from user id
             var fromUserInventoryItem = await (from inventoryItems in db.InventoryItems
@@ -769,7 +769,7 @@ namespace TwolipsDating.Business
             return isIgnored;
         }
 
-        internal async Task<int> RemoveGiftNotification(string currentUserId, int giftTransactionId)
+        internal async Task<int> RemoveGiftNotificationAsync(string currentUserId, int giftTransactionId)
         {
             var giftTransaction = await db.GiftTransactions.FindAsync(giftTransactionId);
 
@@ -781,7 +781,7 @@ namespace TwolipsDating.Business
             return await db.SaveChangesAsync();
         }
 
-        internal async Task<int> RemoveAllGiftNotification(string currentUserId)
+        internal async Task<int> RemoveAllGiftNotificationAsync(string currentUserId)
         {
             var results = await (from giftTransactions in db.GiftTransactions
                                  where giftTransactions.ToUserId == currentUserId
@@ -830,6 +830,28 @@ namespace TwolipsDating.Business
             };
 
             db.ProfileViews.Add(newView);
+            return await db.SaveChangesAsync();
+        }
+
+        internal async Task<int> GetGenderIdForProfileAsync(int profileId)
+        {
+            var genderId = from profiles in db.Profiles
+                           where profiles.Id == profileId
+                           select profiles.GenderId;
+
+            return await genderId.FirstAsync();
+        }
+
+        internal async Task<int> UpdateGenderAsync(Profile profile, int genderId)
+        {
+            Profile profileUpdated = new Profile()
+            {
+                Id = profile.Id
+            };
+
+            profileUpdated = db.Profiles.Attach(profileUpdated);
+            profileUpdated.GenderId = genderId;
+
             return await db.SaveChangesAsync();
         }
     }

@@ -9,11 +9,14 @@ using Microsoft.Owin.Security;
 using TwolipsDating.Models;
 using TwolipsDating.ViewModels;
 using TwolipsDating.Utilities;
+using System.Collections.Generic;
+using TwolipsDating.Business;
 
 namespace TwolipsDating.Controllers
 {
     public class ManageController : BaseController
     {
+        private UserService userService = new UserService();
         private ApplicationSignInManager _signInManager;
 
         public ManageController()
@@ -49,15 +52,42 @@ namespace TwolipsDating.Controllers
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
-            var currentUser = User.Identity.GetUserId();
+            var currentUserId = User.Identity.GetUserId();
+
+            string email = await UserManager.GetEmailAsync(currentUserId);
+
             IndexViewModel model = new IndexViewModel()
             {
-                Email = await UserManager.GetEmailAsync(User.Identity.GetUserId()),
+                Email = email,
                 UserName = User.Identity.Name
             };
+
+            int? profileId = await userService.GetProfileIdAsync(currentUserId);
+
+            if (profileId.HasValue)
+            {
+                var genders = await GetGendersAsync();
+                int? selectedGenderId = await ProfileService.GetGenderIdForProfileAsync(profileId.Value);
+                model.Genders = genders;
+                model.SelectedGenderId = selectedGenderId;
+            }
+
             await SetNotificationsAsync();
 
             return View(model);
+        }
+
+        private async Task<Dictionary<int, string>> GetGendersAsync()
+        {
+            Dictionary<int, string> genderCollection = new Dictionary<int, string>();
+
+            var genders = await ProfileService.GetGendersAsync();
+            foreach (var gender in genders)
+            {
+                genderCollection.Add(gender.Id, gender.Name);
+            }
+
+            return genderCollection;
         }
 
         [HttpPost]
@@ -67,39 +97,78 @@ namespace TwolipsDating.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                user.UserName = model.UserName;
 
-                // if the user is changing his email, we need to re-confirm
-                bool isNewEmail = false;
-                if(user.Email != model.Email)
+                bool isNewUserName = SetupUpdateUserName(model, user);
+
+                bool isNewEmail = SetupUpdateUserEmail(model, user);
+
+                // user has a profile, update it and setup the viewmodel to display on the view
+                if (user.Profile != null)
                 {
-                    isNewEmail = true;
-                    user.EmailConfirmed = false;
+                    await UpdateProfileGender(model.SelectedGenderId, user.Profile);
+                    var genders = await GetGendersAsync();
+                    model.Genders = genders;
                 }
 
-                user.Email = model.Email;
-
-                var result = await UserManager.UpdateAsync(user);
-                if (result.Succeeded)
+                // if the user has chagned user name or email address, update the user entity
+                if (isNewUserName || isNewEmail)
                 {
-                    await SignInAsync(user, isPersistent: false);
-
-                    ViewBag.StatusMessage = "Your account has been updated.";
-
-                    // user changed email address, send confirmation
-                    if (isNewEmail)
+                    var result = await UserManager.UpdateAsync(user);
+                    if (result.Succeeded)
                     {
-                        await SendRegistrationConfirmationEmail(user);
-                        ViewBag.StatusMessage += " Remember to confirm your new email address.";
+                        await SignInAsync(user, isPersistent: false);
+
+                        ViewBag.StatusMessage = "Your account has been updated.";
+
+                        // user changed email address, send confirmation
+                        if (isNewEmail)
+                        {
+                            await SendRegistrationConfirmationEmail(user);
+                            ViewBag.StatusMessage += " Remember to confirm your new email address.";
+                        }
+
+                        return View(model);
                     }
 
-                    return View(model);
+                    AddErrors(result);
                 }
-
-                AddErrors(result);
             }
 
             return View(model);
+        }
+
+        private async Task UpdateProfileGender(int? selectedGenderId, Profile profile)
+        {
+            if (selectedGenderId.HasValue
+                && profile != null
+                && profile.GenderId != selectedGenderId.Value)
+            {
+                await ProfileService.UpdateGenderAsync(profile, selectedGenderId.Value);
+            }
+        }
+
+        private static bool SetupUpdateUserEmail(IndexViewModel model, ApplicationUser user)
+        {
+            // if the user is changing his email, we need to re-confirm
+            bool isNewEmail = false;
+            if (user.Email != model.Email)
+            {
+                isNewEmail = true;
+                user.EmailConfirmed = false;
+                user.Email = model.Email;
+            }
+            return isNewEmail;
+        }
+
+        private static bool SetupUpdateUserName(IndexViewModel model, ApplicationUser user)
+        {
+            bool isNewUserName = false;
+            if (user.UserName != model.UserName)
+            {
+                isNewUserName = true;
+                user.UserName = model.UserName;
+            }
+            return isNewUserName;
         }
 
         //

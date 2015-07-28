@@ -16,7 +16,12 @@ namespace TwolipsDating.Models
         [Required]
         public string UserName { get; set; }
 
+        // not required because users may not have a profile setup yet
+        public int? SelectedGenderId { get; set; }
+
         public bool BrowserRemembered { get; set; }
+
+        public IDictionary<int, string> Genders { get; set; }
     }
 
     public class ManageLoginsViewModel
