@@ -6,15 +6,24 @@
         $('#random-question-content').html(content);
         $('#RandomQuestion_QuestionId').val(data.QuestionId);
 
+        // reset all click handlers on the answer links
+        $(".answer-link").off('click');
+        
         // show the new answers
         var answersHtml = '';
         data.Answers.forEach(function (item) {
-            answersHtml += '<div class="radio"><label><input id="RandomQuestion_SelectedAnswerId" type="radio" value="' + item.AnswerId + '"'
-            + 'name="RandomQuestion.SelectedAnswerId" data-val-required="The SelectedAnswerId field is required."'
-            + 'data-val-number="The field SelectedAnswerId must be a number." data-val="true"></input>'
-            + item.Content + '</label></div>';
+            answersHtml += '<a href="#" id="answer-' + item.AnswerId + '" class="answer-link list-group-item" data-answer-id="' + item.AnswerId + '">'
+            + item.Content
+            + '<span id="icon-correct-' + item.AnswerId + '" class="icon-correct pull-right hidden"><i class="glyphicon glyphicon-ok"></i></span>'
+            + '<span id="icon-incorrect-' + item.AnswerId + '" class="icon-incorrect pull-right hidden"><i class="glyphicon glyphicon-remove"></i></span>'
+            + '</a>';
         });
         $('#answers').html(answersHtml);
+
+        // subscribe new click handlers on new answers
+        $(".answer-link").on("click", function (e) {
+            onSubmitAnswer(e, this);
+        });
 
         // reset the OK button
         $('#result-alert').addClass("hidden");
@@ -30,20 +39,22 @@ function onSubmitAnswer(e, obj) {
     //$("#button-ok").removeClass("hidden");
 
     var questionId = $("#RandomQuestion_QuestionId").val();
-    var selected = $("input[type='radio'][name='RandomQuestion.SelectedAnswerId']:checked");
-    var answerId = "";
-    if (selected.length > 0) {
-        answerId = selected.val();
-    }
+    var selectedAnswerId = $(obj).attr("data-answer-id");  //var selected = $("input[type='radio'][name='RandomQuestion.SelectedAnswerId']:checked");
+    //var answerId = "";
+    //if (selected.length > 0) {
+    //    answerId = selected.val();
+    //}
 
-    var json = '{"questionId":' + questionId + ', "answerId":' + answerId + '}';
+    var json = '{"questionId":' + questionId + ', "answerId":' + selectedAnswerId + '}';
 
     postJson('/trivia/submitAnswer', json, function (data) {
         if (data.success) {
-            if (data.isAnswerCorrect) {
+            if (data.correctAnswerId == selectedAnswerId) {
                 $("#button-next").removeClass("hidden");
-                $("#button-ok").addClass("hidden");
-                $("input[type='radio']").attr("disabled", true);
+                $("#button-next").removeClass("btn-danger");
+                $("#button-next").removeClass("btn-success");
+                $("#button-next").addClass("btn-success");
+                $("#button-skip").addClass("hidden");
                 $("#result-alert").removeClass("alert-success");
                 $("#result-alert").removeClass("alert-danger");
                 $("#result-alert").removeClass("hidden");
@@ -51,14 +62,27 @@ function onSubmitAnswer(e, obj) {
                 $("#result-alert").text('Correct');
             } else {
                 $("#button-next").removeClass("hidden");
-                $("#button-ok").addClass("hidden");
-                $("input[type='radio']").attr("disabled", true);
+                $("#button-next").removeClass("btn-danger");
+                $("#button-next").removeClass("btn-success");
+                $("#button-next").addClass("btn-danger");
+                $("#button-skip").addClass("hidden");
                 $("#result-alert").removeClass("alert-success");
                 $("#result-alert").removeClass("alert-danger");
                 $("#result-alert").removeClass("hidden");
                 $("#result-alert").addClass("alert-danger");
                 $("#result-alert").text('Incorrect');
             }
+
+            $(".answer-link").addClass("list-group-item-danger");
+            $(".answer-link").off();
+            $("#answer-" + data.correctAnswerId).removeClass("list-group-item-danger");
+            $("#answer-" + data.correctAnswerId).addClass("list-group-item-success");
+
+            $(".icon-incorrect").removeClass("hidden");
+            $("#icon-incorrect-" + data.correctAnswerId).addClass("hidden");
+            $("#icon-correct-" + data.correctAnswerId).removeClass("hidden");
+
+            $("#button-skip").hide();
         } else {
             alert(data.error);
         }
@@ -110,5 +134,9 @@ $(document).ready(function () {
         var clone = $(shareButtonsDiv).clone(true);
         var cloneUnhide = clone.removeClass('hide');
         return cloneUnhide.html();
+    });
+
+    $(".answer-link").on("click", function (e) {
+        onSubmitAnswer(e, this);
     });
 });

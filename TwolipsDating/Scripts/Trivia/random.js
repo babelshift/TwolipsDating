@@ -45,7 +45,7 @@ function onSubmitAnswer(e, obj) {
     e.preventDefault();
 
     //$("#button-next").addClass("hidden");
-    $("#button-ok").removeClass("hidden");
+    //$("#button-ok").removeClass("hidden");
 
     var questionId = $("#QuestionId").val();
     var selectedAnswerId = $(obj).attr("data-answer-id"); //$("input[type='radio'][name='SelectedAnswerId']:checked");

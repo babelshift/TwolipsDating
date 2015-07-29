@@ -60,20 +60,21 @@
             {
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <h4 id="random-question-content">@Model.RandomQuestion.Content <small><span class="badge">@Model.RandomQuestion.Points points</span></small></h4>
-                        <div id="answers">
-                            @foreach (var answer in Model.RandomQuestion.Answers)
-                            {
-                                <div class="radio">
-                                    <label>
-                                        @Html.RadioButtonFor(m => m.RandomQuestion.SelectedAnswerId, answer.AnswerId)
+                        <h5 id="random-question-content">@Model.RandomQuestion.Content <small><span class="badge">@Model.RandomQuestion.Points points</span></small></h5>
+                        <div class="list-group">
+                            <div id="answers">
+                                @foreach (var answer in Model.RandomQuestion.Answers)
+                                {
+                                    <a href="#" id="@String.Format("answer-{0}", answer.AnswerId)" class="answer-link list-group-item" data-answer-id="@answer.AnswerId">
                                         @answer.Content
-                                    </label>
-                                </div>
-                            }
+                                        <span id="@String.Format("icon-correct-{0}", answer.AnswerId)" class="icon-correct pull-right hidden"><i class="glyphicon glyphicon-ok"></i></span>
+                                        <span id="@String.Format("icon-incorrect-{0}", answer.AnswerId)" class="icon-incorrect pull-right hidden"><i class="glyphicon glyphicon-remove"></i></span>
+                                    </a>
+                                }
+                            </div>
                         </div>
                         <div id="result-alert" class="alert alert-success hidden"></div>
-                        <button id="button-ok" type="button" class="btn btn-primary btn-sm" onclick="onSubmitAnswer(event, this)" title="Submit answer"><i class="glyphicon glyphicon-ok"></i> OK</button>
+                        <button id="button-skip" type="button" class="btn btn-default btn-sm" onclick="onNextQuestion(event, this)" title=" skip this question">Skip <i class="glyphicon glyphicon-chevron-right"></i></button>
                         <button id="button-next" type="button" class="btn btn-primary btn-sm hidden" onclick="onNextQuestion(event, this)" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</button>
                         @Html.HiddenFor(m => m.RandomQuestion.QuestionId)
                     </div>
