@@ -69,6 +69,11 @@ namespace TwolipsDating.Migrations
                 new ViolationType() { Id = 3, Name = "Advertising" },
                 new ViolationType() { Id = 4, Name = "Harassment" });
 
+            context.QuestionViolationTypes.AddOrUpdate(v => v.Id,
+                new QuestionViolationType() { Id = 1, Name = "Wrong answer" },
+                new QuestionViolationType() { Id = 2, Name = "Poor question" },
+                new QuestionViolationType() { Id = 3, Name = "Typo in question or answer" });
+
             context.Gifts.AddOrUpdate(g => g.Id,
                 new Gift() { Id = 1, Name = "Rose (red)", IconFileName = "RedRose.png", Description = "A red rose", PointPrice = 10 },
                 new Gift() { Id = 2, Name = "Rose (white)", IconFileName = "WhiteRose.png", Description = "A white rose", PointPrice = 15 },

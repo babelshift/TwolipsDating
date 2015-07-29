@@ -18,11 +18,9 @@ namespace TwolipsDating.Models
         public virtual QuestionType QuestionType { get; set; }
 
         public virtual ICollection<Answer> PossibleAnswers { get; set; }
-
         public virtual ICollection<Tag> Tags { get; set; }
-
         public virtual ICollection<AnsweredQuestion> AnsweredInstances { get; set; }
-
         public virtual ICollection<Quiz> Quizzes { get; set; }
+        public virtual ICollection<QuestionViolation> QuestionViolations { get; set; }
     }
 }

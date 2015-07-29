@@ -54,6 +54,8 @@ namespace TwolipsDating.Models
         public DbSet<GeoState> GeoStates { get; set; }
         public DbSet<GeoCountry> GeoCountries { get; set; }
         public DbSet<ProfileViewLog> ProfileViews { get; set; }
+        public DbSet<QuestionViolationType> QuestionViolationTypes { get; set; }
+        public DbSet<QuestionViolation> QuestionViolations { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -82,7 +84,7 @@ namespace TwolipsDating.Models
 			SetupTagSuggestionEntity(modelBuilder);
             SetupMessageConversations(modelBuilder);
             SetupViolationTypes(modelBuilder);
-            SetupReviewViolationEntity(modelBuilder);
+            SetupReviewViolations(modelBuilder);
             SetupGifts(modelBuilder);
             SetupInventoryItems(modelBuilder);
             SetupGiftTransactions(modelBuilder);
@@ -106,6 +108,50 @@ namespace TwolipsDating.Models
             SetupGeoStates(modelBuilder);
             SetupGeoCountries(modelBuilder);
             SetupProfileViews(modelBuilder);
+            SetupQuestionViolationTypes(modelBuilder);
+            SetupQuestionViolations(modelBuilder);
+        }
+
+        private void SetupQuestionViolations(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<QuestionViolation>()
+                .HasKey(p => p.Id);
+
+            modelBuilder.Entity<QuestionViolation>()
+                .HasRequired(p => p.Question)
+                .WithMany(p => p.QuestionViolations)
+                .HasForeignKey(p => p.QuestionId);
+
+            modelBuilder.Entity<QuestionViolation>()
+                .HasRequired(p => p.AuthorUser)
+                .WithMany(p => p.QuestionViolationsAuthored)
+                .HasForeignKey(p => p.AuthorUserId);
+
+            modelBuilder.Entity<QuestionViolation>()
+                .HasRequired(p => p.QuestionViolationType)
+                .WithMany(p => p.QuestionViolations)
+                .HasForeignKey(p => p.QuestionViolationTypeId);
+
+            modelBuilder.Entity<QuestionViolation>().Property(p => p.AuthorUserId).IsRequired();
+            modelBuilder.Entity<QuestionViolation>().Property(p => p.DateCreated).IsRequired();
+        }
+
+        private void SetupQuestionViolationTypes(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<QuestionViolationType>()
+                .HasKey(v => v.Id);
+
+            modelBuilder.Entity<QuestionViolationType>()
+                .Property(v => v.Name)
+                .HasMaxLength(64);
+
+            modelBuilder.Entity<QuestionViolationType>()
+                .Property(v => v.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<QuestionViolationType>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
         }
 
         private void SetupProfileViews(DbModelBuilder modelBuilder)
@@ -599,7 +645,7 @@ namespace TwolipsDating.Models
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
         }
 
-        private static void SetupReviewViolationEntity(DbModelBuilder modelBuilder)
+        private void SetupReviewViolations(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ReviewViolation>()
                 .HasKey(p => p.Id);
@@ -627,7 +673,7 @@ namespace TwolipsDating.Models
             modelBuilder.Entity<ReviewViolation>().Property(p => p.ReviewId).IsRequired();
         }
 
-        private static void SetupViolationTypes(DbModelBuilder modelBuilder)
+        private void SetupViolationTypes(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ViolationType>()
                 .HasKey(v => v.Id);

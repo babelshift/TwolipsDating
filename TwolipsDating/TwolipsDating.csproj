@@ -482,6 +482,10 @@
     <Compile Include="Migrations\201507271922391_Reset.Designer.cs">
       <DependentUpon>201507271922391_Reset.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507290054374_AddQuestionViolations.cs" />
+    <Compile Include="Migrations\201507290054374_AddQuestionViolations.Designer.cs">
+      <DependentUpon>201507290054374_AddQuestionViolations.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\CreateViewOperation.cs" />
     <Compile Include="Migrations\CustomDbConfiguration.cs" />
     <Compile Include="Migrations\RemoveViewOperation.cs" />
@@ -505,6 +509,8 @@
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\QuestionTagPoints.cs" />
     <Compile Include="Models\QuestionType.cs" />
+    <Compile Include="Models\QuestionViolation.cs" />
+    <Compile Include="Models\QuestionViolationType.cs" />
     <Compile Include="Models\Quiz.cs" />
     <Compile Include="Models\ReviewViolation.cs" />
     <Compile Include="Models\StoreTransactionLog.cs" />
@@ -901,6 +907,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507271922391_Reset.resx">
       <DependentUpon>201507271922391_Reset.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507290054374_AddQuestionViolations.resx">
+      <DependentUpon>201507290054374_AddQuestionViolations.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
