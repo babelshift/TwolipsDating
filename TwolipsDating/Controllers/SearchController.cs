@@ -16,14 +16,16 @@ namespace TwolipsDating.Controllers
     {
         private SearchService searchService = new SearchService();
 
+        [AllowAnonymous]
         public async Task<ActionResult> Index(string user, string tag)
         {
             string currentUserId = User.Identity.GetUserId();
+
             await SetNotificationsAsync();
 
             SearchResultViewModel viewModel = new SearchResultViewModel();
 
-            if(!String.IsNullOrEmpty(user) || !String.IsNullOrEmpty(tag))
+            if (!String.IsNullOrEmpty(user) || !String.IsNullOrEmpty(tag))
             {
                 var results = await GetSearchResults(user, tag);
 

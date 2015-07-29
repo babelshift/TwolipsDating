@@ -42,12 +42,12 @@ namespace TwolipsDating.Business
         /// <summary>
         /// Returns the profile ID of the passed user ID. Returns null if the user has no profile.
         /// </summary>
-        /// <param name="currentUserId"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
-        internal async Task<int?> GetProfileIdAsync(string currentUserId)
+        internal async Task<int?> GetProfileIdAsync(string userId)
         {
             var profile = await (from profiles in db.Profiles
-                                 where profiles.ApplicationUser.Id == currentUserId
+                                 where profiles.ApplicationUser.Id == userId
                                  select profiles).FirstOrDefaultAsync();
 
             if(profile != null)
@@ -58,6 +58,11 @@ namespace TwolipsDating.Business
             {
                 return null;
             }
+        }
+
+        internal async Task<bool> DoesUserHaveProfileAsync(string userId)
+        {
+            return (await GetProfileIdAsync(userId)).HasValue;
         }
     }
 }

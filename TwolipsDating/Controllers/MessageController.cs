@@ -16,11 +16,14 @@ namespace TwolipsDating.Controllers
 {
     public class MessageController : BaseController
     {
+        private UserService userService = new UserService();
+
         #region Conversations
 
         public async Task<ActionResult> Conversation(string id)
         {
             var currentUserId = User.Identity.GetUserId();
+            if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
 
             ConversationViewModel viewModel = new ConversationViewModel();
 
@@ -172,6 +175,8 @@ namespace TwolipsDating.Controllers
         {
             var currentUserId = User.Identity.GetUserId();
 
+            if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
+
             var messages = await ProfileService.GetMessagesReceivedByUserAsync(currentUserId);
 
             var receivedMessages = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyCollection<ReceivedMessageViewModel>>(messages);
@@ -192,6 +197,8 @@ namespace TwolipsDating.Controllers
         {
             var currentUserId = User.Identity.GetUserId();
 
+            if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
+
             var messages = await ProfileService.GetMessagesByUserAsync(currentUserId);
 
             var sentMessages = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyCollection<SentMessageViewModel>>(messages);
@@ -208,12 +215,10 @@ namespace TwolipsDating.Controllers
             return View("index", viewModel);
         }
 
-
         protected ActionResult RedirectToConversation(object routeValues = null)
         {
             return RedirectToAction("conversation", routeValues);
         }
-
 
         [HttpPost]
         public async Task<ActionResult> Send(ConversationViewModel viewModel)

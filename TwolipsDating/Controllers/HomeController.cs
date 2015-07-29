@@ -19,6 +19,7 @@ namespace TwolipsDating.Controllers
         private DashboardService dashboardService = new DashboardService();
         private ViolationService violationService = new ViolationService();
         private TriviaService triviaService = new TriviaService();
+        private UserService userService = new UserService();
 
         #endregion
 
@@ -28,6 +29,9 @@ namespace TwolipsDating.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 string currentUserId = User.Identity.GetUserId();
+
+                if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
+
                 List<DashboardItemViewModel> dashboardItems = new List<DashboardItemViewModel>();
 
                 await AddMessagesToFeedAsync(currentUserId, dashboardItems);
@@ -46,25 +50,11 @@ namespace TwolipsDating.Controllers
                     .ToList()
                     .AsReadOnly();
 
-                var violationTypes = await violationService.GetViolationTypesAsync();
-                viewModel.WriteReviewViolation = new WriteReviewViolationViewModel();
-                viewModel.WriteReviewViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
+                await SetupReviewViolationsOnDashboard(viewModel);
 
-                // generate a random question with its answers to view
-                var randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Random);
-                viewModel.RandomQuestion = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
+                await SetupRandomQuestionOnDashboard(currentUserId, viewModel);
 
-                var quizzes = await triviaService.GetQuizzesAsync();
-                viewModel.Quizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(quizzes);
-                var completedQuizzes = await triviaService.GetCompletedQuizzesForUserAsync(currentUserId);
-
-                foreach (var quiz in viewModel.Quizzes)
-                {
-                    if (completedQuizzes.Any(q => q.Key == quiz.Id))
-                    {
-                        quiz.IsComplete = true;
-                    }
-                }
+                await SetupQuizzesOnDashboard(currentUserId, viewModel);
 
                 return View("dashboard", viewModel);
             }
@@ -74,6 +64,35 @@ namespace TwolipsDating.Controllers
                 HomeViewModel viewModel = new HomeViewModel();
                 return View(String.Empty, "~/Views/Shared/_LayoutSplash.cshtml", viewModel);
             }
+        }
+
+        private async Task SetupReviewViolationsOnDashboard(DashboardViewModel viewModel)
+        {
+            var violationTypes = await violationService.GetViolationTypesAsync();
+            viewModel.WriteReviewViolation = new WriteReviewViolationViewModel();
+            viewModel.WriteReviewViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
+        }
+
+        private async Task SetupQuizzesOnDashboard(string currentUserId, DashboardViewModel viewModel)
+        {
+            var quizzes = await triviaService.GetQuizzesAsync();
+            viewModel.Quizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(quizzes);
+            var completedQuizzes = await triviaService.GetCompletedQuizzesForUserAsync(currentUserId);
+
+            foreach (var quiz in viewModel.Quizzes)
+            {
+                if (completedQuizzes.Any(q => q.Key == quiz.Id))
+                {
+                    quiz.IsComplete = true;
+                }
+            }
+        }
+
+        private async Task SetupRandomQuestionOnDashboard(string currentUserId, DashboardViewModel viewModel)
+        {
+            // generate a random question with its answers to view
+            var randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Random);
+            viewModel.RandomQuestion = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
         }
 
         private async Task AddUploadedImagesToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
@@ -137,7 +156,7 @@ namespace TwolipsDating.Controllers
                 violationService.Dispose();
             }
 
-            if(disposing && triviaService != null)
+            if (disposing && triviaService != null)
             {
                 triviaService.Dispose();
             }

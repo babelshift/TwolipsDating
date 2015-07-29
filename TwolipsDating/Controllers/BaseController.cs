@@ -131,6 +131,11 @@ namespace TwolipsDating.Controllers
             return RedirectToAction("index", routeValues);
         }
 
+        protected ActionResult RedirectToProfileIndex()
+        {
+            return RedirectToAction("index", "profile");
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && userManager != null)

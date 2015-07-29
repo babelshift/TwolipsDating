@@ -10,6 +10,12 @@
         var cloneUnhide = clone.removeClass('hide');
         return cloneUnhide.html();
     });
+
+    $(".answer-link").on("click", function (e) {
+        onSubmitAnswer(e, this);
+    });
+
+    setupQuestionViolation();
 });
 
 var interval;
@@ -27,10 +33,38 @@ function tickCountDown() {
         $("#alert-box").html("<h4>You ran out of time!</h4>");
         $("#button-next").removeClass("hidden");
         $("#button-next").addClass("btn-danger");
-        $("#button-ok").addClass("hidden");
         $(".answer-link").addClass("disabled");
+        $("#button-skip").addClass("hidden");
         stopCountdown();
     }
+}
+
+function setupQuestionViolation() {
+    $('#violation-error').hide();
+    $('#violation-success').hide();
+
+    $('#modalQuestionViolation').on('hide.bs.modal', function (event) {
+        $('#violation-error').hide();
+        $('#violation-success').hide();
+        $('#button-violation-submit').show();
+    });
+}
+
+function onAddQuestionViolation(e, obj) {
+    var reviewId = $('#QuestionId').val();
+    var violationTypeId = $('#QuestionViolation_ViolationTypeId').val();
+
+    var json = '{"questionId":' + reviewId + ', "violationTypeId":' + violationTypeId + '}';
+
+    postJson('/violation/addQuestionViolation', json, function (data) {
+        if (data.success) {
+            $('#violation-success').show();
+            $('#button-violation-submit').hide();
+        } else {
+            $('#violation-error').show();
+            $('#violation-error-text').text(data.error);
+        }
+    });
 }
 
 function stopCountdown() {

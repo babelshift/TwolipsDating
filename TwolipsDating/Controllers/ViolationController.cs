@@ -96,7 +96,6 @@ namespace TwolipsDating.Controllers
             }
         }
 
-
         protected override void Dispose(bool disposing)
         {
             if (disposing && violationService != null)

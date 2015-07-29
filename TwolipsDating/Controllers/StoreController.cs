@@ -10,6 +10,7 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.ViewModels;
 using Microsoft.AspNet.Identity;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.Controllers
 {
@@ -20,6 +21,9 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Index()
         {
+            var currentUserId = User.Identity.GetUserId();
+            if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
+
             await SetNotificationsAsync();
 
             return View();
@@ -27,13 +31,15 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Gifts()
         {
+            var currentUserId = User.Identity.GetUserId();
+            if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
+
             await SetNotificationsAsync();
 
             StoreViewModel viewModel = new StoreViewModel();
             var gifts = await storeService.GetGiftsAsync();
             viewModel.StoreGifts = Mapper.Map<IReadOnlyCollection<Gift>, IReadOnlyCollection<StoreGiftViewModel>>(gifts);
 
-            string currentUserId = User.Identity.GetUserId();
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
             return View(viewModel);
@@ -41,13 +47,15 @@ namespace TwolipsDating.Controllers
 
         public async Task<ActionResult> Titles()
         {
+            var currentUserId = User.Identity.GetUserId();
+            if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
+
             await SetNotificationsAsync();
 
             StoreViewModel viewModel = new StoreViewModel();
             var titles = await storeService.GetTitlesAsync();
             viewModel.StoreTitles = Mapper.Map<IReadOnlyCollection<Title>, IReadOnlyCollection<StoreTitleViewModel>>(titles);
 
-            var currentUserId = User.Identity.GetUserId();
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
             var titlesOwnedByUser = await userService.GetTitlesOwnedByUserAsync(currentUserId);
@@ -68,12 +76,12 @@ namespace TwolipsDating.Controllers
         {
             bool success = false;
 
+            string currentUserId = User.Identity.GetUserId();
+
             try
             {
                 if (giftCount > 0 && giftCount <= 100)
                 {
-                    string currentUserId = User.Identity.GetUserId();
-
                     int count = await storeService.BuyGiftAsync(currentUserId, giftId, giftCount);
 
                     success = count > 0;
@@ -81,9 +89,13 @@ namespace TwolipsDating.Controllers
 
                 return Json(new { success = success, count = giftCount });
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException e)
             {
-                return Json(new { success = success, error = "Failed to purchase the gift. Contact support if you continue seeing this." });
+                Log.Error("BuyGift", e,
+                    parameters: new { giftId = giftId, giftCount = giftCount, currentUserId = currentUserId }
+                );
+
+                return Json(new { success = success, error = ErrorMessages.GiftPurchaseFailed });
             }
         }
 
@@ -92,19 +104,23 @@ namespace TwolipsDating.Controllers
         {
             bool success = false;
 
+            string currentUserId = User.Identity.GetUserId();
+
             try
             {
-                string currentUserId = User.Identity.GetUserId();
-
                 int count = await storeService.BuyTitleAsync(currentUserId, titleId);
 
                 success = count > 0;
 
                 return Json(new { success = success });
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException e)
             {
-                return Json(new { success = success, error = "Failed to purchase the title. Contact support if you continue seeing this." });
+                Log.Error("BuyGift", e,
+                    parameters: new { titleId = titleId, currentUserId = currentUserId }
+                );
+
+                return Json(new { success = success, error = ErrorMessages.TitlePurchaseFailed });
             }
         }
 

@@ -180,4 +180,10 @@
   <data name="QuestionViolationNotSaved" xml:space="preserve">
     <value>Something prevented your question violation from being sent. If this continues, contact support.</value>
   </data>
+  <data name="GiftPurchaseFailed" xml:space="preserve">
+    <value>Failed to purchase the gift. Contact support if you continue seeing this.</value>
+  </data>
+  <data name="TitlePurchaseFailed" xml:space="preserve">
+    <value>Failed to purchase the title. Contact support if you continue seeing this.</value>
+  </data>
 </root>

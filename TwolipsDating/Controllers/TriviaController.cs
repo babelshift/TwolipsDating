@@ -17,6 +17,7 @@ namespace TwolipsDating.Controllers
     {
         TriviaService triviaService = new TriviaService();
         ViolationService violationService = new ViolationService();
+        UserService userService = new UserService();
 
         private DateTime? QuestionStartTime
         {
@@ -68,11 +69,11 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
-        #region Random Question 
+        #region Random Question
 
         public async Task<JsonResult> RandomJson()
         {
-            QuestionViewModel viewModel = await GetRandomQuestionViewModel();
+            QuestionViewModel viewModel = await GetRandomQuestionViewModel((int)QuestionTypeValues.Random);
 
             return Json(new
             {
@@ -90,7 +91,12 @@ namespace TwolipsDating.Controllers
         {
             var currentUserId = User.Identity.GetUserId();
 
-            QuestionViewModel viewModel = await GetRandomQuestionViewModel();
+            // if the user is logged in but doesn't have a profile, redirect to profile
+            if (!String.IsNullOrEmpty(currentUserId)
+                && !(await userService.DoesUserHaveProfileAsync(currentUserId)))
+                return RedirectToProfileIndex();
+
+            QuestionViewModel viewModel = await GetRandomQuestionViewModel((int)QuestionTypeValues.Random);
 
             // anonymous viewers can't report violations so don't look any of the types up
             if (!String.IsNullOrEmpty(currentUserId))
@@ -135,22 +141,22 @@ namespace TwolipsDating.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Timed()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                await SetNotificationsAsync();
-            }
-
             var currentUserId = User.Identity.GetUserId();
 
-            // generate a random question with its answers to view
-            Question randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Timed);
+            // if the user is logged in but doesn't have a profile, redirect to profile
+            if (!String.IsNullOrEmpty(currentUserId)
+                && !(await userService.DoesUserHaveProfileAsync(currentUserId)))
+                return RedirectToProfileIndex();
 
-            QuestionViewModel viewModel = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
+            var viewModel = await GetRandomQuestionViewModel((int)QuestionTypeValues.Timed);
 
-            if (viewModel != null)
+            // anonymous viewers can't report violations so don't look any of the types up
+            if (!String.IsNullOrEmpty(currentUserId))
             {
-                viewModel.QuestionTypeId = (int)QuestionTypeValues.Timed;
-                viewModel.UsersAnsweredCorrectly = await GetUsersAnsweredCorrectlyAsync(randomQuestion);
+                // setup violation types
+                var violationTypes = await violationService.GetQuestionViolationTypesAsync();
+                viewModel.QuestionViolation = new QuestionViolationViewModel();
+                viewModel.QuestionViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
             }
 
             return View(viewModel);
@@ -310,23 +316,20 @@ namespace TwolipsDating.Controllers
 
         #endregion
 
-        private async Task<QuestionViewModel> GetRandomQuestionViewModel()
+        private async Task<QuestionViewModel> GetRandomQuestionViewModel(int questionTypeId)
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                await SetNotificationsAsync();
-            }
+            await SetNotificationsAsync();
 
             var currentUserId = User.Identity.GetUserId();
 
             // generate a random question with its answers to view
-            var randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Random);
+            var randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, questionTypeId);
 
             QuestionViewModel viewModel = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
 
             if (viewModel != null)
             {
-                viewModel.QuestionTypeId = (int)QuestionTypeValues.Random;
+                viewModel.QuestionTypeId = questionTypeId;
                 viewModel.UsersAnsweredCorrectly = await GetUsersAnsweredCorrectlyAsync(randomQuestion);
             }
 
@@ -351,7 +354,7 @@ namespace TwolipsDating.Controllers
                 triviaService.Dispose();
             }
 
-            if(disposing && violationService != null)
+            if (disposing && violationService != null)
             {
                 violationService.Dispose();
             }

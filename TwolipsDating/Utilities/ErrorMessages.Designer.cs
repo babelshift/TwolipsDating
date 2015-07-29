@@ -115,6 +115,15 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to purchase the gift. Contact support if you continue seeing this..
+        /// </summary>
+        internal static string GiftPurchaseFailed {
+            get {
+                return ResourceManager.GetString("GiftPurchaseFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Something prevented your from toggling the ignored user status. If this continues, contact support..
         /// </summary>
         internal static string IgnoredUserNotSaved {
@@ -201,6 +210,15 @@ namespace TwolipsDating.Utilities {
         internal static string TitleNotSelected {
             get {
                 return ResourceManager.GetString("TitleNotSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to purchase the title. Contact support if you continue seeing this..
+        /// </summary>
+        internal static string TitlePurchaseFailed {
+            get {
+                return ResourceManager.GetString("TitlePurchaseFailed", resourceCulture);
             }
         }
         
