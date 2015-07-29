@@ -483,6 +483,12 @@ namespace TwolipsDating.Controllers
                     _signInManager.Dispose();
                     _signInManager = null;
                 }
+
+                if(userService != null)
+                {
+                    userService.Dispose();
+                    userService = null;
+                }
             }
 
             base.Dispose(disposing);

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNet.Identity;
 using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -14,7 +15,6 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
-using Microsoft.AspNet.Identity;
 
 namespace TwolipsDating.Controllers
 {
@@ -516,7 +516,7 @@ namespace TwolipsDating.Controllers
                 if (profileToBeViewed != null && profileToBeViewed.ApplicationUser.IsActive)
                 {
                     string expectedSeoName = ProfileExtensions.GetSEOProfileName(profileToBeViewed.ApplicationUser.UserName);
-                    if(seoName != expectedSeoName)
+                    if (seoName != expectedSeoName)
                     {
                         return RedirectToAction("index", new { id = id, seoName = expectedSeoName });
                     }
@@ -602,7 +602,7 @@ namespace TwolipsDating.Controllers
                 }
                 viewModel.UserTitles = titleViewModel;
             }
-            
+
             // anonymous viewers can't report violations so don't look any of the types up
             if (!String.IsNullOrEmpty(currentUserId))
             {
@@ -786,7 +786,7 @@ namespace TwolipsDating.Controllers
             try
             {
                 int changes = await ProfileService.CreateProfileAsync(
-                    viewModel.CreateProfile.SelectedGenderId.Value, 
+                    viewModel.CreateProfile.SelectedGenderId.Value,
                     cityName,
                     stateAbbreviation,
                     countryName,
@@ -878,9 +878,19 @@ namespace TwolipsDating.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && userService != null)
+            if (disposing)
             {
-                userService.Dispose();
+                if (userService != null)
+                {
+                    userService.Dispose();
+                    userService = null;
+                }
+
+                if(violationService != null)
+                {
+                    violationService.Dispose();
+                    violationService = null;
+                }
             }
 
             base.Dispose(disposing);

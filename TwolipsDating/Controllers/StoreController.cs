@@ -126,14 +126,19 @@ namespace TwolipsDating.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && storeService != null)
+            if (disposing)
             {
-                storeService.Dispose();
-            }
+                if (storeService != null)
+                {
+                    storeService.Dispose();
+                    storeService = null;
+                }
 
-            if (disposing && userService != null)
-            {
-                userService.Dispose();
+                if (userService != null)
+                {
+                    userService.Dispose();
+                    userService = null;
+                }
             }
 
             base.Dispose(disposing);

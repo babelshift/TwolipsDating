@@ -265,5 +265,19 @@ namespace TwolipsDating.Controllers
         }
 
         #endregion
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (userService != null)
+                {
+                    userService.Dispose();
+                    userService = null;
+                }
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }
