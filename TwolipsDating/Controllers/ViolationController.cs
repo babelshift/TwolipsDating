@@ -17,8 +17,10 @@ namespace TwolipsDating.Controllers
 
         // todo, don't accept author user id, user could pretend to be someone else
         [HttpPost]
-        public async Task<JsonResult> AddReviewViolation(int reviewId, int violationTypeId, string authorUserId, string content)
+        public async Task<JsonResult> AddReviewViolation(int reviewId, int violationTypeId, string content)
         {
+            var authorUserId = User.Identity.GetUserId();
+
             try
             {
                 if(await violationService.HasUserAlreadyReportedReview(reviewId, authorUserId))

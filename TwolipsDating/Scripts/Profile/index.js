@@ -158,7 +158,7 @@ function onAddReviewViolation(e, obj) {
     var authorUserId = $('#CurrentUserId').val();
     var content = $('#WriteReviewViolation_ViolationContent').val();
 
-    var json = '{"reviewId":' + reviewId + ', "violationTypeId":' + violationTypeId + ', "authorUserId":"' + authorUserId + '", "content":"' + content + '"}';
+    var json = '{"reviewId":' + reviewId + ', "violationTypeId":' + violationTypeId + ', "content":"' + content + '"}';
 
     postJson('/violation/addReviewViolation', json, function (data) {
         if (data.success) {
