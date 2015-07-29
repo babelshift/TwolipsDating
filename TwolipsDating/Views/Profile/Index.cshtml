@@ -53,7 +53,6 @@
                             @Html.LabelFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "control-label" })
                             @Html.TextAreaFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "form-control" })
                         </div>
-                        @Html.HiddenFor(m => m.CurrentUserId)
                         <div id="violation-error" class="alert alert-danger" role="alert">
                             <p id="violation-error-text">Something happened which prevented your violation from being submitted.</p>
                         </div>

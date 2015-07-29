@@ -540,6 +540,7 @@
     <Compile Include="ViewModels\AnswerViewModel.cs" />
     <Compile Include="ViewModels\ChangeProfileImageViewModel.cs" />
     <Compile Include="ViewModels\GiftTransactionViewModel.cs" />
+    <Compile Include="ViewModels\QuestionViolationViewModel.cs" />
     <Compile Include="ViewModels\SearchResultViewModel.cs" />
     <Compile Include="ViewModels\ConversationItemViewModel.cs" />
     <Compile Include="ViewModels\ConversationViewModel.cs" />

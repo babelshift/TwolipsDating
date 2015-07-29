@@ -151,6 +151,15 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something prevented your question violation from being sent. If this continues, contact support..
+        /// </summary>
+        internal static string QuestionViolationNotSaved {
+            get {
+                return ResourceManager.GetString("QuestionViolationNotSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Something prevented your review from being saved. If this continues, contact support..
         /// </summary>
         internal static string ReviewNotSaved {
@@ -201,6 +210,15 @@ namespace TwolipsDating.Utilities {
         internal static string UnhandledException {
             get {
                 return ResourceManager.GetString("UnhandledException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We already received a violation report by you for this question..
+        /// </summary>
+        internal static string UserAlreadyReportedQuestion {
+            get {
+                return ResourceManager.GetString("UserAlreadyReportedQuestion", resourceCulture);
             }
         }
         

@@ -9,9 +9,9 @@
                 data-html="true" data-toggle="popover" data-placement="bottom" data-title="Share" data-animation="false">
             <i class="glyphicon glyphicon-share-alt"></i>
         </button>
-        <button type="button" class="btn btn-default btn-xs">
+        <a href="#" data-toggle="modal" data-target="#modalQuestionViolation" class="btn btn-default btn-xs">
             <i class="glyphicon glyphicon-flag"></i>
-        </button>
+        </a>
     </p>
     <div class="list-group">
         @foreach (var answer in @Model.Answers)

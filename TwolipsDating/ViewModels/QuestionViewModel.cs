@@ -23,5 +23,7 @@ namespace TwolipsDating.ViewModels
         public IReadOnlyCollection<AnswerViewModel> Answers { get; set; }
 
         public IReadOnlyCollection<UserAnsweredQuestionCorrectlyViewModel> UsersAnsweredCorrectly { get; set; }
+
+        public QuestionViolationViewModel QuestionViolation { get; set; }
     }
 }

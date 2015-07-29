@@ -174,4 +174,10 @@
   <data name="TitleNotObtained" xml:space="preserve">
     <value>You cannot select that title because you haven't obtained it yet.</value>
   </data>
+  <data name="UserAlreadyReportedQuestion" xml:space="preserve">
+    <value>We already received a violation report by you for this question.</value>
+  </data>
+  <data name="QuestionViolationNotSaved" xml:space="preserve">
+    <value>Something prevented your question violation from being sent. If this continues, contact support.</value>
+  </data>
 </root>

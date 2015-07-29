@@ -45,6 +45,16 @@ namespace TwolipsDating.Business
             return await db.SaveChangesAsync();
         }
 
+        public async Task<IReadOnlyCollection<QuestionViolationType>> GetQuestionViolationTypesAsync()
+        {
+            var violationTypeResults = from violationTypes in db.QuestionViolationTypes
+                                       select violationTypes;
+
+            var results = await violationTypeResults.ToListAsync();
+
+            return results.AsReadOnly();
+        }
+
         public async Task<IReadOnlyCollection<ViolationType>> GetViolationTypesAsync()
         {
             var violationTypeResults = from violationTypes in db.ViolationTypes
@@ -53,6 +63,35 @@ namespace TwolipsDating.Business
             var results = await violationTypeResults.ToListAsync();
 
             return results.AsReadOnly();
+        }
+
+        public async Task<bool> HasUserAlreadyReportedQuestion(int questionId, string userId)
+        {
+            Debug.Assert(questionId > 0);
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            var questionViolations = from violation in db.QuestionViolations
+                                   where violation.QuestionId == questionId
+                                   where violation.AuthorUserId == userId
+                                   select violation;
+
+            return (await questionViolations.CountAsync()) == 1;
+        }
+
+        internal async Task<int> AddQuestionViolation(int questionId, int violationTypeId, string authorUserId)
+        {
+            Debug.Assert(questionId > 0);
+            Debug.Assert(violationTypeId > 0);
+            Debug.Assert(!String.IsNullOrEmpty(authorUserId));
+
+            QuestionViolation violation = db.QuestionViolations.Create();
+            violation.QuestionId = questionId;
+            violation.QuestionViolationTypeId = violationTypeId;
+            violation.AuthorUserId = authorUserId;
+            violation.DateCreated = DateTime.Now;
+
+            db.QuestionViolations.Add(violation);
+            return await db.SaveChangesAsync();
         }
     }
 }

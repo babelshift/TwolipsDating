@@ -16,6 +16,7 @@ namespace TwolipsDating.Controllers
     public class TriviaController : BaseController
     {
         TriviaService triviaService = new TriviaService();
+        ViolationService violationService = new ViolationService();
 
         private DateTime? QuestionStartTime
         {
@@ -54,7 +55,7 @@ namespace TwolipsDating.Controllers
 
             foreach (var quiz in viewModel.Quizzes)
             {
-                if(completedQuizzes.Any(q => q.Key == quiz.Id))
+                if (completedQuizzes.Any(q => q.Key == quiz.Id))
                 {
                     quiz.IsComplete = true;
                 }
@@ -67,12 +68,14 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
+        #region Random Question 
+
         public async Task<JsonResult> RandomJson()
         {
             QuestionViewModel viewModel = await GetRandomQuestionViewModel();
 
-            return Json(new 
-            { 
+            return Json(new
+            {
                 QuestionId = viewModel.QuestionId,
                 Content = viewModel.Content,
                 Points = viewModel.Points,
@@ -85,67 +88,20 @@ namespace TwolipsDating.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Random()
         {
+            var currentUserId = User.Identity.GetUserId();
+
             QuestionViewModel viewModel = await GetRandomQuestionViewModel();
 
-            return View(viewModel);
-        }
-
-        private async Task<QuestionViewModel> GetRandomQuestionViewModel()
-        {
-            if(User.Identity.IsAuthenticated)
+            // anonymous viewers can't report violations so don't look any of the types up
+            if (!String.IsNullOrEmpty(currentUserId))
             {
-                await SetNotificationsAsync();
-            }
-
-            var currentUserId = User.Identity.GetUserId();
-
-            // generate a random question with its answers to view
-            var randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Random);
-
-            QuestionViewModel viewModel = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
-
-            if (viewModel != null)
-            {
-                viewModel.QuestionTypeId = (int)QuestionTypeValues.Random;
-                viewModel.UsersAnsweredCorrectly = await GetUsersAnsweredCorrectlyAsync(randomQuestion);
-            }
-
-            return viewModel;
-        }
-
-        [AllowAnonymous]
-        public async Task<ActionResult> Timed()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                await SetNotificationsAsync();
-            }
-
-            var currentUserId = User.Identity.GetUserId();
-
-            // generate a random question with its answers to view
-            Question randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Timed);
-
-            QuestionViewModel viewModel = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
-
-            if (viewModel != null)
-            {
-                viewModel.QuestionTypeId = (int)QuestionTypeValues.Timed;
-                viewModel.UsersAnsweredCorrectly = await GetUsersAnsweredCorrectlyAsync(randomQuestion);
+                // setup violation types
+                var violationTypes = await violationService.GetQuestionViolationTypesAsync();
+                viewModel.QuestionViolation = new QuestionViolationViewModel();
+                viewModel.QuestionViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
             }
 
             return View(viewModel);
-        }
-
-        private async Task<IReadOnlyCollection<UserAnsweredQuestionCorrectlyViewModel>> GetUsersAnsweredCorrectlyAsync(Question randomQuestion)
-        {
-            if (randomQuestion != null)
-            {
-                var usersAnsweredCorrectly = await triviaService.GetUsersAnsweredCorrectlyAsync(randomQuestion.Id);
-                return Mapper.Map<IReadOnlyCollection<AnsweredQuestion>, IReadOnlyCollection<UserAnsweredQuestionCorrectlyViewModel>>(usersAnsweredCorrectly);
-            }
-
-            return null;
         }
 
         [HttpPost]
@@ -170,6 +126,34 @@ namespace TwolipsDating.Controllers
 
                 return Json(new { success = false, error = ErrorMessages.AnswerNotSubmitted });
             }
+        }
+
+        #endregion
+
+        #region Timed Question
+
+        [AllowAnonymous]
+        public async Task<ActionResult> Timed()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                await SetNotificationsAsync();
+            }
+
+            var currentUserId = User.Identity.GetUserId();
+
+            // generate a random question with its answers to view
+            Question randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Timed);
+
+            QuestionViewModel viewModel = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
+
+            if (viewModel != null)
+            {
+                viewModel.QuestionTypeId = (int)QuestionTypeValues.Timed;
+                viewModel.UsersAnsweredCorrectly = await GetUsersAnsweredCorrectlyAsync(randomQuestion);
+            }
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -231,6 +215,10 @@ namespace TwolipsDating.Controllers
                 milliseconds = questionStartTime.Millisecond
             }, JsonRequestBehavior.AllowGet);
         }
+
+        #endregion
+
+        #region Quiz
 
         public async Task<ActionResult> Quiz(int id)
         {
@@ -309,7 +297,7 @@ namespace TwolipsDating.Controllers
                     question.SelectedAnswerId.Value,
                     (int)QuestionTypeValues.Quiz);
 
-                if(question.SelectedAnswerId.Value == correctAnswerId)
+                if (question.SelectedAnswerId.Value == correctAnswerId)
                 {
                     numberOfCorrectAnswers++;
                 }
@@ -320,11 +308,52 @@ namespace TwolipsDating.Controllers
             return RedirectToAction("quiz", new { id = viewModel.QuizId });
         }
 
+        #endregion
+
+        private async Task<QuestionViewModel> GetRandomQuestionViewModel()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                await SetNotificationsAsync();
+            }
+
+            var currentUserId = User.Identity.GetUserId();
+
+            // generate a random question with its answers to view
+            var randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Random);
+
+            QuestionViewModel viewModel = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
+
+            if (viewModel != null)
+            {
+                viewModel.QuestionTypeId = (int)QuestionTypeValues.Random;
+                viewModel.UsersAnsweredCorrectly = await GetUsersAnsweredCorrectlyAsync(randomQuestion);
+            }
+
+            return viewModel;
+        }
+
+        private async Task<IReadOnlyCollection<UserAnsweredQuestionCorrectlyViewModel>> GetUsersAnsweredCorrectlyAsync(Question randomQuestion)
+        {
+            if (randomQuestion != null)
+            {
+                var usersAnsweredCorrectly = await triviaService.GetUsersAnsweredCorrectlyAsync(randomQuestion.Id);
+                return Mapper.Map<IReadOnlyCollection<AnsweredQuestion>, IReadOnlyCollection<UserAnsweredQuestionCorrectlyViewModel>>(usersAnsweredCorrectly);
+            }
+
+            return null;
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && triviaService != null)
             {
                 triviaService.Dispose();
+            }
+
+            if(disposing && violationService != null)
+            {
+                violationService.Dispose();
             }
 
             base.Dispose(disposing);
