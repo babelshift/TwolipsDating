@@ -7,24 +7,6 @@
     ViewBag.ImageUrl = Url.Content("~/Content/twolipsicon-white-180x180.png");
 }
 
-<div class="panel panel-default">
-    <div class="panel-body">
-        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = ActiveMenuText.Message })
-        <div class="pull-right">
-            <ul class="nav nav-pills">
-                <li role="presentation" class="active">
-                    <a href="@Url.Action("conversation", new { id = (int?)null })" title="Your conversations"><i class="glyphicon glyphicon-comment"></i>&nbsp;Conversations</a>
-                </li>
-                <li role="presentation">
-                    <a href="@Url.Action("received")" title="Your received messages"><i class="glyphicon glyphicon-download"></i>&nbsp;Received</a>
-                </li>
-                <li role="presentation">
-                    <a href="@Url.Action("sent")" title="Your sent messages"><i class="glyphicon glyphicon-upload"></i>&nbsp;Sent</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
 @if (Model.IsCurrentUserEmailConfirmed)
 {
     <div class="row">

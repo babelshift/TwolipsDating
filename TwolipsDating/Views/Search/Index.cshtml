@@ -7,36 +7,18 @@
 }
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6 col-md-offset-3">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div class="col-md-4" style="padding-left: 0">
-                    @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = TwolipsDating.ViewModels.ActiveMenuText.Search })
-                </div>
-                <div class="col-md-4">
-                        @if (Model.SearchResults != null && Model.SearchResults.Count > 0)
-                        {
-                            if (!String.IsNullOrEmpty(Model.User))
-                            {
-                                <h4><strong>@String.Format("{0} result(s) for '{1}'", Model.SearchResults.Count, Model.User)</strong></h4>
-                            }
-                            else
-                            {
-                                <h4><strong>@String.Format("{0} result(s) for '{1}'", Model.SearchResults.Count, Model.Tag)</strong></h4>
-                            }
-                        }
-                </div>
-                <div class="col-md-4" style="padding-right: 0">
-                    @using (Html.BeginForm("index", "search", FormMethod.Get, new { role = "search" }))
-                    {
-                        <div class="input-group">
-                            @Html.TextBoxFor(m => m.User, null, new { @id = "searchUserName", @class = "form-control", @placeholder = "Search for someone by name..." })
-                            <span class="input-group-btn">
-                                <button class="btn btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-                            </span>
-                        </div>
-                    }
-                </div>
+                @using (Html.BeginForm("index", "search", FormMethod.Get, new { role = "search" }))
+                {
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.User, null, new { @id = "searchUserName", @class = "form-control", @placeholder = "Search for someone by name" })
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </span>
+                    </div>
+                }
             </div>
         </div>
     </div>

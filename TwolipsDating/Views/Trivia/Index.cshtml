@@ -5,11 +5,6 @@
     ViewBag.ImageUrl = Url.Content("~/Content/twolipsicon-white-180x180.png");
 }
 
-<div class="panel panel-default">
-    <div class="panel-body">
-        @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = TwolipsDating.ViewModels.ActiveMenuText.Trivia })
-    </div>
-</div>
 @if (Model.IsCurrentUserEmailConfirmed)
 {
     <div class="row">
