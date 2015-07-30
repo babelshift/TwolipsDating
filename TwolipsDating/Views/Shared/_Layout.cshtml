@@ -33,35 +33,38 @@
                 </a>
             </div>
             <div class="navbar-collapse collapse">
-                @if (User.Identity.IsAuthenticated)
-                {
-                    using (Html.BeginForm("index", "search", FormMethod.Get, new { @class = "navbar-form navbar-left", role = "search" }))
+                @*@@if (User.Identity.IsAuthenticated)
                     {
-                        <div class="input-group">
-                            @Html.TextBox("user", null, new { @id = "searchUserName", @class = "form-control", @placeholder = "Find someone..." })
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-sm btn-default" style="line-height: 1.4"><i class="glyphicon glyphicon-search"></i></button>
-                            </span>
-                        </div>
-                    }
-                }
-                @*<ul id="navbar-main" class="nav navbar-nav">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-search"></i>&nbsp;Explore <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="@Url.Action("index", "home")"><i class="glyphicon glyphicon-home"></i>&nbsp;Dashboard</a></li>
-                                <li><a href="@Url.Action("index", "profile", new { id = (int?)null })"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
-                                <li><a href="@Url.Action("index", "search", new { id = (int?)null })"><i class="glyphicon glyphicon-search"></i>&nbsp;Search</a></li>
-                                <li><a href="@Url.Action("conversation", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Messages</a></li>
-                                <li><a href="@Url.Action("index", "trivia")"><i class="glyphicon glyphicon-education"></i>&nbsp;Trivia</a></li>
-                                <li class="divider"></li>
-                                <li><a href="@Url.Action("index", "store")"><i class="glyphicon glyphicon-blackboard"></i>&nbsp;Store</a></li>
-                                <li><a href="@Url.Action("points", "account")"><i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;Points</a></li>
-                                <li class="divider"></li>
-                                <li><a href="@Url.Action("index", "manage")"><i class="glyphicon glyphicon-cog"></i>&nbsp;Account</a></li>
-                            </ul>
-                        </li>
-                    </ul>*@
+                        using (Html.BeginForm("index", "search", FormMethod.Get, new { @class = "navbar-form navbar-left", role = "search" }))
+                        {
+                            <div class="input-group">
+                                @Html.TextBox("user", null, new { @id = "searchUserName", @class = "form-control", @placeholder = "Find someone..." })
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-sm btn-default" style="line-height: 1.4"><i class="glyphicon glyphicon-search"></i></button>
+                                </span>
+                            </div>
+                        }
+                    }*@
+                <ul id="navbar-main" class="nav navbar-nav visible-md visible-lg">
+                    <li><a href="@Url.Action("index", "profile", new { id = (int?)null })"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
+                    <li><a href="@Url.Action("index", "search", new { id = (int?)null })"><i class="glyphicon glyphicon-search"></i>&nbsp;Search</a></li>
+                    <li><a href="@Url.Action("index", "trivia")"><i class="glyphicon glyphicon-education"></i>&nbsp;Trivia</a></li>
+                    <li><a href="@Url.Action("index", "store")"><i class="glyphicon glyphicon-blackboard"></i>&nbsp;Store</a></li>
+                </ul>
+                <ul id="navbar-main" class="nav navbar-nav visible-xs visible-sm">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-search"></i>&nbsp;Explore <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.Action("index", "home")"><i class="glyphicon glyphicon-home"></i>&nbsp;Dashboard</a></li>
+                            <li><a href="@Url.Action("index", "profile", new { id = (int?)null })"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
+                            <li><a href="@Url.Action("index", "search", new { id = (int?)null })"><i class="glyphicon glyphicon-search"></i>&nbsp;Search</a></li>
+                            <li><a href="@Url.Action("conversation", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Messages</a></li>
+                            <li><a href="@Url.Action("index", "trivia")"><i class="glyphicon glyphicon-education"></i>&nbsp;Trivia</a></li>
+                            <li><a href="@Url.Action("index", "store")"><i class="glyphicon glyphicon-blackboard"></i>&nbsp;Store</a></li>
+                            <li><a href="@Url.Action("points", "account")"><i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;Points</a></li>
+                        </ul>
+                    </li>
+                </ul>
                 @Html.Partial("_LoginPartial")
                 <ul class="nav navbar-nav navbar-right">
                     @if (User.Identity.IsAuthenticated)

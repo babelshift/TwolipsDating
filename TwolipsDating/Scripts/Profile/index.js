@@ -155,7 +155,6 @@ function onSendMessage(e, obj) {
 function onAddReviewViolation(e, obj) {
     var reviewId = $('#review-id').val();
     var violationTypeId = $('#WriteReviewViolation_ViolationTypeId').val();
-    var authorUserId = $('#CurrentUserId').val();
     var content = $('#WriteReviewViolation_ViolationContent').val();
 
     var json = '{"reviewId":' + reviewId + ', "violationTypeId":' + violationTypeId + ', "content":"' + content + '"}';
@@ -410,33 +409,33 @@ function onToggleFavoriteProfile(e, obj, currentUserId, profileUserId, profileId
 
 function toggleFavoriteProfileIcon(isFavorite) {
     if (isFavorite) {
-        $("#button-toggle-favorite-icon").removeClass("glyphicon-heart-empty");
-        $("#button-toggle-favorite-icon").addClass("glyphicon-heart");
-        $("#button-toggle-favorite").removeClass("btn-primary");
-        $("#button-toggle-favorite").addClass("btn-success");
-        $("#button-toggle-favorite").attr("title", "Remove from favorites");
+        $(".button-toggle-favorite-icon").removeClass("glyphicon-heart-empty");
+        $(".button-toggle-favorite-icon").addClass("glyphicon-heart");
+        $(".button-toggle-favorite").removeClass("btn-primary");
+        $(".button-toggle-favorite").addClass("btn-success");
+        $(".button-toggle-favorite").attr("title", "Remove from favorites");
     } else {
-        $("#button-toggle-favorite-icon").removeClass("glyphicon-heart");
-        $("#button-toggle-favorite-icon").addClass("glyphicon-heart-empty");
-        $("#button-toggle-favorite").removeClass("btn-success");
-        $("#button-toggle-favorite").addClass("btn-primary");
-        $("#button-toggle-favorite").attr("title", "Add to favorites");
+        $(".button-toggle-favorite-icon").removeClass("glyphicon-heart");
+        $(".button-toggle-favorite-icon").addClass("glyphicon-heart-empty");
+        $(".button-toggle-favorite").removeClass("btn-success");
+        $(".button-toggle-favorite").addClass("btn-primary");
+        $(".button-toggle-favorite").attr("title", "Add to favorites");
     }
 }
 
 function toggleIgnoredUserIcon(isIgnored) {
     if (isIgnored) {
-        $("#button-toggle-ignored-icon").removeClass("glyphicon-volume-up");
-        $("#button-toggle-ignored-icon").addClass("glyphicon-volume-off");
-        $("#button-toggle-ignored").removeClass("btn-primary");
-        $("#button-toggle-ignored").addClass("btn-danger");
-        $("#button-toggle-ignored").attr("title", "Not receiving updates and messages from this user");
+        $(".button-toggle-ignored-icon").removeClass("glyphicon-volume-up");
+        $(".button-toggle-ignored-icon").addClass("glyphicon-volume-off");
+        $(".button-toggle-ignored").removeClass("btn-primary");
+        $(".button-toggle-ignored").addClass("btn-danger");
+        $(".button-toggle-ignored").attr("title", "Not receiving updates and messages from this user");
     } else {
-        $("#button-toggle-ignored-icon").removeClass("glyphicon-volume-off");
-        $("#button-toggle-ignored-icon").addClass("glyphicon-volume-up");
-        $("#button-toggle-ignored").removeClass("btn-danger");
-        $("#button-toggle-ignored").addClass("btn-primary");
-        $("#button-toggle-ignored").attr("title", "Receiving updates and messages from this user");
+        $(".button-toggle-ignored-icon").removeClass("glyphicon-volume-off");
+        $(".button-toggle-ignored-icon").addClass("glyphicon-volume-up");
+        $(".button-toggle-ignored").removeClass("btn-danger");
+        $(".button-toggle-ignored").addClass("btn-primary");
+        $(".button-toggle-ignored").attr("title", "Receiving updates and messages from this user");
     }
 }
 

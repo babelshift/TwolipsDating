@@ -82,7 +82,7 @@
                             <div class="row">
                                 @foreach (var item in Model.ViewerInventoryItems)
                                 {
-                                    <div id="@String.Format("gift-image-wrapper-{0}", item.GiftId)" class="col-md-2 text-center">
+                                    <div id="@String.Format("gift-image-wrapper-{0}", item.GiftId)" class="col-xs-3 col-md-2 text-center">
                                         <a id="@item.InventoryItemId" data-gift-name="@item.GiftName" data-gift-id="@item.GiftId" href="#" onclick="onSelectGiftClick(event, this)">
                                             <img src="@item.GiftIconFilePath">
                                         </a>
@@ -281,27 +281,93 @@
             </div>
         </div>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    @if (User.Identity.IsAuthenticated && Model.CurrentUserId == Model.ProfileUserId)
+                    {
+                        <a href="#" data-toggle="modal" data-target="#modalProfileImage" data-keyboard="true" title="Change your profile image">
+                            @if (!String.IsNullOrEmpty(Model.ProfileImagePath))
+                            {
+                                <img src="@Model.ProfileImagePath" style="max-height: 128px">
+                            }
+                            else
+                            {
+                                <img src="http://placehold.it/128x128">
+                            }
+                        </a>
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(Model.ProfileImagePath))
+                        {
+                            <img src="@Model.ProfileImagePath" style="max-height: 128px">
+                        }
+                        else
+                        {
+                            <img src="http://placehold.it/128x128">
+                        }
+                    }
+                    <h3 style="margin-top: 5px">
+                        @Model.UserName
+                    </h3>
+                    <h5>
+                        <a id="selected-title" href="#" class="label label-success"
+                           data-title="Select your title" data-container="body" data-toggle="popover" data-placement="bottom"
+                           data-animation="false">@Model.SelectedTitle</a>
+                    </h5>
+                    <h5>@Model.Age&nbsp;&bull;&nbsp;@Model.Gender&nbsp;&bull;&nbsp;@Model.Location</h5>
+                    <h5>
+                        @for (int i = 1; i <= Model.AverageRatingValue; i++)
+                        {
+                            <i class="glyphicon glyphicon-star"></i>
+                        }
+                        @for (int j = 1; j <= 5 - Model.AverageRatingValue; j++)
+                        {
+                            <i class="glyphicon glyphicon-star-empty"></i>
+                        }
+                    </h5>
+                    @*
+                        <p>
+                        <span style="margin-right: 10px;">
+                        <button class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-heart"></i></button>&nbsp;3472
+                        </span>
+                        <span style="margin-right: 10px;"><button class="btn btn-success btn-xs"><i class="glyphicon glyphicon-thumbs-up"></i></button>&nbsp;51</span>
+                        <button class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-thumbs-down"></i></button>&nbsp;7
+                        </p>
+                    *@
+                </div>
+            </div>
             @if (User.Identity.IsAuthenticated)
             {
-                @Html.Partial("_DropDownMenuPartial", new TwolipsDating.ViewModels.DropDownMenuViewModel() { ActiveMenuText = TwolipsDating.ViewModels.ActiveMenuText.Profile })
-
                 if (Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
                 {
-                    <div class="pull-right">
+                    <div class="visible-xs visible-sm" style="display: inline-block; margin: 21px auto; width: 270px">
                         <ul class="nav nav-pills">
-                            <li role="presentation"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift"><i class="glyphicon glyphicon-gift"></i>&nbsp;Gift</button></li>
-                            <li role="presentation"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Message</button></li>
-                            <li role="presentation"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review"><i class="glyphicon glyphicon-edit"></i>&nbsp;Review</button></li>
                             <li role="presentation">
-                                <button id="button-toggle-ignored" type="button" class="btn btn-primary" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.CurrentUserId', '@Model.ProfileUserId')">
-                                    <i id="button-toggle-ignored-icon" class="glyphicon glyphicon-volume-up"></i>
+                                <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
+                                    <i class="glyphicon glyphicon-gift"></i> Send
                                 </button>
                             </li>
                             <li role="presentation">
-                                <button id="button-toggle-favorite" type="button" class="btn btn-primary" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.CurrentUserId', '@Model.ProfileUserId', @Model.ProfileId)">
-                                    <i id="button-toggle-favorite-icon" class="glyphicon glyphicon-heart-empty"></i>
+                                <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
+                                    <i class="glyphicon glyphicon-envelope"></i> Message
+                                </button>
+                            </li>
+                            <li role="presentation">
+                                <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review">
+                                    <i class="glyphicon glyphicon-edit"></i> Review
+                                </button>
+                            </li>
+                            <li role="presentation">
+                                <button class="button-toggle-ignored btn btn-primary btn-xs" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.CurrentUserId', '@Model.ProfileUserId')">
+                                    <i class="button-toggle-ignored-icon glyphicon glyphicon-volume-up"></i>
+                                </button>
+                            </li>
+                            <li role="presentation">
+                                <button type="button" class="button-toggle-favorite btn btn-primary btn-xs" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.CurrentUserId', '@Model.ProfileUserId', @Model.ProfileId)">
+                                    <i class="button-toggle-favorite-icon glyphicon glyphicon-heart-empty"></i>
                                 </button>
                             </li>
                             @*
@@ -311,74 +377,6 @@
                     </div>
                 }
             }
-            else
-            {
-                <h4>You are viewing this profile as an anonymous user. You can interact with this profile if you @Html.ActionLink("sign up", "register", "account") today!</h4>
-            }
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="text-center">
-                        @if (User.Identity.IsAuthenticated && Model.CurrentUserId == Model.ProfileUserId)
-                        {
-                            <a href="#" data-toggle="modal" data-target="#modalProfileImage" data-keyboard="true" title="Change your profile image">
-                                @if (!String.IsNullOrEmpty(Model.ProfileImagePath))
-                                {
-                                    <img src="@Model.ProfileImagePath" style="max-height: 128px">
-                                }
-                                else
-                                {
-                                    <img src="http://placehold.it/128x128">
-                                }
-                            </a>
-                        }
-                        else
-                        {
-                            if (!String.IsNullOrEmpty(Model.ProfileImagePath))
-                            {
-                                <img src="@Model.ProfileImagePath" style="max-height: 128px">
-                            }
-                            else
-                            {
-                                <img src="http://placehold.it/128x128">
-                            }
-                        }
-                        <h3 style="margin-top: 5px">
-                            @Model.UserName
-                        </h3>
-                        <h5>
-                            <a id="selected-title" href="#" class="label label-success"
-                               data-title="Select your title" data-container="body" data-toggle="popover" data-placement="bottom"
-                               data-animation="false">@Model.SelectedTitle</a>
-                        </h5>
-                        <h5>@Model.Age&nbsp;&bull;&nbsp;@Model.Gender&nbsp;&bull;&nbsp;@Model.Location</h5>
-                    </div>
-                    <div class="text-center">
-                        <h5>
-                            @for (int i = 1; i <= Model.AverageRatingValue; i++)
-                            {
-                                <i class="glyphicon glyphicon-star"></i>
-                            }
-                            @for (int j = 1; j <= 5 - Model.AverageRatingValue; j++)
-                            {
-                                <i class="glyphicon glyphicon-star-empty"></i>
-                            }
-                        </h5>
-                        @*
-                            <p>
-                            <span style="margin-right: 10px;">
-                            <button class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-heart"></i></button>&nbsp;3472
-                            </span>
-                            <span style="margin-right: 10px;"><button class="btn btn-success btn-xs"><i class="glyphicon glyphicon-thumbs-up"></i></button>&nbsp;51</span>
-                            <button class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-thumbs-down"></i></button>&nbsp;7
-                            </p>
-                        *@
-                    </div>
-                </div>
-            </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <p class="panel-title"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tags awarded</p>
@@ -464,6 +462,45 @@
             @*@Html.Partial("_SidebarAdvertisementPartial")*@
         </div>
         <div class="col-md-8">
+            @if (User.Identity.IsAuthenticated)
+            {
+                if (Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
+                {
+                    <div class="pull-right visible-md visible-lg" style="display: inline-block; margin-bottom: 10px">
+                        <ul class="nav nav-pills">
+                            <li role="presentation">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
+                                    <i class="glyphicon glyphicon-gift"></i>&nbsp;Gift
+                                </button>
+                            </li>
+                            <li role="presentation">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
+                                    <i class="glyphicon glyphicon-envelope"></i>&nbsp;Message
+                                </button>
+                            </li>
+                            <li role="presentation">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review">
+                                    <i class="glyphicon glyphicon-edit"></i>&nbsp;Review
+                                </button>
+                            </li>
+                            <li role="presentation">
+                                <button type="button" class="button-toggle-ignored btn btn-primary" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.CurrentUserId', '@Model.ProfileUserId')">
+                                    <i class="button-toggle-ignored-icon glyphicon glyphicon-volume-up"></i>
+                                </button>
+                            </li>
+                            <li role="presentation">
+                                <button type="button" class="button-toggle-favorite btn btn-primary" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.CurrentUserId', '@Model.ProfileUserId', @Model.ProfileId)">
+                                    <i  class="button-toggle-favorite-icon glyphicon glyphicon-heart-empty"></i>
+                                </button>
+                            </li>
+                            @*
+                                <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
+                            *@
+                        </ul>
+                    </div>
+                }
+            }
+            <div class="clearfix"></div>
             <div class="panel panel-default">
                 <div class="panel-body">
                     <ul class="nav nav-pills">

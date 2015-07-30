@@ -395,6 +395,9 @@ namespace TwolipsDating.Controllers
             }
 
             string currentUserId = User.Identity.GetUserId();
+
+            // user cannot upload an image if they haven't confirmed their email address
+            // user cannot upload an image for someone else's profile
             bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
             if (viewModel.ProfileUserId != currentUserId || !isCurrentUserEmailConfirmed)
             {
@@ -417,8 +420,10 @@ namespace TwolipsDating.Controllers
                     string fileType = Path.GetExtension(uploadedImage.FileName);
                     string fileName = String.Format("{0}{1}", Guid.NewGuid(), fileType);
 
+                    // add the image id to our database
                     int changes = await ProfileService.AddUploadedImageForUserAsync(currentUserId, fileName);
 
+                    // if we saved to our database successfully, save to Azure Storage Blob
                     if (changes > 0)
                     {
                         CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
@@ -430,7 +435,7 @@ namespace TwolipsDating.Controllers
 
                         using (var stream = uploadedImage.InputStream)
                         {
-                            blockBlob.UploadFromStream(stream);
+                            await blockBlob.UploadFromStreamAsync(stream);
                         }
                     }
                     else
