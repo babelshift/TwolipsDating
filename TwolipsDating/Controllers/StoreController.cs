@@ -19,6 +19,26 @@ namespace TwolipsDating.Controllers
         private StoreService storeService = new StoreService();
         private UserService userService = new UserService();
 
+        private ShoppingCart ShoppingCart
+        {
+            get
+            {
+                if (Session["ShoppingCart"] == null)
+                {
+                    Session["ShoppingCart"] = new ShoppingCart();
+                }
+
+                return (ShoppingCart)Session["ShoppingCart"];
+            }
+            set
+            {
+                if (value != null)
+                {
+                    Session["ShoppingCart"] = (ShoppingCart)value;
+                }
+            }
+        }
+
         public async Task<ActionResult> Index()
         {
             var currentUserId = User.Identity.GetUserId();
@@ -64,6 +84,13 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
+        public async Task<ActionResult> Cart()
+        {
+            await SetNotificationsAsync();
+
+            return View(ShoppingCart);
+        }
+
         private StoreViewModel GetStoreItemViewModel(IReadOnlyList<StoreItem> storeItems)
         {
             StoreViewModel viewModel = new StoreViewModel();
@@ -80,33 +107,44 @@ namespace TwolipsDating.Controllers
         [HttpPost]
         public async Task<JsonResult> BuyStoreItem(int storeItemId, int storeItemTypeId)
         {
-            bool success = false;
-            int count = 0;
-            string currentUserId = User.Identity.GetUserId();
-
             try
             {
-                if (storeItemTypeId == (int)StoreItemTypeValues.Gift)
-                {
-                    count = await storeService.BuyGiftAsync(currentUserId, storeItemId, 1);
-                }
-                else if (storeItemTypeId == (int)StoreItemTypeValues.Title)
-                {
-                    count = await storeService.BuyTitleAsync(currentUserId, storeItemId);
-                }
+                var storeItem = await storeService.GetStoreItemAsync(storeItemId);
+                ShoppingCart.AddItem(storeItem);
+                return Json(new { success = true, count = 1 });
             }
-            catch (DbUpdateException e)
+            catch (Exception ex)
             {
-                Log.Error("BuyStoreItem", e,
-                    parameters: new { storeItemId = storeItemId, currentUserId = currentUserId }
-                );
-
-                return Json(new { success = success, error = ErrorMessages.GiftPurchaseFailed });
+                return Json(new { success = false, count = 1 });
             }
 
-            success = count > 0;
+            //bool success = false;
+            //int count = 0;
+            //string currentUserId = User.Identity.GetUserId();
 
-            return Json(new { success = success, count = 1 });
+            //try
+            //{
+            //    if (storeItemTypeId == (int)StoreItemTypeValues.Gift)
+            //    {
+            //        count = await storeService.BuyGiftAsync(currentUserId, storeItemId, 1);
+            //    }
+            //    else if (storeItemTypeId == (int)StoreItemTypeValues.Title)
+            //    {
+            //        count = await storeService.BuyTitleAsync(currentUserId, storeItemId);
+            //    }
+            //}
+            //catch (DbUpdateException e)
+            //{
+            //    Log.Error("BuyStoreItem", e,
+            //        parameters: new { storeItemId = storeItemId, currentUserId = currentUserId }
+            //    );
+
+            //    return Json(new { success = success, error = ErrorMessages.GiftPurchaseFailed });
+            //}
+
+            //success = count > 0;
+
+            //return Json(new { success = success, count = 1 });
         }
 
         protected override void Dispose(bool disposing)

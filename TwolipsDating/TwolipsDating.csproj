@@ -296,6 +296,8 @@
     <Compile Include="Migrations\201507311816097_AddStoreDateAdded.Designer.cs">
       <DependentUpon>201507311816097_AddStoreDateAdded.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\ShoppingCart.cs" />
+    <Compile Include="Models\ShoppingCartItem.cs" />
     <Compile Include="Models\UserTitle.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -770,6 +772,7 @@
     <Content Include="Views\Store\_StoreItemsPartialView.cshtml" />
     <Content Include="Views\Store\_SaleSpotlightPartial.cshtml" />
     <Content Include="Views\Store\_GiftSpotlightPartial.cshtml" />
+    <Content Include="Views\Store\Cart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

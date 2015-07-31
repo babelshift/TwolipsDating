@@ -15,6 +15,12 @@
         <img class="circular-image" src="@Model.TargetProfileImagePath" />
     </div>
 }
+else
+{
+    <div class="circular-image-wrapper">
+        <img class="circular-image" src="http://placehold.it/32x32" />
+    </div>
+}
 <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
     <a href="@Url.Action("index", "profile", new { id = Model.TargetProfileId })">@Model.TargetUserName</a>
     <small>

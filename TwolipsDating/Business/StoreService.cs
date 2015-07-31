@@ -10,6 +10,11 @@ namespace TwolipsDating.Business
 {
     public class StoreService : BaseService
     {
+        internal async Task<StoreItem> GetStoreItemAsync(int storeItemId)
+        {
+            return await db.StoreItems.FindAsync(storeItemId);
+        }
+
         internal async Task<IReadOnlyList<StoreItem>> GetStoreItemsAsync()
         {
             var result = await (from storeItems in db.StoreItems

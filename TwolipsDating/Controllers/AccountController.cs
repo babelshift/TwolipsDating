@@ -21,7 +21,6 @@ namespace TwolipsDating.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private UserService userService = new UserService();
-        private StoreService storeService = new StoreService();
 
         public AccountController()
         {
@@ -575,12 +574,6 @@ namespace TwolipsDating.Controllers
                 {
                     userService.Dispose();
                     userService = null;
-                }
-
-                if (storeService != null)
-                {
-                    storeService.Dispose();
-                    storeService = null;
                 }
             }
             base.Dispose(disposing);

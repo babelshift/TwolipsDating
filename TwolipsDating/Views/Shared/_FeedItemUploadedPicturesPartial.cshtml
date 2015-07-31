@@ -6,10 +6,16 @@
         <img class="circular-image" src="@Model.UploaderProfileImagePath" />
     </div>
 }
+else
+{
+    <div class="circular-image-wrapper">
+        <img class="circular-image" src="http://placehold.it/32x32" />
+    </div>
+}
 <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
     @{
         string text = String.Empty;
-        if(Model.UploadedImagesPaths.Count > 1)
+        if (Model.UploadedImagesPaths.Count > 1)
         {
             text = "uploaded some images";
         }

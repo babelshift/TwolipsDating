@@ -6,11 +6,16 @@
     <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
         You sent a message to
     </p>
-
     if (!String.IsNullOrEmpty(Model.ReceiverProfileImagePath))
     {
         <div class="circular-image-wrapper">
             <img class="circular-image" src="@Model.ReceiverProfileImagePath" />
+        </div>
+    }
+    else
+    {
+        <div class="circular-image-wrapper">
+            <img class="circular-image" src="http://placehold.it/32x32" />
         </div>
     }
     <p style="display: inline-block; vertical-align: top; margin-top: 4px;">
