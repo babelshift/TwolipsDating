@@ -175,6 +175,10 @@ namespace TwolipsDating.Models
             modelBuilder.Entity<StoreItem>()
                 .Property(v => v.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+            modelBuilder.Entity<StoreItem>()
+                .Property(v => v.DateAdded)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Computed);
         }
 
         private void SetupQuestionViolations(DbModelBuilder modelBuilder)

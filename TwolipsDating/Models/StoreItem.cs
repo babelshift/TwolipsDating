@@ -13,6 +13,7 @@ namespace TwolipsDating.Models
         public int ItemTypeId { get; set; }
         public int PointPrice { get; set; }
         public string IconFileName { get; set; }
+        public DateTime DateAdded { get; set; }
 
         public virtual StoreItemType ItemType { get; set; }
         public virtual ICollection<StoreTransactionLog> StoreTransactions { get; set; }

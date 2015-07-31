@@ -18,6 +18,15 @@ namespace TwolipsDating.Business
             return result.AsReadOnly();
         }
 
+        internal async Task<IReadOnlyList<StoreItem>> GetNewStoreItemsAsync()
+        {
+            var result = await (from storeItems in db.StoreItems
+                                orderby storeItems.DateAdded descending
+                                select storeItems).ToListAsync();
+
+            return result.AsReadOnly();
+        }
+
         //public async Task<IReadOnlyCollection<Gift>> GetGiftsAsync()
         //{
         //    var result = await (from gifts in db.Gifts

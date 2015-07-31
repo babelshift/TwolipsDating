@@ -26,7 +26,8 @@ namespace TwolipsDating.Controllers
 
             await SetNotificationsAsync();
 
-            StoreViewModel viewModel = await GetStoreItems();
+            var storeItems = await storeService.GetNewStoreItemsAsync();
+            StoreViewModel viewModel = GetStoreItemViewModel(storeItems);
 
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
@@ -40,7 +41,8 @@ namespace TwolipsDating.Controllers
 
             await SetNotificationsAsync();
 
-            StoreViewModel viewModel = await GetStoreItems();
+            var storeItems = await storeService.GetStoreItemsAsync();
+            StoreViewModel viewModel = GetStoreItemViewModel(storeItems);
 
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
@@ -54,17 +56,17 @@ namespace TwolipsDating.Controllers
 
             await SetNotificationsAsync();
 
-            StoreViewModel viewModel = await GetStoreItems();
+            var storeItems = await storeService.GetStoreItemsAsync();
+            StoreViewModel viewModel = GetStoreItemViewModel(storeItems);
 
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
             return View(viewModel);
         }
 
-        private async Task<StoreViewModel> GetStoreItems()
+        private StoreViewModel GetStoreItemViewModel(IReadOnlyList<StoreItem> storeItems)
         {
             StoreViewModel viewModel = new StoreViewModel();
-            var storeItems = await storeService.GetStoreItemsAsync();
 
             var storeItemsViewModel = Mapper.Map<IReadOnlyList<StoreItem>, IReadOnlyList<StoreItemViewModel>>(storeItems);
 

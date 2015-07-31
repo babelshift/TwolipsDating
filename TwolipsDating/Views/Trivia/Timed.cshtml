@@ -79,12 +79,8 @@
                         <div id="alert-box" class="alert alert-info">
                             <h4>Select an answer and then press OK. You have <span id="timer-label">10</span> seconds remaining.</h4>
                         </div>
-                        @Html.Partial("_QuestionAndAnswerPartial")
                     }
-                    else
-                    {
-                        <h4>You're a machine. You've answered every timed question we have.</h4>
-                    }
+                    @Html.Partial("_QuestionAndAnswerPartial", Model)
                 </div>
             </div>
         </div>

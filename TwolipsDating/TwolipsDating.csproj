@@ -292,6 +292,10 @@
     <Compile Include="Migrations\201507311622143_ResetProfile.Designer.cs">
       <DependentUpon>201507311622143_ResetProfile.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507311816097_AddStoreDateAdded.cs" />
+    <Compile Include="Migrations\201507311816097_AddStoreDateAdded.Designer.cs">
+      <DependentUpon>201507311816097_AddStoreDateAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\UserTitle.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -929,6 +933,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507311622143_ResetProfile.resx">
       <DependentUpon>201507311622143_ResetProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507311816097_AddStoreDateAdded.resx">
+      <DependentUpon>201507311816097_AddStoreDateAdded.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

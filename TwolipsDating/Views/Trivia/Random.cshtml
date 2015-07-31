@@ -73,10 +73,13 @@
         <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="alert-box" class="alert alert-info">
-                        <h4>Select an answer and then press OK. There is no time limit.</h4>
-                    </div>
-                    @Html.Partial("_QuestionAndAnswerPartial")
+                    @if (Model != null)
+                    {
+                        <div id="alert-box" class="alert alert-info">
+                            <h4>Select an answer and then press OK. There is no time limit.</h4>
+                        </div>
+                    }
+                    @Html.Partial("_QuestionAndAnswerPartial", Model)
                 </div>
             </div>
         </div>
