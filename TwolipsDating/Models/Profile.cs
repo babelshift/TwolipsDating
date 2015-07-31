@@ -26,7 +26,7 @@ namespace TwolipsDating.Models
         public virtual Gender Gender { get; set; }
         public virtual GeoCity GeoCity { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
-        public virtual Title SelectedTitle { get; set; }
+        public virtual StoreItem SelectedTitle { get; set; }
 
 		public virtual ICollection<Tag> Tags { get; set; }
 		public virtual ICollection<TagSuggestion> TagSuggestions { get; set; }

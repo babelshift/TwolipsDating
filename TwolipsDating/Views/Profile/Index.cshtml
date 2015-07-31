@@ -315,7 +315,16 @@
                     <h5>
                         <a id="selected-title" href="#" class="label label-success"
                            data-title="Select your title" data-container="body" data-toggle="popover" data-placement="bottom"
-                           data-animation="false">@Model.SelectedTitle</a>
+                           data-animation="false">
+                            @if (!String.IsNullOrEmpty(Model.SelectedTitle))
+                            {
+                                @Model.SelectedTitle
+                            }
+                            else
+                            {
+                                @:Newbie
+                            }
+                        </a>
                     </h5>
                     <h5>@Model.Age&nbsp;&bull;&nbsp;@Model.Gender&nbsp;&bull;&nbsp;@Model.Location</h5>
                     <h5>
@@ -329,15 +338,16 @@
                         }
                     </h5>
                     @*
-                        <p>
-                        <span style="margin-right: 10px;">
-                        <button class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-heart"></i></button>&nbsp;3472
-                        </span>
-                        <span style="margin-right: 10px;"><button class="btn btn-success btn-xs"><i class="glyphicon glyphicon-thumbs-up"></i></button>&nbsp;51</span>
-                        <button class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-thumbs-down"></i></button>&nbsp;7
-                        </p>
+            <p>
+            <span style="margin-right: 10px;">
+            <button class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-heart"></i></button>&nbsp;3472
+            </span>
+            <span style="margin-right: 10px;"><button class="btn btn-success btn-xs"><i class="glyphicon glyphicon-thumbs-up"></i></button>&nbsp;51</span>
+            <button class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-thumbs-down"></i></button>&nbsp;7
+            </p>
                     *@
                 </div>
+
             </div>
             @if (User.Identity.IsAuthenticated)
             {

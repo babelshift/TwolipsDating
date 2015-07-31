@@ -34,7 +34,7 @@ namespace TwolipsDating.Business
         {
             var purchasedTitles = await (from titles in db.UserTitles
                                          where titles.UserId == currentUserId
-                                         select titles).ToDictionaryAsync(t => t.TitleId, t => t);
+                                         select titles).ToDictionaryAsync(t => t.StoreItemId, t => t);
 
             return new ReadOnlyDictionary<int, UserTitle>(purchasedTitles);
         }

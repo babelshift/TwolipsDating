@@ -10,17 +10,35 @@ namespace TwolipsDating.Business
 {
     public class StoreService : BaseService
     {
-        public async Task<IReadOnlyCollection<Gift>> GetGiftsAsync()
+        internal async Task<IReadOnlyList<StoreItem>> GetStoreItemsAsync()
         {
-            var result = await (from gifts in db.Gifts
-                                select gifts).ToListAsync();
+            var result = await (from storeItems in db.StoreItems
+                                select storeItems).ToListAsync();
 
             return result.AsReadOnly();
         }
 
-        public async Task<int> BuyTitleAsync(string userId, int titleId)
+        //public async Task<IReadOnlyCollection<Gift>> GetGiftsAsync()
+        //{
+        //    var result = await (from gifts in db.Gifts
+        //                        select gifts).ToListAsync();
+
+        //    return result.AsReadOnly();
+        //}
+
+        //internal async Task<IReadOnlyCollection<Title>> GetTitlesAsync()
+        //{
+        //    var result = await (from titles in db.Titles
+        //                        select titles).ToListAsync();
+
+        //    return result.AsReadOnly();
+        //}
+
+
+
+        public async Task<int> BuyTitleAsync(string userId, int storeItemId)
         {
-            var title = await db.Titles.FindAsync(titleId);
+            var title = await db.StoreItems.FindAsync(storeItemId);
             var user = db.Users.Find(userId);
 
             if (user.Points >= title.PointPrice)
@@ -28,7 +46,7 @@ namespace TwolipsDating.Business
                 UserTitle userTitle = new UserTitle()
                 {
                     UserId = userId,
-                    TitleId = titleId,
+                    StoreItemId = storeItemId,
                     DateObtained = DateTime.Now
                 };
 
@@ -40,17 +58,17 @@ namespace TwolipsDating.Business
             return await db.SaveChangesAsync();
         }
 
-        public async Task<int> BuyGiftAsync(string userId, int giftId, int buyCount)
+        public async Task<int> BuyGiftAsync(string userId, int storeItemId, int buyCount)
         {
             // check price of item and see if the user has enough points to buy the item with the count
-            var gift = await db.Gifts.FindAsync(giftId);
+            var gift = await db.StoreItems.FindAsync(storeItemId);
             var user = db.Users.Find(userId);
 
             if (user.Points >= gift.PointPrice * buyCount)
             {
                 // check if user already has an item of this type
                 var inventoryItem = await (from inventory in db.InventoryItems
-                                           where inventory.GiftId == giftId
+                                           where inventory.StoreItemId == storeItemId
                                            where inventory.ApplicationUserId == userId
                                            select inventory).FirstOrDefaultAsync();
 
@@ -65,7 +83,7 @@ namespace TwolipsDating.Business
                     InventoryItem item = new InventoryItem()
                     {
                         ApplicationUserId = userId,
-                        GiftId = giftId,
+                        StoreItemId = storeItemId,
                         ItemCount = buyCount
                     };
 
@@ -75,7 +93,7 @@ namespace TwolipsDating.Business
                 StoreTransactionLog log = new StoreTransactionLog()
                 {
                     UserId = userId,
-                    GiftId = giftId,
+                    StoreItemId = storeItemId,
                     ItemCount = buyCount,
                     DateTransactionOccurred = DateTime.Now
                 };
@@ -88,12 +106,5 @@ namespace TwolipsDating.Business
             return await db.SaveChangesAsync();
         }
 
-        internal async Task<IReadOnlyCollection<Title>> GetTitlesAsync()
-        {
-            var result = await (from titles in db.Titles
-                                select titles).ToListAsync();
-
-            return result.AsReadOnly();
-        }
     }
 }

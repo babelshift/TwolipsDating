@@ -114,10 +114,10 @@ namespace TwolipsDating
                 .ForMember(dest => dest.ReceiverProfileId, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Profile.Id));
 
             Mapper.CreateMap<InventoryItem, InventoryItemViewModel>()
-                .ForMember(dest => dest.GiftDescription, opts => opts.MapFrom(source => source.Gift.Description))
-                .ForMember(dest => dest.GiftIconFilePath, opts => opts.MapFrom(source => source.Gift.GetIconPath()))
-                .ForMember(dest => dest.GiftId, opts => opts.MapFrom(source => source.GiftId))
-                .ForMember(dest => dest.GiftName, opts => opts.MapFrom(source => source.Gift.Name))
+                .ForMember(dest => dest.GiftDescription, opts => opts.MapFrom(source => source.StoreItem.Description))
+                .ForMember(dest => dest.GiftIconFilePath, opts => opts.MapFrom(source => source.StoreItem.GetIconPath()))
+                .ForMember(dest => dest.GiftId, opts => opts.MapFrom(source => source.StoreItemId))
+                .ForMember(dest => dest.GiftName, opts => opts.MapFrom(source => source.StoreItem.Name))
                 .ForMember(dest => dest.InventoryItemId, opts => opts.MapFrom(source => source.InventoryItemId))
                 .ForMember(dest => dest.ItemCount, opts => opts.MapFrom(source => source.ItemCount));
 
@@ -137,38 +137,29 @@ namespace TwolipsDating
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(source => source.Name))
                 .ForMember(dest => dest.Points, opts => opts.MapFrom(source => source.Points));
 
-            Mapper.CreateMap<Gift, StoreGiftViewModel>()
-                .ForMember(dest => dest.GiftId, opts => opts.MapFrom(source => source.Id))
-                .ForMember(dest => dest.GiftName, opts => opts.MapFrom(source => source.Name))
-                .ForMember(dest => dest.GiftImagePath, opts => opts.MapFrom(source => source.GetIconPath()))
-                .ForMember(dest => dest.PointPrice, opts => opts.MapFrom(source => source.PointPrice))
-                .ForMember(dest => dest.GiftDescription, opts => opts.MapFrom(source => source.Description));
-
-            Mapper.CreateMap<Title, StoreTitleViewModel>()
-                .ForMember(dest => dest.TitleId, opts => opts.MapFrom(source => source.Id))
-                .ForMember(dest => dest.TitleName, opts => opts.MapFrom(source => source.Name))
-                .ForMember(dest => dest.PointPrice, opts => opts.MapFrom(source => source.PointPrice))
-                .ForMember(dest => dest.TitleDescription, opts => opts.MapFrom(source => source.Description));
+            Mapper.CreateMap<StoreItem, StoreItemViewModel>()
+                .ForMember(dest => dest.ItemId, opts => opts.MapFrom(source => source.Id))
+                .ForMember(dest => dest.ItemName, opts => opts.MapFrom(source => source.Name))
+                .ForMember(dest => dest.ItemImagePath, opts => opts.MapFrom(source => source.GetIconPath()))
+                .ForMember(dest => dest.PointsCost, opts => opts.MapFrom(source => source.PointPrice))
+                .ForMember(dest => dest.ItemDescription, opts => opts.MapFrom(source => source.Description))
+                .ForMember(dest => dest.ItemTypeId, opts => opts.MapFrom(source => source.ItemTypeId));
 
             Mapper.CreateMap<StoreTransactionLog, StoreTransactionViewModel>()
                 .ForMember(dest => dest.TransactionDate, opts => opts.MapFrom(source => source.DateTransactionOccurred))
-                .ForMember(dest => dest.ItemName, opts => opts.MapFrom(source => source.Gift.Name))
-                .ForMember(dest => dest.ItemCost, opts => opts.MapFrom(source => source.Gift.PointPrice))
+                .ForMember(dest => dest.ItemName, opts => opts.MapFrom(source => source.StoreItem.Name))
+                .ForMember(dest => dest.ItemCost, opts => opts.MapFrom(source => source.StoreItem.PointPrice))
                 .ForMember(dest => dest.ItemCount, opts => opts.MapFrom(source => source.ItemCount))
-                .ForMember(dest => dest.ItemType, opts => opts.MapFrom(source => "Gift"))
-                .ForMember(dest => dest.TotalCost, opts => opts.MapFrom(source => source.ItemCount * source.Gift.PointPrice));
+                .ForMember(dest => dest.ItemType, opts => opts.MapFrom(source => StoreItemTypeValues.Gift))
+                .ForMember(dest => dest.TotalCost, opts => opts.MapFrom(source => source.ItemCount * source.StoreItem.PointPrice));
 
             Mapper.CreateMap<GiftTransactionLog, GiftTransactionViewModel>()
                 .ForMember(dest => dest.GiftAmount, opts => opts.MapFrom(source => source.ItemCount))
-                .ForMember(dest => dest.GiftImagePath, opts => opts.MapFrom(source => source.Gift.GetIconPath()))
+                .ForMember(dest => dest.GiftImagePath, opts => opts.MapFrom(source => source.StoreItem.GetIconPath()))
                 .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.FromUser.Profile.GetProfileImagePath()))
                 .ForMember(dest => dest.SenderUserName, opts => opts.MapFrom(source => source.FromUser.UserName))
                 .ForMember(dest => dest.GiftTransactionId, opts => opts.MapFrom(source => source.GiftTransactionLogId))
                 .ForMember(dest => dest.DateTransaction, opts => opts.MapFrom(source => source.DateTransactionOccurred.GetTimeAgo()));
-
-            Mapper.CreateMap<Title, TitleViewModel>()
-                .ForMember(dest => dest.TitleId, opts => opts.MapFrom(source => source.Id))
-                .ForMember(dest => dest.TitleName, opts => opts.MapFrom(source => source.Name));
 
             Mapper.CreateMap<AnsweredQuestion, UserAnsweredQuestionCorrectlyViewModel>()
                 .ForMember(dest => dest.UserName, opts => opts.MapFrom(source => source.User.UserName))

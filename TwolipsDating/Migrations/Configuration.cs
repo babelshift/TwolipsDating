@@ -4,7 +4,9 @@ namespace TwolipsDating.Migrations
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
+    using System.Data.Entity.Validation;
     using System.Linq;
+    using System.Text;
     using TwolipsDating.Models;
 
     internal sealed class Configuration : DbMigrationsConfiguration<TwolipsDating.Models.ApplicationDbContext>
@@ -12,6 +14,37 @@ namespace TwolipsDating.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+        }
+        
+        /// <summary>
+        /// Wrapper for SaveChanges adding the Validation Messages to the generated exception
+        /// </summary>
+        /// <param name="context">The context.</param>
+        private void SaveChanges(DbContext context)
+        {
+            try
+            {
+                context.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                foreach (var failure in ex.EntityValidationErrors)
+                {
+                    sb.AppendFormat("{0} failed validation\n", failure.Entry.Entity.GetType());
+                    foreach (var error in failure.ValidationErrors)
+                    {
+                        sb.AppendFormat("- {0} : {1}", error.PropertyName, error.ErrorMessage);
+                        sb.AppendLine();
+                    }
+                }
+
+                throw new DbEntityValidationException(
+                    "Entity Validation Failed - errors follow:\n" +
+                    sb.ToString(), ex
+                ); // Add the original exception as the innerException
+            }
         }
 
         protected override void Seed(TwolipsDating.Models.ApplicationDbContext context)
@@ -74,11 +107,24 @@ namespace TwolipsDating.Migrations
                 new QuestionViolationType() { Id = 2, Name = "Poor question" },
                 new QuestionViolationType() { Id = 3, Name = "Typo in question or answer" });
 
-            context.Gifts.AddOrUpdate(g => g.Id,
-                new Gift() { Id = 1, Name = "Rose (red)", IconFileName = "RedRose.png", Description = "A red rose", PointPrice = 10 },
-                new Gift() { Id = 2, Name = "Rose (white)", IconFileName = "WhiteRose.png", Description = "A white rose", PointPrice = 15 },
-                new Gift() { Id = 3, Name = "Dog bone", IconFileName = "DogBone.png", Description = "A tasty dog bone", PointPrice = 15 },
-                new Gift() { Id = 4, Name = "Candy", IconFileName = "Candy.png", Description = "A delicious piece of candy", PointPrice = 20 });
+            context.StoreItemTypes.AddOrUpdate(g => g.Id,
+                new StoreItemType() { Id = (int)StoreItemTypeValues.Gift, Name = StoreItemTypeValues.Gift.ToString(), Description = "A gift for a friend." },
+                new StoreItemType() { Id = (int)StoreItemTypeValues.Title, Name = StoreItemTypeValues.Title.ToString(), Description = "A title to show off." });
+
+            context.StoreItems.AddOrUpdate(g => g.Id,
+                new StoreItem() { Id = 1, Name = "Rose (red)", IconFileName = "RedRose.png", Description = "A red rose", PointPrice = 10, ItemTypeId = (int)StoreItemTypeValues.Gift },
+                new StoreItem() { Id = 2, Name = "Rose (white)", IconFileName = "WhiteRose.png", Description = "A white rose", PointPrice = 15, ItemTypeId = (int)StoreItemTypeValues.Gift },
+                new StoreItem() { Id = 3, Name = "Dog bone", IconFileName = "DogBone.png", Description = "A tasty dog bone", PointPrice = 15, ItemTypeId = (int)StoreItemTypeValues.Gift },
+                new StoreItem() { Id = 4, Name = "Candy", IconFileName = "Candy.png", Description = "A delicious piece of candy", PointPrice = 20, ItemTypeId = (int)StoreItemTypeValues.Gift },
+                new StoreItem() { Id = 5, Name = "Lizard Lord", IconFileName = "Placeholder.png", Description = "King of the lizard creatures.", PointPrice = 100, ItemTypeId = (int)StoreItemTypeValues.Title },
+                new StoreItem() { Id = 6, Name = "Robot Cop", IconFileName = "Placeholder.png", Description = "A robotic police officer different from the popular copyrighted version.", PointPrice = 100, ItemTypeId = (int)StoreItemTypeValues.Title },
+                new StoreItem() { Id = 7, Name = "High Warlord", IconFileName = "Placeholder.png", Description = "Played way too much World of Warcraft.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
+                new StoreItem() { Id = 8, Name = "Grand Marshal", IconFileName = "Placeholder.png", Description = "Played way too much World of Warcraft.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
+                new StoreItem() { Id = 9, Name = "General", IconFileName = "Placeholder.png", Description = "Commands a presence on the battlefield.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
+                new StoreItem() { Id = 10, Name = "Psycho Dentist", IconFileName = "Placeholder.png", Description = "Straps people to a chair and drills for cavities.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
+                new StoreItem() { Id = 11, Name = "Crazy Cat Lover", IconFileName = "Placeholder.png", Description = "Owns 20 cats and probably doesn't clean up after them.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
+                new StoreItem() { Id = 12, Name = "The President", IconFileName = "Placeholder.png", Description = "The most powerful person in the world.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
+                new StoreItem() { Id = 13, Name = "El Guapo", IconFileName = "Placeholder.png", Description = "Devilishly handsome.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title });
 
             context.QuestionTypes.AddOrUpdate(q => q.Id,
                 new QuestionType() { Id = (int)QuestionTypeValues.Random, Name = "Random" },
@@ -89,17 +135,7 @@ namespace TwolipsDating.Migrations
                 new MilestoneType() { Id = (int)MilestoneTypeValues.QuestionAnsweredCorrectly, Name = "Question Answered Correctly" },
                 new MilestoneType() { Id = (int)MilestoneTypeValues.QuizCompletedSuccessfully, Name = "Quiz Completed Successfully" });
 
-            context.Titles.AddOrUpdate(t => t.Id,
-                new Title() { Id = 1, Name = "Lizard Lord", Description = "King of the lizard creatures.", PointPrice = 100 },
-                new Title() { Id = 2, Name = "Robot Cop", Description = "A robotic police officer different from the popular copyrighted version.", PointPrice = 100 },
-                new Title() { Id = 3, Name = "High Warlord", Description = "Played way too much World of Warcraft.", PointPrice = 200 },
-                new Title() { Id = 4, Name = "Grand Marshal", Description = "Played way too much World of Warcraft.", PointPrice = 200 },
-                new Title() { Id = 5, Name = "General", Description = "Commands a presence on the battlefield.", PointPrice = 200 },
-                new Title() { Id = 6, Name = "Psycho Dentist", Description = "Straps people to a chair and drills for cavities.", PointPrice = 200 },
-                new Title() { Id = 7, Name = "Crazy Cat Lover", Description = "Owns 20 cats and probably doesn't clean up after them.", PointPrice = 200 },
-                new Title() { Id = 8, Name = "The President", Description = "The most powerful person in the world.", PointPrice = 200 },
-                new Title() { Id = 9, Name = "El Guapo", Description = "Devilishly handsome.", PointPrice = 200 }
-            );
+            SaveChanges(context);
         }
     }
 }

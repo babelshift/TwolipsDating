@@ -602,7 +602,7 @@ namespace TwolipsDating.Controllers
                     titleViewModel.Add(new TitleViewModel()
                     {
                         TitleId = title.Key,
-                        TitleName = title.Value.Title.Name
+                        TitleName = title.Value.StoreItem.Name
                     });
                 }
                 viewModel.UserTitles = titleViewModel;

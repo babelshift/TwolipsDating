@@ -1,0 +1,49 @@
+﻿@model TwolipsDating.ViewModels.StoreItemViewModel
+
+@if (Model != null)
+{
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="panel-title">
+                Gift Spotlight
+            </div>
+        </div>
+        <div class="panel-body text-center">
+            <div class="store-item-wrapper">
+                <div style="min-height: 155px; padding: 5px">
+                    @if (!String.IsNullOrEmpty(Model.ItemImagePath))
+                    {
+                        <img src="@Model.ItemImagePath" />
+                    }
+                    else
+                    {
+                        <img src="http://placehold.it/64x64" />
+                    }
+                    <div class="store-item-details">
+                        <h4>@Model.ItemName</h4>
+                        <i class="glyphicon glyphicon-piggy-bank"></i>
+                        @Model.PointsCost
+                    </div>
+                    <div class="store-item-buy hidden">
+                        <h4>@Model.ItemName</h4>
+                        <button type="button" href="#" class="btn btn-success btn-block">
+                            <i class="glyphicon glyphicon-piggy-bank"></i>
+                            @Model.PointsCost
+                        </button>
+                    </div>
+                    @*<h4>@Model.GiftSpotlight.ItemName</h4>
+                        <p>
+                            <i class="glyphicon glyphicon-piggy-bank"></i>
+                            <span style="text-decoration: line-through">900</span> 100
+                            <span class="label label-success">80% off</span>
+                            @Model.GiftSpotlight.PointsCost
+                        </p>
+                        <small>Sale ends in 15 hours</small>*@
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer text-center">
+            <small><a href="#">View all gifts</a></small>
+        </div>
+    </div>
+}

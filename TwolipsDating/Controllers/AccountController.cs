@@ -552,11 +552,11 @@ namespace TwolipsDating.Controllers
                 storeTransactions.Add(new StoreTransactionViewModel()
                 {
                     TransactionDate = title.Value.DateObtained,
-                    ItemName = title.Value.Title.Name,
-                    ItemCost = title.Value.Title.PointPrice,
+                    ItemName = title.Value.StoreItem.Name,
+                    ItemCost = title.Value.StoreItem.PointPrice,
                     ItemCount = 1,
                     ItemType = "Title",
-                    TotalCost = title.Value.Title.PointPrice
+                    TotalCost = title.Value.StoreItem.PointPrice
                 });
             }
         }

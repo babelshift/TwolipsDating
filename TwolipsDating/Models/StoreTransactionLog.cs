@@ -9,11 +9,11 @@ namespace TwolipsDating.Models
     {
         public int StoreTransactionLogId { get; set; }
         public string UserId { get; set; }
-        public int GiftId { get; set; }
+        public int StoreItemId { get; set; }
         public int ItemCount { get; set; }
         public DateTime DateTransactionOccurred { get; set; }
 
         public virtual ApplicationUser BuyerUser { get; set; }
-        public virtual Gift Gift { get; set; }
+        public virtual StoreItem StoreItem { get; set; }
     }
 }

@@ -26,102 +26,85 @@ namespace TwolipsDating.Controllers
 
             await SetNotificationsAsync();
 
-            return View();
-        }
-
-        public async Task<ActionResult> Gifts()
-        {
-            var currentUserId = User.Identity.GetUserId();
-            if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
-
-            await SetNotificationsAsync();
-
-            StoreViewModel viewModel = new StoreViewModel();
-            var gifts = await storeService.GetGiftsAsync();
-            viewModel.StoreGifts = Mapper.Map<IReadOnlyCollection<Gift>, IReadOnlyCollection<StoreGiftViewModel>>(gifts);
+            StoreViewModel viewModel = await GetStoreItems();
 
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
             return View(viewModel);
         }
 
-        public async Task<ActionResult> Titles()
+        public async Task<ActionResult> Popular()
         {
             var currentUserId = User.Identity.GetUserId();
             if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
 
             await SetNotificationsAsync();
 
-            StoreViewModel viewModel = new StoreViewModel();
-            var titles = await storeService.GetTitlesAsync();
-            viewModel.StoreTitles = Mapper.Map<IReadOnlyCollection<Title>, IReadOnlyCollection<StoreTitleViewModel>>(titles);
+            StoreViewModel viewModel = await GetStoreItems();
 
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
-            var titlesOwnedByUser = await userService.GetTitlesOwnedByUserAsync(currentUserId);
+            return View(viewModel);
+        }
 
-            foreach (var title in viewModel.StoreTitles)
-            {
-                if (titlesOwnedByUser.Any(q => q.Key == title.TitleId))
-                {
-                    title.IsAlreadyOwnedByUser = true;
-                }
-            }
+        public async Task<ActionResult> Sale()
+        {
+            var currentUserId = User.Identity.GetUserId();
+            if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
+
+            await SetNotificationsAsync();
+
+            StoreViewModel viewModel = await GetStoreItems();
+
+            viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
             return View(viewModel);
+        }
+
+        private async Task<StoreViewModel> GetStoreItems()
+        {
+            StoreViewModel viewModel = new StoreViewModel();
+            var storeItems = await storeService.GetStoreItemsAsync();
+
+            var storeItemsViewModel = Mapper.Map<IReadOnlyList<StoreItem>, IReadOnlyList<StoreItemViewModel>>(storeItems);
+
+            viewModel.StoreItems = storeItemsViewModel;
+            viewModel.Spotlight = storeItemsViewModel[0];
+            viewModel.GiftSpotlight = storeItemsViewModel[0];
+
+            return viewModel;
         }
 
         [HttpPost]
-        public async Task<JsonResult> BuyGift(int giftId, int giftCount)
+        public async Task<JsonResult> BuyStoreItem(int storeItemId, int storeItemTypeId)
         {
             bool success = false;
-
+            int count = 0;
             string currentUserId = User.Identity.GetUserId();
 
             try
             {
-                if (giftCount > 0 && giftCount <= 100)
+                if (storeItemTypeId == (int)StoreItemTypeValues.Gift)
                 {
-                    int count = await storeService.BuyGiftAsync(currentUserId, giftId, giftCount);
-
-                    success = count > 0;
+                    count = await storeService.BuyGiftAsync(currentUserId, storeItemId, 1);
                 }
-
-                return Json(new { success = success, count = giftCount });
+                else if (storeItemTypeId == (int)StoreItemTypeValues.Title)
+                {
+                    count = await storeService.BuyTitleAsync(currentUserId, storeItemId);
+                }
             }
             catch (DbUpdateException e)
             {
-                Log.Error("BuyGift", e,
-                    parameters: new { giftId = giftId, giftCount = giftCount, currentUserId = currentUserId }
+                Log.Error("BuyStoreItem", e,
+                    parameters: new { storeItemId = storeItemId, currentUserId = currentUserId }
                 );
 
                 return Json(new { success = success, error = ErrorMessages.GiftPurchaseFailed });
             }
-        }
 
-        [HttpPost]
-        public async Task<JsonResult> BuyTitle(int titleId)
-        {
-            bool success = false;
+            success = count > 0;
 
-            string currentUserId = User.Identity.GetUserId();
-
-            try
-            {
-                int count = await storeService.BuyTitleAsync(currentUserId, titleId);
-
-                success = count > 0;
-
-                return Json(new { success = success });
-            }
-            catch (DbUpdateException e)
-            {
-                Log.Error("BuyGift", e,
-                    parameters: new { titleId = titleId, currentUserId = currentUserId }
-                );
-
-                return Json(new { success = success, error = ErrorMessages.TitlePurchaseFailed });
-            }
+            return Json(new { success = success, count = 1 });
         }
 
         protected override void Dispose(bool disposing)

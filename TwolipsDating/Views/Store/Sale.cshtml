@@ -16,9 +16,9 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <ul class="nav nav-pills">
-                    <li role="presentation" class="active"><a href="@Url.Action("index", "store")">New</a></li>
+                    <li role="presentation"><a href="@Url.Action("index", "store")">New</a></li>
                     <li role="presentation"><a href="@Url.Action("popular", "store")">Popular</a></li>
-                    <li role="presentation"><a href="@Url.Action("sale", "store")">On Sale</a></li>
+                    <li role="presentation" class="active"><a href="@Url.Action("sale", "store")">On Sale</a></li>
                 </ul>
                 <hr />
                 @Html.Partial("_StoreItemsPartialView", Model.StoreItems)

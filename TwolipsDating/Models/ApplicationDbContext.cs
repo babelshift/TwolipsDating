@@ -31,7 +31,7 @@ namespace TwolipsDating.Models
         public DbSet<MessageConversation> MessageConversations { get; set; }
         public DbSet<ViolationType> ViolationTypes { get; set; }
         public DbSet<ReviewViolation> ReviewViolations { get; set; }
-        public DbSet<Gift> Gifts { get; set; }
+        //public DbSet<Gift> Gifts { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
         public DbSet<GiftTransactionLog> GiftTransactions { get; set; }
         public DbSet<FavoriteProfile> FavoriteProfiles { get; set; }
@@ -46,7 +46,7 @@ namespace TwolipsDating.Models
         public DbSet<MilestoneAchievement> MilestoneAchievements { get; set; }
         public DbSet<MilestoneType> MilestoneTypes { get; set; }
         public DbSet<CompletedQuiz> CompletedQuizzes { get; set; }
-        public DbSet<Title> Titles { get; set; }
+        //public DbSet<Title> Titles { get; set; }
         public DbSet<StoreTransactionLog> StoreTransactions { get; set; }
         public DbSet<UserTitle> UserTitles { get; set; }
         public DbSet<Announcement> Announcements { get; set; }
@@ -56,6 +56,8 @@ namespace TwolipsDating.Models
         public DbSet<ProfileViewLog> ProfileViews { get; set; }
         public DbSet<QuestionViolationType> QuestionViolationTypes { get; set; }
         public DbSet<QuestionViolation> QuestionViolations { get; set; }
+        public DbSet<StoreItem> StoreItems { get; set; }
+        public DbSet<StoreItemType> StoreItemTypes { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -85,7 +87,7 @@ namespace TwolipsDating.Models
             SetupMessageConversations(modelBuilder);
             SetupViolationTypes(modelBuilder);
             SetupReviewViolations(modelBuilder);
-            SetupGifts(modelBuilder);
+            //SetupGifts(modelBuilder);
             SetupInventoryItems(modelBuilder);
             SetupGiftTransactions(modelBuilder);
             SetupFavoriteProfiles(modelBuilder);
@@ -100,7 +102,7 @@ namespace TwolipsDating.Models
             SetupMilestoneAchievements(modelBuilder);
             SetupMilestoneTypes(modelBuilder);
             SetupCompletedQuizzes(modelBuilder);
-            SetupTitles(modelBuilder);
+            //SetupTitles(modelBuilder);
             SetupStoreTransactions(modelBuilder);
             SetupUserTitles(modelBuilder);
             SetupAnnouncements(modelBuilder);
@@ -110,6 +112,69 @@ namespace TwolipsDating.Models
             SetupProfileViews(modelBuilder);
             SetupQuestionViolationTypes(modelBuilder);
             SetupQuestionViolations(modelBuilder);
+            SetupStoreItems(modelBuilder);
+            SetupStoreItemTypes(modelBuilder);
+        }
+
+        private void SetupStoreItemTypes(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<StoreItemType>()
+                .HasKey(v => v.Id);
+
+            modelBuilder.Entity<StoreItemType>()
+                .Property(v => v.Name)
+                .HasMaxLength(64);
+
+            modelBuilder.Entity<StoreItemType>()
+                .Property(v => v.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<StoreItemType>()
+                .Property(v => v.Description)
+                .HasMaxLength(255);
+
+            modelBuilder.Entity<StoreItemType>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+        }
+
+        private void SetupStoreItems(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<StoreItem>()
+                .HasKey(v => v.Id);
+
+            modelBuilder.Entity<StoreItem>()
+                .Property(v => v.Name)
+                .HasMaxLength(64);
+
+            modelBuilder.Entity<StoreItem>()
+                .Property(v => v.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<StoreItem>()
+                .Property(v => v.Description)
+                .HasMaxLength(255);
+
+            modelBuilder.Entity<StoreItem>()
+                .Property(v => v.Description)
+                .IsRequired();
+
+            modelBuilder.Entity<StoreItem>()
+                .Property(v => v.IconFileName)
+                .HasMaxLength(64);
+
+            modelBuilder.Entity<StoreItem>()
+                .Property(v => v.IconFileName)
+                .IsRequired();
+
+            modelBuilder.Entity<StoreItem>()
+                .HasRequired(v => v.ItemType)
+                .WithMany(v => v.StoreItems)
+                .HasForeignKey(v => v.ItemTypeId);
+
+            modelBuilder.Entity<StoreItem>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
         }
 
         private void SetupQuestionViolations(DbModelBuilder modelBuilder)
@@ -239,7 +304,7 @@ namespace TwolipsDating.Models
         private void SetupUserTitles(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserTitle>()
-                .HasKey(t => new { t.UserId, t.TitleId });
+                .HasKey(t => new { t.UserId, StoreItemId = t.StoreItemId });
 
             modelBuilder.Entity<UserTitle>()
                 .Property(v => v.UserId)
@@ -250,9 +315,9 @@ namespace TwolipsDating.Models
                 .IsRequired();
 
             modelBuilder.Entity<UserTitle>()
-                .HasRequired(v => v.Title)
+                .HasRequired(v => v.StoreItem)
                 .WithMany(v => v.OwnerUsers)
-                .HasForeignKey(v => v.TitleId);
+                .HasForeignKey(v => v.StoreItemId);
 
             modelBuilder.Entity<UserTitle>()
                 .HasRequired(v => v.User)
@@ -275,36 +340,36 @@ namespace TwolipsDating.Models
                 .HasForeignKey(p => p.UserId);
 
             modelBuilder.Entity<StoreTransactionLog>()
-                .HasRequired(p => p.Gift)
+                .HasRequired(p => p.StoreItem)
                 .WithMany(p => p.StoreTransactions)
-                .HasForeignKey(p => p.GiftId);
+                .HasForeignKey(p => p.StoreItemId);
         }
 
-        private void SetupTitles(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Title>()
-                .HasKey(v => v.Id);
+        //private void SetupTitles(DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Title>()
+        //        .HasKey(v => v.Id);
 
-            modelBuilder.Entity<Title>()
-                .Property(v => v.Name)
-                .HasMaxLength(64);
+        //    modelBuilder.Entity<Title>()
+        //        .Property(v => v.Name)
+        //        .HasMaxLength(64);
 
-            modelBuilder.Entity<Title>()
-                .Property(v => v.Name)
-                .IsRequired();
+        //    modelBuilder.Entity<Title>()
+        //        .Property(v => v.Name)
+        //        .IsRequired();
 
-            modelBuilder.Entity<Title>()
-                .Property(v => v.Description)
-                .HasMaxLength(255);
+        //    modelBuilder.Entity<Title>()
+        //        .Property(v => v.Description)
+        //        .HasMaxLength(255);
 
-            modelBuilder.Entity<Title>()
-                .Property(v => v.Description)
-                .IsRequired();
+        //    modelBuilder.Entity<Title>()
+        //        .Property(v => v.Description)
+        //        .IsRequired();
 
-            modelBuilder.Entity<Title>()
-                .Property(v => v.Id)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-        }
+        //    modelBuilder.Entity<Title>()
+        //        .Property(v => v.Id)
+        //        .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+        //}
 
         private void SetupCompletedQuizzes(DbModelBuilder modelBuilder)
         {
@@ -556,7 +621,7 @@ namespace TwolipsDating.Models
                 .IsRequired();
 
             modelBuilder.Entity<GiftTransactionLog>()
-                .Property(v => v.GiftId)
+                .Property(v => v.StoreItemId)
                 .IsRequired();
 
             modelBuilder.Entity<GiftTransactionLog>()
@@ -578,9 +643,9 @@ namespace TwolipsDating.Models
                 .HasForeignKey(p => p.ToUserId);
 
             modelBuilder.Entity<GiftTransactionLog>()
-                .HasRequired(p => p.Gift)
+                .HasRequired(p => p.StoreItem)
                 .WithMany(p => p.GiftTransactions)
-                .HasForeignKey(p => p.GiftId);
+                .HasForeignKey(p => p.StoreItemId);
         }
 
         private void SetupInventoryItems(DbModelBuilder modelBuilder)
@@ -593,7 +658,7 @@ namespace TwolipsDating.Models
                 .IsRequired();
 
             modelBuilder.Entity<InventoryItem>()
-                .Property(v => v.GiftId)
+                .Property(v => v.StoreItemId)
                 .IsRequired();
 
             modelBuilder.Entity<InventoryItem>()
@@ -601,9 +666,9 @@ namespace TwolipsDating.Models
                 .IsRequired();
 
             modelBuilder.Entity<InventoryItem>()
-                .HasRequired(p => p.Gift)
+                .HasRequired(p => p.StoreItem)
                 .WithMany(p => p.InventoryItems)
-                .HasForeignKey(p => p.GiftId);
+                .HasForeignKey(p => p.StoreItemId);
 
             modelBuilder.Entity<InventoryItem>()
                 .HasRequired(p => p.OwnerUser)
@@ -611,39 +676,39 @@ namespace TwolipsDating.Models
                 .HasForeignKey(p => p.ApplicationUserId);
         }
 
-        private void SetupGifts(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Gift>()
-                .HasKey(v => v.Id);
+        //private void SetupGifts(DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Gift>()
+        //        .HasKey(v => v.Id);
 
-            modelBuilder.Entity<Gift>()
-                .Property(v => v.Name)
-                .HasMaxLength(64);
+        //    modelBuilder.Entity<Gift>()
+        //        .Property(v => v.Name)
+        //        .HasMaxLength(64);
 
-            modelBuilder.Entity<Gift>()
-                .Property(v => v.Name)
-                .IsRequired();
+        //    modelBuilder.Entity<Gift>()
+        //        .Property(v => v.Name)
+        //        .IsRequired();
 
-            modelBuilder.Entity<Gift>()
-                .Property(v => v.Description)
-                .HasMaxLength(255);
+        //    modelBuilder.Entity<Gift>()
+        //        .Property(v => v.Description)
+        //        .HasMaxLength(255);
 
-            modelBuilder.Entity<Gift>()
-                .Property(v => v.Description)
-                .IsRequired();
+        //    modelBuilder.Entity<Gift>()
+        //        .Property(v => v.Description)
+        //        .IsRequired();
 
-            modelBuilder.Entity<Gift>()
-                .Property(v => v.IconFileName)
-                .HasMaxLength(64);
+        //    modelBuilder.Entity<Gift>()
+        //        .Property(v => v.IconFileName)
+        //        .HasMaxLength(64);
 
-            modelBuilder.Entity<Gift>()
-                .Property(v => v.IconFileName)
-                .IsRequired();
+        //    modelBuilder.Entity<Gift>()
+        //        .Property(v => v.IconFileName)
+        //        .IsRequired();
 
-            modelBuilder.Entity<Gift>()
-                .Property(v => v.Id)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-        }
+        //    modelBuilder.Entity<Gift>()
+        //        .Property(v => v.Id)
+        //        .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+        //}
 
         private void SetupReviewViolations(DbModelBuilder modelBuilder)
         {

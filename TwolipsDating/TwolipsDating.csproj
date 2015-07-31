@@ -284,6 +284,18 @@
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
+    <Compile Include="Migrations\201507311603205_ReworkStoreModel.cs" />
+    <Compile Include="Migrations\201507311603205_ReworkStoreModel.Designer.cs">
+      <DependentUpon>201507311603205_ReworkStoreModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507311622143_ResetProfile.cs" />
+    <Compile Include="Migrations\201507311622143_ResetProfile.Designer.cs">
+      <DependentUpon>201507311622143_ResetProfile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserTitle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ViewModels\StoreItemViewModel.cs" />
     <Compile Include="Controllers\TriviaController.cs" />
     <Compile Include="Controllers\ViolationController.cs" />
     <Compile Include="Migrations\201503082310198_initial.cs" />
@@ -497,7 +509,6 @@
     <Compile Include="Models\GeoState.cs" />
     <Compile Include="Models\GeoCountry.cs" />
     <Compile Include="Models\GeoCity.cs" />
-    <Compile Include="Models\Gift.cs" />
     <Compile Include="Models\GiftTransactionLog.cs" />
     <Compile Include="Models\IgnoredUser.cs" />
     <Compile Include="Models\InventoryItem.cs" />
@@ -513,13 +524,13 @@
     <Compile Include="Models\QuestionViolationType.cs" />
     <Compile Include="Models\Quiz.cs" />
     <Compile Include="Models\ReviewViolation.cs" />
+    <Compile Include="Models\StoreItem.cs" />
+    <Compile Include="Models\StoreItemType.cs" />
     <Compile Include="Models\StoreTransactionLog.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\TagAward.cs" />
     <Compile Include="Models\TagSuggestion.cs" />
-    <Compile Include="Models\Title.cs" />
     <Compile Include="Models\UserImage.cs" />
-    <Compile Include="Models\UserTitle.cs" />
     <Compile Include="Models\ViolationType.cs" />
     <Compile Include="Utilities\CityExtensions.cs" />
     <Compile Include="Utilities\EmailTextHelper.cs" />
@@ -591,8 +602,6 @@
     <Compile Include="ViewModels\SendMessageViewModel.cs" />
     <Compile Include="ViewModels\SentMessageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
-    <Compile Include="ViewModels\StoreGiftViewModel.cs" />
-    <Compile Include="ViewModels\StoreTitleViewModel.cs" />
     <Compile Include="ViewModels\StoreTransactionViewModel.cs" />
     <Compile Include="ViewModels\StoreViewModel.cs" />
     <Compile Include="ViewModels\TagViewModel.cs" />
@@ -682,6 +691,7 @@
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\Shared\layout.js" />
+    <Content Include="Scripts\Store\index.js" />
     <Content Include="Scripts\Store\gifts.js" />
     <Content Include="Scripts\Store\titles.js" />
     <Content Include="Scripts\Trivia\quiz.js" />
@@ -744,9 +754,6 @@
     <Content Include="Views\Trivia\Timed.cshtml" />
     <Content Include="Views\Trivia\Quiz.cshtml" />
     <Content Include="Views\Store\Index.cshtml" />
-    <Content Include="Views\Store\Colors.cshtml" />
-    <Content Include="Views\Store\Titles.cshtml" />
-    <Content Include="Views\Store\Gifts.cshtml" />
     <Content Include="Views\Account\Points.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Shared\_SidebarAdvertisementPartial.cshtml" />
@@ -754,6 +761,11 @@
     <Content Include="Views\Shared\_ProfileImagePartial.cshtml" />
     <Content Include="Views\Trivia\_SidebarOthersAnsweredCorrectlyPartial.cshtml" />
     <Content Include="Views\Trivia\_QuestionAndAnswerPartial.cshtml" />
+    <Content Include="Views\Store\Popular.cshtml" />
+    <Content Include="Views\Store\Sale.cshtml" />
+    <Content Include="Views\Store\_StoreItemsPartialView.cshtml" />
+    <Content Include="Views\Store\_SaleSpotlightPartial.cshtml" />
+    <Content Include="Views\Store\_GiftSpotlightPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -911,6 +923,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507290054374_AddQuestionViolations.resx">
       <DependentUpon>201507290054374_AddQuestionViolations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507311603205_ReworkStoreModel.resx">
+      <DependentUpon>201507311603205_ReworkStoreModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507311622143_ResetProfile.resx">
+      <DependentUpon>201507311622143_ResetProfile.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

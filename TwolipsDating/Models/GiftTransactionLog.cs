@@ -10,13 +10,13 @@ namespace TwolipsDating.Models
         public int GiftTransactionLogId { get; set; }
         public string FromUserId { get; set; }
         public string ToUserId { get; set; }
-        public int GiftId { get; set; }
+        public int StoreItemId { get; set; }
         public int ItemCount { get; set; }
         public DateTime DateTransactionOccurred { get; set; }
         public bool IsReviewedByToUser { get; set; }
 
         public virtual ApplicationUser FromUser { get; set; }
         public virtual ApplicationUser ToUser { get; set; }
-        public virtual Gift Gift { get; set; }
+        public virtual StoreItem StoreItem { get; set; }
     }
 }

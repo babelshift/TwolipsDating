@@ -11,11 +11,11 @@ namespace TwolipsDating.Utilities
     {
         private static readonly string cdn = ConfigurationManager.AppSettings["cdnUrl"];
 
-        public static string GetIconPath(this Gift gift)
+        public static string GetIconPath(this StoreItem storeItem)
         {
-            if (gift != null && !String.IsNullOrEmpty(gift.IconFileName))
+            if (storeItem != null && !String.IsNullOrEmpty(storeItem.IconFileName))
             {
-                return GetImagePath(gift.IconFileName);
+                return GetImagePath(storeItem.IconFileName);
             }
 
             return String.Empty;

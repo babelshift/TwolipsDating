@@ -633,7 +633,7 @@ namespace TwolipsDating.Business
             {
                 DateTransactionOccurred = DateTime.Now,
                 FromUserId = fromUserId,
-                GiftId = giftId,
+                StoreItemId = giftId,
                 ItemCount = 1,
                 ToUserId = toUserId,
                 IsReviewedByToUser = false
@@ -656,7 +656,7 @@ namespace TwolipsDating.Business
             // increase inventory count for to user id
             var toUserInventoryItem = await (from inventoryItems in db.InventoryItems
                                              where inventoryItems.ApplicationUserId == toUserId
-                                             where inventoryItems.GiftId == giftId
+                                             where inventoryItems.StoreItemId == giftId
                                              select inventoryItems).FirstOrDefaultAsync();
 
             // if there is an inventory item for this gift, increase the count
@@ -670,7 +670,7 @@ namespace TwolipsDating.Business
                 InventoryItem newItem = new InventoryItem()
                 {
                     ApplicationUserId = toUserId,
-                    GiftId = giftId,
+                    StoreItemId = giftId,
                     ItemCount = 1
                 };
 
@@ -798,7 +798,7 @@ namespace TwolipsDating.Business
         internal async Task<int> SetSelectedTitle(string currentUserId, int titleId)
         {
             var user = db.Users.Find(currentUserId);
-            bool hasUserObtainedTitle = user.ObtainedTitles.Any(t => t.TitleId == titleId);
+            bool hasUserObtainedTitle = user.ObtainedTitles.Any(t => t.StoreItemId == titleId);
 
             // user hasn't obtained this title, don't let them use it
             if (!hasUserObtainedTitle)
