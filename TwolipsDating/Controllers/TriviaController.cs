@@ -99,7 +99,7 @@ namespace TwolipsDating.Controllers
             QuestionViewModel viewModel = await GetRandomQuestionViewModel((int)QuestionTypeValues.Random);
 
             // anonymous viewers can't report violations so don't look any of the types up
-            if (!String.IsNullOrEmpty(currentUserId))
+            if (!String.IsNullOrEmpty(currentUserId) && viewModel != null)
             {
                 // setup violation types
                 var violationTypes = await violationService.GetQuestionViolationTypesAsync();
@@ -151,7 +151,7 @@ namespace TwolipsDating.Controllers
             var viewModel = await GetRandomQuestionViewModel((int)QuestionTypeValues.Timed);
 
             // anonymous viewers can't report violations so don't look any of the types up
-            if (!String.IsNullOrEmpty(currentUserId))
+            if (!String.IsNullOrEmpty(currentUserId) && viewModel != null)
             {
                 // setup violation types
                 var violationTypes = await violationService.GetQuestionViolationTypesAsync();
