@@ -9,7 +9,7 @@ namespace TwolipsDating.Models
     {
         private List<ShoppingCartItem> items = new List<ShoppingCartItem>();
 
-        public IReadOnlyCollection<ShoppingCartItem> Items
+        public IReadOnlyList<ShoppingCartItem> Items
         {
             get
             {
@@ -43,6 +43,11 @@ namespace TwolipsDating.Models
             {
                 match.Quantity++;
             }
+        }
+
+        public void Clear()
+        {
+            items.Clear();
         }
     }
 }

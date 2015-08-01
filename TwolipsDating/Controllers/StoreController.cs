@@ -88,7 +88,48 @@ namespace TwolipsDating.Controllers
         {
             await SetNotificationsAsync();
 
-            return View(ShoppingCart);
+            var viewModel = Mapper.Map<ShoppingCart, ShoppingCartViewModel>(ShoppingCart);
+
+            return View(viewModel);
+        }
+
+        public async Task<ActionResult> Checkout(ShoppingCartViewModel shoppingCart)
+        {
+            if(ModelState.IsValid)
+            {
+                foreach(var item in shoppingCart.Items)
+                {
+                    await BuyItem(item.Item.ItemId, item.Item.ItemTypeId, item.Quantity);
+                }
+
+                ShoppingCart.Clear();
+            }
+
+            return RedirectToAction("index", "store");
+        }
+
+        private async Task BuyItem(int storeItemId, int storeItemTypeId, int quantity)
+        {
+            int count = 0;
+            string currentUserId = User.Identity.GetUserId();
+
+            try
+            {
+                if (storeItemTypeId == (int)StoreItemTypeValues.Gift)
+                {
+                    count = await storeService.BuyGiftAsync(currentUserId, storeItemId, quantity);
+                }
+                else if (storeItemTypeId == (int)StoreItemTypeValues.Title)
+                {
+                    count = await storeService.BuyTitleAsync(currentUserId, storeItemId);
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                Log.Error("BuyStoreItem", e,
+                    parameters: new { storeItemId = storeItemId, currentUserId = currentUserId }
+                );
+            }
         }
 
         private StoreViewModel GetStoreItemViewModel(IReadOnlyList<StoreItem> storeItems)
@@ -99,7 +140,8 @@ namespace TwolipsDating.Controllers
 
             viewModel.StoreItems = storeItemsViewModel;
             viewModel.Spotlight = storeItemsViewModel[0];
-            viewModel.GiftSpotlight = storeItemsViewModel[0];
+            viewModel.GiftSpotlight = storeItemsViewModel[1];
+            viewModel.ShoppingCartItemCount = ShoppingCart.Items.Count;
 
             return viewModel;
         }
@@ -117,34 +159,6 @@ namespace TwolipsDating.Controllers
             {
                 return Json(new { success = false, count = 1 });
             }
-
-            //bool success = false;
-            //int count = 0;
-            //string currentUserId = User.Identity.GetUserId();
-
-            //try
-            //{
-            //    if (storeItemTypeId == (int)StoreItemTypeValues.Gift)
-            //    {
-            //        count = await storeService.BuyGiftAsync(currentUserId, storeItemId, 1);
-            //    }
-            //    else if (storeItemTypeId == (int)StoreItemTypeValues.Title)
-            //    {
-            //        count = await storeService.BuyTitleAsync(currentUserId, storeItemId);
-            //    }
-            //}
-            //catch (DbUpdateException e)
-            //{
-            //    Log.Error("BuyStoreItem", e,
-            //        parameters: new { storeItemId = storeItemId, currentUserId = currentUserId }
-            //    );
-
-            //    return Json(new { success = success, error = ErrorMessages.GiftPurchaseFailed });
-            //}
-
-            //success = count > 0;
-
-            //return Json(new { success = success, count = 1 });
         }
 
         protected override void Dispose(bool disposing)

@@ -166,6 +166,12 @@ namespace TwolipsDating
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateAnswered.GetTimeAgo()))
                 .ForMember(dest => dest.ProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileImagePath()))
                 .ForMember(dest => dest.ProfileId, opts => opts.MapFrom(source => source.User.Profile.Id));
+
+            Mapper.CreateMap<ShoppingCart, ShoppingCartViewModel>()
+                .ForMember(dest => dest.Items, opts => opts.MapFrom(source => source.Items.ToList().AsReadOnly()));
+
+            Mapper.CreateMap<ShoppingCartItem, ShoppingCartItemViewModel>()
+                .ForMember(dest => dest.Item, opts => opts.MapFrom(source => source.Item));
         }
     }
 }

@@ -1,62 +1,70 @@
 ﻿@using TwolipsDating.Utilities
-@model TwolipsDating.Models.ShoppingCart
+@model TwolipsDating.ViewModels.ShoppingCartViewModel
 
 @{
-    ViewBag.Title = "twolips - your shopping cart";
+    ViewBag.Title = "twolips - cart";
     ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
     ViewBag.ImageUrl = Url.Content("~/Content/twolipsicon-white-180x180.png");
 }
 
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        <button type="button" class="btn btn-success btn-xs pull-right" style="margin-bottom: 5px" href="@Url.Action("index", "store")">Continue Shopping</button>
+        <a class="btn btn-success btn-xs pull-right" style="margin-bottom: 5px" href="@Url.Action("index", "store")">Continue Shopping</a>
         <div class="clearfix"></div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title">
-                    Shopping Cart
+        @using (Html.BeginForm("checkout", "store", FormMethod.Post, new { role = "form" }))
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        Shopping Cart
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @if (Model != null && Model.Items != null && Model.Items.Count > 0)
+                    {
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ITEM</th>
+                                    <th>QTY</th>
+                                    <th>PRICE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.Items.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            <h4>
+                                                <img src="@Model.Items[i].Item.ItemImagePath" />
+                                                @Model.Items[i].Item.ItemName
+                                            </h4>
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(m => Model.Items[i].Quantity, new { style = "width: 50px" })
+                                            @Html.HiddenFor(m => Model.Items[i].Item.ItemId)
+                                            @Html.HiddenFor(m => Model.Items[i].Item.PointsCost)
+                                            @Html.HiddenFor(m => Model.Items[i].Item.ItemTypeId)
+                                        </td>
+                                        <td><i class="glyphicon glyphicon-piggy-bank"></i> @Model.Items[i].TotalPrice</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td></td>
+                                    <td>Subtotal:</td>
+                                    <td><i class="glyphicon glyphicon-piggy-bank"></i> @Model.TotalCost</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <h4>Your shopping cart is empty.</h4>
+                    }
                 </div>
             </div>
-            <div class="panel-body">
-                @if (Model != null && Model.Items != null && Model.Items.Count > 0)
-                {
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>ITEM</th>
-                                <th>QTY</th>
-                                <th>PRICE</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Items)
-                            {
-                                <tr>
-                                    <td>
-                                        <h4>
-                                            <img src="@item.Item.GetIconPath()" />
-                                            @item.Item.Name
-                                        </h4>
-                                    </td>
-                                    <td><input type="text" value="@item.Quantity" style="width: 50px"/></td>
-                                    <td><i class="glyphicon glyphicon-piggy-bank"></i> @item.TotalPrice</td>
-                                </tr>
-                            }
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td>Subtotal: <i class="glyphicon glyphicon-piggy-bank"></i> @Model.TotalCost</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                }
-                else
-                {
-                    <h4>Your shopping cart is empty.</h4>
-                }
-            </div>
-        </div>
-        <button type="button" class="btn btn-success pull-right">Checkout</button>
+            <button type="submit" class="btn btn-success pull-right">Checkout</button>
+        }
     </div>
 </div>
 

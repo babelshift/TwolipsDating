@@ -301,6 +301,8 @@
     <Compile Include="Models\UserTitle.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
+    <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
     <Compile Include="ViewModels\StoreItemViewModel.cs" />
     <Compile Include="Controllers\TriviaController.cs" />
     <Compile Include="Controllers\ViolationController.cs" />
@@ -773,6 +775,7 @@
     <Content Include="Views\Store\_SaleSpotlightPartial.cshtml" />
     <Content Include="Views\Store\_GiftSpotlightPartial.cshtml" />
     <Content Include="Views\Store\Cart.cshtml" />
+    <Content Include="Views\Store\_ItemAddedConfirmationPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

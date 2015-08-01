@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace TwolipsDating.ViewModels
+{
+    public class ShoppingCartItemViewModel
+    {
+        public StoreItemViewModel Item { get; set; }
+        public int Quantity { get; set; }
+        public int TotalPrice { get { return Quantity * Item.PointsCost; } }
+    }
+}

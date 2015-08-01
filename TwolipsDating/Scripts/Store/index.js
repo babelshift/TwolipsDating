@@ -24,6 +24,7 @@
                 var userPointsCount = $("#span-points-count").html();
                 var userPointsCountAfterPurchase = userPointsCount - itemPrice;
                 $("#span-points-count").html(userPointsCountAfterPurchase);
+                $('#modal-buy').modal('show');
             }
             else {
             }

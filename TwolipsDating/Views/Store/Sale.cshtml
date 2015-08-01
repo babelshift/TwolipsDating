@@ -6,7 +6,7 @@
     ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
     ViewBag.ImageUrl = Url.Content("~/Content/twolipsicon-white-180x180.png");
 }
-
+@Html.Partial("_ItemAddedConfirmationPartial")
 <div class="row">
     <div class="col-md-3">
         @Html.Partial("_SaleSpotlightPartial", Model.Spotlight)
@@ -15,6 +15,7 @@
     <div class="col-md-9">
         <div class="panel panel-default">
             <div class="panel-body">
+                <a href="@Url.Action("cart", "store")" class="btn btn-default pull-right"><i class="glyphicon glyphicon-shopping-cart"></i> View cart (@Model.ShoppingCartItemCount)</a>
                 <ul class="nav nav-pills">
                     <li role="presentation"><a href="@Url.Action("index", "store")">New</a></li>
                     <li role="presentation"><a href="@Url.Action("popular", "store")">Popular</a></li>
