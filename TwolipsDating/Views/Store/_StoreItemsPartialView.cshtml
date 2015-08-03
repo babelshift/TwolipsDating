@@ -2,7 +2,8 @@
 
 @foreach (var storeItem in Model)
 {
-    <div class="store-item-wrapper col-lg-3 col-md-4 col-sm-4 col-xs-6 text-center" style="min-height: 200px;">
+    <div class="store-item-wrapper col-lg-3 col-md-4 col-sm-4 col-xs-6 text-center" style="min-height: 200px;"
+         title="@storeItem.ItemDescription" data-placement="auto top" data-animation="false">
         <div class="store-item" style="border: 1px solid transparent; padding: 5px">
             @*<span class="label label-danger" style="position: absolute; top: 3px; left: 40px;">
                     New
@@ -17,13 +18,13 @@
             }
             <div class="store-item-details">
                 <h4>@storeItem.ItemName</h4>
-                <p style="margin-bottom: 0">@((TwolipsDating.Models.StoreItemTypeValues)storeItem.ItemTypeId)</p>
+                <p style="margin-bottom: 0; color: #999">@((TwolipsDating.Models.StoreItemTypeValues)storeItem.ItemTypeId)</p>
                 <i class="glyphicon glyphicon-piggy-bank"></i>
                 @storeItem.PointsCost
             </div>
             <div class="store-item-buy hidden">
                 <h4>@storeItem.ItemName</h4>
-                <button type="button" href="#" class="store-item-buy-button btn btn-success btn-block" 
+                <button type="button" href="#" class="store-item-buy-button btn btn-success btn-block"
                         data-item-id="@storeItem.ItemId" data-item-type-id="@storeItem.ItemTypeId" data-item-price="@storeItem.PointsCost">
                     <i class="glyphicon glyphicon-piggy-bank"></i>
                     @storeItem.PointsCost

@@ -11,7 +11,7 @@
             $('.store-item-buy', this).addClass('hidden');
         }
     });
-
+    
     $('.store-item-buy-button').on('click', function () {
         var itemId = $(this).attr('data-item-id');
         var itemTypeId = $(this).attr('data-item-type-id');
@@ -21,6 +21,9 @@
 
         postJson('/store/buyStoreItem', json, function (data) {
             if (data.success) {
+                var currentShoppingCartCount = parseInt($('#shopping-cart-count').text());
+                $('#shopping-cart-count').text(++currentShoppingCartCount);
+
                 var userPointsCount = $("#span-points-count").html();
                 var userPointsCountAfterPurchase = userPointsCount - itemPrice;
                 $("#span-points-count").html(userPointsCountAfterPurchase);
@@ -30,5 +33,7 @@
             }
         });
     });
+
+    $('.store-item-wrapper').tooltip();
 });
 

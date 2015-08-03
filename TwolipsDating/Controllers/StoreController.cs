@@ -141,7 +141,7 @@ namespace TwolipsDating.Controllers
             viewModel.StoreItems = storeItemsViewModel;
             viewModel.Spotlight = storeItemsViewModel[0];
             viewModel.GiftSpotlight = storeItemsViewModel[1];
-            viewModel.ShoppingCartItemCount = ShoppingCart.Items.Count;
+            viewModel.ShoppingCartItemCount = ShoppingCart.Count;
 
             return viewModel;
         }
@@ -159,6 +159,13 @@ namespace TwolipsDating.Controllers
             {
                 return Json(new { success = false, count = 1 });
             }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> RemoveCartItem(int storeItemId)
+        {
+            ShoppingCart.RemoveItem(storeItemId);
+            return Json(new { success = true });
         }
 
         protected override void Dispose(bool disposing)

@@ -22,7 +22,7 @@
                 <div class="panel-body">
                     @if (Model != null && Model.Items != null && Model.Items.Count > 0)
                     {
-                        <table class="table">
+                        <table class="table" id="shopping-cart-table">
                             <thead>
                                 <tr>
                                     <th>ITEM</th>
@@ -33,11 +33,12 @@
                             <tbody>
                                 @for (int i = 0; i < Model.Items.Count; i++)
                                 {
-                                    <tr>
+                                    <tr id="@String.Format("row-item-{0}", i)">
                                         <td>
                                             <h4>
                                                 <img src="@Model.Items[i].Item.ItemImagePath" />
                                                 @Model.Items[i].Item.ItemName
+                                                <small>@((TwolipsDating.Models.StoreItemTypeValues)Model.Items[i].Item.ItemTypeId)</small>
                                             </h4>
                                         </td>
                                         <td>
@@ -46,8 +47,10 @@
                                             {
                                                 style = "width: 50px",
                                                 @type = "number",
-                                                oninput = "onTextQtyBlur(event, this, " + i + ")"
+                                                oninput = "onTextQtyBlur(event, this, " + i + ")",
+                                                min = 1
                                             })
+                                            <p><a href="#" data-item-id="@Model.Items[i].Item.ItemId" data-item-number="@i" class="remove-item">Remove</a></p>
                                             @Html.HiddenFor(m => Model.Items[i].Item.ItemId)
                                             @Html.HiddenFor(m => Model.Items[i].Item.PointsCost)
                                             @Html.HiddenFor(m => Model.Items[i].Item.ItemTypeId)

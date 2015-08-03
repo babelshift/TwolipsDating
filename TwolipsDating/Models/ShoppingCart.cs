@@ -17,6 +17,19 @@ namespace TwolipsDating.Models
             }
         }
 
+        public int Count
+        {
+            get
+            {
+                int count = 0;
+                foreach(var item in items)
+                {
+                    count += item.Quantity;
+                }
+                return count;
+            }
+        }
+
         public int TotalCost
         {
             get
@@ -42,6 +55,15 @@ namespace TwolipsDating.Models
             else
             {
                 match.Quantity++;
+            }
+        }
+
+        public void RemoveItem(int storeItemId)
+        {
+            var match = items.FirstOrDefault(i => i.Item.Id == storeItemId);
+            if(match != null)
+            {
+                items.Remove(match);
             }
         }
 

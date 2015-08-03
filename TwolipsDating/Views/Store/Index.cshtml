@@ -15,7 +15,9 @@
     <div class="col-md-9">
         <div class="panel panel-default">
             <div class="panel-body">
-                <a href="@Url.Action("cart", "store")" class="btn btn-default pull-right"><i class="glyphicon glyphicon-shopping-cart"></i> View cart (@Model.ShoppingCartItemCount)</a>
+                <a href="@Url.Action("cart", "store")" class="btn btn-default pull-right">
+                    <i class="glyphicon glyphicon-shopping-cart"></i> View cart (<span id="shopping-cart-count">@Model.ShoppingCartItemCount</span>)
+                </a>
                 <ul class="nav nav-pills">
                     <li role="presentation" class="active"><a href="@Url.Action("index", "store")">New</a></li>
                     <li role="presentation"><a href="@Url.Action("popular", "store")">Popular</a></li>
