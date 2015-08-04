@@ -12,5 +12,7 @@ namespace TwolipsDating.ViewModels
         public string QuizDescription { get; set; }
         public List<QuestionViewModel> Questions { get; set; }
         public bool IsAlreadyCompleted { get; set; }
+
+        public QuestionViolationViewModel QuestionViolation { get; set; }
     }
 }

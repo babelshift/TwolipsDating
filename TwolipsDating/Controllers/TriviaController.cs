@@ -74,7 +74,7 @@ namespace TwolipsDating.Controllers
 
         public async Task<JsonResult> RandomJson()
         {
-            QuestionViewModel viewModel = await GetRandomQuestionViewModel((int)QuestionTypeValues.Random);
+            QuestionViewModel viewModel = await GetRandomQuestionViewModelAsync((int)QuestionTypeValues.Random);
 
             return Json(new
             {
@@ -97,16 +97,9 @@ namespace TwolipsDating.Controllers
                 && !(await userService.DoesUserHaveProfileAsync(currentUserId)))
                 return RedirectToProfileIndex();
 
-            QuestionViewModel viewModel = await GetRandomQuestionViewModel((int)QuestionTypeValues.Random);
+            QuestionViewModel viewModel = await GetRandomQuestionViewModelAsync((int)QuestionTypeValues.Random);
 
-            // anonymous viewers can't report violations so don't look any of the types up
-            if (User.Identity.IsAuthenticated && viewModel != null)
-            {
-                // setup violation types
-                var violationTypes = await violationService.GetQuestionViolationTypesAsync();
-                viewModel.QuestionViolation = new QuestionViolationViewModel();
-                viewModel.QuestionViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
-            }
+            viewModel.QuestionViolation = await GetQuestionViolationViewModelAsync();
 
             return View(viewModel);
         }
@@ -149,18 +142,26 @@ namespace TwolipsDating.Controllers
                 && !(await userService.DoesUserHaveProfileAsync(currentUserId)))
                 return RedirectToProfileIndex();
 
-            var viewModel = await GetRandomQuestionViewModel((int)QuestionTypeValues.Timed);
+            var viewModel = await GetRandomQuestionViewModelAsync((int)QuestionTypeValues.Timed);
+
+            viewModel.QuestionViolation = await GetQuestionViolationViewModelAsync();
+
+            return View(viewModel);
+        }
+
+        private async Task<QuestionViolationViewModel> GetQuestionViolationViewModelAsync()
+        {
+            QuestionViolationViewModel viewModel = new QuestionViolationViewModel();
 
             // anonymous viewers can't report violations so don't look any of the types up
-            if (User.Identity.IsAuthenticated && viewModel != null)
+            if (User.Identity.IsAuthenticated)
             {
                 // setup violation types
                 var violationTypes = await violationService.GetQuestionViolationTypesAsync();
-                viewModel.QuestionViolation = new QuestionViolationViewModel();
-                viewModel.QuestionViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
+                viewModel.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
             }
 
-            return View(viewModel);
+            return viewModel;
         }
 
         [HttpPost]
@@ -298,6 +299,8 @@ namespace TwolipsDating.Controllers
                 QuizDescription = quiz.Description
             };
 
+            viewModel.QuestionViolation = await GetQuestionViolationViewModelAsync();
+
             return View(viewModel);
         }
 
@@ -344,7 +347,7 @@ namespace TwolipsDating.Controllers
 
         #endregion
 
-        private async Task<QuestionViewModel> GetRandomQuestionViewModel(int questionTypeId)
+        private async Task<QuestionViewModel> GetRandomQuestionViewModelAsync(int questionTypeId)
         {
             await SetNotificationsAsync();
 

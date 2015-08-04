@@ -25,10 +25,10 @@ function setupQuestionViolation() {
 }
 
 function onAddQuestionViolation(e, obj) {
-    var reviewId = $('#QuestionId').val();
+    var questionId = $('#QuestionId').val();
     var violationTypeId = $('#QuestionViolation_ViolationTypeId').val();
 
-    var json = '{"questionId":' + reviewId + ', "violationTypeId":' + violationTypeId + '}';
+    var json = '{"questionId":' + questionId + ', "violationTypeId":' + violationTypeId + '}';
 
     postJson('/violation/addQuestionViolation', json, function (data) {
         if (data.success) {
