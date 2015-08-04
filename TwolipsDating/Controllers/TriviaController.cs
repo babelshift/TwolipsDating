@@ -10,6 +10,7 @@ using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
 using Microsoft.AspNet.Identity;
+using System.Net;
 
 namespace TwolipsDating.Controllers
 {
@@ -239,6 +240,10 @@ namespace TwolipsDating.Controllers
                 return RedirectToProfileIndex();
 
             var quiz = await triviaService.GetQuizAsync(id);
+            if(quiz == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
 
             bool isAlreadyCompleted = false;
             List<QuestionViewModel> questionListViewModel = new List<QuestionViewModel>();

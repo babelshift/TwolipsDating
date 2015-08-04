@@ -159,6 +159,7 @@ namespace TwolipsDating
                 .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.FromUser.Profile.GetProfileImagePath()))
                 .ForMember(dest => dest.SenderUserName, opts => opts.MapFrom(source => source.FromUser.UserName))
                 .ForMember(dest => dest.GiftTransactionId, opts => opts.MapFrom(source => source.GiftTransactionLogId))
+                .ForMember(dest => dest.SenderProfileId, opts => opts.MapFrom(source => source.FromUser.Profile.Id))
                 .ForMember(dest => dest.DateTransaction, opts => opts.MapFrom(source => source.DateTransactionOccurred.GetTimeAgo()));
 
             Mapper.CreateMap<AnsweredQuestion, UserAnsweredQuestionCorrectlyViewModel>()

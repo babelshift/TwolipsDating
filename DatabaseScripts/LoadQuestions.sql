@@ -1,48 +1,11 @@
 declare @answers as dbo.AnswerType;
 
-insert into @answers(Content, IsCorrect) values('4', 1);
-insert into @answers(Content, IsCorrect) values('5', 0);
-insert into @answers(Content, IsCorrect) values('-1', 0);
-insert into @answers(Content, IsCorrect) values('10', 0);
-exec dbo.InsertQuestion '2 + 2 = x. Find x.', 5, 2, @answers;
-
-delete from @answers;
-insert into @answers(Content, IsCorrect) values('Bricks', 0);
-insert into @answers(Content, IsCorrect) values('Feathers', 0);
-insert into @answers(Content, IsCorrect) values('They weigh the same.', 1);
-exec dbo.InsertQuestion 'What is heavier? Two pounds of bricks or two pounds of feathers?', 5, 2,  @answers;
-
-delete from @answers;
-insert into @answers(Content, IsCorrect) values('Baltimore', 0);
-insert into @answers(Content, IsCorrect) values('Tallahassee', 1);
-insert into @answers(Content, IsCorrect) values('Miami', 0);
-insert into @answers(Content, IsCorrect) values('Tampa', 0);
-exec dbo.InsertQuestion 'What is the capitol city of Florida?', 5, 2,  @answers;
-
-delete from @answers;
-insert into @answers(Content, IsCorrect) values('0', 0);
-insert into @answers(Content, IsCorrect) values('10', 0);
-insert into @answers(Content, IsCorrect) values('24', 1);
-insert into @answers(Content, IsCorrect) values('50', 0);
-exec dbo.InsertQuestion 'How many inches are in 2 feet?', 5, 2,  @answers;
-
-delete from @answers;
-insert into @answers(Content, IsCorrect) values('1', 0);
-insert into @answers(Content, IsCorrect) values('2', 0);
-insert into @answers(Content, IsCorrect) values('3', 0);
-insert into @answers(Content, IsCorrect) values('4', 1);
-exec dbo.InsertQuestion 'Four doors are open. Close two doors. Open one door. How many doors were originally open?', 5, 2,  @answers;
-
-declare @answers as dbo.AnswerType;
-
 delete from @answers;
 insert into @answers(Content, IsCorrect) values('Celestial objects',1);
 insert into @answers(Content, IsCorrect) values('Periodic elements',0);
 insert into @answers(Content, IsCorrect) values('Human history',0);
 insert into @answers(Content, IsCorrect) values('Rock formations',0);
 exec dbo.InsertQuestion 'Astronomy is the study of what?',5,1, @answers;
-
-declare @answers as dbo.AnswerType;
 delete from @answers;
 insert into @answers(Content, IsCorrect) values('TRUE',1);
 insert into @answers(Content, IsCorrect) values('FALSE',0);
@@ -94,8 +57,6 @@ exec dbo.InsertQuestion 'In what celestial object are stars born?',5,1, @answers
 delete from @answers;
 insert into @answers(Content, IsCorrect) values('White dwarf',1);
 insert into @answers(Content, IsCorrect) values('Red giant',0);
-insert into @answers(Content, IsCorrect) values('',0);
-insert into @answers(Content, IsCorrect) values('',0);
 exec dbo.InsertQuestion 'Which type of star is older, a white dwarf or a red giant?',5,1, @answers;
 delete from @answers;
 insert into @answers(Content, IsCorrect) values('Group',0);
@@ -112,8 +73,6 @@ exec dbo.InsertQuestion 'Which star system is the closest to Earth?',5,1, @answe
 delete from @answers;
 insert into @answers(Content, IsCorrect) values('TRUE',1);
 insert into @answers(Content, IsCorrect) values('FALSE',0);
-insert into @answers(Content, IsCorrect) values('',0);
-insert into @answers(Content, IsCorrect) values('',0);
 exec dbo.InsertQuestion 'Earth is the third planet from the Sun. True or false?',5,1, @answers;
 delete from @answers;
 insert into @answers(Content, IsCorrect) values('225',0);
@@ -166,17 +125,4 @@ exec dbo.InsertQuestion 'Earthquakes are caused by the shifting of what?',5,1, @
 delete from @answers;
 insert into @answers(Content, IsCorrect) values('TRUE',1);
 insert into @answers(Content, IsCorrect) values('FALSE',0);
-insert into @answers(Content, IsCorrect) values('',0);
-insert into @answers(Content, IsCorrect) values('',0);
 exec dbo.InsertQuestion 'Geology is important to the study of the history of the Earth. True or false?',5,1, @answers;
-
-
-
---delete from dbo.TagQuestions;
---delete from dbo.AnsweredQuestions;
---update dbo.Questions
---set CorrectAnswerId = null;
---delete from dbo.Answers;
---delete from dbo.Questions;
-
-select * from dbo.questiontypes
