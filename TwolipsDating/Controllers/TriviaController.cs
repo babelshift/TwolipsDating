@@ -92,14 +92,14 @@ namespace TwolipsDating.Controllers
             var currentUserId = User.Identity.GetUserId();
 
             // if the user is logged in but doesn't have a profile, redirect to profile
-            if (!String.IsNullOrEmpty(currentUserId)
+            if (User.Identity.IsAuthenticated
                 && !(await userService.DoesUserHaveProfileAsync(currentUserId)))
                 return RedirectToProfileIndex();
 
             QuestionViewModel viewModel = await GetRandomQuestionViewModel((int)QuestionTypeValues.Random);
 
             // anonymous viewers can't report violations so don't look any of the types up
-            if (!String.IsNullOrEmpty(currentUserId) && viewModel != null)
+            if (User.Identity.IsAuthenticated && viewModel != null)
             {
                 // setup violation types
                 var violationTypes = await violationService.GetQuestionViolationTypesAsync();
@@ -144,14 +144,14 @@ namespace TwolipsDating.Controllers
             var currentUserId = User.Identity.GetUserId();
 
             // if the user is logged in but doesn't have a profile, redirect to profile
-            if (!String.IsNullOrEmpty(currentUserId)
+            if (User.Identity.IsAuthenticated
                 && !(await userService.DoesUserHaveProfileAsync(currentUserId)))
                 return RedirectToProfileIndex();
 
             var viewModel = await GetRandomQuestionViewModel((int)QuestionTypeValues.Timed);
 
             // anonymous viewers can't report violations so don't look any of the types up
-            if (!String.IsNullOrEmpty(currentUserId) && viewModel != null)
+            if (User.Identity.IsAuthenticated && viewModel != null)
             {
                 // setup violation types
                 var violationTypes = await violationService.GetQuestionViolationTypesAsync();
@@ -226,47 +226,62 @@ namespace TwolipsDating.Controllers
 
         #region Quiz
 
+        [AllowAnonymous]
         public async Task<ActionResult> Quiz(int id)
         {
             await SetNotificationsAsync();
 
             var currentUserId = User.Identity.GetUserId();
 
+            // if the user is logged in but doesn't have a profile, redirect to profile
+            if (User.Identity.IsAuthenticated
+                && !(await userService.DoesUserHaveProfileAsync(currentUserId)))
+                return RedirectToProfileIndex();
+
             var quiz = await triviaService.GetQuizAsync(id);
 
-            // check if the quiz has already been completed by the user
-            bool isAlreadyCompleted = await triviaService.IsQuizAlreadyCompletedAsync(currentUserId, quiz.Id);
-
+            bool isAlreadyCompleted = false;
             List<QuestionViewModel> questionListViewModel = new List<QuestionViewModel>();
-            // if it has already been completed, get answered questions for quiz and user
-            if (isAlreadyCompleted)
+
+            if (User.Identity.IsAuthenticated)
             {
-                // get the already answered questions for this quiz
-                var answeredQuizQuestions = await triviaService.GetAnsweredQuizQuestions(currentUserId, id);
+                // check if the quiz has already been completed by the user
+                isAlreadyCompleted = await triviaService.IsQuizAlreadyCompletedAsync(currentUserId, quiz.Id);
 
-                // get the list of all possible questions for this quiz
-                var quizQuestions = await triviaService.GetQuizQuestionsAsync(id);
-                questionListViewModel = Mapper.Map<IReadOnlyCollection<Question>, List<QuestionViewModel>>(quizQuestions);
-
-                // match up the already selected answers with the questions for this quiz
-                foreach (var questionViewModel in questionListViewModel)
+                // if it has already been completed, get answered questions for quiz and user
+                if (isAlreadyCompleted)
                 {
-                    var answeredQuizQuestion = answeredQuizQuestions[questionViewModel.QuestionId];
-                    questionViewModel.SelectedAnswerId = answeredQuizQuestion.AnswerId;
-                    questionViewModel.IsAlreadyAnswered = true;
+                    // get the already answered questions for this quiz
+                    var answeredQuizQuestions = await triviaService.GetAnsweredQuizQuestions(currentUserId, id);
 
-                    // mark the correct answer to show the user
-                    foreach (var answer in questionViewModel.Answers)
+                    // get the list of all possible questions for this quiz
+                    var quizQuestions = await triviaService.GetQuizQuestionsAsync(id);
+                    questionListViewModel = Mapper.Map<IReadOnlyCollection<Question>, List<QuestionViewModel>>(quizQuestions);
+
+                    // match up the already selected answers with the questions for this quiz
+                    foreach (var questionViewModel in questionListViewModel)
                     {
-                        answer.IsCorrect = (answer.AnswerId == questionViewModel.CorrectAnswerId);
+                        var answeredQuizQuestion = answeredQuizQuestions[questionViewModel.QuestionId];
+                        questionViewModel.SelectedAnswerId = answeredQuizQuestion.AnswerId;
+                        questionViewModel.IsAlreadyAnswered = true;
+
+                        // mark the correct answer to show the user
+                        foreach (var answer in questionViewModel.Answers)
+                        {
+                            answer.IsCorrect = (answer.AnswerId == questionViewModel.CorrectAnswerId);
+                        }
                     }
                 }
+                // if it hasn't been completed, get unanswered questions for quiz
+                else
+                {
+                    questionListViewModel = await GetQuizQuestions(id, questionListViewModel);
+                }
             }
-            // if it hasn't been completed, get unanswered questions for quiz
+            // user isn't authenticated, so anonymous users the questions
             else
             {
-                var quizQuestions = await triviaService.GetQuizQuestionsAsync(id);
-                questionListViewModel = Mapper.Map<IReadOnlyCollection<Question>, List<QuestionViewModel>>(quizQuestions);
+                questionListViewModel = await GetQuizQuestions(id, questionListViewModel);
             }
 
             QuizViewModel viewModel = new QuizViewModel()
@@ -274,10 +289,18 @@ namespace TwolipsDating.Controllers
                 Questions = questionListViewModel,
                 QuizName = quiz.Name,
                 QuizId = id,
-                IsAlreadyCompleted = isAlreadyCompleted
+                IsAlreadyCompleted = isAlreadyCompleted,
+                QuizDescription = quiz.Description
             };
 
             return View(viewModel);
+        }
+
+        private async Task<List<QuestionViewModel>> GetQuizQuestions(int id, List<QuestionViewModel> questionListViewModel)
+        {
+            var quizQuestions = await triviaService.GetQuizQuestionsAsync(id);
+            questionListViewModel = Mapper.Map<IReadOnlyCollection<Question>, List<QuestionViewModel>>(quizQuestions);
+            return questionListViewModel;
         }
 
         [HttpPost]

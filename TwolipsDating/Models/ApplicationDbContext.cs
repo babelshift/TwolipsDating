@@ -573,6 +573,10 @@ namespace TwolipsDating.Models
             modelBuilder.Entity<Quiz>()
                 .Property(v => v.Description)
                 .HasMaxLength(255);
+
+            modelBuilder.Entity<Quiz>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
         }
 
         private void SetupIgnoredUsers(DbModelBuilder modelBuilder)

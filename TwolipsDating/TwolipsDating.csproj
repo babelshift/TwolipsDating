@@ -296,6 +296,10 @@
     <Compile Include="Migrations\201507311816097_AddStoreDateAdded.Designer.cs">
       <DependentUpon>201507311816097_AddStoreDateAdded.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508032125539_RemoveQuizIdentity.cs" />
+    <Compile Include="Migrations\201508032125539_RemoveQuizIdentity.Designer.cs">
+      <DependentUpon>201508032125539_RemoveQuizIdentity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
     <Compile Include="Models\UserTitle.cs">
@@ -777,6 +781,7 @@
     <Content Include="Views\Store\_GiftSpotlightPartial.cshtml" />
     <Content Include="Views\Store\Cart.cshtml" />
     <Content Include="Views\Store\_ItemAddedConfirmationPartial.cshtml" />
+    <Content Include="Views\Trivia\_ModalQuestionViolationPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -943,6 +948,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507311816097_AddStoreDateAdded.resx">
       <DependentUpon>201507311816097_AddStoreDateAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508032125539_RemoveQuizIdentity.resx">
+      <DependentUpon>201508032125539_RemoveQuizIdentity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

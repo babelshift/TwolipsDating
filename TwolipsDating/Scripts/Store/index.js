@@ -23,10 +23,6 @@
             if (data.success) {
                 var currentShoppingCartCount = parseInt($('#shopping-cart-count').text());
                 $('#shopping-cart-count').text(++currentShoppingCartCount);
-
-                var userPointsCount = $("#span-points-count").html();
-                var userPointsCountAfterPurchase = userPointsCount - itemPrice;
-                $("#span-points-count").html(userPointsCountAfterPurchase);
                 $('#modal-buy').modal('show');
             }
             else {

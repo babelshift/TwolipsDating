@@ -9,6 +9,7 @@ namespace TwolipsDating.ViewModels
     {
         public int QuizId { get; set; }
         public string QuizName { get; set; }
+        public string QuizDescription { get; set; }
         public List<QuestionViewModel> Questions { get; set; }
         public bool IsAlreadyCompleted { get; set; }
     }

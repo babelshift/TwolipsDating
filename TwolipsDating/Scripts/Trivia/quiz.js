@@ -1,4 +1,14 @@
-﻿function onSubmitAnswer(e, obj) {
+﻿$(document).ready(function () {
+    setupPopoverWithContent(".share-question-link", function () {
+        var questionId = $(this).attr('data-question-id'); // extract the review ID
+        var shareButtonsDiv = "#share-question-buttons-popover-" + questionId;
+        var clone = $(shareButtonsDiv).clone(true);
+        var cloneUnhide = clone.removeClass('hide');
+        return cloneUnhide.html();
+    });
+});
+
+function onSubmitAnswer(e, obj) {
     e.preventDefault();
 
     $("#button-next").addClass("hidden");
