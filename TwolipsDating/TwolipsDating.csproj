@@ -622,6 +622,7 @@
     <Compile Include="ViewModels\UploadedImageFeedViewModel.cs" />
     <Compile Include="ViewModels\UploadImageViewModel.cs" />
     <Compile Include="ViewModels\UserAnsweredQuestionCorrectlyViewModel.cs" />
+    <Compile Include="ViewModels\UserCompletedQuizViewModel.cs" />
     <Compile Include="ViewModels\UserImageViewModel.cs" />
     <Compile Include="ViewModels\UserPointsViewModel.cs" />
     <Compile Include="ViewModels\UserStatsViewModel.cs" />
@@ -782,6 +783,7 @@
     <Content Include="Views\Store\Cart.cshtml" />
     <Content Include="Views\Store\_ItemAddedConfirmationPartial.cshtml" />
     <Content Include="Views\Trivia\_ModalQuestionViolationPartial.cshtml" />
+    <Content Include="Views\Trivia\_SidebarOthersCompletedQuizPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

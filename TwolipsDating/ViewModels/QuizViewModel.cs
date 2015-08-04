@@ -13,6 +13,8 @@ namespace TwolipsDating.ViewModels
         public List<QuestionViewModel> Questions { get; set; }
         public bool IsAlreadyCompleted { get; set; }
 
+        public IReadOnlyCollection<UserCompletedQuizViewModel> UsersCompletedQuiz { get; set; }
+
         public QuestionViolationViewModel QuestionViolation { get; set; }
     }
 }

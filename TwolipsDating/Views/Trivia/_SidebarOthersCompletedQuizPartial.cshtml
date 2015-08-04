@@ -1,0 +1,30 @@
+﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.UserCompletedQuizViewModel>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            Users completed this quiz
+        </h4>
+    </div>
+    @if (Model != null && Model.Count > 0)
+    {
+        <div class="list-group">
+            @foreach (var user in Model)
+            {
+                <a href="@Url.Action("index", "profile", new { id = user.ProfileId })" class="list-group-item">
+                    <span class="badge" style="margin-top: 7px">@user.TimeAgo</span>
+                    @Html.Partial("_ProfileImagePartial", user.ProfileImagePath)
+                    <p style="display: inline-block; vertical-align: top; margin-top: 4px; font-size: 14px">
+                        <strong>@user.UserName</strong>
+                    </p>
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="panel-body">
+            <p>No one has completed this quiz yet!</p>
+        </div>
+    }
+</div>

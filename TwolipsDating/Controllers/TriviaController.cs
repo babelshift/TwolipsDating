@@ -241,7 +241,7 @@ namespace TwolipsDating.Controllers
                 return RedirectToProfileIndex();
 
             var quiz = await triviaService.GetQuizAsync(id);
-            if(quiz == null)
+            if (quiz == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
@@ -296,7 +296,8 @@ namespace TwolipsDating.Controllers
                 QuizName = quiz.Name,
                 QuizId = id,
                 IsAlreadyCompleted = isAlreadyCompleted,
-                QuizDescription = quiz.Description
+                QuizDescription = quiz.Description,
+                UsersCompletedQuiz = await GetUsersCompletedQuizAsync(id)
             };
 
             viewModel.QuestionViolation = await GetQuestionViolationViewModelAsync();
@@ -361,21 +362,22 @@ namespace TwolipsDating.Controllers
             if (viewModel != null)
             {
                 viewModel.QuestionTypeId = questionTypeId;
-                viewModel.UsersAnsweredCorrectly = await GetUsersAnsweredCorrectlyAsync(randomQuestion);
+                viewModel.UsersAnsweredCorrectly = await GetUsersAnsweredCorrectlyAsync(randomQuestion.Id);
             }
 
             return viewModel;
         }
 
-        private async Task<IReadOnlyCollection<UserAnsweredQuestionCorrectlyViewModel>> GetUsersAnsweredCorrectlyAsync(Question randomQuestion)
+        private async Task<IReadOnlyCollection<UserAnsweredQuestionCorrectlyViewModel>> GetUsersAnsweredCorrectlyAsync(int questionId)
         {
-            if (randomQuestion != null)
-            {
-                var usersAnsweredCorrectly = await triviaService.GetUsersAnsweredCorrectlyAsync(randomQuestion.Id);
-                return Mapper.Map<IReadOnlyCollection<AnsweredQuestion>, IReadOnlyCollection<UserAnsweredQuestionCorrectlyViewModel>>(usersAnsweredCorrectly);
-            }
+            var usersAnsweredCorrectly = await triviaService.GetUsersAnsweredCorrectlyAsync(questionId);
+            return Mapper.Map<IReadOnlyCollection<AnsweredQuestion>, IReadOnlyCollection<UserAnsweredQuestionCorrectlyViewModel>>(usersAnsweredCorrectly);
+        }
 
-            return null;
+        private async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int quizId)
+        {
+            var usersCompletedQuiz = await triviaService.GetUsersCompletedQuizAsync(quizId);
+            return Mapper.Map<IReadOnlyCollection<CompletedQuiz>, IReadOnlyCollection<UserCompletedQuizViewModel>>(usersCompletedQuiz);
         }
 
         protected override void Dispose(bool disposing)
