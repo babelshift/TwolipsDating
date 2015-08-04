@@ -7,13 +7,17 @@ $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) {
 function setupPopoverWithContent(elementName, contentFunction) {
     // loop through all share review links and turn them into valid popovers with share buttons
     $(elementName).each(function () {
-        var popover = $(this).popover({ content: contentFunction });
+        var popover = $(this).popover({
+            content: contentFunction,
+            trigger: "manual",
+        });
 
         var id = $(this).attr('id');
 
         $(this).off('click.' + id);
         $(this).on('click.' + id, function (e) {
             e.preventDefault();
+            popover.popover('show');
         });
 
         // we remove handlers first to avoid stacking handlers
@@ -32,6 +36,7 @@ function setupPopoverWithContent(elementName, contentFunction) {
 // the popover will take html content, will not jump to the top when clicked, and will dismiss when anything other than the popover is clicked
 function setupHtmlPopover(elementName, contentName) {
     var popover = $(elementName).popover({
+        trigger: "manual",
         html: true,
         content: function () {
             return $(contentName).html();
@@ -42,6 +47,7 @@ function setupHtmlPopover(elementName, contentName) {
     $(elementName).off('click.' + elementName);
     $(elementName).on('click.' + elementName, function (e) {
         e.preventDefault();
+        popover.popover('show');
     });
 
     // we remove handlers first to avoid stacking handlers
