@@ -13,18 +13,18 @@
                 <ul class="dropdown-menu" role="menu">
                     <li>
                         <a href="@Url.Action("index", "profile", new { id = (int?)null })">
-                            <i class="glyphicon glyphicon-user"></i>&nbsp;View your profile
+                            <i class="glyphicon glyphicon-user"></i>&nbsp;My Profile
                         </a>
                     </li>
                     <li>
                         <a href="@Url.Action("index", "manage", new { id = (int?)null })">
-                            <i class="glyphicon glyphicon-cog"></i>&nbsp;Manage your settings
+                            <i class="glyphicon glyphicon-cog"></i>&nbsp;My Settings
                         </a>
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <a href="#" title="Sign out" onclick="document.getElementById('logoutForm').submit()">
-                            <i class="glyphicon glyphicon-log-out"></i>&nbsp;Sign out
+                        <a href="#" title="Log out" onclick="document.getElementById('logoutForm').submit()">
+                            <i class="glyphicon glyphicon-log-out"></i>&nbsp;Log out
                         </a>
                     </li>
                 </ul>

@@ -304,6 +304,10 @@
     <Compile Include="Migrations\201508032125539_RemoveQuizIdentity.Designer.cs">
       <DependentUpon>201508032125539_RemoveQuizIdentity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508051601437_AddIsActiveToQuiz.cs" />
+    <Compile Include="Migrations\201508051601437_AddIsActiveToQuiz.Designer.cs">
+      <DependentUpon>201508051601437_AddIsActiveToQuiz.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
     <Compile Include="Models\UserTitle.cs">
@@ -957,6 +961,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508032125539_RemoveQuizIdentity.resx">
       <DependentUpon>201508032125539_RemoveQuizIdentity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508051601437_AddIsActiveToQuiz.resx">
+      <DependentUpon>201508051601437_AddIsActiveToQuiz.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -25,6 +25,19 @@ namespace TwolipsDating.Business
         internal async Task<IReadOnlyCollection<Quiz>> GetQuizzesAsync()
         {
             var quizzes = from quiz in db.Quizzes
+                          where quiz.IsActive
+                          select quiz;
+
+            var results = await quizzes.ToListAsync();
+
+            return results.AsReadOnly();
+        }
+
+        internal async Task<IReadOnlyCollection<Quiz>> GetNewQuizzesAsync()
+        {
+            var quizzes = from quiz in db.Quizzes
+                          where quiz.IsActive
+                          orderby quiz.DateCreated descending
                           select quiz;
 
             var results = await quizzes.ToListAsync();

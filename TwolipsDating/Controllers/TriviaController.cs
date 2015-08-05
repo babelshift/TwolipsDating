@@ -47,21 +47,14 @@ namespace TwolipsDating.Controllers
         {
             await SetNotificationsAsync();
 
-            var quizzes = await triviaService.GetQuizzesAsync();
+            var currentUserId = User.Identity.GetUserId();
+
+            var newQuizzes = await triviaService.GetNewQuizzesAsync();
 
             TriviaMenuViewModel viewModel = new TriviaMenuViewModel();
-            viewModel.Quizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(quizzes);
+            viewModel.NewQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(newQuizzes);
 
-            var currentUserId = User.Identity.GetUserId();
-            var completedQuizzes = await triviaService.GetCompletedQuizzesForUserAsync(currentUserId);
-
-            foreach (var quiz in viewModel.Quizzes)
-            {
-                if (completedQuizzes.Any(q => q.Key == quiz.Id))
-                {
-                    quiz.IsComplete = true;
-                }
-            }
+            await SetCompletedQuizzes(currentUserId, viewModel);
 
             //var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
             viewModel.UserStats = await ProfileService.GetUserStatsAsync(currentUserId);
@@ -69,6 +62,19 @@ namespace TwolipsDating.Controllers
             viewModel.RecentlyCompletedQuizzes = await GetUsersCompletedQuizzesAsync();
             
             return View(viewModel);
+        }
+
+        private async Task SetCompletedQuizzes(string currentUserId, TriviaMenuViewModel viewModel)
+        {
+            var completedQuizzes = await triviaService.GetCompletedQuizzesForUserAsync(currentUserId);
+
+            foreach (var quiz in viewModel.NewQuizzes)
+            {
+                if (completedQuizzes.Any(q => q.Key == quiz.Id))
+                {
+                    quiz.IsComplete = true;
+                }
+            }
         }
 
         #region Random Question

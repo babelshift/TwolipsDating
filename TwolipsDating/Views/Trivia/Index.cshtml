@@ -31,9 +31,9 @@
                     <h4 class="panel-title"><i class="glyphicon glyphicon-king"></i> Quizzes</h4>
                 </div>
                 <div class="panel-body text-center">
-                    @foreach (var quiz in Model.Quizzes)
+                    @foreach (var quiz in Model.NewQuizzes)
                     {
-                        <div class="col-md-4" style="max-height: 175px; min-height: 175px">
+                        <div class="col-lg-4 col-md-6 col-sm-4" style="max-height: 175px; min-height: 175px">
                             <h4><a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a></h4>
                             @if (quiz.IsComplete)
                             {
@@ -49,7 +49,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 col-sm-6">
             <div class="panel panel-default">
                 <div class="panel-heading text-center">
                     <h4 class="panel-title"><i class="glyphicon glyphicon-stats"></i> Your Stats</h4>
@@ -67,6 +67,8 @@
                     <li class="list-group-item">Quizzes Completed<span class="badge">@Model.UserStats.QuizzesCompleted</span></li>
                 </ul>
             </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
             @if (Model.RecentlyCompletedQuizzes != null && Model.RecentlyCompletedQuizzes.Count > 0)
             {
                 <div class="panel panel-default">

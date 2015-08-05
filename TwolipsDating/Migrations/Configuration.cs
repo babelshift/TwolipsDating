@@ -124,7 +124,8 @@ namespace TwolipsDating.Migrations
                 new StoreItem() { Id = 10, Name = "Psycho Dentist", IconFileName = "PsychoDentist.png", Description = "Straps people to a chair and drills for cavities.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
                 new StoreItem() { Id = 11, Name = "Crazy Cat Lover", IconFileName = "CrazyCatLover.png", Description = "Owns 20 cats and probably doesn't clean up after them.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
                 new StoreItem() { Id = 12, Name = "The President", IconFileName = "President.png", Description = "The most powerful person in the world.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
-                new StoreItem() { Id = 13, Name = "El Guapo", IconFileName = "ElGuapo.png", Description = "Devilishly handsome.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title });
+                new StoreItem() { Id = 13, Name = "El Guapo", IconFileName = "ElGuapo.png", Description = "Devilishly handsome.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
+                new StoreItem() { Id = 14, Name = "Banana Bunch", IconFileName = "Bananas.png", Description = "A perfectly sized bunch of bananas full of potassium.", PointPrice = 25, ItemTypeId = (int)StoreItemTypeValues.Gift });
 
             context.QuestionTypes.AddOrUpdate(q => q.Id,
                 new QuestionType() { Id = (int)QuestionTypeValues.Random, Name = "Random" },
