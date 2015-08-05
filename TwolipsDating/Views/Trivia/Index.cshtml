@@ -67,23 +67,26 @@
                     <li class="list-group-item">Quizzes Completed<span class="badge">@Model.UserStats.QuizzesCompleted</span></li>
                 </ul>
             </div>
-            <div class="panel panel-default">
-                <div class="panel-heading text-center">
-                    <h4 class="panel-title"><i class="glyphicon glyphicon-certificate"></i> Recently Completed</h4>
+            @if (Model.RecentlyCompletedQuizzes != null && Model.RecentlyCompletedQuizzes.Count > 0)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading text-center">
+                        <h4 class="panel-title"><i class="glyphicon glyphicon-certificate"></i> Recently Completed</h4>
+                    </div>
+                    <div class="list-group">
+                        @foreach (var quiz in Model.RecentlyCompletedQuizzes)
+                        {
+                            <a href="@Url.Action("index", "profile", new { id = quiz.ProfileId })" class="list-group-item">
+                                <span class="badge" style="margin-top: 7px">@quiz.TimeAgo</span>
+                                @Html.Partial("_ProfileImagePartial", quiz.ProfileImagePath)
+                                <p style="display: inline-block; vertical-align: top; margin-top: 4px; font-size: 14px">
+                                    @quiz.UserName &bull; @quiz.QuizName
+                                </p>
+                            </a>
+                        }
+                    </div>
                 </div>
-                <div class="list-group">
-                    @foreach (var quiz in Model.RecentlyCompletedQuizzes)
-                    {
-                        <a href="@Url.Action("index", "profile", new { id = quiz.ProfileId })" class="list-group-item">
-                            <span class="badge" style="margin-top: 7px">@quiz.TimeAgo</span>
-                            @Html.Partial("_ProfileImagePartial", quiz.ProfileImagePath)
-                            <p style="display: inline-block; vertical-align: top; margin-top: 4px; font-size: 14px">
-                                @quiz.UserName &bull; @quiz.QuizName
-                            </p>
-                        </a>
-                    }
-                </div>
-            </div>
+            }
         </div>
     </div>
 }
