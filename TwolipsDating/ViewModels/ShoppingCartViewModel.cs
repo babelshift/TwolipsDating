@@ -9,6 +9,12 @@ namespace TwolipsDating.ViewModels
     {
         public List<ShoppingCartItemViewModel> Items { get; set; }
 
-        public int TotalCost { get { return Items.Sum(t => t.TotalPrice); } }
+        public int TotalCost 
+        { 
+            get 
+            { 
+                return Items != null ? Items.Sum(t => t.TotalPrice) : 0; 
+            } 
+        }
     }
 }
