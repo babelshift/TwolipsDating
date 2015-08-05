@@ -1,79 +1,79 @@
 declare @answers as dbo.AnswerType;
 
-insert into @answers(Content, IsCorrect) values('Last level cache', 0);
-insert into @answers(Content, IsCorrect) values('Logical link control', 0);
-insert into @answers(Content, IsCorrect) values('Limited liability company', 1);
-insert into @answers(Content, IsCorrect) values('Landlocked country', 0);
-exec dbo.InsertQuizQuestion 'What does LLC stand for in business terms?', 0, 4, @answers;
+insert into @answers(Content, IsCorrect) values('Grammar', 0);
+insert into @answers(Content, IsCorrect) values('Linguistics', 1);
+insert into @answers(Content, IsCorrect) values('Poetry', 0);
+insert into @answers(Content, IsCorrect) values('Communication', 0);
+exec dbo.InsertQuizQuestion 'What is the scientific study of language?', 0, 4, @answers;
 
 delete from @answers;
 
-insert into @answers(Content, IsCorrect) values('Stock exchange', 1);
-insert into @answers(Content, IsCorrect) values('Stock tradership', 0);
-insert into @answers(Content, IsCorrect) values('Auction house', 0);
-insert into @answers(Content, IsCorrect) values('Market place', 0);
-exec dbo.InsertQuizQuestion 'Stock brokers and traders can buy or sell stocks on what?', 0, 4, @answers;
+insert into @answers(Content, IsCorrect) values('100 to 300', 0);
+insert into @answers(Content, IsCorrect) values('1,000 to 3,000', 0);
+insert into @answers(Content, IsCorrect) values('5,000 to 7,000', 1);
+insert into @answers(Content, IsCorrect) values('10,000 to 20,000', 0);
+exec dbo.InsertQuizQuestion 'How many languages are estimated to exist in the world?', 0, 4, @answers;
 
 delete from @answers;
 
-insert into @answers(Content, IsCorrect) values('A specific person or enterprise with full control over supply of a commodity', 1);
-insert into @answers(Content, IsCorrect) values('An extremely rich city or village', 0);
-insert into @answers(Content, IsCorrect) values('An upset CEO', 0);
-insert into @answers(Content, IsCorrect) values('A method by which investors can increase their investment returns', 0);
-exec dbo.InsertQuizQuestion 'Aside from being a popular board game, what is a monopoly?', 0, 4, @answers;
+insert into @answers(Content, IsCorrect) values('Embossed surface', 1);
+insert into @answers(Content, IsCorrect) values('Digital images', 0);
+insert into @answers(Content, IsCorrect) values('Sounds and voices', 0);
+insert into @answers(Content, IsCorrect) values('Interpretive dance', 0);
+exec dbo.InsertQuizQuestion 'Braille is a form of encoding language into what?', 0, 4, @answers;
 
 delete from @answers;
 
-insert into @answers(Content, IsCorrect) values('Microsoft', 0);
-insert into @answers(Content, IsCorrect) values('Lumber Liquidators', 0);
-insert into @answers(Content, IsCorrect) values('Caterpillar', 0);
-insert into @answers(Content, IsCorrect) values('Enron', 1);
-exec dbo.InsertQuizQuestion 'Which company was found to be involved in systemic accounting fraud in 2001?', 0, 4, @answers;
+insert into @answers(Content, IsCorrect) values('Heart', 0);
+insert into @answers(Content, IsCorrect) values('Lungs', 0);
+insert into @answers(Content, IsCorrect) values('Brain', 1);
+insert into @answers(Content, IsCorrect) values('Liver', 0);
+exec dbo.InsertQuizQuestion 'Which organ coordinates all linguistic activity?', 0, 4, @answers;
 
 delete from @answers;
 
-insert into @answers(Content, IsCorrect) values('A tax on imports or exports', 1);
-insert into @answers(Content, IsCorrect) values('A tax on local sales', 0);
-insert into @answers(Content, IsCorrect) values('A term to describe a successful business', 0);
-insert into @answers(Content, IsCorrect) values('A technique by which investors can swap shares', 0);
-exec dbo.InsertQuizQuestion 'What is a tariff?', 0, 4, @answers;
+insert into @answers(Content, IsCorrect) values('Indo-European', 1);
+insert into @answers(Content, IsCorrect) values('Afro-Asiatic', 0);
+insert into @answers(Content, IsCorrect) values('Dravidian', 0);
+insert into @answers(Content, IsCorrect) values('Malayo-Polynesian', 0);
+exec dbo.InsertQuizQuestion 'English is part of what language family?', 0, 4, @answers;
 
 delete from @answers;
 
-insert into @answers(Content, IsCorrect) values('Throwing three strikes in a row in baseball', 0);
-insert into @answers(Content, IsCorrect) values('Ending a strike by paying workers higher wages', 1);
-insert into @answers(Content, IsCorrect) values('Forceful replacement of striking workers', 0);
-insert into @answers(Content, IsCorrect) values('Locking out workers from a business', 0);
-exec dbo.InsertQuizQuestion 'The controversial act of strikebreaking involves what?', 0, 4, @answers;
+insert into @answers(Content, IsCorrect) values('Early childhood', 1);
+insert into @answers(Content, IsCorrect) values('Mid childhood', 0);
+insert into @answers(Content, IsCorrect) values('Teenager', 0);
+insert into @answers(Content, IsCorrect) values('Adult', 0);
+exec dbo.InsertQuizQuestion 'At what stage of human development is language most easily learned?', 0, 4, @answers;
 
 delete from @answers;
 
-insert into @answers(Content, IsCorrect) values('Direct deposit', 1);
-insert into @answers(Content, IsCorrect) values('Direct payment', 0);
-insert into @answers(Content, IsCorrect) values('Direct wages', 0);
-insert into @answers(Content, IsCorrect) values('Direct transaction', 0);
-exec dbo.InsertQuizQuestion 'Which term is used when a worker receives salary payments directly to a bank account?', 0, 4, @answers;
+insert into @answers(Content, IsCorrect) values('It is less structured', 1);
+insert into @answers(Content, IsCorrect) values('It is able to be encoded', 0);
+insert into @answers(Content, IsCorrect) values('It is open ended and productive', 1);
+insert into @answers(Content, IsCorrect) values('It has the potential to be loud and obnoxious', 0);
+exec dbo.InsertQuizQuestion 'What is one way in which human language is unique compared to other animals?', 0, 4, @answers;
 
 delete from @answers;
 
-insert into @answers(Content, IsCorrect) values('Accounting', 0);
-insert into @answers(Content, IsCorrect) values('Engineering', 0);
-insert into @answers(Content, IsCorrect) values('Human resources', 1);
-insert into @answers(Content, IsCorrect) values('Executives', 0);
-exec dbo.InsertQuizQuestion 'Which business department is most commonly in charge of handling worker disputes?', 0, 4, @answers;
+insert into @answers(Content, IsCorrect) values('Chattering', 0);
+insert into @answers(Content, IsCorrect) values('Stuttering', 1);
+insert into @answers(Content, IsCorrect) values('Dyslexia', 0);
+insert into @answers(Content, IsCorrect) values('Muteness', 0);
+exec dbo.InsertQuizQuestion 'Which speech disorder is recognized by repetitions of sounds?', 0, 4, @answers;
 
 delete from @answers;
 
-insert into @answers(Content, IsCorrect) values('Industrial revolution', 0);
-insert into @answers(Content, IsCorrect) values('Civil war', 0);
-insert into @answers(Content, IsCorrect) values('Gilded age', 1);
+insert into @answers(Content, IsCorrect) values('Noam Chomsky', 0);
+insert into @answers(Content, IsCorrect) values('Plato', 0);
+insert into @answers(Content, IsCorrect) values('Paul Broca', 1);
 insert into @answers(Content, IsCorrect) values('Civil rights', 0);
-exec dbo.InsertQuizQuestion 'In United States history, the 1870s to 1900 saw both a large economic and poverty increase. What was this period called?', 0, 4, @answers;
+exec dbo.InsertQuizQuestion 'Who discovered the speech center of the human brain?', 0, 4, @answers;
 
 delete from @answers;
 
-insert into @answers(Content, IsCorrect) values('Chief Executive Officer', 1);
-insert into @answers(Content, IsCorrect) values('Chief Efficiency Officer', 0);
-insert into @answers(Content, IsCorrect) values('Counter Effects Online', 1);
-insert into @answers(Content, IsCorrect) values('Cross Element Order', 0);
-exec dbo.InsertQuizQuestion 'What does CEO stand for?', 0, 4, @answers;
+insert into @answers(Content, IsCorrect) values('1984', 1);
+insert into @answers(Content, IsCorrect) values('Of Mice and Men', 0);
+insert into @answers(Content, IsCorrect) values('Contact', 0);
+insert into @answers(Content, IsCorrect) values('Blood Meridian', 0);
+exec dbo.InsertQuizQuestion 'Which book involves using tight control over language to control how people think?', 0, 4, @answers;

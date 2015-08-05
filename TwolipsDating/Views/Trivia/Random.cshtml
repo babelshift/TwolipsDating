@@ -20,11 +20,9 @@
                 <a href="mailto:info@twolipsdating.com">Contact us</a> to suggest some new questions. You might see yours here soon!
             </div>
         </div>
+        @Html.Partial("_SidebarTagsForQuestion", Model.Tags)
         @*@Html.Partial("_SidebarAdvertisementPartial")*@
-        @if (Model != null)
-        {
-            @Html.Partial("_SidebarOthersAnsweredCorrectlyPartial", Model.UsersAnsweredCorrectly)
-        }
+        @Html.Partial("_SidebarOthersAnsweredCorrectlyPartial", Model.UsersAnsweredCorrectly)
     </div>
     <div class="col-md-8">
         <div class="panel panel-default">

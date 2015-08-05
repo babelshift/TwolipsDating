@@ -16,5 +16,7 @@ namespace TwolipsDating.ViewModels
         public IReadOnlyCollection<UserCompletedQuizViewModel> UsersCompletedQuiz { get; set; }
 
         public QuestionViolationViewModel QuestionViolation { get; set; }
+
+        public IReadOnlyCollection<TagViewModel> Tags { get; set; }
     }
 }

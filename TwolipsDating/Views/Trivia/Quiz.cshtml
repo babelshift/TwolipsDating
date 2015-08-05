@@ -52,12 +52,13 @@
                 <a href="mailto:info@twolipsdating.com">Contact us</a> to suggest some new quizzes. You might see yours here soon!
             </div>
         </div>
+        @Html.Partial("_SidebarTagsForQuiz", Model.Tags)
         @Html.Partial("_SidebarOthersCompletedQuizPartial", Model.UsersCompletedQuiz)
     </div>
     <div class="col-md-8">
         <div class="panel panel-default">
             <div class="panel-body">
-                @if (Model != null && Model.Questions != null && Model.Questions.Count > 0)
+                @if (Model.Questions != null && Model.Questions.Count > 0)
                 {
                     <h3>@Model.QuizName</h3>
                     <h4>@Model.QuizDescription</h4>

@@ -304,7 +304,8 @@ namespace TwolipsDating.Controllers
                 QuizId = id,
                 IsAlreadyCompleted = isAlreadyCompleted,
                 QuizDescription = quiz.Description,
-                UsersCompletedQuiz = await GetUsersCompletedQuizAsync(id)
+                UsersCompletedQuiz = await GetUsersCompletedQuizAsync(id),
+                Tags = await GetTagsForQuizAsync(id)
             };
 
             viewModel.QuestionViolation = await GetQuestionViolationViewModelAsync();
@@ -370,9 +371,16 @@ namespace TwolipsDating.Controllers
             {
                 viewModel.QuestionTypeId = questionTypeId;
                 viewModel.UsersAnsweredCorrectly = await GetUsersAnsweredCorrectlyAsync(randomQuestion.Id);
+                viewModel.Tags = await GetTagsForQuestionAsync(randomQuestion.Id);
             }
 
             return viewModel;
+        }
+
+        private async Task<IReadOnlyCollection<TagViewModel>> GetTagsForQuestionAsync(int questionId)
+        {
+            var tags = await triviaService.GetTagsForQuestionAsync(questionId);
+            return Mapper.Map<IReadOnlyCollection<Tag>, IReadOnlyCollection<TagViewModel>>(tags);
         }
 
         private async Task<IReadOnlyCollection<UserAnsweredQuestionCorrectlyViewModel>> GetUsersAnsweredCorrectlyAsync(int questionId)
@@ -391,6 +399,12 @@ namespace TwolipsDating.Controllers
         {
             var usersCompletedQuiz = await triviaService.GetUsersCompletedQuizzesAsync();
             return Mapper.Map<IReadOnlyCollection<CompletedQuiz>, IReadOnlyCollection<UserCompletedQuizViewModel>>(usersCompletedQuiz);
+        }
+        
+        private async Task<IReadOnlyCollection<TagViewModel>> GetTagsForQuizAsync(int quizId)
+        {
+            var tags = await triviaService.GetTagsForQuizAsync(quizId);
+            return tags;
         }
 
         protected override void Dispose(bool disposing)

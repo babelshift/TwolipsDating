@@ -792,6 +792,8 @@
     <Content Include="Views\Store\_ItemAddedConfirmationPartial.cshtml" />
     <Content Include="Views\Trivia\_ModalQuestionViolationPartial.cshtml" />
     <Content Include="Views\Trivia\_SidebarOthersCompletedQuizPartial.cshtml" />
+    <Content Include="Views\Trivia\_SidebarTagsForQuestion.cshtml" />
+    <Content Include="Views\Trivia\_SidebarTagsForQuiz.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

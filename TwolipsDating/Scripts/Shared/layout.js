@@ -94,6 +94,8 @@ function get(url, successFunction) {
 }
 
 $(document).ready(function () {
+    $('.custom-tooltip').tooltip({ animation: false });
+
     // setup announcement/gift popovers
     var announcementPopover = setupHtmlPopover('#popover-announcements', '#popover-announcements-content');
     var giftsPopover = setupHtmlPopover('#popover-gifts', '#popover-gifts-content');

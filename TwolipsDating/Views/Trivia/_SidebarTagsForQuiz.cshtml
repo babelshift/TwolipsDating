@@ -1,0 +1,26 @@
+﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.TagViewModel>
+
+@if (Model != null && Model.Count > 0)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                Tags for this quiz
+                <small>
+                    <i title="The questions in this quiz count towards these tags."
+                       class="custom-tooltip glyphicon glyphicon-info-sign"></i>
+                </small>
+            </h4>
+        </div>
+        <div class="panel-body">
+            <div class="tags">
+                @foreach (var tag in Model)
+                {
+                    <a href="#" class="custom-tooltip btn btn-default btn-xs" title="@tag.Description">
+                        @tag.Name
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+}

@@ -9,5 +9,6 @@ namespace TwolipsDating.ViewModels
     {
         public int TagId { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TwolipsDating.Models;
+using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
 {
@@ -471,6 +472,35 @@ namespace TwolipsDating.Business
                                      select completedQuizzes;
 
             return await usersCompletedQuiz.ToListAsync();
+        }
+
+        internal async Task<IReadOnlyCollection<Tag>> GetTagsForQuestionAsync(int questionId)
+        {
+            var tagsForQuestion = from questions in db.Questions
+                                  where questions.Id == questionId
+                                  select questions.Tags;
+
+            return (await tagsForQuestion.SingleAsync())
+                .ToList()
+                .AsReadOnly();
+        }
+
+        internal async Task<IReadOnlyCollection<TagViewModel>> GetTagsForQuizAsync(int quizId)
+        {
+            var tagsForQuiz = from quizzes in db.Quizzes
+                              where quizzes.Id == quizId
+                              from questions in quizzes.Questions
+                              from tags in questions.Tags
+                              group tags by new { tags.TagId, tags.Name, tags.Description }
+                                  into g
+                                  select new TagViewModel()
+                                  {
+                                      TagId = g.Key.TagId,
+                                      Name = g.Key.Name,
+                                      Description = g.Key.Description
+                                  };
+
+            return await tagsForQuiz.ToListAsync();
         }
     }
 }
