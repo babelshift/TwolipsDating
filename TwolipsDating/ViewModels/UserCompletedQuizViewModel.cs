@@ -7,6 +7,7 @@ namespace TwolipsDating.ViewModels
 {
     public class UserCompletedQuizViewModel
     {
+        public string QuizName { get; set; }
         public string ProfileImagePath { get; set; }
         public string UserName { get; set; }
         public int ProfileId { get; set; }

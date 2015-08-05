@@ -10,5 +10,7 @@ namespace TwolipsDating.ViewModels
         public IReadOnlyCollection<QuizOverviewViewModel> Quizzes { get; set; }
         public UserStatsViewModel UserStats { get; set; }
         public bool IsCurrentUserEmailConfirmed { get; set; }
+
+        public IReadOnlyCollection<UserCompletedQuizViewModel> RecentlyCompletedQuizzes { get; set; }
     }
 }

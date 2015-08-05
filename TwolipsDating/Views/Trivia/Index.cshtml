@@ -8,46 +8,51 @@
 @if (Model.IsCurrentUserEmailConfirmed)
 {
     <div class="row">
-        <div class="col-md-4 col-md-offset-2">
+        <div class="col-md-8">
             <div class="panel panel-default">
-                <div class="panel-body text-center">
-                    <i class="glyphicon glyphicon-refresh"></i>&nbsp;<a href="@Url.Action("random")">Random Questions</a>
+                <div class="panel-heading text-center">
+                    <h4 class="panel-title"><i class="glyphicon glyphicon-education"></i> Trivia</h4>
                 </div>
-            </div>
-            <div class="panel panel-default">
                 <div class="panel-body text-center">
-                    <i class="glyphicon glyphicon-time"></i>&nbsp;<a href="@Url.Action("timed")">Timed Questions</a>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="text-center">
-                        <i class="glyphicon glyphicon-king"></i>&nbsp;Specialized Quizzes
+                    <div class="col-md-5 col-sm-5 col-sm-offset-1 col-md-offset-1">
+                        <h1><i class="glyphicon glyphicon-random"></i></h1>
+                        <h3><a href="@Url.Action("random")">Random</a></h3>
+                        <p>Each question is randomly selected from a pool of questions without any time limit.</p>
+                    </div>
+                    <div class="col-md-5 col-sm-5">
+                        <h1><i class="glyphicon glyphicon-time"></i></h1>
+                        <h3><a href="@Url.Action("timed")">Timed</a></h3>
+                        <p>Each question is randomly selected from a pool of questions with a 10 second time limit.</p>
                     </div>
                 </div>
-                <div class="list-group">
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading text-center">
+                    <h4 class="panel-title"><i class="glyphicon glyphicon-king"></i> Quizzes</h4>
+                </div>
+                <div class="panel-body text-center">
                     @foreach (var quiz in Model.Quizzes)
                     {
-                        if (quiz.IsComplete)
-                        {
-                            <a href="@Url.Action("quiz", new { id = quiz.Id })" class="list-group-item list-group-item-success">
-                                <span class="badge">Completed</span>@quiz.Name
-                            </a>
-                        }
-                        else
-                        {
-                            <a href="@Url.Action("quiz", new { id = quiz.Id })" class="list-group-item">
-                                <span class="badge">@quiz.Points points</span>@quiz.Name
-                            </a>
-                        }
+                        <div class="col-md-4" style="max-height: 175px; min-height: 175px">
+                            <h4><a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a></h4>
+                            @if (quiz.IsComplete)
+                            {
+                                <p class="label label-success">Completed</p>
+                            }
+                            else
+                            {
+                                <p class="label label-primary">@quiz.Points points</p>
+                            }
+                            <p style="margin-top: 5px;">@quiz.Description</p>
+                        </div>
                     }
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="panel panel-default">
-                <div class="panel-body text-center">
-                    <i class="glyphicon glyphicon-stats"></i>&nbsp;Your Stats
+                <div class="panel-heading text-center">
+                    <h4 class="panel-title"><i class="glyphicon glyphicon-stats"></i> Your Stats</h4>
                 </div>
                 <ul class="list-group">
                     <li class="list-group-item">Total Points<span class="badge">@Model.UserStats.TotalPoints</span></li>
@@ -61,6 +66,23 @@
                     <li class="list-group-item">Quiz Questions Answered Correctly<span class="badge">@Model.UserStats.QuizQuestionsAnsweredCorrectly</span></li>
                     <li class="list-group-item">Quizzes Completed<span class="badge">@Model.UserStats.QuizzesCompleted</span></li>
                 </ul>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading text-center">
+                    <h4 class="panel-title"><i class="glyphicon glyphicon-certificate"></i> Recently Completed</h4>
+                </div>
+                <div class="list-group">
+                    @foreach (var quiz in Model.RecentlyCompletedQuizzes)
+                    {
+                        <a href="@Url.Action("index", "profile", new { id = quiz.ProfileId })" class="list-group-item">
+                            <span class="badge" style="margin-top: 7px">@quiz.TimeAgo</span>
+                            @Html.Partial("_ProfileImagePartial", quiz.ProfileImagePath)
+                            <p style="display: inline-block; vertical-align: top; margin-top: 4px; font-size: 14px">
+                                @quiz.UserName &bull; @quiz.QuizName
+                            </p>
+                        </a>
+                    }
+                </div>
             </div>
         </div>
     </div>

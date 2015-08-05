@@ -66,7 +66,8 @@ namespace TwolipsDating.Controllers
             //var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
             viewModel.UserStats = await ProfileService.GetUserStatsAsync(currentUserId);
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
-
+            viewModel.RecentlyCompletedQuizzes = await GetUsersCompletedQuizzesAsync();
+            
             return View(viewModel);
         }
 
@@ -377,6 +378,12 @@ namespace TwolipsDating.Controllers
         private async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int quizId)
         {
             var usersCompletedQuiz = await triviaService.GetUsersCompletedQuizAsync(quizId);
+            return Mapper.Map<IReadOnlyCollection<CompletedQuiz>, IReadOnlyCollection<UserCompletedQuizViewModel>>(usersCompletedQuiz);
+        }
+
+        private async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizzesAsync()
+        {
+            var usersCompletedQuiz = await triviaService.GetUsersCompletedQuizzesAsync();
             return Mapper.Map<IReadOnlyCollection<CompletedQuiz>, IReadOnlyCollection<UserCompletedQuizViewModel>>(usersCompletedQuiz);
         }
 

@@ -448,5 +448,16 @@ namespace TwolipsDating.Business
 
             return await usersCompletedQuiz.ToListAsync();
         }
+
+        internal async Task<IReadOnlyCollection<CompletedQuiz>> GetUsersCompletedQuizzesAsync()
+        {
+            var usersCompletedQuiz = from completedQuizzes in db.CompletedQuizzes
+                                     join users in db.Users on completedQuizzes.UserId equals users.Id
+                                     where users.IsActive
+                                     orderby completedQuizzes.DateCompleted descending
+                                     select completedQuizzes;
+
+            return await usersCompletedQuiz.ToListAsync();
+        }
     }
 }
