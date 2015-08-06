@@ -42,8 +42,7 @@
                    onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
                     <img src="~/Content/fb_16.png" alt="Share on Facebook" />
                 </a>
-                <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("{0} just reviewed {1}", review.AuthorUserName, Model.ProfileUserName)) + "&url=" + Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme))"
-                   onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=350,width=600');return false;">
+                <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("{0} just reviewed {1}", review.AuthorUserName, Model.ProfileUserName)) + "&url=" + Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme))">
                     <img src="~/Content/bird_blue_16.png" alt="Tweet" />
                 </a>
                 <a href="@("https://plus.google.com/share?url=" + Url.Action("index", "profile", new { id =  Model.ProfileId }, Request.Url.Scheme))"

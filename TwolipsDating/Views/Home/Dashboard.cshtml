@@ -53,6 +53,11 @@
             @if (Model.RandomQuestion != null)
             {
                 <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title text-center">
+                            <i class="glyphicon glyphicon-education"></i> Trivia
+                        </div>
+                    </div>
                     <div class="panel-body">
                         <h5 id="random-question-content">@Model.RandomQuestion.Content <small><span class="badge">@Model.RandomQuestion.Points points</span></small></h5>
                         <div class="list-group">
@@ -85,7 +90,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="panel-title text-center">
-                            Quizzes
+                            <i class="glyphicon glyphicon-king"></i> Quizzes
                         </div>
                     </div>
                     <div class="list-group">
