@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -91,7 +92,7 @@ namespace TwolipsDating.Controllers
 
             filterContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            filterContext.Result = GetActionResult(filterContext);
+            filterContext.Result = GetActionResultOnException(filterContext);
 
             Log.Error(filterContext.Exception.Message, filterContext.Exception.StackTrace);
 
