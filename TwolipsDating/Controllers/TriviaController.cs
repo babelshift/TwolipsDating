@@ -60,7 +60,7 @@ namespace TwolipsDating.Controllers
             viewModel.UserStats = await ProfileService.GetUserStatsAsync(currentUserId);
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
             viewModel.RecentlyCompletedQuizzes = await GetUsersCompletedQuizzesAsync();
-            
+
             return View(viewModel);
         }
 
@@ -83,15 +83,28 @@ namespace TwolipsDating.Controllers
         {
             QuestionViewModel viewModel = await GetRandomQuestionViewModelAsync((int)QuestionTypeValues.Random);
 
-            return Json(new
+            // there is a random question 
+            if (viewModel != null)
             {
-                QuestionId = viewModel.QuestionId,
-                Content = viewModel.Content,
-                Points = viewModel.Points,
-                IsAlreadyAnswered = viewModel.IsAlreadyAnswered,
-                CorrectAnswerId = viewModel.CorrectAnswerId,
-                Answers = viewModel.Answers
-            }, JsonRequestBehavior.AllowGet);
+                return Json(new
+                {
+                    Success = true,
+                    QuestionId = viewModel.QuestionId,
+                    Content = viewModel.Content,
+                    Points = viewModel.Points,
+                    IsAlreadyAnswered = viewModel.IsAlreadyAnswered,
+                    CorrectAnswerId = viewModel.CorrectAnswerId,
+                    Answers = viewModel.Answers
+                }, JsonRequestBehavior.AllowGet);
+            }
+            // there are no more random questions
+            else
+            {
+                return Json(new
+                {
+                    Success = false
+                }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [AllowAnonymous]
@@ -400,7 +413,7 @@ namespace TwolipsDating.Controllers
             var usersCompletedQuiz = await triviaService.GetUsersCompletedQuizzesAsync();
             return Mapper.Map<IReadOnlyCollection<CompletedQuiz>, IReadOnlyCollection<UserCompletedQuizViewModel>>(usersCompletedQuiz);
         }
-        
+
         private async Task<IReadOnlyCollection<TagViewModel>> GetTagsForQuizAsync(int quizId)
         {
             var tags = await triviaService.GetTagsForQuizAsync(quizId);

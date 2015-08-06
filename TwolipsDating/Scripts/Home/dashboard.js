@@ -1,34 +1,42 @@
 ﻿function onNextQuestion(e, obj) {
+
     // get a random question
     get('/trivia/randomJson', function (data) {
-        // show the new question
-        var content = data.Content + ' <small><span class="badge">' + data.Points + ' points</span></small>';
-        $('#random-question-content').html(content);
-        $('#RandomQuestion_QuestionId').val(data.QuestionId);
+        if (data.Success) {
+            // show the new question
+            var content = data.Content + ' <small><span class="badge">' + data.Points + ' points</span></small>';
+            $('#random-question-content').html(content);
+            $('#RandomQuestion_QuestionId').val(data.QuestionId);
 
-        // reset all click handlers on the answer links
-        $(".answer-link").off('click');
-        
-        // show the new answers
-        var answersHtml = '';
-        data.Answers.forEach(function (item) {
-            answersHtml += '<a href="#" id="answer-' + item.AnswerId + '" class="answer-link list-group-item" data-answer-id="' + item.AnswerId + '">'
-            + item.Content
-            + '<span id="icon-correct-' + item.AnswerId + '" class="icon-correct pull-right hidden"><i class="glyphicon glyphicon-ok"></i></span>'
-            + '<span id="icon-incorrect-' + item.AnswerId + '" class="icon-incorrect pull-right hidden"><i class="glyphicon glyphicon-remove"></i></span>'
-            + '</a>';
-        });
-        $('#answers').html(answersHtml);
+            // show the new answers
+            var answersHtml = '';
+            data.Answers.forEach(function (item) {
+                answersHtml += '<a href="#" id="answer-' + item.AnswerId + '" class="answer-link list-group-item" data-answer-id="' + item.AnswerId + '">'
+                + item.Content
+                + '<span id="icon-correct-' + item.AnswerId + '" class="icon-correct pull-right hidden"><i class="glyphicon glyphicon-ok"></i></span>'
+                + '<span id="icon-incorrect-' + item.AnswerId + '" class="icon-incorrect pull-right hidden"><i class="glyphicon glyphicon-remove"></i></span>'
+                + '</a>';
+            });
+            $('#answers').html(answersHtml);
 
-        // subscribe new click handlers on new answers
-        $(".answer-link").on("click", function (e) {
-            onSubmitAnswer(e, this);
-        });
+            // reset all click handlers on the answer links
+            $(".answer-link").off('click');
 
-        // reset the OK button
-        $('#result-alert').addClass("hidden");
-        $('#button-next').addClass("hidden");
-        $('#button-ok').removeClass("hidden");
+            // subscribe new click handlers on new answers
+            $(".answer-link").on("click", function (e) {
+                onSubmitAnswer(e, this);
+            });
+
+            // reset the OK button
+            $('#result-alert').addClass("hidden");
+            $('#button-next').addClass("hidden");
+            $('#button-ok').removeClass("hidden");
+        } else {
+            $('#trivia-panel').fadeOut('normal', function () {
+                $(this).remove();
+                $('#trivia-panel-no-questions').removeClass("hidden");
+            });
+        }
     });
 }
 
@@ -60,6 +68,12 @@ function onSubmitAnswer(e, obj) {
                 $("#result-alert").removeClass("hidden");
                 $("#result-alert").addClass("alert-success");
                 $("#result-alert").text('Correct');
+
+                // increase the users points by the amount the question was worth
+                var questionPointsValue = parseInt($('#question-points-value').val());
+                var userCurrentPointsAmount = parseInt($('#span-points-count').text());
+                var userNewPointsAmount = userCurrentPointsAmount + questionPointsValue;
+                $('#span-points-count').text(userNewPointsAmount);
             } else {
                 $("#button-next").removeClass("hidden");
                 $("#button-next").removeClass("btn-danger");
