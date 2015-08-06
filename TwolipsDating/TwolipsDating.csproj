@@ -777,7 +777,6 @@
     <Content Include="Views\Account\Points.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Shared\_SidebarAdvertisementPartial.cshtml" />
-    <Content Include="Views\Shared\_SidebarQuizzesPartial.cshtml" />
     <Content Include="Views\Shared\_ProfileImagePartial.cshtml" />
     <Content Include="Views\Trivia\_SidebarOthersAnsweredCorrectlyPartial.cshtml" />
     <Content Include="Views\Trivia\_QuestionAndAnswerPartial.cshtml" />

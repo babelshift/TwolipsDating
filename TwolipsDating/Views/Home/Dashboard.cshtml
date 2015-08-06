@@ -50,46 +50,48 @@
     @if (Model.IsCurrentUserEmailConfirmed)
     {
         <div class="col-md-4">
-            @if (Model.RandomQuestion != null)
-            {
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-title text-center">
-                            <i class="glyphicon glyphicon-education"></i> Trivia
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div id="trivia-panel">
-                            <h5 id="random-question-content">@Model.RandomQuestion.Content <small><span class="badge">@Model.RandomQuestion.Points points</span></small></h5>
-                            <div class="list-group">
-                                <div id="answers">
-                                    @foreach (var answer in Model.RandomQuestion.Answers)
-                                    {
-                                        <a href="#" id="@String.Format("answer-{0}", answer.AnswerId)" class="answer-link list-group-item" data-answer-id="@answer.AnswerId">
-                                            @answer.Content
-                                            <span id="@String.Format("icon-correct-{0}", answer.AnswerId)" class="icon-correct pull-right hidden"><i class="glyphicon glyphicon-ok"></i></span>
-                                            <span id="@String.Format("icon-incorrect-{0}", answer.AnswerId)" class="icon-incorrect pull-right hidden"><i class="glyphicon glyphicon-remove"></i></span>
-                                        </a>
-                                    }
-                                </div>
-                            </div>
-                            <div id="result-alert" class="alert alert-success hidden"></div>
-                            <button id="button-skip" type="button" class="btn btn-default btn-sm" onclick="onNextQuestion(event, this)" title=" skip this question">Skip <i class="glyphicon glyphicon-chevron-right"></i></button>
-                            <button id="button-next" type="button" class="btn btn-primary btn-sm hidden" onclick="onNextQuestion(event, this)" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</button>
-                            @Html.HiddenFor(m => m.RandomQuestion.QuestionId)
-                            <input id="question-points-value" type="hidden" value="@Model.RandomQuestion.Points" />
-                        </div>
-                        <div id="trivia-panel-no-questions" class="hidden">
-                            You've answered all the random questions for now. <a href="@Url.Action("index", "trivia")">Want more?</a>
-                        </div>
-                    </div>
-                    <div class="panel-footer">
-                        <div class="text-center">
-                            <a href="@Url.Action("random", "trivia")"><small>See more questions</small></a>
-                        </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title text-center">
+                        <i class="glyphicon glyphicon-education"></i> Trivia
                     </div>
                 </div>
-            }
+                <div class="panel-body">
+                    @if (Model.RandomQuestion != null)
+                    {
+                        <h5 id="random-question-content">@Model.RandomQuestion.Content <small><span class="badge">@Model.RandomQuestion.Points points</span></small></h5>
+                        <div class="list-group">
+                            <div id="answers">
+                                @foreach (var answer in Model.RandomQuestion.Answers)
+                                {
+                                    <a href="#" id="@String.Format("answer-{0}", answer.AnswerId)" class="answer-link list-group-item" data-answer-id="@answer.AnswerId">
+                                        @answer.Content
+                                        <span id="@String.Format("icon-correct-{0}", answer.AnswerId)" class="icon-correct pull-right hidden"><i class="glyphicon glyphicon-ok"></i></span>
+                                        <span id="@String.Format("icon-incorrect-{0}", answer.AnswerId)" class="icon-incorrect pull-right hidden"><i class="glyphicon glyphicon-remove"></i></span>
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                        <div id="result-alert" class="alert alert-success hidden"></div>
+                        <button id="button-skip" type="button" class="btn btn-default btn-sm" onclick="onNextQuestion(event, this)" title=" skip this question">Skip <i class="glyphicon glyphicon-chevron-right"></i></button>
+                        <button id="button-next" type="button" class="btn btn-primary btn-sm hidden" onclick="onNextQuestion(event, this)" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</button>
+                        @Html.HiddenFor(m => m.RandomQuestion.QuestionId)
+                        <input id="question-points-value" type="hidden" value="@Model.RandomQuestion.Points" />
+                        <div id="trivia-panel-no-questions" class="hidden">
+                            <p>You've answered all the random questions for now. <a href="@Url.Action("index", "trivia")">Want more?</a></p>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>You've answered all the random questions for now. <a href="@Url.Action("index", "trivia")">Want more?</a></p>
+                    }
+                </div>
+                <div class="panel-footer">
+                    <div class="text-center">
+                        <a href="@Url.Action("random", "trivia")"><small>See more questions</small></a>
+                    </div>
+                </div>
+            </div>
             @*@Html.Partial("_SidebarAdvertisementPartial")*@
             @if (Model.Quizzes != null && Model.Quizzes.Count > 0)
             {
