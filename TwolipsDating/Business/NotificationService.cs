@@ -23,6 +23,7 @@ namespace TwolipsDating.Business
             var messageCount = await (from message in db.Messages
                                       where message.ReceiverApplicationUserId == userId
                                       where message.MessageStatusId == (int)MessageStatusValue.Unread
+                                      where message.SenderApplicationUser.IsActive
                                       select message).CountAsync();
 
             return messageCount;

@@ -23,17 +23,27 @@ namespace TwolipsDating.Controllers
         public async Task<ActionResult> Conversation(string id)
         {
             var currentUserId = User.Identity.GetUserId();
+
+            // if the user doesn't have a profile, redirect them to the profile to create  it
             if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
 
             ConversationViewModel viewModel = new ConversationViewModel();
 
             // get recent conversations for the current user
-            await GetRecentConversationsAsync(currentUserId, viewModel);
+            viewModel.Conversations = await GetRecentConversationsAsync(currentUserId);
 
             // if no target user to view messages with has been specified, just show the first in the list
             if (String.IsNullOrEmpty(id) && viewModel.Conversations.Count > 0)
             {
                 id = viewModel.Conversations[0].TargetUserId;
+            }
+
+            // lookup the profile we are accessing and the messages between the current user and that profile
+            var profileForOtherUser = await ProfileService.GetUserProfileAsync(id);
+
+            if (profileForOtherUser == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
             // setup the essentials in the viewmodel
@@ -49,31 +59,18 @@ namespace TwolipsDating.Controllers
                 return View(viewModel);
             }
 
-            // lookup the profile we are accessing and the messages between the current user and that profile
-            var profileForOtherUser = await ProfileService.GetUserProfileAsync(id);
-
-            if(profileForOtherUser == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-            }
-
             // look up conversations between the current user and the selected id
             var messagesBetweenUsers = await ProfileService.GetMessagesBetweenUsersAsync(currentUserId, id);
-            var conversationMessages = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyList<ConversationItemViewModel>>(messagesBetweenUsers);
-            viewModel.ConversationMessages = conversationMessages;
-            
+            var conversationMessagesBetweenUsers = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyList<ConversationItemViewModel>>(messagesBetweenUsers);
+            viewModel.ConversationMessages = conversationMessagesBetweenUsers;
+
             // setup targetted user for which conversations are being looked
             viewModel.TargetUserName = profileForOtherUser.ApplicationUser.UserName;
             viewModel.TargetUserAge = profileForOtherUser.Birthday.GetAge();
             viewModel.TargetUserLocation = profileForOtherUser.GeoCity.ToFullLocationString();
             viewModel.TargetProfileId = profileForOtherUser.Id;
             viewModel.TargetUserId = id;
-
-            // if the profile we are looking up has a profile image, set the url it appropriately
-            if (profileForOtherUser.UserImage != null && !String.IsNullOrEmpty(profileForOtherUser.UserImage.FileName))
-            {
-                viewModel.TargetProfileImagePath = profileForOtherUser.GetProfileImagePath();
-            }
+            viewModel.TargetProfileImagePath = profileForOtherUser.GetProfileImagePath();
 
             return View(viewModel);
         }
@@ -84,7 +81,7 @@ namespace TwolipsDating.Controllers
         /// <param name="currentUserId"></param>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        private async Task GetRecentConversationsAsync(string currentUserId, ConversationViewModel viewModel)
+        private async Task<IReadOnlyList<ConversationItemViewModel>> GetRecentConversationsAsync(string currentUserId)
         {
             // get all messages sent and received by the current user
             var messagesForUser = await ProfileService.GetMessageConversationsAsync(currentUserId);
@@ -94,7 +91,7 @@ namespace TwolipsDating.Controllers
             foreach (var message in messagesForUser)
             {
                 ConversationItemViewModel conversation = GetConversationItemViewModel(currentUserId, message);
-                
+
                 // each conversation is considered unique by the participants
                 // if participant A messages B and B messages A, both messages are part of the same conversation because the participants are the same
                 ConversationKey conversationKey = new ConversationKey()
@@ -106,7 +103,7 @@ namespace TwolipsDating.Controllers
                 UpdateConversationCollection(conversations, conversation, conversationKey);
             }
 
-            viewModel.Conversations = conversations.Values.ToList().AsReadOnly();
+            return conversations.Values.ToList().AsReadOnly();
         }
 
         /// <summary>
