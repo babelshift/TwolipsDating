@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace TwolipsDating.Models
 {
@@ -15,10 +12,10 @@ namespace TwolipsDating.Models
 
     public class MessageStatus
     {
-		public MessageStatus()
-		{
-			Messages = new List<Message>();
-		}
+        public MessageStatus()
+        {
+            Messages = new List<Message>();
+        }
 
         public int Id { get; set; }
 

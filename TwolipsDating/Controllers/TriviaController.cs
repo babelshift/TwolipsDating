@@ -1,25 +1,32 @@
 ﻿using AutoMapper;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
-using Microsoft.AspNet.Identity;
-using System.Net;
 
 namespace TwolipsDating.Controllers
 {
     public class TriviaController : BaseController
     {
-        TriviaService triviaService = new TriviaService();
-        ViolationService violationService = new ViolationService();
-        UserService userService = new UserService();
+        #region Services
 
+        private TriviaService triviaService = new TriviaService();
+        private ViolationService violationService = new ViolationService();
+        private UserService userService = new UserService();
+
+        #endregion
+
+        /// <summary>
+        /// Get or set the date and time at which the current user has started viewing a question.
+        /// </summary>
         private DateTime? QuestionStartTime
         {
             get
@@ -43,6 +50,12 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        #region Dashboard
+
+        /// <summary>
+        /// Returns a view to display the trivia dashboard
+        /// </summary>
+        /// <returns></returns>
         public async Task<ActionResult> Index()
         {
             await SetNotificationsAsync();
@@ -54,9 +67,9 @@ namespace TwolipsDating.Controllers
             TriviaMenuViewModel viewModel = new TriviaMenuViewModel();
             viewModel.NewQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(newQuizzes);
 
-            await SetCompletedQuizzes(currentUserId, viewModel);
+            // alters the viewmodel's list of quizzes to indicate if the quiz has already been completed by the currently logged in user
+            await SetQuizzesCompletedByCurrentUser(currentUserId, viewModel);
 
-            //var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
             viewModel.UserStats = await ProfileService.GetUserStatsAsync(currentUserId);
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
             viewModel.RecentlyCompletedQuizzes = await GetUsersCompletedQuizzesAsync();
@@ -64,7 +77,13 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
-        private async Task SetCompletedQuizzes(string currentUserId, TriviaMenuViewModel viewModel)
+        /// <summary>
+        /// Alters the viewmodel's list of quizzes to indicate if the quiz has already been completed by the currently logged in user
+        /// </summary>
+        /// <param name="currentUserId"></param>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        private async Task SetQuizzesCompletedByCurrentUser(string currentUserId, TriviaMenuViewModel viewModel)
         {
             var completedQuizzes = await triviaService.GetCompletedQuizzesForUserAsync(currentUserId);
 
@@ -77,13 +96,29 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns a collection of quizzes that have been completed by various users
+        /// </summary>
+        /// <returns></returns>
+        private async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizzesAsync()
+        {
+            var usersCompletedQuiz = await triviaService.GetUsersCompletedQuizzesAsync();
+            return Mapper.Map<IReadOnlyCollection<CompletedQuiz>, IReadOnlyCollection<UserCompletedQuizViewModel>>(usersCompletedQuiz);
+        }
+
+        #endregion
+
         #region Random Question
 
+        /// <summary>
+        /// Returns a JSON object which contains a random question and its contents. Returns "success: false" if no questions remain unanswered for the currently logged in user.
+        /// </summary>
+        /// <returns></returns>
         public async Task<JsonResult> RandomJson()
         {
             QuestionViewModel viewModel = await GetRandomQuestionViewModelAsync((int)QuestionTypeValues.Random);
 
-            // there is a random question 
+            // there is a random question
             if (viewModel != null)
             {
                 return Json(new
@@ -107,6 +142,10 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns a view containing a random question. Redirects to the user's create profile if no profile exists for the user.
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         public async Task<ActionResult> Random()
         {
@@ -124,6 +163,12 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// Submits an answer for a question and records the action for the currently logged in user.
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <param name="answerId"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<JsonResult> SubmitAnswer(int questionId, int answerId)
         {
@@ -131,14 +176,30 @@ namespace TwolipsDating.Controllers
             {
                 var currentUserId = User.Identity.GetUserId();
 
-                var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
+                int? currentUserProfileId = await userService.GetProfileIdAsync(currentUserId);
 
-                // log the answer for this user's question history
-                int correctAnswerId = await triviaService.RecordAnsweredQuestionAsync(currentUserId, currentUserProfile.Id, questionId, answerId, (int)QuestionTypeValues.Random);
+                if (currentUserProfileId.HasValue)
+                {
+                    // log the answer for this user's question history
+                    int correctAnswerId = await triviaService.RecordAnsweredQuestionAsync(
+                        currentUserId,
+                        currentUserProfileId.Value,
+                        questionId,
+                        answerId,
+                        (int)QuestionTypeValues.Random);
 
-                return Json(new { success = true, correctAnswerId = correctAnswerId });
+                    return Json(new { success = true, correctAnswerId = correctAnswerId });
+                }
+                else
+                {
+                    Log.Warn("SubmitAnswer", ErrorMessages.AnswerNotSubmitted,
+                        parameters: new { questionId = questionId, answerId = answerId }
+                    );
+
+                    return Json(new { success = false, error = ErrorMessages.AnswerNotSubmitted });
+                }
             }
-            catch (Exception e)
+            catch (DbUpdateException e)
             {
                 Log.Error("SubmitAnswer", e,
                     parameters: new { questionId = questionId, answerId = answerId }
@@ -148,10 +209,14 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        #endregion
+        #endregion Random Question
 
         #region Timed Question
 
+        /// <summary>
+        /// Returns a view containing a timed random question. Redirects to the user's create profile if no profile exists for the user.
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         public async Task<ActionResult> Timed()
         {
@@ -169,21 +234,12 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
-        private async Task<QuestionViolationViewModel> GetQuestionViolationViewModelAsync()
-        {
-            QuestionViolationViewModel viewModel = new QuestionViolationViewModel();
-
-            // anonymous viewers can't report violations so don't look any of the types up
-            if (User.Identity.IsAuthenticated)
-            {
-                // setup violation types
-                var violationTypes = await violationService.GetQuestionViolationTypesAsync();
-                viewModel.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
-            }
-
-            return viewModel;
-        }
-
+        /// <summary>
+        /// Submits an answer for a timed question and records the action for the currently logged in user.
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <param name="answerId"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<JsonResult> SubmitTimedAnswer(int questionId, int answerId)
         {
@@ -200,12 +256,28 @@ namespace TwolipsDating.Controllers
                     {
                         var currentUserId = User.Identity.GetUserId();
 
-                        var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
+                        int? currentUserProfileId = await userService.GetProfileIdAsync(currentUserId);
 
-                        // log the answer for this user's question history
-                        int correctAnswerId = await triviaService.RecordAnsweredQuestionAsync(currentUserId, currentUserProfile.Id, questionId, answerId, (int)QuestionTypeValues.Timed);
+                        if (currentUserProfileId.HasValue)
+                        {
+                            // log the answer for this user's question history
+                            int correctAnswerId = await triviaService.RecordAnsweredQuestionAsync(
+                                currentUserId,
+                                currentUserProfileId.Value,
+                                questionId,
+                                answerId,
+                                (int)QuestionTypeValues.Timed);
 
-                        return Json(new { success = true, correctAnswerId = correctAnswerId });
+                            return Json(new { success = true, correctAnswerId = correctAnswerId });
+                        }
+                        else
+                        {
+                            Log.Warn("SubmitTimedAnswer", ErrorMessages.AnswerNotSubmitted,
+                                parameters: new { questionId = questionId, answerId = answerId }
+                            );
+
+                            return Json(new { success = false, error = ErrorMessages.AnswerNotSubmitted });
+                        }
                     }
                     else
                     {
@@ -217,7 +289,7 @@ namespace TwolipsDating.Controllers
                     return Json(new { success = false, error = "How did you answer without starting the question?" });
                 }
             }
-            catch (Exception e)
+            catch (DbUpdateException e)
             {
                 Log.Error("SubmitAnswer", e,
                     parameters: new { questionId = questionId, answerId = answerId }
@@ -227,6 +299,10 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Starts a timer on a timed question and returns a JSON object containing the time components.
+        /// </summary>
+        /// <returns></returns>
         public JsonResult StartTimedQuestion()
         {
             DateTime questionStartTime = DateTime.UtcNow;
@@ -244,10 +320,15 @@ namespace TwolipsDating.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        #endregion
+        #endregion Timed Question
 
         #region Quiz
 
+        /// <summary>
+        /// Returns a view containing quiz questions and optionally the correct answers and the selected answers by the user if they've completed the quiz.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         public async Task<ActionResult> Quiz(int id)
         {
@@ -260,6 +341,7 @@ namespace TwolipsDating.Controllers
                 && !(await userService.DoesUserHaveProfileAsync(currentUserId)))
                 return RedirectToProfileIndex();
 
+            // if there is no quiz by this id, return not found
             var quiz = await triviaService.GetQuizAsync(id);
             if (quiz == null)
             {
@@ -326,13 +408,24 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
-        private async Task<List<QuestionViewModel>> GetQuizQuestions(int id, List<QuestionViewModel> questionListViewModel)
+        /// <summary>
+        /// Returns a collection of questions for a quiz.
+        /// </summary>
+        /// <param name="quizId"></param>
+        /// <param name="questionListViewModel"></param>
+        /// <returns></returns>
+        private async Task<List<QuestionViewModel>> GetQuizQuestions(int quizId, List<QuestionViewModel> questionListViewModel)
         {
-            var quizQuestions = await triviaService.GetQuizQuestionsAsync(id);
+            var quizQuestions = await triviaService.GetQuizQuestionsAsync(quizId);
             questionListViewModel = Mapper.Map<IReadOnlyCollection<Question>, List<QuestionViewModel>>(quizQuestions);
             return questionListViewModel;
         }
 
+        /// <summary>
+        /// Submits the completion of a quiz for the currently logged in user.
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> Quiz(QuizViewModel viewModel)
         {
@@ -367,8 +460,35 @@ namespace TwolipsDating.Controllers
             return RedirectToAction("quiz", new { id = viewModel.QuizId });
         }
 
-        #endregion
+        /// <summary>
+        /// Returns a collection of users who have completed a quiz.
+        /// </summary>
+        /// <param name="quizId"></param>
+        /// <returns></returns>
+        private async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int quizId)
+        {
+            var usersCompletedQuiz = await triviaService.GetUsersCompletedQuizAsync(quizId);
+            return Mapper.Map<IReadOnlyCollection<CompletedQuiz>, IReadOnlyCollection<UserCompletedQuizViewModel>>(usersCompletedQuiz);
+        }
 
+        /// <summary>
+        /// Returns a collection of tag associated with the questions of a quiz.
+        /// </summary>
+        /// <param name="quizId"></param>
+        /// <returns></returns>
+        private async Task<IReadOnlyCollection<TagViewModel>> GetTagsForQuizAsync(int quizId)
+        {
+            var tags = await triviaService.GetTagsForQuizAsync(quizId);
+            return tags;
+        }
+
+        #endregion Quiz
+
+        /// <summary>
+        /// Returns a view model containing a random question of a certain type with its tags and users who have already answered it correctly.
+        /// </summary>
+        /// <param name="questionTypeId"></param>
+        /// <returns></returns>
         private async Task<QuestionViewModel> GetRandomQuestionViewModelAsync(int questionTypeId)
         {
             await SetNotificationsAsync();
@@ -390,36 +510,51 @@ namespace TwolipsDating.Controllers
             return viewModel;
         }
 
+        /// <summary>
+        /// Returns a collection of tags for a certain question.
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <returns></returns>
         private async Task<IReadOnlyCollection<TagViewModel>> GetTagsForQuestionAsync(int questionId)
         {
             var tags = await triviaService.GetTagsForQuestionAsync(questionId);
             return Mapper.Map<IReadOnlyCollection<Tag>, IReadOnlyCollection<TagViewModel>>(tags);
         }
 
+        /// <summary>
+        /// Returns a collection of users who answered a question correctly.
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <returns></returns>
         private async Task<IReadOnlyCollection<UserAnsweredQuestionCorrectlyViewModel>> GetUsersAnsweredCorrectlyAsync(int questionId)
         {
             var usersAnsweredCorrectly = await triviaService.GetUsersAnsweredCorrectlyAsync(questionId);
             return Mapper.Map<IReadOnlyCollection<AnsweredQuestion>, IReadOnlyCollection<UserAnsweredQuestionCorrectlyViewModel>>(usersAnsweredCorrectly);
         }
 
-        private async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int quizId)
+        /// <summary>
+        /// Returns a view model containing question violation objects.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<QuestionViolationViewModel> GetQuestionViolationViewModelAsync()
         {
-            var usersCompletedQuiz = await triviaService.GetUsersCompletedQuizAsync(quizId);
-            return Mapper.Map<IReadOnlyCollection<CompletedQuiz>, IReadOnlyCollection<UserCompletedQuizViewModel>>(usersCompletedQuiz);
+            QuestionViolationViewModel viewModel = new QuestionViolationViewModel();
+
+            // anonymous viewers can't report violations so don't look any of the types up
+            if (User.Identity.IsAuthenticated)
+            {
+                // setup violation types
+                var violationTypes = await violationService.GetQuestionViolationTypesAsync();
+                viewModel.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
+            }
+
+            return viewModel;
         }
 
-        private async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizzesAsync()
-        {
-            var usersCompletedQuiz = await triviaService.GetUsersCompletedQuizzesAsync();
-            return Mapper.Map<IReadOnlyCollection<CompletedQuiz>, IReadOnlyCollection<UserCompletedQuizViewModel>>(usersCompletedQuiz);
-        }
-
-        private async Task<IReadOnlyCollection<TagViewModel>> GetTagsForQuizAsync(int quizId)
-        {
-            var tags = await triviaService.GetTagsForQuizAsync(quizId);
-            return tags;
-        }
-
+        /// <summary>
+        /// Disposes all services.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace TwolipsDating.ViewModels
 {
@@ -44,48 +40,48 @@ namespace TwolipsDating.ViewModels
         public bool IsIgnoredByCurrentUser { get; set; }
         public bool IsFavoritedByCurrentUser { get; set; }
 
-        #endregion
+        #endregion Profile view stuff
 
         #region Report review stuff
 
         public WriteReviewViolationViewModel WriteReviewViolation { get; set; }
 
-        #endregion
+        #endregion Report review stuff
 
         #region Write review stuff
 
         public WriteReviewViewModel WriteReview { get; set; }
 
-        #endregion
+        #endregion Write review stuff
 
         #region Send message stuff
 
         public SendMessageViewModel SendMessage { get; set; }
 
-        #endregion
+        #endregion Send message stuff
 
         #region Profile creation stuff
 
         public CreateProfileViewModel CreateProfile { get; set; }
 
-        #endregion
+        #endregion Profile creation stuff
 
         #region Image upload stuff
 
         public UploadImageViewModel UploadImage { get; set; }
 
-        #endregion
+        #endregion Image upload stuff
 
         #region Send gift stuff
 
         public SendGiftViewModel SendGift { get; set; }
 
-        #endregion
+        #endregion Send gift stuff
 
         #region Profile image stuff
 
         public ChangeProfileImageViewModel ChangeImage { get; set; }
 
-        #endregion
+        #endregion Profile image stuff
     }
 }

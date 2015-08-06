@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
@@ -10,16 +11,24 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
-using Microsoft.AspNet.Identity;
 
 namespace TwolipsDating.Controllers
 {
     public class MessageController : BaseController
     {
+        #region Services
+
         private UserService userService = new UserService();
+
+        #endregion Services
 
         #region Conversations
 
+        /// <summary>
+        /// Returns a view model containing conversations between the currently logged in user and another user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<ActionResult> Conversation(string id)
         {
             var currentUserId = User.Identity.GetUserId();
@@ -41,6 +50,7 @@ namespace TwolipsDating.Controllers
             // lookup the profile we are accessing and the messages between the current user and that profile
             var profileForOtherUser = await ProfileService.GetUserProfileAsync(id);
 
+            // there is no profile for the user that we are looking up
             if (profileForOtherUser == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
@@ -164,10 +174,14 @@ namespace TwolipsDating.Controllers
             return conversationItem;
         }
 
-        #endregion
+        #endregion Conversations
 
         #region Sent/Received
 
+        /// <summary>
+        /// Sets up a view model displaying all received messages for the currently logged in user.
+        /// </summary>
+        /// <returns></returns>
         public async Task<ActionResult> Received()
         {
             var currentUserId = User.Identity.GetUserId();
@@ -190,6 +204,10 @@ namespace TwolipsDating.Controllers
             return View("index", viewModel);
         }
 
+        /// <summary>
+        /// Sets up a view model displaying all sent messages for the currently logged in user.
+        /// </summary>
+        /// <returns></returns>
         public async Task<ActionResult> Sent()
         {
             var currentUserId = User.Identity.GetUserId();
@@ -212,11 +230,21 @@ namespace TwolipsDating.Controllers
             return View("index", viewModel);
         }
 
+        /// <summary>
+        /// Redirects to the conversation action.
+        /// </summary>
+        /// <param name="routeValues"></param>
+        /// <returns></returns>
         protected ActionResult RedirectToConversation(object routeValues = null)
         {
             return RedirectToAction("conversation", routeValues);
         }
 
+        /// <summary>
+        /// Sends a message to a user from the currently logged in user. Does nothing if the current user's email address isn't confirmed.
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> Send(ConversationViewModel viewModel)
         {
@@ -261,8 +289,12 @@ namespace TwolipsDating.Controllers
             return RedirectToConversation(new { id = viewModel.TargetApplicationUserId });
         }
 
-        #endregion
+        #endregion Sent/Received
 
+        /// <summary>
+        /// Disposes all services.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

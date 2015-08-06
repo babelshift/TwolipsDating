@@ -1,24 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using TwolipsDating.Models;
-using System.Data.Entity;
 
 namespace TwolipsDating.Business
 {
     public class NotificationService : BaseService
     {
-        public async Task<IReadOnlyList<Announcement>> GetAnnouncementNotificationsAsync()
+        /// <summary>
+        /// Returns a collection of announcements.
+        /// </summary>
+        /// <returns></returns>
+        internal async Task<IReadOnlyList<Announcement>> GetAnnouncementNotificationsAsync()
         {
             var announcementsList = from announcements in db.Announcements
                                     select announcements;
 
-            return (await announcementsList.ToListAsync()).AsReadOnly();
+            var results = await announcementsList.ToListAsync();
+            return results.AsReadOnly();
         }
 
-        public async Task<int> GetMessageNotificationCountAsync(string userId)
+        /// <summary>
+        /// Returns a count of message notifications for a user. Count includes only unread messages and from users that are marked as active.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        internal async Task<int> GetMessageNotificationCountAsync(string userId)
         {
             var messageCount = await (from message in db.Messages
                                       where message.ReceiverApplicationUserId == userId

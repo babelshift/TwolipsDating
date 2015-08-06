@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Dapper;
+using System;
 using System.Collections.Generic;
-using TwolipsDating.Models;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using Dapper;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using TwolipsDating.Models;
 
 namespace TwolipsDating.Business
 {
@@ -12,6 +12,13 @@ namespace TwolipsDating.Business
     {
         protected ApplicationDbContext db = new ApplicationDbContext();
 
+        /// <summary>
+        /// Uses Dapper to perform an asynchronous query to the default connection.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         protected async Task<IEnumerable<T>> QueryAsync<T>(string sql, object parameters)
         {
             Debug.Assert(!String.IsNullOrEmpty(sql));
@@ -28,13 +35,17 @@ namespace TwolipsDating.Business
             }
         }
 
-
-
+        /// <summary>
+        /// Disposes the db context
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
         }
 
+        /// <summary>
+        /// Disposes the db context
+        /// </summary>
         private void Dispose(bool disposing)
         {
             if (disposing)

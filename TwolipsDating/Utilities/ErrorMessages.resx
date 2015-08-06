@@ -186,4 +186,13 @@
   <data name="TitlePurchaseFailed" xml:space="preserve">
     <value>Failed to purchase the title. Contact support if you continue seeing this.</value>
   </data>
+  <data name="CannotFavoriteOwnProfile" xml:space="preserve">
+    <value>You cannot favorite your own profile.</value>
+  </data>
+  <data name="CannotIgnoreSelf" xml:space="preserve">
+    <value>You cannot ignore yourself.</value>
+  </data>
+  <data name="Forbidden" xml:space="preserve">
+    <value>Forbidden</value>
+  </data>
 </root>

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace TwolipsDating.Models
 {
@@ -22,7 +20,7 @@ namespace TwolipsDating.Models
             get
             {
                 int count = 0;
-                foreach(var item in items)
+                foreach (var item in items)
                 {
                     count += item.Quantity;
                 }
@@ -43,7 +41,7 @@ namespace TwolipsDating.Models
             // optimize this with a hash table lookup
             var match = items.FirstOrDefault(i => i.Item.Id == item.Id);
 
-            if(match == null)
+            if (match == null)
             {
                 ShoppingCartItem cartItem = new ShoppingCartItem()
                 {
@@ -61,7 +59,7 @@ namespace TwolipsDating.Models
         public void RemoveItem(int storeItemId)
         {
             var match = items.FirstOrDefault(i => i.Item.Id == storeItemId);
-            if(match != null)
+            if (match != null)
             {
                 items.Remove(match);
             }

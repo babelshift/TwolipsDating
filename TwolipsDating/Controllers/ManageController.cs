@@ -1,16 +1,15 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using TwolipsDating.Models;
-using TwolipsDating.ViewModels;
-using TwolipsDating.Utilities;
-using System.Collections.Generic;
 using TwolipsDating.Business;
+using TwolipsDating.Models;
+using TwolipsDating.Utilities;
+using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Controllers
 {
@@ -143,7 +142,7 @@ namespace TwolipsDating.Controllers
                 && profile != null
                 && profile.GenderId != selectedGenderId.Value)
             {
-                await ProfileService.UpdateGenderAsync(profile, selectedGenderId.Value);
+                await ProfileService.UpdateGenderAsync(profile.Id, selectedGenderId.Value);
             }
         }
 
@@ -484,7 +483,7 @@ namespace TwolipsDating.Controllers
                     _signInManager = null;
                 }
 
-                if(userService != null)
+                if (userService != null)
                 {
                     userService.Dispose();
                     userService = null;
@@ -495,6 +494,7 @@ namespace TwolipsDating.Controllers
         }
 
         #region Helpers
+
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -551,6 +551,6 @@ namespace TwolipsDating.Controllers
             Error
         }
 
-        #endregion
+        #endregion Helpers
     }
 }

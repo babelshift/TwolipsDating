@@ -10,19 +10,33 @@ namespace TwolipsDating.Business
 {
     public class ViolationService : BaseService
     {
+        /// <summary>
+        /// Returns a boolean indicating if a user has already reported a review violation.
+        /// </summary>
+        /// <param name="reviewId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<bool> HasUserAlreadyReportedReview(int reviewId, string userId)
         {
             Debug.Assert(reviewId > 0);
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
             var reviewViolations = from violation in db.ReviewViolations
-                                  where violation.ReviewId == reviewId
-                                  where violation.AuthorUserId == userId
-                                  select violation;
+                                   where violation.ReviewId == reviewId
+                                   where violation.AuthorUserId == userId
+                                   select violation;
 
             return (await reviewViolations.CountAsync()) == 1;
         }
 
+        /// <summary>
+        /// Adds a review violation report to the database. Does nothing if the user put nothing in the content.
+        /// </summary>
+        /// <param name="reviewId"></param>
+        /// <param name="violationTypeId"></param>
+        /// <param name="content"></param>
+        /// <param name="authorUserId"></param>
+        /// <returns></returns>
         public async Task<int> AddReviewViolation(int reviewId, int violationTypeId, string content, string authorUserId)
         {
             if (String.IsNullOrEmpty(content))
@@ -45,6 +59,10 @@ namespace TwolipsDating.Business
             return await db.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Returns a collection of types that users can select for question violations.
+        /// </summary>
+        /// <returns></returns>
         public async Task<IReadOnlyCollection<QuestionViolationType>> GetQuestionViolationTypesAsync()
         {
             var violationTypeResults = from violationTypes in db.QuestionViolationTypes
@@ -55,29 +73,46 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
+        /// <summary>
+        /// Returns a collection of types that users can select for review violations.
+        /// </summary>
+        /// <returns></returns>
         public async Task<IReadOnlyCollection<ViolationType>> GetViolationTypesAsync()
         {
             var violationTypeResults = from violationTypes in db.ViolationTypes
-                          select violationTypes;
+                                       select violationTypes;
 
             var results = await violationTypeResults.ToListAsync();
 
             return results.AsReadOnly();
         }
 
+        /// <summary>
+        /// Returns a boolean indicating if a user has alraedy reported a question violation.
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<bool> HasUserAlreadyReportedQuestion(int questionId, string userId)
         {
             Debug.Assert(questionId > 0);
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
             var questionViolations = from violation in db.QuestionViolations
-                                   where violation.QuestionId == questionId
-                                   where violation.AuthorUserId == userId
-                                   select violation;
+                                     where violation.QuestionId == questionId
+                                     where violation.AuthorUserId == userId
+                                     select violation;
 
             return (await questionViolations.CountAsync()) == 1;
         }
 
+        /// <summary>
+        /// Adds a question violation authored by a user.
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <param name="violationTypeId"></param>
+        /// <param name="authorUserId"></param>
+        /// <returns></returns>
         internal async Task<int> AddQuestionViolation(int questionId, int violationTypeId, string authorUserId)
         {
             Debug.Assert(questionId > 0);

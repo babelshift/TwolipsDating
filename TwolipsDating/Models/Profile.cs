@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace TwolipsDating.Models
 {
     public class Profile
     {
-		public Profile()
-		{
-			Tags = new List<Tag>();
+        public Profile()
+        {
+            Tags = new List<Tag>();
             TagSuggestions = new List<TagSuggestion>();
             FavoritedBy = new List<FavoriteProfile>();
             TagAwards = new List<TagAward>();
-		}
+        }
 
         public int Id { get; set; }
         public DateTime Birthday { get; set; }
@@ -28,8 +26,8 @@ namespace TwolipsDating.Models
         public virtual ApplicationUser ApplicationUser { get; set; }
         public virtual StoreItem SelectedTitle { get; set; }
 
-		public virtual ICollection<Tag> Tags { get; set; }
-		public virtual ICollection<TagSuggestion> TagSuggestions { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; }
+        public virtual ICollection<TagSuggestion> TagSuggestions { get; set; }
         public virtual ICollection<FavoriteProfile> FavoritedBy { get; set; }
         public virtual ICollection<TagAward> TagAwards { get; set; }
         public virtual ICollection<ProfileViewLog> VisitedBy { get; set; }

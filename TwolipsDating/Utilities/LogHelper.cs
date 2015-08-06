@@ -1,10 +1,7 @@
 ﻿using NLog;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Web;
 
 namespace TwolipsDating.Utilities
 {
@@ -16,7 +13,7 @@ namespace TwolipsDating.Utilities
         {
             logger = LogManager.GetLogger(typeName);
         }
-        
+
         public void Error(string message, string stackTrace)
         {
             Debug.Assert(!String.IsNullOrEmpty(message));
@@ -71,11 +68,11 @@ namespace TwolipsDating.Utilities
             logMessage.AppendFormat("Action: {0}", actionName);
             logMessage.AppendFormat(", Message: {0}", e.Message);
 
-            if(e.InnerException != null)
+            if (e.InnerException != null)
             {
                 logMessage.AppendFormat(", InnerMessage: {0}", e.InnerException.Message);
 
-                if(e.InnerException.InnerException != null)
+                if (e.InnerException.InnerException != null)
                 {
                     logMessage.AppendFormat(", InnerInnerMessage: {0}", e.InnerException.Message);
                 }
@@ -92,7 +89,7 @@ namespace TwolipsDating.Utilities
                 logMessage.Append("]");
             }
 
-                logMessage.AppendFormat(", StackTrace: {0}", e.StackTrace);
+            logMessage.AppendFormat(", StackTrace: {0}", e.StackTrace);
 
             logger.Error(logMessage.ToString());
         }

@@ -19,7 +19,7 @@
 
         var json = '{"storeItemId":' + itemId + ', "storeItemTypeId":' + itemTypeId + '}';
 
-        postJson('/store/buyStoreItem', json, function (data) {
+        postJson('/store/addToCart', json, function (data) {
             if (data.success) {
                 var currentShoppingCartCount = parseInt($('#shopping-cart-count').text());
                 $('#shopping-cart-count').text(++currentShoppingCartCount);

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using TwolipsDating.Models;
 
 namespace TwolipsDating.Business
@@ -17,7 +15,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<UserImage>> GetRecentFollowerImagesAsync(string userId)
+        internal async Task<IReadOnlyCollection<UserImage>> GetRecentFollowerImagesAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -36,7 +34,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<Review>> GetRecentFollowerReviewsAsync(string userId)
+        internal async Task<IReadOnlyCollection<Review>> GetRecentFollowerReviewsAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 

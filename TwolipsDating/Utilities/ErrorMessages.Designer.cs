@@ -79,6 +79,24 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You cannot favorite your own profile..
+        /// </summary>
+        internal static string CannotFavoriteOwnProfile {
+            get {
+                return ResourceManager.GetString("CannotFavoriteOwnProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot ignore yourself..
+        /// </summary>
+        internal static string CannotIgnoreSelf {
+            get {
+                return ResourceManager.GetString("CannotIgnoreSelf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You need to confirm your email address first..
         /// </summary>
         internal static string EmailAddressNotConfirmed {
@@ -93,6 +111,15 @@ namespace TwolipsDating.Utilities {
         internal static string FavoriteProfileNotSaved {
             get {
                 return ResourceManager.GetString("FavoriteProfileNotSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forbidden.
+        /// </summary>
+        internal static string Forbidden {
+            get {
+                return ResourceManager.GetString("Forbidden", resourceCulture);
             }
         }
         

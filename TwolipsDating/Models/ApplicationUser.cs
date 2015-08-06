@@ -2,10 +2,8 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace TwolipsDating.Models
 {
@@ -27,12 +25,12 @@ namespace TwolipsDating.Models
 
         public virtual Profile Profile { get; set; }
 
-		public virtual ICollection<Review> SentReviews { get; set; }
-		public virtual ICollection<Review> ReceivedReviews { get; set; }
-		public virtual ICollection<Message> SentMessages { get; set; }
-		public virtual ICollection<Message> ReceivedMessages { get; set; }
-		public virtual ICollection<UserImage> UploadedImages { get; set; }
-		public virtual ICollection<TagSuggestion> TagSuggestions { get; set; }
+        public virtual ICollection<Review> SentReviews { get; set; }
+        public virtual ICollection<Review> ReceivedReviews { get; set; }
+        public virtual ICollection<Message> SentMessages { get; set; }
+        public virtual ICollection<Message> ReceivedMessages { get; set; }
+        public virtual ICollection<UserImage> UploadedImages { get; set; }
+        public virtual ICollection<TagSuggestion> TagSuggestions { get; set; }
         public virtual ICollection<ReviewViolation> ReviewViolationsAuthored { get; set; }
         public virtual ICollection<QuestionViolation> QuestionViolationsAuthored { get; set; }
         public virtual ICollection<InventoryItem> InventoryItems { get; set; }

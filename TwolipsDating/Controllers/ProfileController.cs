@@ -21,34 +21,40 @@ namespace TwolipsDating.Controllers
 {
     public class ProfileController : BaseController
     {
+        #region Members
+
         private UserService userService = new UserService();
         private ViolationService violationService = new ViolationService();
 
+        #endregion
+
         #region Toggle Favorite and Ignore
 
+        /// <summary>
+        /// Toggles the status of whether or not a user has a profile favorited. Does nothing if the user is attempting to favorite own profile.
+        /// </summary>
+        /// <param name="currentUserId"></param>
+        /// <param name="profileUserId"></param>
+        /// <param name="profileId"></param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> ToggleFavoriteProfile(string currentUserId, string profileUserId, int profileId)
+        public async Task<JsonResult> ToggleFavoriteProfile(string profileUserId, int profileId)
         {
+            var currentUserId = User.Identity.GetUserId();
+
             try
             {
                 // if user is favoriting his own profile, do nothing
                 if (currentUserId == profileUserId)
                 {
-                    return Json(new { success = false });
-                }
-
-                // if user is not logged in, forbidden
-                // if passed user id is not equal to request current user id, forbidden
-                if (!User.Identity.IsAuthenticated || currentUserId != User.Identity.GetUserId())
-                {
-                    return Json(new { success = false, error = "403 Forbidden" });
+                    return Json(new { success = false, error = ErrorMessages.CannotFavoriteOwnProfile });
                 }
 
                 bool isFavorite = await ProfileService.ToggleFavoriteProfileAsync(currentUserId, profileId);
 
                 return Json(new { success = true, isFavorite = isFavorite });
             }
-            catch (Exception e)
+            catch (DbUpdateException e)
             {
                 Log.Error("ToggleFavoriteProfile", e,
                     parameters: new { currentUserId = currentUserId, profileUserId = profileUserId, profileId = profileId }
@@ -58,29 +64,30 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Toggles the status of whether or not a user has a profile favorited. Does nothing if the user is attempting to favorite own profile.
+        /// </summary>
+        /// <param name="currentUserId"></param>
+        /// <param name="profileUserId"></param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> ToggleIgnoredUser(string currentUserId, string profileUserId)
+        public async Task<JsonResult> ToggleIgnoredUser(string profileUserId)
         {
+            var currentUserId = User.Identity.GetUserId();
+
             try
             {
                 // if user is ignoring himself, do nothing
                 if (currentUserId == profileUserId)
                 {
-                    return Json(new { success = false });
-                }
-
-                // if user is not logged in, forbidden
-                // if passed user id is not equal to request current user id, forbidden
-                if (!User.Identity.IsAuthenticated || currentUserId != User.Identity.GetUserId())
-                {
-                    return Json(new { success = false, error = "403 Forbidden" });
+                    return Json(new { success = false, error = ErrorMessages.CannotIgnoreSelf });
                 }
 
                 bool isIgnored = await ProfileService.ToggleIgnoredUserAsync(currentUserId, profileUserId);
 
                 return Json(new { success = true, isIgnored = isIgnored });
             }
-            catch (Exception e)
+            catch (DbUpdateException e)
             {
                 Log.Error("ToggleIgnoredUser", e,
                     parameters: new { currentUserId = currentUserId, profileUserId = profileUserId }
@@ -94,6 +101,14 @@ namespace TwolipsDating.Controllers
 
         #region Suggest Tags
 
+        /// <summary>
+        /// Adds a suggsted tag to a profile based on a users selected action. For example, a user can select "intellectual" tag as a suggestion
+        /// for someone else's profile.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="profileId"></param>
+        /// <param name="suggestAction"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<JsonResult> SuggestTag(int id, int profileId, string suggestAction)
         {
@@ -112,6 +127,7 @@ namespace TwolipsDating.Controllers
                     changes = await ProfileService.RemoveTagSuggestionAsync(id, profileId, currentUserId);
                 }
 
+                // if no changes occurred as a result of the above functions, then either nothing was changed or the save failed
                 if (changes > 0)
                 {
                     int tagCount = await ProfileService.GetTagSuggestionCountForProfileAsync(id, profileId);
@@ -140,6 +156,13 @@ namespace TwolipsDating.Controllers
 
         #region Send Gifts
 
+        /// <summary>
+        /// Sends a gift from a user's inventory to another user's inventory. Does nothing if the current user's email is not confirmed.
+        /// </summary>
+        /// <param name="profileUserId"></param>
+        /// <param name="giftId"></param>
+        /// <param name="inventoryItemId"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<JsonResult> SendGift(string profileUserId, int giftId, int inventoryItemId)
         {
@@ -152,7 +175,6 @@ namespace TwolipsDating.Controllers
                 if (isCurrentUserEmailConfirmed)
                 {
                     int giftCount = await ProfileService.SendGiftAsync(currentUserId, profileUserId, giftId, inventoryItemId);
-
                     return Json(new { success = true, giftCount = giftCount });
                 }
                 else
@@ -172,6 +194,11 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Removes a single gift notification from the notification bar. Does nothing if the current user's email is not confirmed.
+        /// </summary>
+        /// <param name="giftTransactionId"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<JsonResult> RemoveGiftNotification(int giftTransactionId)
         {
@@ -183,8 +210,7 @@ namespace TwolipsDating.Controllers
 
                 if (isCurrentUserEmailConfirmed)
                 {
-                    int result = await ProfileService.RemoveGiftNotificationAsync(currentUserId, giftTransactionId);
-
+                    int changes = await ProfileService.RemoveGiftNotificationAsync(currentUserId, giftTransactionId);
                     return Json(new { success = true });
                 }
                 else
@@ -204,6 +230,10 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Removes all gift notifications for the current logged in user. Does nothing if the current user's email is not confirmed.
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public async Task<JsonResult> RemoveAllGiftNotifications()
         {
@@ -240,6 +270,12 @@ namespace TwolipsDating.Controllers
 
         #region Send Messages
 
+        /// <summary>
+        /// Sends a message from the currently logged in user to another user. Does nothing if the current user's email is not confirmed.
+        /// </summary>
+        /// <param name="profileUserId"></param>
+        /// <param name="messageBody"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<JsonResult> SendMessage(string profileUserId, string messageBody)
         {
@@ -247,7 +283,6 @@ namespace TwolipsDating.Controllers
 
             try
             {
-
                 bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
                 if (isCurrentUserEmailConfirmed)
@@ -290,6 +325,13 @@ namespace TwolipsDating.Controllers
 
         #region Write Reviews
 
+        /// <summary>
+        /// Writes a review for a user from the currently logged in user. Does nothing if the current user's email is not confirmed.
+        /// </summary>
+        /// <param name="profileUserId"></param>
+        /// <param name="rating"></param>
+        /// <param name="reviewContent"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<JsonResult> WriteReview(string profileUserId, int rating, string reviewContent)
         {
@@ -339,6 +381,14 @@ namespace TwolipsDating.Controllers
 
         #region Manage Image Uploads
 
+        /// <summary>
+        /// Deletes an uploaded image from a profile. Does nothing if attempting to delete from someone else's profile. Does nothing if the current user's email is not confirmed.
+        /// This will delete the image reference in Azure SQL Server and the physical file in Azure Storage Blobs.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="fileName"></param>
+        /// <param name="profileUserId"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> DeleteImage(int id, string fileName, string profileUserId)
         {
@@ -351,6 +401,8 @@ namespace TwolipsDating.Controllers
 
             try
             {
+                // TODO: how to make this atomic?
+
                 int changes = await ProfileService.DeleteUserImage(id);
 
                 if (changes > 0)
@@ -387,6 +439,15 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Uploads multiple images from a user's selection. 
+        /// Does nothing if attempting to upload to someone else's profile. 
+        /// Does nothing if the current user's email is not confirmed.
+        /// Does nothing if attempting to upload non image files.
+        /// This will upload the image reference in Azure SQL Server and the physical file in Azure Storage Blobs.
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> UploadImage(UploadImageViewModel viewModel)
         {
@@ -461,6 +522,13 @@ namespace TwolipsDating.Controllers
             return RedirectToIndex(new { tab = "pictures" });
         }
 
+        /// <summary>
+        /// Changes a user's displayed profile image based on a selected image.
+        /// Does nothing if attempting to change someone else's profile. 
+        /// Does nothing if the current user's email is not confirmed.
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> ChangeImage(ProfileViewModel viewModel)
         {
@@ -508,6 +576,14 @@ namespace TwolipsDating.Controllers
 
         #region Index and Show Profile
 
+        /// <summary>
+        /// Determines if a user is viewing their own profile, needs to create a profile, or is viewing someone else's profile. If the user is viewing their own profile
+        /// or someone else's profile, display it as normal. If the user is viewing their own profile, but it doesn't exist yet, the creation screen is shown.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="seoName"></param>
+        /// <param name="tab"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         public async Task<ActionResult> Index(int? id = null, string seoName = null, string tab = null)
         {
@@ -541,7 +617,7 @@ namespace TwolipsDating.Controllers
             else
             {
                 // user attempting to view base /profile URL but isn't logged in
-                if (String.IsNullOrEmpty(currentUserId))
+                if (!User.Identity.IsAuthenticated)
                 {
                     return RedirectToAction("login", "account");
                 }
@@ -561,12 +637,19 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Populates a view model containing all data needed to show a user's profile view.
+        /// </summary>
+        /// <param name="tab"></param>
+        /// <param name="currentUserId"></param>
+        /// <param name="profile"></param>
+        /// <returns></returns>
         private async Task<ActionResult> ShowUserProfileAsync(string tab, string currentUserId, Models.Profile profile)
         {
             var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profile.ApplicationUser.Id);
 
             var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
-            viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
+            viewModel.IsCurrentUserEmailConfirmed = !User.Identity.IsAuthenticated ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
             viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
             viewModel.CurrentUserId = currentUserId;
             viewModel.AverageRatingValue = reviews.AverageRating();
@@ -575,22 +658,28 @@ namespace TwolipsDating.Controllers
             // tag suggestions and awards
             await SetupProfileTagSuggestions(currentUserId, profile, viewModel);
 
-            // favorites and ignores (check for empty so we skip in case of anonymous viewers)
-            if (!String.IsNullOrEmpty(currentUserId))
+            // only do certain things if the viewer of the profile is logged in
+            if (User.Identity.IsAuthenticated)
             {
+                // setup favorites and ignores
                 viewModel.IsFavoritedByCurrentUser = profile.FavoritedBy.Any(f => f.UserId == currentUserId);
                 viewModel.IsIgnoredByCurrentUser = await userService.IsUserIgnoredByUserAsync(currentUserId, profile.ApplicationUser.Id);
-            }
 
-            // setup the inventory
-            await SetupProfileInventory(currentUserId, profile, viewModel);
-
-            // anonymous viewers don't have an inventory, so skip this if empty
-            if (!String.IsNullOrEmpty(currentUserId))
-            {
+                // setup inventory for the viewer of the profile
                 var viewerInventoryItems = await ProfileService.GetInventoryAsync(currentUserId);
                 viewModel.ViewerInventoryItems = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(viewerInventoryItems);
+
+                // setup violation types
+                var violationTypes = await violationService.GetViolationTypesAsync();
+                viewModel.WriteReviewViolation = new WriteReviewViolationViewModel();
+                viewModel.WriteReviewViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
+
+                // log a visit to the profile
+                await ProfileService.LogProfileViewAsync(currentUserId, viewModel.ProfileId);
             }
+
+            // setup the profile's inventory
+            await SetupProfileInventory(currentUserId, profile, viewModel);
 
             // setup user titles to select (only if the user is viewing their own profile)
             // TODO: optimize this
@@ -609,29 +698,19 @@ namespace TwolipsDating.Controllers
                 viewModel.UserTitles = titleViewModel;
             }
 
-            // anonymous viewers can't report violations so don't look any of the types up
-            if (!String.IsNullOrEmpty(currentUserId))
-            {
-                // setup violation types
-                var violationTypes = await violationService.GetViolationTypesAsync();
-                viewModel.WriteReviewViolation = new WriteReviewViolationViewModel();
-                viewModel.WriteReviewViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
-            }
-
             // setup viewmodel specific to the actively selected tab
             await SetViewModelBasedOnActiveTabAsync(profile, viewModel, reviews, currentUserId);
-
-            // log this visit
-            // TODO
-            // don't log anonymous views for now, but think of a way to do so
-            if (!String.IsNullOrEmpty(currentUserId))
-            {
-                await ProfileService.LogProfileViewAsync(currentUserId, viewModel.ProfileId);
-            }
 
             return View(viewModel);
         }
 
+        /// <summary>
+        /// Sets up the view model to include tag suggestions to be displayed and manaaged on a profile.
+        /// </summary>
+        /// <param name="currentUserId"></param>
+        /// <param name="profile"></param>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         private async Task SetupProfileTagSuggestions(string currentUserId, Models.Profile profile, ProfileViewModel viewModel)
         {
             var tagsSuggestedForProfile = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profile.Id);
@@ -640,6 +719,13 @@ namespace TwolipsDating.Controllers
             viewModel.AwardedTags = await ProfileService.GetTagsAwardedToProfileAsync(profile.Id);
         }
 
+        /// <summary>
+        /// Sets up the view model to include the profile's inventory items
+        /// </summary>
+        /// <param name="currentUserId"></param>
+        /// <param name="profile"></param>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         private async Task SetupProfileInventory(string currentUserId, Models.Profile profile, ProfileViewModel viewModel)
         {
             var profileInventoryItems = await ProfileService.GetInventoryAsync(profile.ApplicationUser.Id);
@@ -649,23 +735,40 @@ namespace TwolipsDating.Controllers
             viewModel.Inventory.ProfileUserId = profile.ApplicationUser.Id;
         }
 
+        /// <summary>
+        /// Returns a collection of all tags in the system and a count of how many suggestions a profile has of each.
+        /// </summary>
+        /// <param name="tagsSuggestedForProfile"></param>
+        /// <returns></returns>
         private async Task<IReadOnlyCollection<ProfileTagSuggestionViewModel>> GetAllTagsAndCountsInSystemAsync(IReadOnlyCollection<ProfileTagSuggestionViewModel> tagsSuggestedForProfile)
         {
-            var allTagsInSystem = Mapper.Map<IReadOnlyCollection<Tag>, IReadOnlyCollection<ProfileTagSuggestionViewModel>>(await ProfileService.GetAllTagsAsync());
-            var d = tagsSuggestedForProfile.ToDictionary(t => t.TagId);
-            foreach (var tag in allTagsInSystem)
+            var allTags = await ProfileService.GetAllTagsAsync();
+            var allTagViewModel = Mapper.Map<IReadOnlyCollection<Tag>, IReadOnlyCollection<ProfileTagSuggestionViewModel>>(allTags);
+            var mapOfTags = tagsSuggestedForProfile.ToDictionary(t => t.TagId);
+
+            // count each tag that has been suggsted for this profile and mark if the tag has already been suggested by the current user
+            foreach (var tag in allTagViewModel)
             {
-                ProfileTagSuggestionViewModel t = null;
-                bool success = d.TryGetValue(tag.TagId, out t);
+                ProfileTagSuggestionViewModel suggestedTag = null;
+                bool success = mapOfTags.TryGetValue(tag.TagId, out suggestedTag);
                 if (success)
                 {
-                    tag.TagCount = t.TagCount;
-                    tag.DidUserSuggest = t.DidUserSuggest;
+                    tag.TagCount = suggestedTag.TagCount;
+                    tag.DidUserSuggest = suggestedTag.DidUserSuggest;
                 }
             }
-            return allTagsInSystem;
+            return allTagViewModel;
         }
 
+        /// <summary>
+        /// Sets some extra items on the view model based on the tab that the user has selected. For example, if the user selects to view the feed, then extra
+        /// items will need to be populated such as the items that are displayed in the feed.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <param name="viewModel"></param>
+        /// <param name="reviews"></param>
+        /// <param name="currentUserId"></param>
+        /// <returns></returns>
         private async Task SetViewModelBasedOnActiveTabAsync(Models.Profile profile,
             ProfileViewModel viewModel,
             IReadOnlyCollection<Review> reviews,
@@ -693,7 +796,6 @@ namespace TwolipsDating.Controllers
             }
             if (viewModel.ActiveTab == "reviews")
             {
-                // get the user's reviews
                 viewModel.Reviews = new ProfileReviewsViewModel();
                 viewModel.Reviews.Items = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewViewModel>>(reviews);
                 viewModel.Reviews.CurrentUserId = currentUserId;
@@ -703,6 +805,13 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns the profile feed view model which is used to display all feed items that have occurred for a profile including reviews, messages, and uploaded images.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <param name="reviews"></param>
+        /// <param name="uploadedImages"></param>
+        /// <returns></returns>
         private ProfileFeedViewModel GetUserFeed(Models.Profile profile, IReadOnlyCollection<Review> reviews, IReadOnlyCollection<UserImage> uploadedImages)
         {
             List<ProfileFeedItemViewModel> feedItems = new List<ProfileFeedItemViewModel>();
@@ -732,17 +841,22 @@ namespace TwolipsDating.Controllers
             }
 
             var orderedFeed = feedItems.OrderByDescending(v => v.DateOccurred).ToList().AsReadOnly();
+
             ProfileFeedViewModel viewModel = new ProfileFeedViewModel()
             {
                 Items = orderedFeed
             };
+
             return viewModel;
         }
 
+        /// <summary>
+        /// If the profile doesn't exist when the user wants to view their own profile, use a special view model which only allows for the creation of a profile.
+        /// </summary>
+        /// <returns></returns>
         private async Task<ActionResult> GetViewModelForProfileCreationAsync()
         {
             var genders = await ProfileService.GetGendersAsync();
-            //var countries = await ProfileService.GetCountriesAsync();
 
             ProfileViewModel viewModel = new ProfileViewModel();
             viewModel.ViewMode = ProfileViewModel.ProfileViewMode.CreateProfile;
@@ -756,14 +870,7 @@ namespace TwolipsDating.Controllers
 
             viewModel.CreateProfile.Genders = genderCollection;
 
-            //Dictionary<int, string> countryCollection = new Dictionary<int, string>();
-            //foreach (var country in countries)
-            //{
-            //    countryCollection.Add(country.Id, country.Name);
-            //}
-
             string currentUserId = User.Identity.GetUserId();
-            //viewModel.CreateProfile.Countries = countryCollection;
             viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
             return View(viewModel);
@@ -772,7 +879,7 @@ namespace TwolipsDating.Controllers
         #endregion
 
         #region Create Profile
-
+        
         [HttpPost]
         public async Task<ActionResult> Create(ProfileViewModel viewModel)
         {
@@ -839,6 +946,11 @@ namespace TwolipsDating.Controllers
 
         #region Select Title
 
+        /// <summary>
+        /// Sets a displayed profile title for the currently logged in user. Does nothing if the user's email address isn't confirmed.
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> SetSelectedTitle(int titleId)
         {
@@ -871,6 +983,11 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Logs an exception that occurred in the SelectTitle action.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="e"></param>
         private void LogSelectTitleException(string userId, Exception e)
         {
             Log.Error(
@@ -882,6 +999,10 @@ namespace TwolipsDating.Controllers
 
         #endregion
 
+        /// <summary>
+        /// Disposes of all services.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -1,21 +1,29 @@
 ﻿using AutoMapper;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using TwolipsDating.Business;
-using TwolipsDating.ViewModels;
 using TwolipsDating.Utilities;
-using Microsoft.AspNet.Identity;
+using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Controllers
 {
     public class SearchController : BaseController
     {
+        #region Services
+
         private SearchService searchService = new SearchService();
 
+        #endregion Services
+
+        /// <summary>
+        /// Sets up a view model which can be used to display search results based on a user name or a tag name.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="tag"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         public async Task<ActionResult> Index(string user, string tag)
         {
@@ -39,6 +47,7 @@ namespace TwolipsDating.Controllers
                     profileViewModel.ReviewCount = reviews.Count;
 
                     // tag suggestions and awards
+                    // this will break for anonymous users
                     profileViewModel.SuggestedTags = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profileViewModel.ProfileId);
                 }
 
@@ -49,6 +58,12 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// Returns a collection of profiles that match either the user name or the tag or both.
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="tag"></param>
+        /// <returns></returns>
         private async Task<IReadOnlyCollection<Models.Profile>> GetSearchResults(string userName, string tag)
         {
             IReadOnlyCollection<Models.Profile> results = null;
@@ -72,6 +87,10 @@ namespace TwolipsDating.Controllers
             return results;
         }
 
+        /// <summary>
+        /// Disposes all services.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && searchService != null)

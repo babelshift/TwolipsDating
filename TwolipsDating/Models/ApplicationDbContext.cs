@@ -1,11 +1,7 @@
-﻿using System.Data.Entity;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System;
-using System.Data.Entity.ModelConfiguration.Conventions;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace TwolipsDating.Models
 {
@@ -18,21 +14,25 @@ namespace TwolipsDating.Models
 
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Gender> Genders { get; set; }
+
         //public DbSet<Country> Countries { get; set; }
         //public DbSet<City> Cities { get; set; }
         //public DbSet<ZipCode> ZipCodes { get; set; }
         public DbSet<Message> Messages { get; set; }
+
         public DbSet<MessageStatus> MessageStatuses { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<ReviewRating> ReviewRatings { get; set; }
         public DbSet<UserImage> UserImages { get; set; }
-		public DbSet<Tag> Tags { get; set; }
-		public DbSet<TagSuggestion> TagSuggestions { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<TagSuggestion> TagSuggestions { get; set; }
         public DbSet<MessageConversation> MessageConversations { get; set; }
         public DbSet<ViolationType> ViolationTypes { get; set; }
         public DbSet<ReviewViolation> ReviewViolations { get; set; }
+
         //public DbSet<Gift> Gifts { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
+
         public DbSet<GiftTransactionLog> GiftTransactions { get; set; }
         public DbSet<FavoriteProfile> FavoriteProfiles { get; set; }
         public DbSet<IgnoredUser> IgnoredUsers { get; set; }
@@ -46,8 +46,10 @@ namespace TwolipsDating.Models
         public DbSet<MilestoneAchievement> MilestoneAchievements { get; set; }
         public DbSet<MilestoneType> MilestoneTypes { get; set; }
         public DbSet<CompletedQuiz> CompletedQuizzes { get; set; }
+
         //public DbSet<Title> Titles { get; set; }
         public DbSet<StoreTransactionLog> StoreTransactions { get; set; }
+
         public DbSet<UserTitle> UserTitles { get; set; }
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<GeoCity> GeoCities { get; set; }
@@ -82,8 +84,8 @@ namespace TwolipsDating.Models
             SetupReviewEntity(modelBuilder);
             SetupReviewRatingEntity(modelBuilder);
             SetupUserImageEntity(modelBuilder);
-			SetupTagEntity(modelBuilder);
-			SetupTagSuggestionEntity(modelBuilder);
+            SetupTagEntity(modelBuilder);
+            SetupTagSuggestionEntity(modelBuilder);
             SetupMessageConversations(modelBuilder);
             SetupViolationTypes(modelBuilder);
             SetupReviewViolations(modelBuilder);
@@ -773,51 +775,51 @@ namespace TwolipsDating.Models
                 .ToTable("dbo.MessageConversations");
         }
 
-		private void SetupTagSuggestionEntity(DbModelBuilder modelBuilder)
-		{
-			modelBuilder.Entity<TagSuggestion>()
-				.HasKey(t => new { t.TagId, t.ProfileId, t.SuggestingUserId });
+        private void SetupTagSuggestionEntity(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TagSuggestion>()
+                .HasKey(t => new { t.TagId, t.ProfileId, t.SuggestingUserId });
 
-			modelBuilder.Entity<TagSuggestion>()
-				.Property(t => t.DateSuggested)
-				.IsRequired();
+            modelBuilder.Entity<TagSuggestion>()
+                .Property(t => t.DateSuggested)
+                .IsRequired();
 
-			modelBuilder.Entity<TagSuggestion>()
-				.HasRequired(t => t.Profile)
-				.WithMany(t => t.TagSuggestions)
-				.HasForeignKey(t => t.ProfileId);
+            modelBuilder.Entity<TagSuggestion>()
+                .HasRequired(t => t.Profile)
+                .WithMany(t => t.TagSuggestions)
+                .HasForeignKey(t => t.ProfileId);
 
-			modelBuilder.Entity<TagSuggestion>()
-				.HasRequired(t => t.SuggestingUser)
-				.WithMany(t => t.TagSuggestions)
-				.HasForeignKey(t => t.SuggestingUserId);
+            modelBuilder.Entity<TagSuggestion>()
+                .HasRequired(t => t.SuggestingUser)
+                .WithMany(t => t.TagSuggestions)
+                .HasForeignKey(t => t.SuggestingUserId);
 
-			modelBuilder.Entity<TagSuggestion>()
-				.HasRequired(t => t.Tag)
-				.WithMany(t => t.TagSuggestions)
-				.HasForeignKey(t => t.TagId);
-		}
+            modelBuilder.Entity<TagSuggestion>()
+                .HasRequired(t => t.Tag)
+                .WithMany(t => t.TagSuggestions)
+                .HasForeignKey(t => t.TagId);
+        }
 
-		private void SetupTagEntity(DbModelBuilder modelBuilder)
-		{
-			modelBuilder.Entity<Tag>().HasKey(t => t.TagId);
+        private void SetupTagEntity(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Tag>().HasKey(t => t.TagId);
 
-			modelBuilder.Entity<Tag>()
-				.Property(g => g.TagId)
-				.HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            modelBuilder.Entity<Tag>()
+                .Property(g => g.TagId)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
-			modelBuilder.Entity<Tag>()
-				.Property(t => t.Name)
-				.HasMaxLength(255);
+            modelBuilder.Entity<Tag>()
+                .Property(t => t.Name)
+                .HasMaxLength(255);
 
-			modelBuilder.Entity<Tag>()
-				.Property(t => t.Name)
-				.IsRequired();
+            modelBuilder.Entity<Tag>()
+                .Property(t => t.Name)
+                .IsRequired();
 
-			modelBuilder.Entity<Tag>()
-				.HasMany(t => t.Profiles)
-				.WithMany(t => t.Tags);
-		}
+            modelBuilder.Entity<Tag>()
+                .HasMany(t => t.Profiles)
+                .WithMany(t => t.Tags);
+        }
 
         private void SetupUserImageEntity(DbModelBuilder modelBuilder)
         {

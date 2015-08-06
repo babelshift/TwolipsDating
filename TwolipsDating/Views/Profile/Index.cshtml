@@ -9,25 +9,27 @@
 @Html.HiddenFor(m => m.ActiveTab)
 @Html.HiddenFor(m => m.ProfileId)
 @Html.HiddenFor(m => m.ProfileUserId)
-@Html.HiddenFor(m => m.CurrentUserId)
 
 @if (Model != null && Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileViewMode.ShowProfile)
 {
-    <div id="popover-titles-content" class="hide">
-        @if (Model.UserTitles != null && Model.UserTitles.Count > 0)
-        {
-            foreach (var userTitle in Model.UserTitles)
+    if (Model.CurrentUserId == Model.ProfileUserId)
+    {
+        <div id="popover-titles-content" class="hide">
+            @if (Model.UserTitles != null && Model.UserTitles.Count > 0)
             {
-                <p>
-                    @if (userTitle.TitleName == Model.SelectedTitle)
-                    {
-                        <i class="@String.Format("selected-title-item-check-{0}", userTitle.TitleId) glyphicon glyphicon-ok"></i>
-                    }
-                    <a class="@String.Format("select-title-link-{0}", userTitle.TitleId)" href="#" data-title-name="@userTitle.TitleName" data-title-id="@userTitle.TitleId">@userTitle.TitleName</a>
-                </p>
+                foreach (var userTitle in Model.UserTitles)
+                {
+                    <p>
+                        @if (userTitle.TitleName == Model.SelectedTitle)
+                        {
+                            <i class="@String.Format("selected-title-item-check-{0}", userTitle.TitleId) glyphicon glyphicon-ok"></i>
+                        }
+                        <a class="@String.Format("select-title-link-{0}", userTitle.TitleId)" href="#" data-title-name="@userTitle.TitleName" data-title-id="@userTitle.TitleId">@userTitle.TitleName</a>
+                    </p>
+                }
             }
-        }
-    </div>
+        </div>
+    }
     if (Model.WriteReviewViolation != null && Model.WriteReviewViolation.ViolationTypes != null && Model.WriteReviewViolation.ViolationTypes.Count > 0)
     {
         <div class="modal fade" id="modalReviewViolation" tabindex="-1" role="dialog" aria-labelledby="modalReviewViolationLabel" aria-hidden="true">
@@ -338,13 +340,13 @@
                         }
                     </h5>
                     @*
-            <p>
-            <span style="margin-right: 10px;">
-            <button class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-heart"></i></button>&nbsp;3472
-            </span>
-            <span style="margin-right: 10px;"><button class="btn btn-success btn-xs"><i class="glyphicon glyphicon-thumbs-up"></i></button>&nbsp;51</span>
-            <button class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-thumbs-down"></i></button>&nbsp;7
-            </p>
+                        <p>
+                        <span style="margin-right: 10px;">
+                        <button class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-heart"></i></button>&nbsp;3472
+                        </span>
+                        <span style="margin-right: 10px;"><button class="btn btn-success btn-xs"><i class="glyphicon glyphicon-thumbs-up"></i></button>&nbsp;51</span>
+                        <button class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-thumbs-down"></i></button>&nbsp;7
+                        </p>
                     *@
                 </div>
 
@@ -371,12 +373,12 @@
                                 </button>
                             </li>
                             <li role="presentation">
-                                <button class="button-toggle-ignored btn btn-primary btn-xs" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.CurrentUserId', '@Model.ProfileUserId')">
+                                <button class="button-toggle-ignored btn btn-primary btn-xs" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.ProfileUserId')">
                                     <i class="button-toggle-ignored-icon glyphicon glyphicon-volume-up"></i>
                                 </button>
                             </li>
                             <li role="presentation">
-                                <button type="button" class="button-toggle-favorite btn btn-primary btn-xs" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.CurrentUserId', '@Model.ProfileUserId', @Model.ProfileId)">
+                                <button type="button" class="button-toggle-favorite btn btn-primary btn-xs" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
                                     <i class="button-toggle-favorite-icon glyphicon glyphicon-heart-empty"></i>
                                 </button>
                             </li>
@@ -399,7 +401,7 @@
                             <div class="tags">
                                 @foreach (var tag in Model.AwardedTags)
                                 {
-                                    <a href="#" class="btn btn-default btn-xs" title="@tag.TagDescription">
+                                    <a href="#" class="custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
                                         <span class="badge">@tag.TagCount</span> @tag.TagName
                                     </a>
                                 }
@@ -435,13 +437,13 @@
                             {
                                 if (tag.DidUserSuggest)
                                 {
-                                    <a href="#" class="btn btn-primary btn-xs" title="@tag.TagDescription">
+                                    <a href="#" class="custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
                                         <span class="badge">@tag.TagCount</span> @tag.TagName
                                     </a>
                                 }
                                 else
                                 {
-                                    <a href="#" class="btn btn-default btn-xs" title="@tag.TagDescription">
+                                    <a href="#" class="custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
                                         <span class="badge">@tag.TagCount</span> @tag.TagName
                                     </a>
                                 }
@@ -494,13 +496,13 @@
                                 </button>
                             </li>
                             <li role="presentation">
-                                <button type="button" class="button-toggle-ignored btn btn-primary" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.CurrentUserId', '@Model.ProfileUserId')">
+                                <button type="button" class="button-toggle-ignored btn btn-primary" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.ProfileUserId')">
                                     <i class="button-toggle-ignored-icon glyphicon glyphicon-volume-up"></i>
                                 </button>
                             </li>
                             <li role="presentation">
-                                <button type="button" class="button-toggle-favorite btn btn-primary" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.CurrentUserId', '@Model.ProfileUserId', @Model.ProfileId)">
-                                    <i  class="button-toggle-favorite-icon glyphicon glyphicon-heart-empty"></i>
+                                <button type="button" class="button-toggle-favorite btn btn-primary" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
+                                    <i class="button-toggle-favorite-icon glyphicon glyphicon-heart-empty"></i>
                                 </button>
                             </li>
                             @*

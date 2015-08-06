@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace TwolipsDating.Utilities
+﻿namespace TwolipsDating.Utilities
 {
     public class UploadedImageFeedKey
     {
@@ -15,7 +10,7 @@ namespace TwolipsDating.Utilities
             var uploadedImageFeed = obj as UploadedImageFeedKey;
             if (uploadedImageFeed != null)
             {
-                if(UserId == uploadedImageFeed.UserId && TimeAgo == uploadedImageFeed.TimeAgo)
+                if (UserId == uploadedImageFeed.UserId && TimeAgo == uploadedImageFeed.TimeAgo)
                 {
                     return true;
                 }

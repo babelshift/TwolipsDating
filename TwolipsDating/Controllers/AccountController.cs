@@ -1,19 +1,17 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+﻿using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
-using TwolipsDating.Business;
 using TwolipsDating.ViewModels;
-using AutoMapper;
-using System.Collections.Generic;
 
 namespace TwolipsDating.Controllers
 {
@@ -27,7 +25,7 @@ namespace TwolipsDating.Controllers
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
-			: base (userManager)
+            : base(userManager)
         {
             SignInManager = signInManager;
         }
@@ -38,9 +36,9 @@ namespace TwolipsDating.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -104,11 +102,14 @@ namespace TwolipsDating.Controllers
             {
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
+
                 case SignInStatus.LockedOut:
                     ModelState.AddModelError("", "The account is locked. Please try again later or contact support for assistance.");
                     return View(model);
+
                 case SignInStatus.RequiresVerification:
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "The entered username or password is incorrect.");
@@ -141,17 +142,19 @@ namespace TwolipsDating.Controllers
                 return View(model);
             }
 
-            // The following code protects for brute force attacks against the two factor codes. 
-            // If a user enters incorrect codes for a specified amount of time then the user account 
-            // will be locked out for a specified amount of time. 
+            // The following code protects for brute force attacks against the two factor codes.
+            // If a user enters incorrect codes for a specified amount of time then the user account
+            // will be locked out for a specified amount of time.
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
                     return RedirectToLocal(model.ReturnUrl);
+
                 case SignInStatus.LockedOut:
                     return View("Lockout");
+
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid code.");
@@ -223,7 +226,7 @@ namespace TwolipsDating.Controllers
             }
             var result = await UserManager.ConfirmEmailAsync(userId, code);
 
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 // send email to admins letting them know someone confirmed their email
                 await SendAdminEmailAfterConfirmationAsync(userId);
@@ -249,7 +252,6 @@ namespace TwolipsDating.Controllers
 
         private async Task SendAdminEmailAfterConfirmationAsync(string userId)
         {
-
             IdentityMessage message = new IdentityMessage();
             message.Destination = "admin@twolipsdating.com";
             message.Subject = "A user has confirmed their e-mail address";
@@ -412,10 +414,13 @@ namespace TwolipsDating.Controllers
             {
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
+
                 case SignInStatus.LockedOut:
                     return View("Lockout");
+
                 case SignInStatus.RequiresVerification:
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
+
                 case SignInStatus.Failure:
                 default:
                     // If the user does not have an account, then prompt the user to create an account
@@ -570,7 +575,7 @@ namespace TwolipsDating.Controllers
                     _signInManager = null;
                 }
 
-                if(userService != null)
+                if (userService != null)
                 {
                     userService.Dispose();
                     userService = null;
@@ -580,6 +585,7 @@ namespace TwolipsDating.Controllers
         }
 
         #region Helpers
+
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -636,6 +642,7 @@ namespace TwolipsDating.Controllers
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
-        #endregion
+
+        #endregion Helpers
     }
 }

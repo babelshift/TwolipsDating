@@ -1,20 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using TwolipsDating.Models;
 using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
+using TwolipsDating.Models;
 
 namespace TwolipsDating.Business
 {
     public class StoreService : BaseService
     {
+        /// <summary>
+        /// Returns a store item.
+        /// </summary>
+        /// <param name="storeItemId"></param>
+        /// <returns></returns>
         internal async Task<StoreItem> GetStoreItemAsync(int storeItemId)
         {
             return await db.StoreItems.FindAsync(storeItemId);
         }
 
+        /// <summary>
+        /// Returns all store items.
+        /// </summary>
+        /// <returns></returns>
         internal async Task<IReadOnlyList<StoreItem>> GetStoreItemsAsync()
         {
             var result = await (from storeItems in db.StoreItems
@@ -23,6 +31,10 @@ namespace TwolipsDating.Business
             return result.AsReadOnly();
         }
 
+        /// <summary>
+        /// Returns all store items in descending order by the date at which they were added.
+        /// </summary>
+        /// <returns></returns>
         internal async Task<IReadOnlyList<StoreItem>> GetNewStoreItemsAsync()
         {
             var result = await (from storeItems in db.StoreItems
@@ -32,24 +44,12 @@ namespace TwolipsDating.Business
             return result.AsReadOnly();
         }
 
-        //public async Task<IReadOnlyCollection<Gift>> GetGiftsAsync()
-        //{
-        //    var result = await (from gifts in db.Gifts
-        //                        select gifts).ToListAsync();
-
-        //    return result.AsReadOnly();
-        //}
-
-        //internal async Task<IReadOnlyCollection<Title>> GetTitlesAsync()
-        //{
-        //    var result = await (from titles in db.Titles
-        //                        select titles).ToListAsync();
-
-        //    return result.AsReadOnly();
-        //}
-
-
-
+        /// <summary>
+        /// Adds a title to a user's collection and reduces their points appropriately.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="storeItemId"></param>
+        /// <returns></returns>
         public async Task<int> BuyTitleAsync(string userId, int storeItemId)
         {
             var title = await db.StoreItems.FindAsync(storeItemId);
@@ -72,6 +72,13 @@ namespace TwolipsDating.Business
             return await db.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Adds a gift to a user's collection and reduces their points appropriately.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="storeItemId"></param>
+        /// <param name="buyCount"></param>
+        /// <returns></returns>
         public async Task<int> BuyGiftAsync(string userId, int storeItemId, int buyCount)
         {
             // check price of item and see if the user has enough points to buy the item with the count
@@ -119,6 +126,5 @@ namespace TwolipsDating.Business
 
             return await db.SaveChangesAsync();
         }
-
     }
 }

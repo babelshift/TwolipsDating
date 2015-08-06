@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,6 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
-using Microsoft.AspNet.Identity;
 
 namespace TwolipsDating.Controllers
 {
@@ -21,11 +21,12 @@ namespace TwolipsDating.Controllers
         private TriviaService triviaService = new TriviaService();
         private UserService userService = new UserService();
 
-        #endregion
+        #endregion Services
 
         [AllowAnonymous]
         public async Task<ActionResult> Index()
         {
+            // if the user is authenticated, allow them to view their dashboard
             if (User.Identity.IsAuthenticated)
             {
                 string currentUserId = User.Identity.GetUserId();
@@ -58,14 +59,19 @@ namespace TwolipsDating.Controllers
 
                 return View("dashboard", viewModel);
             }
+            // if the user isn't authenticated, show them the new user splash page
             else
             {
-                // this is the splash page (displayed when the user isn't authenticated)
                 HomeViewModel viewModel = new HomeViewModel();
                 return View(String.Empty, "~/Views/Shared/_LayoutSplash.cshtml", viewModel);
             }
         }
 
+        /// <summary>
+        /// Adds the necessary components to the view model to allow a user to select review violation options
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         private async Task SetupReviewViolationsOnDashboard(DashboardViewModel viewModel)
         {
             var violationTypes = await violationService.GetViolationTypesAsync();
@@ -73,6 +79,12 @@ namespace TwolipsDating.Controllers
             viewModel.WriteReviewViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
         }
 
+        /// <summary>
+        /// Sets up the view model to contain a list of quizzes and whether or not the current user has completed those quizzes
+        /// </summary>
+        /// <param name="currentUserId"></param>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         private async Task SetupQuizzesOnDashboard(string currentUserId, DashboardViewModel viewModel)
         {
             var quizzes = await triviaService.GetQuizzesAsync();
@@ -88,6 +100,12 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Sets up the view model to contain a random question to display to a user
+        /// </summary>
+        /// <param name="currentUserId"></param>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         private async Task SetupRandomQuestionOnDashboard(string currentUserId, DashboardViewModel viewModel)
         {
             // generate a random question with its answers to view
@@ -95,10 +113,15 @@ namespace TwolipsDating.Controllers
             viewModel.RandomQuestion = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
         }
 
+        /// <summary>
+        /// Queries the database for recent images uploaded by the current user's followers and adds them to the view model.
+        /// </summary>
+        /// <param name="currentUserId"></param>
+        /// <param name="dashboardItems"></param>
+        /// <returns></returns>
         private async Task AddUploadedImagesToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
             var uploadedImages = await dashboardService.GetRecentFollowerImagesAsync(currentUserId);
-
             var uploadedImagesConsolidated = uploadedImages.GetConsolidatedImagesForFeed();
 
             foreach (var userImageViewModel in uploadedImagesConsolidated)
@@ -112,6 +135,12 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Queries the database for recent reviews written by the current user's followers and adds them to the view model.
+        /// </summary>
+        /// <param name="currentUserId"></param>
+        /// <param name="dashboardItems"></param>
+        /// <returns></returns>
         private async Task AddReviewsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
             var reviews = await dashboardService.GetRecentFollowerReviewsAsync(currentUserId);
@@ -128,6 +157,12 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Queries the database for recent messages written by the current user's followers to the current user and adds them to the view model.
+        /// </summary>
+        /// <param name="currentUserId"></param>
+        /// <param name="dashboardItems"></param>
+        /// <returns></returns>
         private async Task AddMessagesToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
             var messages = await ProfileService.GetMessagesByUserAsync(currentUserId);
@@ -144,6 +179,10 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Disposes of the services and their associated DbContexts.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

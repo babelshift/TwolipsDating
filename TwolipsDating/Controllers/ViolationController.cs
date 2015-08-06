@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNet.Identity;
 using System.Data.Entity.Infrastructure;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using TwolipsDating.Business;
 using TwolipsDating.Utilities;
-using Microsoft.AspNet.Identity;
 
 namespace TwolipsDating.Controllers
 {
@@ -15,7 +11,13 @@ namespace TwolipsDating.Controllers
     {
         private ViolationService violationService = new ViolationService();
 
-        // todo, don't accept author user id, user could pretend to be someone else
+        /// <summary>
+        /// Adds a review violation to the database for the currently logged in user. Does nothing if the user has already reported this review.
+        /// </summary>
+        /// <param name="reviewId"></param>
+        /// <param name="violationTypeId"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<JsonResult> AddReviewViolation(int reviewId, int violationTypeId, string content)
         {
@@ -23,7 +25,8 @@ namespace TwolipsDating.Controllers
 
             try
             {
-                if(await violationService.HasUserAlreadyReportedReview(reviewId, authorUserId))
+                // don't allow the user to report a review that they've already reported
+                if (await violationService.HasUserAlreadyReportedReview(reviewId, authorUserId))
                 {
                     return Json(new { success = false, error = ErrorMessages.UserAlreadyReportedReview });
                 }
@@ -57,6 +60,12 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Adds a question violation to the database for the currently logged in user. Does nothing if the user has already reported this review.
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <param name="violationTypeId"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<JsonResult> AddQuestionViolation(int questionId, int violationTypeId)
         {
@@ -64,6 +73,7 @@ namespace TwolipsDating.Controllers
 
             try
             {
+                // don't allow the user to report a question that they've already reported
                 if (await violationService.HasUserAlreadyReportedQuestion(questionId, currentUserId))
                 {
                     return Json(new { success = false, error = ErrorMessages.UserAlreadyReportedQuestion });
@@ -98,6 +108,10 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        /// <summary>
+        /// Disposes all services.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && violationService != null)

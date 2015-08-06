@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using TwolipsDating.Models;
-using TwolipsDating.ViewModels;
-using TwolipsDating.Utilities;
 using System.Configuration;
+using System.Linq;
+using TwolipsDating.Models;
+using TwolipsDating.Utilities;
+using TwolipsDating.ViewModels;
 
 namespace TwolipsDating
 {
@@ -103,7 +102,7 @@ namespace TwolipsDating
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()))
                 .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.GetProfileImagePath()))
                 .ForMember(dest => dest.SenderProfileId, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.Id));
-            
+
             Mapper.CreateMap<Message, SentMessageViewModel>()
                 .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateSent))
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(source => source.Id))

@@ -23,9 +23,10 @@
     $("#f_elem_city").autocomplete("option", "delay", 100);
 
     var profileUserId = $('#ProfileUserId').val();
-    var currentUserId = $('#CurrentUserId').val();
 
-    if (profileUserId == currentUserId) {
+    // only bother setting up the select title popover if the content is visible
+    // the content will only be visible if the user is viewing their own profile
+    if ($('#popover-titles-content').length) {
         // setup the popover for the selected title
         setupHtmlPopover('#selected-title', '#popover-titles-content');
 
@@ -397,10 +398,10 @@ function onDeleteImage(e, obj, userImageId, fileName, profileUserId) {
     });
 }
 
-function onToggleFavoriteProfile(e, obj, currentUserId, profileUserId, profileId) {
+function onToggleFavoriteProfile(e, obj, profileUserId, profileId) {
     e.preventDefault();
 
-    var json = '{"currentUserId":"' + currentUserId + '", "profileUserId":"' + profileUserId + '", "profileId":' + profileId + '}';
+    var json = '{"profileUserId":"' + profileUserId + '", "profileId":' + profileId + '}';
 
     postJson('/profile/toggleFavoriteProfile', json, function (data) {
         if (data.success) {
@@ -443,10 +444,10 @@ function toggleIgnoredUserIcon(isIgnored) {
     }
 }
 
-function onToggleIgnoredUser(e, obj, currentUserId, profileUserId) {
+function onToggleIgnoredUser(e, obj, profileUserId) {
     e.preventDefault();
 
-    var json = '{"currentUserId":"' + currentUserId + '", "profileUserId":"' + profileUserId + '"}';
+    var json = '{"profileUserId":"' + profileUserId + '"}';
 
     postJson('/profile/toggleIgnoredUser', json, function (data) {
         if (data.success) {
