@@ -658,6 +658,7 @@
     <Content Include="Content\gplus-16.png" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.min.css" />
+    <Content Include="Content\Placeholder.png" />
     <Content Include="Content\SplashHowTo1.png" />
     <Content Include="Content\SplashHowTo2.png" />
     <Content Include="Content\SplashHowTo3.png" />
