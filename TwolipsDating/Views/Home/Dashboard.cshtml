@@ -92,18 +92,6 @@
                     </div>
                 </div>
             </div>
-            <div class="ad">
-                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <!-- Dashboard - Sidebar - 1 -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1823005717277864"
-                     data-ad-slot="9881746234"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
             @if (Model.Quizzes != null && Model.Quizzes.Count > 0)
             {
                 <div class="panel panel-default">
@@ -136,8 +124,51 @@
                     </div>
                 </div>
             }
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Dashboard - Sidebar - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="9881746234"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </div>
         <div class="col-md-8">
+            @*@if (Model.Items.Count == 0 && Model.UsersToFollow != null && Model.UsersToFollow.Count > 0)
+                {*@
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title text-center">
+                        <i class="glyphicon glyphicon-globe"></i> Users to Follow
+                    </div>
+                </div>
+                <div class="panel-body text-center">
+                    @foreach (var userProfile in Model.UsersToFollow)
+                    {
+                        <div class="col-sm-3" style="min-height: 185px;">
+                            <a href="@Url.Action("index", "profile", new{ id = userProfile.ProfileId })">
+                                @if (!String.IsNullOrEmpty(userProfile.ProfileImagePath))
+                                {
+                                    <img src="@userProfile.ProfileImagePath" style="max-height: 84px">
+                                }
+                                else
+                                {
+                                    <img src="http://placehold.it/84x84">
+                                }
+                            </a>
+                            <h4 style="margin-top: 5px">
+                                <a href="@Url.Action("index", "profile", new{ id = userProfile.ProfileId })">
+                                    @userProfile.UserName
+                                </a>
+                            </h4>
+                            <h5>@userProfile.Age &bull; @userProfile.Gender &bull; @userProfile.Location</h5>
+                        </div>
+                    }
+                </div>
+            </div>
+            @*}*@
             <div class="panel panel-default">
                 <div class="panel-body">
                     @if (Model.Items.Count > 0)

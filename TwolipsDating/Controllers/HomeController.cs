@@ -51,11 +51,13 @@ namespace TwolipsDating.Controllers
                     .ToList()
                     .AsReadOnly();
 
-                await SetupReviewViolationsOnDashboard(viewModel);
+                await SetupReviewViolationsOnDashboardAsync(viewModel);
 
-                await SetupRandomQuestionOnDashboard(currentUserId, viewModel);
+                await SetupRandomQuestionOnDashboardAsync(currentUserId, viewModel);
 
-                await SetupQuizzesOnDashboard(currentUserId, viewModel);
+                await SetupQuizzesOnDashboardAsync(currentUserId, viewModel);
+
+                await SetupUsersToFollowAsync(viewModel);
 
                 return View("dashboard", viewModel);
             }
@@ -67,12 +69,19 @@ namespace TwolipsDating.Controllers
             }
         }
 
+        private async Task SetupUsersToFollowAsync(DashboardViewModel viewModel)
+        {
+            int profilesToRetrieve = 8;
+            var profiles = await ProfileService.GetRandomProfilesAsync(profilesToRetrieve);
+            viewModel.UsersToFollow = Mapper.Map<IReadOnlyCollection<Models.Profile>, IReadOnlyCollection<ProfileViewModel>>(profiles);
+        }
+
         /// <summary>
         /// Adds the necessary components to the view model to allow a user to select review violation options
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        private async Task SetupReviewViolationsOnDashboard(DashboardViewModel viewModel)
+        private async Task SetupReviewViolationsOnDashboardAsync(DashboardViewModel viewModel)
         {
             var violationTypes = await violationService.GetViolationTypesAsync();
             viewModel.WriteReviewViolation = new WriteReviewViolationViewModel();
@@ -85,7 +94,7 @@ namespace TwolipsDating.Controllers
         /// <param name="currentUserId"></param>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        private async Task SetupQuizzesOnDashboard(string currentUserId, DashboardViewModel viewModel)
+        private async Task SetupQuizzesOnDashboardAsync(string currentUserId, DashboardViewModel viewModel)
         {
             var quizzes = await triviaService.GetQuizzesAsync();
             viewModel.Quizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(quizzes);
@@ -106,7 +115,7 @@ namespace TwolipsDating.Controllers
         /// <param name="currentUserId"></param>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        private async Task SetupRandomQuestionOnDashboard(string currentUserId, DashboardViewModel viewModel)
+        private async Task SetupRandomQuestionOnDashboardAsync(string currentUserId, DashboardViewModel viewModel)
         {
             // generate a random question with its answers to view
             var randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Random);

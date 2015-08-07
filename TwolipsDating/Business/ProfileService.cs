@@ -144,7 +144,7 @@ namespace TwolipsDating.Business
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="profileId"></param>
@@ -835,7 +835,7 @@ namespace TwolipsDating.Business
         }
 
         /// <summary>
-        /// Adds 
+        /// Adds
         /// </summary>
         /// <param name="toUserId"></param>
         /// <param name="giftId"></param>
@@ -1107,6 +1107,37 @@ namespace TwolipsDating.Business
             profileUpdated.GenderId = genderId;
 
             return await db.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Returns a random set of unique profiles. The set size is determined by the parameter.
+        /// </summary>
+        /// <param name="profilesToRetrieve"></param>
+        /// <returns></returns>
+        internal async Task<IReadOnlyCollection<Profile>> GetRandomProfilesAsync(int profilesToRetrieve)
+        {
+            var allProfiles = await (from profiles in db.Profiles
+                                     where profiles.ApplicationUser.IsActive
+                                     select profiles).ToListAsync();
+
+            List<Profile> randomProfiles = new List<Profile>();
+            Random random = new Random();
+            for (int i = 0; i < profilesToRetrieve; i++)
+            {
+                // get a random profile and add to our result set
+                int indexOfProfileToAdd = random.Next(0, allProfiles.Count);
+
+                var profileToAdd = allProfiles[indexOfProfileToAdd];
+
+                // only add a profile to our results if it's not already in there
+                bool isProfileAlreadyAdded = randomProfiles.Any(r => r.Id == profileToAdd.Id);
+                if (!isProfileAlreadyAdded)
+                {
+                    randomProfiles.Add(allProfiles[indexOfProfileToAdd]);
+                }
+            }
+
+            return randomProfiles.AsReadOnly();
         }
     }
 }
