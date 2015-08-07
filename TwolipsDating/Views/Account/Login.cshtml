@@ -14,7 +14,6 @@
                     <div class="panel-body">
                         @using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
                         {
-                            @Html.AntiForgeryToken()
                             <div class="text-center">
                                 <h3>Sign in quickly</h3>
                             </div>
@@ -43,7 +42,6 @@
                         </div>
                         @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
                         {
-                            @Html.AntiForgeryToken()
                             @Html.ValidationSummary()
                             <div class="form-group">
                                 @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Your username" })
