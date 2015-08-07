@@ -289,3 +289,7 @@ input[readonly] {
     overflow-y: scroll;
     max-height: 300px;
 }
+
+.ad {
+    margin-bottom: 21px;
+}

@@ -31,6 +31,12 @@ namespace TwolipsDating.Controllers
         /// <returns></returns>
         public async Task<ActionResult> Conversation(string id)
         {
+            // we want to look up conversations between a user and another user
+            // if no id is provided, we want to lookup the latest conversation set
+                // if there is no latest conversation set, we want to return a view that indicates to the user there are no messages
+            // if id is provided, look up conversations for that id
+                // if the id is invalid, return 404
+
             var currentUserId = User.Identity.GetUserId();
 
             // if the user doesn't have a profile, redirect them to the profile to create  it
@@ -41,8 +47,22 @@ namespace TwolipsDating.Controllers
             // get recent conversations for the current user
             viewModel.Conversations = await GetRecentConversationsAsync(currentUserId);
 
-            // if no target user to view messages with has been specified, just show the first in the list
-            if (String.IsNullOrEmpty(id) && viewModel.Conversations.Count > 0)
+            // setup notifications in the upper right
+            await SetNotificationsAsync();
+
+            // setup the essentials in the viewmodel
+            viewModel.TargetApplicationUserId = id;
+            viewModel.CurrentUserId = currentUserId;
+            viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+
+            // there are no recent conversations, return the view with an empty set
+            if(viewModel.Conversations.Count == 0)
+            {
+                return View(viewModel);
+            }
+
+            // if no id value was provided for the conversation, look up the first one
+            if (String.IsNullOrEmpty(id))
             {
                 id = viewModel.Conversations[0].TargetUserId;
             }
@@ -54,19 +74,6 @@ namespace TwolipsDating.Controllers
             if (profileForOtherUser == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-            }
-
-            // setup the essentials in the viewmodel
-            viewModel.TargetApplicationUserId = id;
-            viewModel.CurrentUserId = currentUserId;
-            viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
-
-            // setup notifications in the upper right
-            await SetNotificationsAsync();
-
-            if (String.IsNullOrEmpty(id))
-            {
-                return View(viewModel);
             }
 
             // look up conversations between the current user and the selected id
