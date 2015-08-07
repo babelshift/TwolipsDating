@@ -1,4 +1,4 @@
-﻿@model TwolipsDating.ViewModels.StoreItemViewModel
+﻿@model TwolipsDating.ViewModels.SpotlightSaleViewModel
 
 @if (Model != null)
 {
@@ -9,36 +9,39 @@
             </div>
         </div>
         <div class="panel-body text-center">
-            <div class="store-item-wrapper" title="@Model.ItemDescription" data-animation="false">
+            <div class="store-item-wrapper" title="@Model.StoreItem.ItemDescription" data-animation="false">
                 <div style="min-height: 155px; padding: 5px">
-                    @if (!String.IsNullOrEmpty(Model.ItemImagePath))
+                    @if (!String.IsNullOrEmpty(Model.StoreItem.ItemImagePath))
                     {
-                        <img src="@Model.ItemImagePath" />
+                        <img src="@Model.StoreItem.ItemImagePath" />
                     }
                     else
                     {
                         <img src="http://placehold.it/64x64" />
                     }
                     <div class="store-item-details">
-                        <h4>@Model.ItemName</h4>
+                        <h4>@Model.StoreItem.ItemName</h4>
+
+                        <span style="color: #a1a1a1">
+                            <s>
+                                <i class="glyphicon glyphicon-piggy-bank"></i>
+                                @Model.StoreItem.PointsCost
+                            </s>
+                        </span>
+                        &nbsp;
                         <i class="glyphicon glyphicon-piggy-bank"></i>
-                        @Model.PointsCost
+                        @Model.DiscountedPointsCost
+                        <span class="label label-success">@Model.DiscountPercent</span>
+                        <br />
+                        Sales ends in @Model.TimeUntilEnd
                     </div>
                     <div class="store-item-buy hidden">
-                        <h4>@Model.ItemName</h4>
+                        <h4>@Model.StoreItem.ItemName</h4>
                         <button type="button" href="#" class="btn btn-success btn-block">
                             <i class="glyphicon glyphicon-piggy-bank"></i>
-                            @Model.PointsCost
+                            @Model.DiscountedPointsCost
                         </button>
                     </div>
-                    @*<h4>@Model.Spotlight.ItemName</h4>
-                <p>
-                    <i class="glyphicon glyphicon-piggy-bank"></i>
-                    <span style="text-decoration: line-through">900</span> 100
-                    <span class="label label-success">80% off</span>
-                    @Model.Spotlight.PointsCost
-                </p>
-                <small>Sale ends in 15 hours</small>*@
                 </div>
             </div>
         </div>

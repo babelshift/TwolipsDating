@@ -4,9 +4,26 @@ namespace TwolipsDating.Utilities
 {
     public static class DateTimeExtensions
     {
-        public static int GetAge(this DateTime dateTime)
+        public static string GetTimeUntilEnd(this DateTime dateEnd)
         {
-            return (int)((DateTime.Now - dateTime).TotalDays / 365);
+            DateTime now = DateTime.Now;
+
+            string format = "{0}:{1}:{2}";
+
+            // in the past, there's no time left
+            if (dateEnd < now)
+            {
+                return String.Format(format, "00", "00", "00");
+            }
+
+            TimeSpan timeBetweenNowAndThen = dateEnd - now;
+
+            return String.Format(format, timeBetweenNowAndThen.Days.ToString("00"), timeBetweenNowAndThen.Hours.ToString("00"), timeBetweenNowAndThen.Minutes.ToString("00"));
+        }
+
+        public static int GetAge(this DateTime birthday)
+        {
+            return (int)((DateTime.Now - birthday).TotalDays / 365);
         }
 
         public static string GetTimeAgo(this DateTime dateReviewCreated)

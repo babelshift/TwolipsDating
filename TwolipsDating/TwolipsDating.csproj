@@ -306,13 +306,21 @@
     <Compile Include="Migrations\201508051601437_AddIsActiveToQuiz.Designer.cs">
       <DependentUpon>201508051601437_AddIsActiveToQuiz.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508071938153_AddStoreSalesAndSpotlights.cs" />
+    <Compile Include="Migrations\201508071938153_AddStoreSalesAndSpotlights.Designer.cs">
+      <DependentUpon>201508071938153_AddStoreSalesAndSpotlights.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
+    <Compile Include="Models\StoreSale.cs" />
+    <Compile Include="Models\StoreGiftSpotlight.cs" />
+    <Compile Include="Models\StoreSpotlight.cs" />
     <Compile Include="Models\UserTitle.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
+    <Compile Include="ViewModels\SpotlightSaleViewModel.cs" />
     <Compile Include="ViewModels\StoreItemViewModel.cs" />
     <Compile Include="Controllers\TriviaController.cs" />
     <Compile Include="Controllers\ViolationController.cs" />
@@ -964,6 +972,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508051601437_AddIsActiveToQuiz.resx">
       <DependentUpon>201508051601437_AddIsActiveToQuiz.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508071938153_AddStoreSalesAndSpotlights.resx">
+      <DependentUpon>201508071938153_AddStoreSalesAndSpotlights.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

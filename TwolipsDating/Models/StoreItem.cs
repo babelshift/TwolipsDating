@@ -19,5 +19,6 @@ namespace TwolipsDating.Models
         public virtual ICollection<InventoryItem> InventoryItems { get; set; }
         public virtual ICollection<UserTitle> OwnerUsers { get; set; }
         public virtual ICollection<Profile> SelectedByProfiles { get; set; }
+        public virtual ICollection<StoreSale> StoreSales { get; set; }
     }
 }

@@ -11,7 +11,14 @@ namespace TwolipsDating.Utilities
 
             if (geoCity != null)
             {
-                sb.AppendFormat("{0}, {1}, {2}", geoCity.Name, geoCity.GeoState.Abbreviation, geoCity.GeoState.GeoCountry.Name);
+                if(geoCity.GeoState.GeoCountry.Name == "United States")
+                {
+                    sb.AppendFormat("{0}, {1}", geoCity.Name, geoCity.GeoState.Abbreviation);
+                }
+                else
+                {
+                    sb.AppendFormat("{0}, {1}, {2}", geoCity.Name, geoCity.GeoState.Abbreviation, geoCity.GeoState.GeoCountry.Name);
+                }
             }
 
             return sb.ToString();

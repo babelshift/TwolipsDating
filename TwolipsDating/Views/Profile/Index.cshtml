@@ -258,14 +258,14 @@
                             {
                                 if (tag.DidUserSuggest)
                                 {
-                                    <a href="#" id="@String.Format("{0}-tag-button", tag.TagId)" onclick="onSuggestTag(event, this, @tag.TagId)" class="btn btn-primary btn-xs" title="a clever one">
+                                    <a href="#" id="@String.Format("{0}-tag-button", tag.TagId)" onclick="onSuggestTag(event, this, @tag.TagId)" class="custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
                                         <span id="@String.Format("{0}-tag-count", tag.TagId)" class="badge">@tag.TagCount</span> @tag.TagName
                                     </a>
                                     <a href="#" onclick="onSuggestTag(event, this, @tag.TagId)"><i id="@String.Format("{0}-tag-glyph", tag.TagId)" class="glyphicon glyphicon-minus"></i></a>
                                 }
                                 else
                                 {
-                                    <a href="#" id="@String.Format("{0}-tag-button", tag.TagId)" onclick="onSuggestTag(event, this, @tag.TagId)" class="btn btn-default btn-xs" title="a clever one">
+                                    <a href="#" id="@String.Format("{0}-tag-button", tag.TagId)" onclick="onSuggestTag(event, this, @tag.TagId)" class="custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
                                         <span id="@String.Format("{0}-tag-count", tag.TagId)" class="badge">@tag.TagCount</span> @tag.TagName
                                     </a>
                                     <a href="#" onclick="onSuggestTag(event, this, @tag.TagId)"><i id="@String.Format("{0}-tag-glyph", tag.TagId)" class="glyphicon glyphicon-plus"></i></a>
@@ -372,12 +372,12 @@
                                 </button>
                             </li>
                             <li role="presentation">
-                                <button class="button-toggle-ignored btn btn-primary btn-xs" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.ProfileUserId')">
+                                <button class="custom-tooltip button-toggle-ignored btn btn-primary btn-xs" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.ProfileUserId')">
                                     <i class="button-toggle-ignored-icon glyphicon glyphicon-volume-up"></i>
                                 </button>
                             </li>
                             <li role="presentation">
-                                <button type="button" class="button-toggle-favorite btn btn-primary btn-xs" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
+                                <button type="button" class="custom-tooltip button-toggle-favorite btn btn-primary btn-xs" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
                                     <i class="button-toggle-favorite-icon glyphicon glyphicon-heart-empty"></i>
                                 </button>
                             </li>
@@ -389,8 +389,10 @@
                 }
             }
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <p class="panel-title"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tags awarded</p>
+                <div class="panel-heading text-center">
+                    <p class="custom-tooltip panel-title" title="Tags that have been awarded to the user based on community activities">
+                        <i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tags awarded
+                    </p>
                 </div>
                 <div class="panel-body">
                     @if (Model.AwardedTags != null && Model.AwardedTags.Count > 0)
@@ -420,24 +422,15 @@
                     }
                 </div>
             </div>
-            <div class="ad">
-                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <!-- Profile - Sidebar - 1 -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1823005717277864"
-                     data-ad-slot="8265412231"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
             <div class="panel panel-default">
-                <div class="panel-heading">
+                <div class="panel-heading text-center">
                     <p class="panel-title" style="display: inline-block"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tags suggested by users</p>
                     @if (User.Identity.IsAuthenticated && Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
                     {
-                        <a style="display: inline-block" href="#" data-toggle="modal" data-target="#modalSuggestTags" data-keyboard="true">suggest</a>
+                        <a style="display: inline-block" href="#" class="custom-tooltip" title="Suggest some tags to be displayed on this user's profile"
+                           data-toggle="modal" data-target="#modalSuggestTags" data-keyboard="true">
+                            suggest
+                        </a>
                     }
                 </div>
                 <div class="panel-body">
@@ -482,6 +475,18 @@
                     *@
                 </div>
             </div>
+
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Profile - Sidebar - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="8265412231"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+
             @*@Html.Partial("_SidebarAdvertisementPartial")*@
         </div>
 

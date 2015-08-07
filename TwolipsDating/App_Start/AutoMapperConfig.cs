@@ -78,7 +78,8 @@ namespace TwolipsDating
             Mapper.CreateMap<Tag, TagViewModel>();
 
             Mapper.CreateMap<Tag, ProfileTagSuggestionViewModel>()
-                .ForMember(dest => dest.TagName, opts => opts.MapFrom(source => source.Name));
+                .ForMember(dest => dest.TagName, opts => opts.MapFrom(source => source.Name))
+                .ForMember(dest => dest.TagDescription, opts => opts.MapFrom(source => source.Description));
 
             Mapper.CreateMap<Message, ConversationItemViewModel>()
                 .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateSent))
@@ -179,6 +180,11 @@ namespace TwolipsDating
 
             Mapper.CreateMap<ShoppingCartItem, ShoppingCartItemViewModel>()
                 .ForMember(dest => dest.Item, opts => opts.MapFrom(source => source.Item));
+
+            Mapper.CreateMap<StoreSale, SpotlightSaleViewModel>()
+                .ForMember(dest => dest.Discount, opts => opts.MapFrom(source => source.Discount))
+                .ForMember(dest => dest.StoreItem, opts => opts.MapFrom(source => source.StoreItem))
+                .ForMember(dest => dest.TimeUntilEnd, opts => opts.MapFrom(source => source.DateEnd.GetTimeUntilEnd()));
         }
     }
 }

@@ -126,5 +126,27 @@ namespace TwolipsDating.Business
 
             return await db.SaveChangesAsync();
         }
+
+        internal async Task<StoreSale> GetCurrentSpotlightAsync()
+        {
+            DateTime now = DateTime.Now;
+
+            var currentSpotlightSale = await (from spotlights in db.StoreSpotlights
+                                          where now >= spotlights.DateStart && now <= spotlights.DateEnd
+                                          select spotlights.StoreSale).FirstOrDefaultAsync();
+
+            return currentSpotlightSale;
+        }
+
+        internal async Task<StoreSale> GetCurrentGiftSpotlightAsync()
+        {
+            DateTime now = DateTime.Now;
+
+            var currentSpotlightSale = await (from spotlights in db.StoreGiftSpotlights
+                                              where now >= spotlights.DateStart && now <= spotlights.DateEnd
+                                              select spotlights.StoreSale).FirstOrDefaultAsync();
+
+            return currentSpotlightSale;
+        }
     }
 }

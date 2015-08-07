@@ -14,12 +14,7 @@ namespace TwolipsDating.Models
 
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Gender> Genders { get; set; }
-
-        //public DbSet<Country> Countries { get; set; }
-        //public DbSet<City> Cities { get; set; }
-        //public DbSet<ZipCode> ZipCodes { get; set; }
         public DbSet<Message> Messages { get; set; }
-
         public DbSet<MessageStatus> MessageStatuses { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<ReviewRating> ReviewRatings { get; set; }
@@ -29,10 +24,7 @@ namespace TwolipsDating.Models
         public DbSet<MessageConversation> MessageConversations { get; set; }
         public DbSet<ViolationType> ViolationTypes { get; set; }
         public DbSet<ReviewViolation> ReviewViolations { get; set; }
-
-        //public DbSet<Gift> Gifts { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
-
         public DbSet<GiftTransactionLog> GiftTransactions { get; set; }
         public DbSet<FavoriteProfile> FavoriteProfiles { get; set; }
         public DbSet<IgnoredUser> IgnoredUsers { get; set; }
@@ -46,10 +38,7 @@ namespace TwolipsDating.Models
         public DbSet<MilestoneAchievement> MilestoneAchievements { get; set; }
         public DbSet<MilestoneType> MilestoneTypes { get; set; }
         public DbSet<CompletedQuiz> CompletedQuizzes { get; set; }
-
-        //public DbSet<Title> Titles { get; set; }
         public DbSet<StoreTransactionLog> StoreTransactions { get; set; }
-
         public DbSet<UserTitle> UserTitles { get; set; }
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<GeoCity> GeoCities { get; set; }
@@ -60,6 +49,9 @@ namespace TwolipsDating.Models
         public DbSet<QuestionViolation> QuestionViolations { get; set; }
         public DbSet<StoreItem> StoreItems { get; set; }
         public DbSet<StoreItemType> StoreItemTypes { get; set; }
+        public DbSet<StoreSale> StoreSales { get; set; }
+        public DbSet<StoreSpotlight> StoreSpotlights { get; set; }
+        public DbSet<StoreGiftSpotlight> StoreGiftSpotlights { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -75,10 +67,6 @@ namespace TwolipsDating.Models
             SetupApplicationUserEntity(modelBuilder);
             SetupProfileEntity(modelBuilder);
             SetupGenderEntity(modelBuilder);
-            //SetupCountryEntity(modelBuilder);
-            //SetupCityEntity(modelBuilder);
-            //SetupUSStateEntity(modelBuilder);
-            //SetupZipCodeEntity(modelBuilder);
             SetupMessageStatusEntity(modelBuilder);
             SetupMessageEntity(modelBuilder);
             SetupReviewEntity(modelBuilder);
@@ -89,7 +77,6 @@ namespace TwolipsDating.Models
             SetupMessageConversations(modelBuilder);
             SetupViolationTypes(modelBuilder);
             SetupReviewViolations(modelBuilder);
-            //SetupGifts(modelBuilder);
             SetupInventoryItems(modelBuilder);
             SetupGiftTransactions(modelBuilder);
             SetupFavoriteProfiles(modelBuilder);
@@ -104,7 +91,6 @@ namespace TwolipsDating.Models
             SetupMilestoneAchievements(modelBuilder);
             SetupMilestoneTypes(modelBuilder);
             SetupCompletedQuizzes(modelBuilder);
-            //SetupTitles(modelBuilder);
             SetupStoreTransactions(modelBuilder);
             SetupUserTitles(modelBuilder);
             SetupAnnouncements(modelBuilder);
@@ -116,6 +102,42 @@ namespace TwolipsDating.Models
             SetupQuestionViolations(modelBuilder);
             SetupStoreItems(modelBuilder);
             SetupStoreItemTypes(modelBuilder);
+            SetupStoreSales(modelBuilder);
+            SetupStoreSpotlights(modelBuilder);
+            SetupStoreGiftSpotlights(modelBuilder);
+        }
+
+        private void SetupStoreGiftSpotlights(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<StoreGiftSpotlight>()
+                .HasKey(v => new { v.StoreSaleId, v.DateStart, v.DateEnd });
+
+            modelBuilder.Entity<StoreGiftSpotlight>()
+                .HasRequired(v => v.StoreSale)
+                .WithMany(v => v.StoreGiftSpotlights)
+                .HasForeignKey(v => v.StoreSaleId);
+        }
+
+        private void SetupStoreSpotlights(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<StoreSpotlight>()
+                .HasKey(v => new { v.StoreSaleId, v.DateStart, v.DateEnd });
+
+            modelBuilder.Entity<StoreSpotlight>()
+                .HasRequired(v => v.StoreSale)
+                .WithMany(v => v.StoreSpotlights)
+                .HasForeignKey(v => v.StoreSaleId);
+        }
+
+        private void SetupStoreSales(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<StoreSale>()
+                .HasKey(v => v.SaleId);
+
+            modelBuilder.Entity<StoreSale>()
+                .HasRequired(v => v.StoreItem)
+                .WithMany(v => v.StoreSales)
+                .HasForeignKey(v => v.StoreItemId);
         }
 
         private void SetupStoreItemTypes(DbModelBuilder modelBuilder)

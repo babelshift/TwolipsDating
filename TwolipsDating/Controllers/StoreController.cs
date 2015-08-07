@@ -55,7 +55,7 @@ namespace TwolipsDating.Controllers
             await SetNotificationsAsync();
 
             var storeItems = await storeService.GetNewStoreItemsAsync();
-            StoreViewModel viewModel = GetStoreItemViewModel(storeItems);
+            StoreViewModel viewModel = await GetStoreViewModelAsync(storeItems);
 
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
@@ -74,7 +74,7 @@ namespace TwolipsDating.Controllers
             await SetNotificationsAsync();
 
             var storeItems = await storeService.GetStoreItemsAsync();
-            StoreViewModel viewModel = GetStoreItemViewModel(storeItems);
+            StoreViewModel viewModel = await GetStoreViewModelAsync(storeItems);
 
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
@@ -93,7 +93,7 @@ namespace TwolipsDating.Controllers
             await SetNotificationsAsync();
 
             var storeItems = await storeService.GetStoreItemsAsync();
-            StoreViewModel viewModel = GetStoreItemViewModel(storeItems);
+            StoreViewModel viewModel = await GetStoreViewModelAsync(storeItems);
 
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
@@ -183,15 +183,20 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="storeItems"></param>
         /// <returns></returns>
-        private StoreViewModel GetStoreItemViewModel(IReadOnlyList<StoreItem> storeItems)
+        private async Task<StoreViewModel> GetStoreViewModelAsync(IReadOnlyList<StoreItem> storeItems)
         {
             StoreViewModel viewModel = new StoreViewModel();
 
             var storeItemsViewModel = Mapper.Map<IReadOnlyList<StoreItem>, IReadOnlyList<StoreItemViewModel>>(storeItems);
 
             viewModel.StoreItems = storeItemsViewModel;
-            viewModel.Spotlight = storeItemsViewModel[0];
-            viewModel.GiftSpotlight = storeItemsViewModel[1];
+
+            var spotlightSale = await storeService.GetCurrentSpotlightAsync();
+            viewModel.Spotlight = Mapper.Map<StoreSale, SpotlightSaleViewModel>(spotlightSale);
+
+            var giftSpotlightSale = await storeService.GetCurrentGiftSpotlightAsync();
+            viewModel.GiftSpotlight = Mapper.Map<StoreSale, SpotlightSaleViewModel>(giftSpotlightSale);
+            
             viewModel.ShoppingCartItemCount = ShoppingCart.Count;
 
             return viewModel;
