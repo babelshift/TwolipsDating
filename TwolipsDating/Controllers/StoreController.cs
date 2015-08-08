@@ -195,10 +195,10 @@ namespace TwolipsDating.Controllers
             viewModel.StoreItems = storeItemViewModel;
 
             var spotlightSale = await storeService.GetCurrentSpotlightAsync();
-            viewModel.Spotlight = Mapper.Map<StoreSale, SpotlightSaleViewModel>(spotlightSale);
+            viewModel.Spotlight = Mapper.Map<StoreSale, StoreItemViewModel>(spotlightSale);
 
             var giftSpotlightSale = await storeService.GetCurrentGiftSpotlightAsync();
-            viewModel.GiftSpotlight = Mapper.Map<StoreSale, SpotlightSaleViewModel>(giftSpotlightSale);
+            viewModel.GiftSpotlight = Mapper.Map<StoreSale, StoreItemViewModel>(giftSpotlightSale);
             
             viewModel.ShoppingCartItemCount = ShoppingCart.Count;
 
@@ -217,7 +217,8 @@ namespace TwolipsDating.Controllers
             try
             {
                 var storeItem = await storeService.GetStoreItemAsync(storeItemId);
-                ShoppingCart.AddItem(storeItem);
+                var storeItemViewModel = Mapper.Map<StoreItem, StoreItemViewModel>(storeItem);
+                ShoppingCart.AddItem(storeItemViewModel);
                 return Json(new { success = true, count = 1 });
             }
             catch (Exception ex)

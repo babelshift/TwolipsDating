@@ -12,6 +12,13 @@ namespace TwolipsDating.Business
     {
         protected ApplicationDbContext db = new ApplicationDbContext();
 
+        public BaseService()
+        {
+#if DEBUG
+            db.Database.Log = s => { Debug.WriteLine(s); };
+#endif
+        }
+
         /// <summary>
         /// Uses Dapper to perform an asynchronous query to the default connection.
         /// </summary>

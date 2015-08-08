@@ -1,4 +1,5 @@
 ﻿using System;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.ViewModels
 {
@@ -12,14 +13,20 @@ namespace TwolipsDating.ViewModels
         public int ItemTypeId { get; set; }
         public double? Discount { get; set; } // not all items are on sale
         public DateTime? DateSaleEnds { get; set; } // not all items are on sale
-        public string TimeUntilSaleEnds { get; set; }
+
+        public string TimeUntilSaleEnds 
+        { 
+            get 
+            {
+                return DateSaleEnds.HasValue ? DateSaleEnds.Value.GetTimeUntilEnd() : String.Empty;
+            } 
+        }
 
         public string DiscountPercent
         {
             get
             {
-                string percent = Discount.HasValue ? String.Format("-{0}%", Discount * 100) : String.Empty;
-                return percent;
+                return Discount.HasValue ? String.Format("-{0}%", Discount * 100) : String.Empty;
             }
         }
 

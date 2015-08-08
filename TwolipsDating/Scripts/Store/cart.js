@@ -25,7 +25,7 @@
 
 function onTextQtyBlur(e, obj, itemNumber) {
     var itemQuantity = $(obj).val();
-    var itemPrice = $('#Items_' + itemNumber + '__Item_PointsCost').val();
+    var itemPrice = $('#Items_' + itemNumber + '__Item_DiscountedPointsCost').val();
     var totalItemPrice = itemQuantity * itemPrice;
     $('#total-cost-' + itemNumber).text(totalItemPrice);
 

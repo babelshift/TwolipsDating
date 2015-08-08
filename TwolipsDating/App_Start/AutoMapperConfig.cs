@@ -143,7 +143,9 @@ namespace TwolipsDating
                 .ForMember(dest => dest.ItemImagePath, opts => opts.MapFrom(source => source.GetIconPath()))
                 .ForMember(dest => dest.PointsCost, opts => opts.MapFrom(source => source.PointPrice))
                 .ForMember(dest => dest.ItemDescription, opts => opts.MapFrom(source => source.Description))
-                .ForMember(dest => dest.ItemTypeId, opts => opts.MapFrom(source => source.ItemTypeId));
+                .ForMember(dest => dest.ItemTypeId, opts => opts.MapFrom(source => source.ItemTypeId))
+                .ForMember(dest => dest.Discount, opts => opts.MapFrom(source => source.GetDiscountIfAvailable()))
+                .ForMember(dest => dest.DateSaleEnds, opts => opts.MapFrom(source => source.GetDateSaleEndsIfAvailable()));
 
             Mapper.CreateMap<StoreTransactionLog, StoreTransactionViewModel>()
                 .ForMember(dest => dest.TransactionDate, opts => opts.MapFrom(source => source.DateTransactionOccurred))
@@ -181,10 +183,15 @@ namespace TwolipsDating
             Mapper.CreateMap<ShoppingCartItem, ShoppingCartItemViewModel>()
                 .ForMember(dest => dest.Item, opts => opts.MapFrom(source => source.Item));
 
-            Mapper.CreateMap<StoreSale, SpotlightSaleViewModel>()
-                .ForMember(dest => dest.Discount, opts => opts.MapFrom(source => source.Discount))
-                .ForMember(dest => dest.StoreItem, opts => opts.MapFrom(source => source.StoreItem))
-                .ForMember(dest => dest.TimeUntilEnd, opts => opts.MapFrom(source => source.DateEnd.GetTimeUntilEnd()));
+            Mapper.CreateMap<StoreSale, StoreItemViewModel>()
+                .ForMember(dest => dest.ItemId, opts => opts.MapFrom(source => source.StoreItem.Id))
+                .ForMember(dest => dest.ItemName, opts => opts.MapFrom(source => source.StoreItem.Name))
+                .ForMember(dest => dest.ItemImagePath, opts => opts.MapFrom(source => source.StoreItem.GetIconPath()))
+                .ForMember(dest => dest.PointsCost, opts => opts.MapFrom(source => source.StoreItem.PointPrice))
+                .ForMember(dest => dest.ItemDescription, opts => opts.MapFrom(source => source.StoreItem.Description))
+                .ForMember(dest => dest.ItemTypeId, opts => opts.MapFrom(source => source.StoreItem.ItemTypeId))
+                .ForMember(dest => dest.DateSaleEnds, opts => opts.MapFrom(source => source.DateEnd))
+                .ForMember(dest => dest.Discount, opts => opts.MapFrom(source => source.Discount));
         }
     }
 }

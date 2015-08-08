@@ -52,7 +52,7 @@
                                             })
                                             <p><a href="#" data-item-id="@Model.Items[i].Item.ItemId" data-item-number="@i" class="remove-item">Remove</a></p>
                                             @Html.HiddenFor(m => Model.Items[i].Item.ItemId)
-                                            @Html.HiddenFor(m => Model.Items[i].Item.PointsCost)
+                                            @Html.HiddenFor(m => Model.Items[i].Item.DiscountedPointsCost)
                                             @Html.HiddenFor(m => Model.Items[i].Item.ItemTypeId)
                                             @Html.HiddenFor(m => Model.Items[i].IsRemoved)
                                         </td>

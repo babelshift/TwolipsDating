@@ -65,7 +65,6 @@ namespace TwolipsDating.Business
             foreach (var item in results)
             {
                 item.ItemImagePath = item.GetIconPath();
-                item.TimeUntilSaleEnds = item.DateSaleEnds.HasValue ? item.DateSaleEnds.Value.GetTimeUntilEnd() : String.Empty;
             }
 
             return results;

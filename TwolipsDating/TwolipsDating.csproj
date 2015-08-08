@@ -318,6 +318,7 @@
     <Compile Include="Models\UserTitle.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\StoreItemExtensions.cs" />
     <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
     <Compile Include="ViewModels\SpotlightSaleViewModel.cs" />

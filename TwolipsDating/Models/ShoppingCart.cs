@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Models
 {
@@ -36,10 +37,10 @@ namespace TwolipsDating.Models
             }
         }
 
-        public void AddItem(StoreItem item)
+        public void AddItem(StoreItemViewModel item)
         {
             // optimize this with a hash table lookup
-            var match = items.FirstOrDefault(i => i.Item.Id == item.Id);
+            var match = items.FirstOrDefault(i => i.Item.ItemId == item.ItemId);
 
             if (match == null)
             {
@@ -58,7 +59,7 @@ namespace TwolipsDating.Models
 
         public void RemoveItem(int storeItemId)
         {
-            var match = items.FirstOrDefault(i => i.Item.Id == storeItemId);
+            var match = items.FirstOrDefault(i => i.Item.ItemId == storeItemId);
             if (match != null)
             {
                 items.Remove(match);
