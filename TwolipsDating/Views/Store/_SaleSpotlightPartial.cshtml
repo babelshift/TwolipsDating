@@ -37,7 +37,8 @@
                     </div>
                     <div class="store-item-buy hidden">
                         <h4>@Model.StoreItem.ItemName</h4>
-                        <button type="button" href="#" class="btn btn-success btn-block">
+                        <button type="button" href="#" class="store-item-buy-button btn btn-success btn-block"
+                                data-item-id="@Model.StoreItem.ItemId" data-item-type-id="@Model.StoreItem.ItemTypeId">
                             <i class="glyphicon glyphicon-piggy-bank"></i>
                             @Model.DiscountedPointsCost
                         </button>

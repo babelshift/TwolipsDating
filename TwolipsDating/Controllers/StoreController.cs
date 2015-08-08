@@ -62,43 +62,43 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
-        /// <summary>
-        /// Returns a view model used to display the store of items.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<ActionResult> Popular()
-        {
-            var currentUserId = User.Identity.GetUserId();
-            if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
+        ///// <summary>
+        ///// Returns a view model used to display the store of items.
+        ///// </summary>
+        ///// <returns></returns>
+        //public async Task<ActionResult> Popular()
+        //{
+        //    var currentUserId = User.Identity.GetUserId();
+        //    if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
 
-            await SetNotificationsAsync();
+        //    await SetNotificationsAsync();
 
-            var storeItems = await storeService.GetStoreItemsAsync();
-            StoreViewModel viewModel = await GetStoreViewModelAsync(storeItems);
+        //    var storeItems = await storeService.GetStoreItemsAsync();
+        //    StoreViewModel viewModel = await GetStoreViewModelAsync(storeItems);
 
-            viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
+        //    viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
-            return View(viewModel);
-        }
+        //    return View(viewModel);
+        //}
 
-        /// <summary>
-        /// Returns a view model used to display the store of items.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<ActionResult> Sale()
-        {
-            var currentUserId = User.Identity.GetUserId();
-            if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
+        ///// <summary>
+        ///// Returns a view model used to display the store of items.
+        ///// </summary>
+        ///// <returns></returns>
+        //public async Task<ActionResult> Sale()
+        //{
+        //    var currentUserId = User.Identity.GetUserId();
+        //    if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
 
-            await SetNotificationsAsync();
+        //    await SetNotificationsAsync();
 
-            var storeItems = await storeService.GetStoreItemsAsync();
-            StoreViewModel viewModel = await GetStoreViewModelAsync(storeItems);
+        //    var storeItems = await storeService.GetStoreItemsAsync();
+        //    StoreViewModel viewModel = await GetStoreViewModelAsync(storeItems);
 
-            viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
+        //    viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
-            return View(viewModel);
-        }
+        //    return View(viewModel);
+        //}
 
         /// <summary>
         /// Returns a view containing the user's shopping cart contents.
@@ -118,6 +118,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="shoppingCart"></param>
         /// <returns></returns>
+        [HttpPost]
         public async Task<ActionResult> Checkout(ShoppingCartViewModel shoppingCart)
         {
             if (ModelState.IsValid)
@@ -126,10 +127,14 @@ namespace TwolipsDating.Controllers
 
                 foreach (var shoppingCartItem in shoppingCart.Items)
                 {
-                    bool successful = await BuyItem(shoppingCartItem.Item.ItemId, shoppingCartItem.Item.ItemTypeId, shoppingCartItem.Quantity);
-                    if(successful)
+                    // the user may have marked the item as removed from the cart in the UI, skip over those
+                    if (!shoppingCartItem.IsRemoved)
                     {
-                        shoppingCartItemsPurchased.Add(shoppingCartItem.Item.ItemId);
+                        bool successful = await BuyItem(shoppingCartItem.Item.ItemId, shoppingCartItem.Item.ItemTypeId, shoppingCartItem.Quantity);
+                        if (successful)
+                        {
+                            shoppingCartItemsPurchased.Add(shoppingCartItem.Item.ItemId);
+                        }
                     }
                 }
 
@@ -183,13 +188,11 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="storeItems"></param>
         /// <returns></returns>
-        private async Task<StoreViewModel> GetStoreViewModelAsync(IReadOnlyList<StoreItem> storeItems)
+        private async Task<StoreViewModel> GetStoreViewModelAsync(IReadOnlyList<StoreItemViewModel> storeItemViewModel)
         {
             StoreViewModel viewModel = new StoreViewModel();
 
-            var storeItemsViewModel = Mapper.Map<IReadOnlyList<StoreItem>, IReadOnlyList<StoreItemViewModel>>(storeItems);
-
-            viewModel.StoreItems = storeItemsViewModel;
+            viewModel.StoreItems = storeItemViewModel;
 
             var spotlightSale = await storeService.GetCurrentSpotlightAsync();
             viewModel.Spotlight = Mapper.Map<StoreSale, SpotlightSaleViewModel>(spotlightSale);

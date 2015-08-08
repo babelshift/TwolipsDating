@@ -15,7 +15,6 @@
     $('.store-item-buy-button').on('click', function () {
         var itemId = $(this).attr('data-item-id');
         var itemTypeId = $(this).attr('data-item-type-id');
-        var itemPrice = $(this).attr('data-item-price');
 
         var json = '{"storeItemId":' + itemId + ', "storeItemTypeId":' + itemTypeId + '}';
 

@@ -1,12 +1,23 @@
 ﻿using System;
 using System.Configuration;
 using TwolipsDating.Models;
+using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Utilities
 {
     public static class GiftExtensions
     {
         private static readonly string cdn = ConfigurationManager.AppSettings["cdnUrl"];
+
+        public static string GetIconPath(this StoreItemViewModel storeItemViewModel)
+        {
+            if (storeItemViewModel != null && !String.IsNullOrEmpty(storeItemViewModel.ItemImagePath))
+            {
+                return GetImagePath(storeItemViewModel.ItemImagePath);
+            }
+
+            return String.Empty;
+        }
 
         public static string GetIconPath(this StoreItem storeItem)
         {

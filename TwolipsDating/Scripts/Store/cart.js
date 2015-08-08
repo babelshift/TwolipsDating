@@ -14,7 +14,8 @@
                     });
                 } else {
                     $('#row-item-' + itemNumber).fadeOut('normal', function () {
-                        $(this).remove();
+                        var itemPrice = $('#Items_' + itemNumber + '__IsRemoved').val(true);
+                        $(this).hide();
                     });
                 }
             }

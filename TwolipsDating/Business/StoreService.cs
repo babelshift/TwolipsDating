@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TwolipsDating.Models;
+using TwolipsDating.ViewModels;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.Business
 {
@@ -35,13 +38,37 @@ namespace TwolipsDating.Business
         /// Returns all store items in descending order by the date at which they were added.
         /// </summary>
         /// <returns></returns>
-        internal async Task<IReadOnlyList<StoreItem>> GetNewStoreItemsAsync()
+        internal async Task<IReadOnlyList<StoreItemViewModel>> GetNewStoreItemsAsync()
         {
-            var result = await (from storeItems in db.StoreItems
-                                orderby storeItems.DateAdded descending
-                                select storeItems).ToListAsync();
+            DateTime now = DateTime.Now;
 
-            return result.AsReadOnly();
+            var query = from storeItems in db.StoreItems
+                        join sales in db.StoreSales on storeItems.Id equals sales.StoreItemId into lj
+                        from sales in lj.DefaultIfEmpty()
+                        where (now >= sales.DateStart && now <= sales.DateEnd) || sales.Discount == null // sales for today or items without sales
+                        orderby storeItems.DateAdded descending
+                        select new StoreItemViewModel()
+                        {
+                            ItemId = storeItems.Id,
+                            Discount = sales.Discount,
+                            ItemDescription = storeItems.Description,
+                            ItemName = storeItems.Name,
+                            ItemTypeId = storeItems.ItemTypeId,
+                            PointsCost = storeItems.PointPrice,
+                            ItemImagePath = storeItems.IconFileName,
+                            DateSaleEnds = sales.DateEnd
+                        };
+
+            var results = await query.ToListAsync();
+
+            // we couldn't execute these custom formatting functions in the LINQ query, so we loop and do it here
+            foreach (var item in results)
+            {
+                item.ItemImagePath = item.GetIconPath();
+                item.TimeUntilSaleEnds = item.DateSaleEnds.HasValue ? item.DateSaleEnds.Value.GetTimeUntilEnd() : String.Empty;
+            }
+
+            return results;
         }
 
         /// <summary>
@@ -55,7 +82,10 @@ namespace TwolipsDating.Business
             var title = await db.StoreItems.FindAsync(storeItemId);
             var user = db.Users.Find(userId);
 
-            if (user.Points >= title.PointPrice)
+            // get any sales that this item is under
+            int pointsCost = await GetAdjustedSalePrice(storeItemId, title.PointPrice);
+
+            if (user.Points >= pointsCost)
             {
                 UserTitle userTitle = new UserTitle()
                 {
@@ -66,7 +96,7 @@ namespace TwolipsDating.Business
 
                 db.UserTitles.Add(userTitle);
 
-                user.Points -= title.PointPrice;
+                user.Points -= pointsCost;
             }
 
             return await db.SaveChangesAsync();
@@ -81,11 +111,18 @@ namespace TwolipsDating.Business
         /// <returns></returns>
         public async Task<int> BuyGiftAsync(string userId, int storeItemId, int buyCount)
         {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+            Debug.Assert(storeItemId > 0);
+            Debug.Assert(buyCount > 0);
+
             // check price of item and see if the user has enough points to buy the item with the count
             var gift = await db.StoreItems.FindAsync(storeItemId);
             var user = db.Users.Find(userId);
 
-            if (user.Points >= gift.PointPrice * buyCount)
+            // get any sales that this item is under
+            int pointsCost = await GetAdjustedSalePrice(storeItemId, gift.PointPrice);
+
+            if (user.Points >= pointsCost * buyCount)
             {
                 // check if user already has an item of this type
                 var inventoryItem = await (from inventory in db.InventoryItems
@@ -121,10 +158,29 @@ namespace TwolipsDating.Business
 
                 db.StoreTransactions.Add(log);
 
-                user.Points -= gift.PointPrice * buyCount;
+                user.Points -= pointsCost * buyCount;
             }
 
             return await db.SaveChangesAsync();
+        }
+
+        private async Task<int> GetAdjustedSalePrice(int storeItemId, int originalPointsPrice)
+        {
+            int salePointsPrice = originalPointsPrice;
+
+            DateTime now = DateTime.Now;
+
+            var saleForItem = await (from sales in db.StoreSales
+                                     where sales.StoreItemId == storeItemId
+                                     where now >= sales.DateStart && now <= sales.DateEnd
+                                     select sales).FirstOrDefaultAsync();
+
+            if (saleForItem != null)
+            {
+                salePointsPrice -= (int)(salePointsPrice * saleForItem.Discount);
+            }
+
+            return salePointsPrice;
         }
 
         internal async Task<StoreSale> GetCurrentSpotlightAsync()

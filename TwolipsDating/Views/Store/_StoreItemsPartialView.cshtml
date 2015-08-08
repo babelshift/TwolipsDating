@@ -19,15 +19,31 @@
             <div class="store-item-details">
                 <h4>@storeItem.ItemName</h4>
                 <p style="margin-bottom: 0; color: #999">@((TwolipsDating.Models.StoreItemTypeValues)storeItem.ItemTypeId)</p>
+                @if (storeItem.Discount.HasValue)
+                {
+                    <span style="color: #a1a1a1">
+                        <s>
+                            <i class="glyphicon glyphicon-piggy-bank"></i>
+                            @storeItem.PointsCost
+                        </s>
+                    </span>
+                    @:&nbsp;
+                }
                 <i class="glyphicon glyphicon-piggy-bank"></i>
-                @storeItem.PointsCost
+                @storeItem.DiscountedPointsCost
+                @if (storeItem.Discount.HasValue)
+                {
+                    <span class="label label-success">@storeItem.DiscountPercent</span>
+                    <br />
+                    @:Sales ends in @storeItem.TimeUntilSaleEnds
+                }
             </div>
             <div class="store-item-buy hidden">
                 <h4>@storeItem.ItemName</h4>
                 <button type="button" href="#" class="store-item-buy-button btn btn-success btn-block"
-                        data-item-id="@storeItem.ItemId" data-item-type-id="@storeItem.ItemTypeId" data-item-price="@storeItem.PointsCost">
+                        data-item-id="@storeItem.ItemId" data-item-type-id="@storeItem.ItemTypeId">
                     <i class="glyphicon glyphicon-piggy-bank"></i>
-                    @storeItem.PointsCost
+                    @storeItem.DiscountedPointsCost
                 </button>
             </div>
         </div>
