@@ -9,8 +9,14 @@
 @Html.Partial("_ItemAddedConfirmationPartial")
 <div class="row">
     <div class="col-md-3">
-        @Html.Partial("_SaleSpotlightPartial", Model.Spotlight)
-        @Html.Partial("_GiftSpotlightPartial", Model.GiftSpotlight)
+        @if (Model.Spotlight != null)
+        {
+            @Html.Partial("_SaleSpotlightPartial", Model.Spotlight)
+        }
+        @if (Model.GiftSpotlight != null)
+        {
+            @Html.Partial("_GiftSpotlightPartial", Model.GiftSpotlight)
+        }
         <div class="ad">
             <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             <!-- Store - Sidebar - 1 -->

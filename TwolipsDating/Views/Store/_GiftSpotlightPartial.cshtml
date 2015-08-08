@@ -11,6 +11,9 @@
         <div class="panel-body text-center">
             <div class="store-item-wrapper" title="@Model.StoreItem.ItemDescription" data-animation="false">
                 <div style="min-height: 155px; padding: 5px">
+                    <h4 style="position: absolute; margin: 0">
+                        <span class="label label-success">@Model.DiscountPercent</span>
+                    </h4>
                     @if (!String.IsNullOrEmpty(Model.StoreItem.ItemImagePath))
                     {
                         <img src="@Model.StoreItem.ItemImagePath" />
@@ -31,7 +34,6 @@
                         &nbsp;
                         <i class="glyphicon glyphicon-piggy-bank"></i>
                         @Model.DiscountedPointsCost
-                        <span class="label label-success">@Model.DiscountPercent</span>
                         <br />
                         Sales ends in @Model.TimeUntilEnd
                     </div>

@@ -5,9 +5,12 @@
     <div class="store-item-wrapper col-lg-3 col-md-4 col-sm-4 col-xs-6 text-center" style="min-height: 200px;"
          title="@storeItem.ItemDescription" data-placement="auto top" data-animation="false">
         <div class="store-item" style="border: 1px solid transparent; padding: 5px">
-            @*<span class="label label-danger" style="position: absolute; top: 3px; left: 40px;">
-                    New
-                </span>*@
+            @if (storeItem.Discount.HasValue)
+            {
+                <h4 style="position: absolute; margin: 0; left: 20px">
+                    <span class="label label-success">@storeItem.DiscountPercent</span>
+                </h4>
+            }
             @if (!String.IsNullOrEmpty(storeItem.ItemImagePath))
             {
                 <img src="@storeItem.ItemImagePath" />
@@ -21,21 +24,22 @@
                 <p style="margin-bottom: 0; color: #999">@((TwolipsDating.Models.StoreItemTypeValues)storeItem.ItemTypeId)</p>
                 @if (storeItem.Discount.HasValue)
                 {
-                    <span style="color: #a1a1a1">
+                    <span style="color: #999">
                         <s>
                             <i class="glyphicon glyphicon-piggy-bank"></i>
                             @storeItem.PointsCost
                         </s>
                     </span>
                     @:&nbsp;
-                }
-                <i class="glyphicon glyphicon-piggy-bank"></i>
-                @storeItem.DiscountedPointsCost
-                @if (storeItem.Discount.HasValue)
-                {
-                    <span class="label label-success">@storeItem.DiscountPercent</span>
+                    <i class="glyphicon glyphicon-piggy-bank"></i>
+                    @storeItem.DiscountedPointsCost
                     <br />
                     @:Sales ends in @storeItem.TimeUntilSaleEnds
+                }
+                else
+                {
+                    <i class="glyphicon glyphicon-piggy-bank"></i>
+                    @storeItem.DiscountedPointsCost
                 }
             </div>
             <div class="store-item-buy hidden">
