@@ -22,13 +22,12 @@
             if (data.success) {
                 var currentShoppingCartCount = parseInt($('#shopping-cart-count').text());
                 $('#shopping-cart-count').text(++currentShoppingCartCount);
+                $('.custom-tooltip').tooltip('hide');
                 $('#modal-buy').modal('show');
             }
             else {
             }
         });
     });
-
-    $('.store-item-wrapper').tooltip();
 });
 
