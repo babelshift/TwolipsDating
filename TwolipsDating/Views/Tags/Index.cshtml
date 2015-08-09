@@ -1,0 +1,27 @@
+﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.TagViewModel>
+
+@{
+    ViewBag.Title = "twolips - tags";
+    ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
+    ViewBag.ImageUrl = Url.Content("~/Content/twolipsicon-white-180x180.png");
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            @foreach (var tag in Model)
+            {
+                <div class="col-md-3" style="min-height: 85px; overflow: hidden">
+                    <p>
+                        <a href="@Url.Action("index", "search", new { tag = tag.Name })" class="custom-tooltip btn btn-default btn-xs" title="@tag.Description" data-container="body">
+                            @tag.Name
+                        </a>
+                        <small>&times;3482</small>
+                        <br />
+                        <small>@tag.Description</small>
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

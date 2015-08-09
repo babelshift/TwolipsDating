@@ -194,6 +194,11 @@ input[type="checkbox"].input-validation-error {
     margin-bottom: 15px;
 }
 
+.search-result .circular-image-wrapper {
+    width: 48px;
+    height: 48px;
+}
+
 .circular-image-wrapper {
     width: 32px;
     height: 32px;
@@ -292,4 +297,21 @@ input[readonly] {
 
 .ad {
     margin-bottom: 21px;
+}
+
+.search-result .profile-info-wrapper {
+    display:inline-block; vertical-align: top; margin-top: 3px;
+}
+
+.search-result .name-and-location {
+    font-size: 14px;
+}
+
+.search-result .rating {
+    font-size: 12px;
+}
+
+.search-result hr { 
+    margin-top: 10px; 
+    margin-bottom: 10px;
 }

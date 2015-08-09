@@ -161,6 +161,7 @@ namespace TwolipsDating.Business
                              from tag in db.Tags
                              where tag.TagId == tagSuggestion.TagId
                              where tagSuggestion.ProfileId == profileId
+                             where tagSuggestion.SuggestingUser.IsActive // only show suggestions from active users
                              select new ProfileTagSuggestionViewModel()
                             {
                                 TagId = tag.TagId,
@@ -209,6 +210,7 @@ namespace TwolipsDating.Business
             int count = await (from tagSuggestions in db.TagSuggestions
                                where tagSuggestions.TagId == tagId
                                where tagSuggestions.ProfileId == profileId
+                               where tagSuggestions.SuggestingUser.IsActive
                                select tagSuggestions).CountAsync();
 
             return count;

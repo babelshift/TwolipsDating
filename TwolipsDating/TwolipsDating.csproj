@@ -43,8 +43,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper, Version=4.0.3.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.4.0.3\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=4.0.4.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.0.4\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -286,6 +286,7 @@
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
+    <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Migrations\201507311603205_ReworkStoreModel.cs" />
     <Compile Include="Migrations\201507311603205_ReworkStoreModel.Designer.cs">
       <DependentUpon>201507311603205_ReworkStoreModel.cs</DependentUpon>
@@ -801,6 +802,7 @@
     <Content Include="Views\Trivia\_SidebarOthersCompletedQuizPartial.cshtml" />
     <Content Include="Views\Trivia\_SidebarTagsForQuestion.cshtml" />
     <Content Include="Views\Trivia\_SidebarTagsForQuiz.cshtml" />
+    <Content Include="Views\Tags\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

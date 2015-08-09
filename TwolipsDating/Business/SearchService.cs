@@ -25,7 +25,9 @@ namespace TwolipsDating.Business
                                  join tagSuggestions in db.TagSuggestions on profiles.Id equals tagSuggestions.ProfileId
                                  where tagSuggestions.Tag.Name == userName
                                  where profiles.ApplicationUser.IsActive
-                                 select profiles).ToListAsync();
+                                 select profiles)
+                                 .Distinct()
+                                 .ToListAsync();
 
             return results.AsReadOnly();
         }
