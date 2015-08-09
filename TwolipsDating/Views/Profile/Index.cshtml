@@ -19,13 +19,13 @@
             {
                 foreach (var userTitle in Model.UserTitles)
                 {
-                    <p>
-                        @if (userTitle.TitleName == Model.SelectedTitle)
+            <p>
+                @if (userTitle.TitleName == Model.SelectedTitle)
                         {
-                            <i class="@String.Format("selected-title-item-check-{0}", userTitle.TitleId) glyphicon glyphicon-ok"></i>
+                        <i class="@String.Format("selected-title-item-check-{0}", userTitle.TitleId) glyphicon glyphicon-ok"></i>
                         }
-                        <a class="@String.Format("select-title-link-{0}", userTitle.TitleId)" href="#" data-title-name="@userTitle.TitleName" data-title-id="@userTitle.TitleId">@userTitle.TitleName</a>
-                    </p>
+                <a class="@String.Format("select-title-link-{0}", userTitle.TitleId)" href="#" data-title-name="@userTitle.TitleName" data-title-id="@userTitle.TitleId">@userTitle.TitleName</a>
+            </p>
                 }
             }
         </div>
@@ -79,50 +79,50 @@
                 </div>
                 @if (Model.ViewerInventoryItems != null && Model.ViewerInventoryItems.Count > 0)
                 {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <div class="row">
-                                @foreach (var item in Model.ViewerInventoryItems)
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            @foreach (var item in Model.ViewerInventoryItems)
                                 {
-                                    <div id="@String.Format("gift-image-wrapper-{0}", item.GiftId)" class="col-xs-3 col-md-2 text-center">
-                                        <a id="@item.InventoryItemId" data-gift-name="@item.GiftName" data-gift-id="@item.GiftId" href="#" onclick="onSelectGiftClick(event, this)">
-                                            <img src="@item.GiftIconFilePath">
-                                        </a>
-                                        <p id="@String.Format("gift-count-{0}", item.InventoryItemId)" class="bg-info">@item.ItemCount</p>
-                                    </div>
+                                <div id="@String.Format("gift-image-wrapper-{0}", item.GiftId)" class="col-xs-3 col-md-2 text-center">
+                                    <a id="@item.InventoryItemId" data-gift-name="@item.GiftName" data-gift-id="@item.GiftId" href="#" onclick="onSelectGiftClick(event, this)">
+                                        <img src="@item.GiftIconFilePath">
+                                    </a>
+                                    <p id="@String.Format("gift-count-{0}", item.InventoryItemId)" class="bg-info">@item.ItemCount</p>
+                                </div>
                                 }
-                            </div>
                         </div>
-                        <div class="pull-right">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button id="button-gift-send" type="button" class="btn btn-primary" onclick="onSendGift(event, this)">Send</button>
-                        </div>
-                        <div class="clearfix"></div>
-                        <br />
-                        <div id="gift-error" class="alert alert-danger" role="alert">
-                            <p id="gift-error-text">Something happened which prevented your gift from being sent.</p>
-                        </div>
-                        <div id="gift-success" class="alert alert-success" role="alert">
-                            <p>Gift sent successfully.</p>
-                        </div>
-                        <table id="gift-send-log" class="table">
-                            <thead>
-                                <tr>
-                                    <th>Gifts successfully sent so far:</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                        @Html.HiddenFor(m => m.SendGift.GiftId)
-                        @Html.HiddenFor(m => m.SendGift.InventoryItemId)
-                        <input type="hidden" id="selected-gift-name" />
                     </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button id="button-gift-send" type="button" class="btn btn-primary" onclick="onSendGift(event, this)">Send</button>
+                    </div>
+                    <div class="clearfix"></div>
+                    <br />
+                    <div id="gift-error" class="alert alert-danger" role="alert">
+                        <p id="gift-error-text">Something happened which prevented your gift from being sent.</p>
+                    </div>
+                    <div id="gift-success" class="alert alert-success" role="alert">
+                        <p>Gift sent successfully.</p>
+                    </div>
+                    <table id="gift-send-log" class="table">
+                        <thead>
+                            <tr>
+                                <th>Gifts successfully sent so far:</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    @Html.HiddenFor(m => m.SendGift.GiftId)
+                    @Html.HiddenFor(m => m.SendGift.InventoryItemId)
+                    <input type="hidden" id="selected-gift-name" />
+                </div>
                 }
                 else
                 {
-                    <div class="modal-body">
-                        <p>You don't have any items to send. Go get some and come back!</p>
-                    </div>
+                <div class="modal-body">
+                    <p>You don't have any items to send. Go get some and come back!</p>
+                </div>
                 }
             </div>
         </div>
@@ -205,38 +205,38 @@
                     {
                         using (Html.BeginForm("changeimage", "profile", FormMethod.Post))
                         {
-                            @Html.AntiForgeryToken()
-                            @Html.ValidationSummary()
-                            <div class="modal-body">
-                                <div class="row">
-                                    @foreach (var userImage in Model.UploadImage.UserImages)
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary()
+                    <div class="modal-body">
+                        <div class="row">
+                            @foreach (var userImage in Model.UploadImage.UserImages)
                                     {
-                                        <div class="col-xs-6 col-md-3">
-                                            <a id="@userImage.Id" href="#" class="thumbnail" onclick="onSelectProfileImageClick(event, this)">
-                                                <img src="@userImage.Path" style="max-height: 128px;">
-                                            </a>
-                                        </div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <a id="@userImage.Id" href="#" class="thumbnail" onclick="onSelectProfileImageClick(event, this)">
+                                            <img src="@userImage.Path" style="max-height: 128px;">
+                                        </a>
+                                    </div>
                                     }
-                                </div>
-                            </div>
-                            @Html.HiddenFor(m => m.ChangeImage.UserImageId)
-                            @Html.HiddenFor(m => m.ProfileUserId)
-                            @Html.HiddenFor(m => m.ProfileId)
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">OK</button>
-                            </div>
+                        </div>
+                    </div>
+                    @Html.HiddenFor(m => m.ChangeImage.UserImageId)
+                    @Html.HiddenFor(m => m.ProfileUserId)
+                    @Html.HiddenFor(m => m.ProfileId)
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">OK</button>
+                    </div>
                         }
                     }
                     else
                     {
-                        <div class="modal-body">
-                            <h4>You can't change your profile image because you haven't uploaded any images.</h4>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">OK</button>
-                        </div>
+                    <div class="modal-body">
+                        <h4>You can't change your profile image because you haven't uploaded any images.</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">OK</button>
+                    </div>
                     }
                 </div>
             </div>
@@ -251,34 +251,34 @@
                 </div>
                 @using (Html.BeginForm("sendmessage", "profile", FormMethod.Post))
                 {
-                    @Html.AntiForgeryToken()
-                    <div class="modal-body">
-                        <div class="tags">
-                            @foreach (var tag in Model.AllTags)
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="tags">
+                        @foreach (var tag in Model.AllTags)
                             {
                                 if (tag.DidUserSuggest)
                                 {
-                                    <a href="#" id="@String.Format("{0}-tag-button", tag.TagId)" onclick="onSuggestTag(event, this, @tag.TagId)" class="custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
-                                        <span id="@String.Format("{0}-tag-count", tag.TagId)" class="badge">@tag.TagCount</span> @tag.TagName
-                                    </a>
-                                    <a href="#" onclick="onSuggestTag(event, this, @tag.TagId)"><i id="@String.Format("{0}-tag-glyph", tag.TagId)" class="glyphicon glyphicon-minus"></i></a>
+                            <a href="#" id="@String.Format("{0}-tag-button", tag.TagId)" onclick="onSuggestTag(event, this, @tag.TagId)" class="custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
+                                <span id="@String.Format("{0}-tag-count", tag.TagId)" class="badge">@tag.TagCount</span> @tag.TagName
+                            </a>
+                            <a href="#" onclick="onSuggestTag(event, this, @tag.TagId)"><i id="@String.Format("{0}-tag-glyph", tag.TagId)" class="glyphicon glyphicon-minus"></i></a>
                                 }
                                 else
                                 {
-                                    <a href="#" id="@String.Format("{0}-tag-button", tag.TagId)" onclick="onSuggestTag(event, this, @tag.TagId)" class="custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
-                                        <span id="@String.Format("{0}-tag-count", tag.TagId)" class="badge">@tag.TagCount</span> @tag.TagName
-                                    </a>
-                                    <a href="#" onclick="onSuggestTag(event, this, @tag.TagId)"><i id="@String.Format("{0}-tag-glyph", tag.TagId)" class="glyphicon glyphicon-plus"></i></a>
+                            <a href="#" id="@String.Format("{0}-tag-button", tag.TagId)" onclick="onSuggestTag(event, this, @tag.TagId)" class="custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
+                                <span id="@String.Format("{0}-tag-count", tag.TagId)" class="badge">@tag.TagCount</span> @tag.TagName
+                            </a>
+                            <a href="#" onclick="onSuggestTag(event, this, @tag.TagId)"><i id="@String.Format("{0}-tag-glyph", tag.TagId)" class="glyphicon glyphicon-plus"></i></a>
                                 }
-                                <input id="@String.Format("{0}-tag-hidden", tag.TagId)" type="hidden" value="@tag.DidUserSuggest.ToString().ToLower()" />
-                                @:&nbsp;
-                                @:&nbsp;
+                            <input id="@String.Format("{0}-tag-hidden", tag.TagId)" type="hidden" value="@tag.DidUserSuggest.ToString().ToLower()" />
+                            @:&nbsp;
+                            @:&nbsp;
                             }
-                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
                 }
             </div>
         </div>
@@ -528,6 +528,14 @@
                         </ul>
                     </div>
                 }
+            }
+            else
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>You are viewing this profile anonymously. You can interact with it by <a href="@Url.Action("login", "account")">logging in</a>.</h4>
+                    </div>
+                </div>
             }
             <div class="clearfix"></div>
             <div class="panel panel-default">

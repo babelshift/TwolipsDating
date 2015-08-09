@@ -48,6 +48,7 @@
                     }*@
                 <ul id="navbar-main" class="nav navbar-nav visible-md visible-lg">
                     <li><a href="@Url.Action("index", "profile", new { id = (int?)null })"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
+                    <li><a href="@Url.Action("index", "tags")"><i class="glyphicon glyphicon-tags"></i>&nbsp;Tags</a></li>
                     <li><a href="@Url.Action("index", "search", new { id = (int?)null })"><i class="glyphicon glyphicon-search"></i>&nbsp;Search</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-education"></i>&nbsp;Trivia <span class="caret"></span></a>
@@ -65,6 +66,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="@Url.Action("index", "profile", new { id = (int?)null })"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
                             <li><a href="@Url.Action("index", "search", new { id = (int?)null })"><i class="glyphicon glyphicon-search"></i>&nbsp;Search</a></li>
+                            <li><a href="@Url.Action("index", "tags")"><i class="glyphicon glyphicon-tags"></i>&nbsp;Tags</a></li>
                             <li><a href="@Url.Action("conversation", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Messages</a></li>
                             <li><a href="@Url.Action("index", "trivia")"><i class="glyphicon glyphicon-education"></i>&nbsp;Trivia</a></li>
                             <li><a href="@Url.Action("index", "store")"><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp;Store</a></li>

@@ -13,8 +13,11 @@ namespace TwolipsDating.Controllers
     public class TagsController : BaseController
     {
         // GET: Tags
+        [AllowAnonymous]
         public async Task<ActionResult> Index()
         {
+            await SetNotificationsAsync();
+
             var tags = await ProfileService.GetAllTagsInUseAndCountsAsync();
 
             return View(tags);
