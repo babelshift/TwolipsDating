@@ -15,10 +15,9 @@ namespace TwolipsDating.Controllers
         // GET: Tags
         public async Task<ActionResult> Index()
         {
-            var tags = await ProfileService.GetAllTagsAsync();
-            var viewModel = Mapper.Map<IReadOnlyCollection<Tag>, IReadOnlyCollection<TagViewModel>>(tags);
+            var tags = await ProfileService.GetAllTagsInUseAndCountsAsync();
 
-            return View(viewModel);
+            return View(tags);
         }
     }
 }

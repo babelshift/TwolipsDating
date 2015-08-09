@@ -632,6 +632,7 @@
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\StoreTransactionViewModel.cs" />
     <Compile Include="ViewModels\StoreViewModel.cs" />
+    <Compile Include="ViewModels\TagAndCountViewModel.cs" />
     <Compile Include="ViewModels\TagViewModel.cs" />
     <Compile Include="ViewModels\TitleViewModel.cs" />
     <Compile Include="ViewModels\TriviaMenuViewModel.cs" />
