@@ -59,22 +59,12 @@ function onSubmitAnswer(e, obj) {
     postJson('/trivia/submitAnswer', json, function (data) {
         if (data.success) {
             if (data.correctAnswerId == selectedAnswerId) {
-                $("#alert-box").removeClass("alert-success");
-                $("#alert-box").removeClass("alert-danger");
-                $("#alert-box").removeClass("alert-info");
-                $("#alert-box").addClass("alert-success");
-                $("#alert-box").html("<h5>Correct!</h5>");
                 $("#button-next").removeClass("hidden");
                 $("#button-next").addClass("btn-success");
                 $("#button-skip").addClass("hidden");
                 //$("#button-ok").addClass("hidden");
                 //$("input[type='radio']").attr("disabled", true);
             } else {
-                $("#alert-box").removeClass("alert-success");
-                $("#alert-box").removeClass("alert-danger");
-                $("#alert-box").removeClass("alert-info");
-                $("#alert-box").addClass("alert-danger");
-                $("#alert-box").html("<h5>Incorrect!</h5>");
                 $("#button-next").removeClass("hidden");
                 $("#button-next").addClass("btn-danger");
                 $("#button-skip").addClass("hidden");

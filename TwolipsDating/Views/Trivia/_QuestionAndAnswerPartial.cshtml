@@ -2,20 +2,38 @@
 
 @if (Model != null && !String.IsNullOrEmpty(Model.Content))
 {
-    <p>
-        @Model.Content
-        &nbsp;
-        <button type="button" id="share-question-link" class="btn btn-primary btn-xs"
-                data-html="true" data-toggle="popover" data-placement="bottom" data-title="Share" data-animation="false">
-            <i class="glyphicon glyphicon-share-alt"></i>
-        </button>
-        @if (User.Identity.IsAuthenticated)
+    <div class="panel-body">
+        @if (!User.Identity.IsAuthenticated)
         {
-            <a href="#" data-toggle="modal" data-target="#modalQuestionViolation" class="btn btn-default btn-xs">
-                <i class="glyphicon glyphicon-flag"></i>
-            </a>
+            <div id="alert-box" class="alert alert-info">
+                <h5>You can answer this question by <a href="@Url.Action("login", "account")" class="alert-link">logging in</a>.</h5>
+            </div>
         }
-    </p>
+        else
+        {
+            if (Model.QuestionTypeId == (int)TwolipsDating.Models.QuestionTypeValues.Timed)
+            {
+                <div id="alert-box" class="alert alert-info">
+                    <h5>Click or tap to select an answer. You have <span id="timer-label">10</span> seconds remaining.</h5>
+                </div>
+            }
+        }
+        @Html.Partial("_QuestionRatingBarPartial", Model.Points)
+        <p>
+            @Model.Content
+            &nbsp;
+            <button type="button" id="share-question-link" class="btn btn-primary btn-xs"
+                    data-html="true" data-toggle="popover" data-placement="bottom" data-title="Share" data-animation="false">
+                <i class="glyphicon glyphicon-share-alt"></i>
+            </button>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="#" data-toggle="modal" data-target="#modalQuestionViolation" class="btn btn-default btn-xs">
+                    <i class="glyphicon glyphicon-flag"></i>
+                </a>
+            }
+        </p>
+    </div>
     <div class="list-group">
         @foreach (var answer in @Model.Answers)
         {
@@ -35,25 +53,26 @@
             }
         }
     </div>
-    @*<button id="button-ok" type="button" class="btn btn-primary btn-sm" onclick="onSubmitAnswer(event, this)" title="Submit answer"><i class="glyphicon glyphicon-ok"></i> OK</button>*@
-    if (User.Identity.IsAuthenticated)
-    {
-        if (Model.QuestionTypeId == (int)TwolipsDating.Models.QuestionTypeValues.Random)
+    <div class="panel-body">
+        @if (User.Identity.IsAuthenticated)
         {
-            <a id="button-skip" href="@Url.Action("random", "trivia")" class="btn btn-default btn-sm" title="Skip this question">Skip <i class="glyphicon glyphicon-chevron-right"></i> </a>
-            <a id="button-next" href="@Url.Action("random", "trivia")" class="btn btn-primary btn-sm hidden" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</a>
+            if (Model.QuestionTypeId == (int)TwolipsDating.Models.QuestionTypeValues.Random)
+            {
+                <a id="button-skip" href="@Url.Action("random", "trivia")" class="btn btn-default btn-sm" title="Skip this question">Skip <i class="glyphicon glyphicon-chevron-right"></i> </a>
+                <a id="button-next" href="@Url.Action("random", "trivia")" class="btn btn-primary btn-sm hidden" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</a>
+            }
+            else
+            {
+                <a id="button-skip" href="@Url.Action("timed", "trivia")" class="btn btn-default btn-sm" title="Skip this question">Skip <i class="glyphicon glyphicon-chevron-right"></i> </a>
+                <a id="button-next" href="@Url.Action("timed", "trivia")" class="btn btn-primary btn-sm hidden" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</a>
+            }
+            @Html.HiddenFor(m => m.QuestionId)
         }
         else
         {
-            <a id="button-skip" href="@Url.Action("timed", "trivia")" class="btn btn-default btn-sm" title="Skip this question">Skip <i class="glyphicon glyphicon-chevron-right"></i> </a>
-            <a id="button-next" href="@Url.Action("timed", "trivia")" class="btn btn-primary btn-sm hidden" title="Get next question"><i class="glyphicon glyphicon-random"></i> Next</a>
+            <a href="@Url.Action("login", "account")" class="btn btn-primary">Log in to answer this question</a>
         }
-        @Html.HiddenFor(m => m.QuestionId)
-    }
-    else
-    {
-        <a href="@Url.Action("login", "account")" class="btn btn-primary">Log in to answer this question</a>
-    }
+    </div>
 }
 else
 {

@@ -9,17 +9,21 @@
 @Html.Partial("_ModalQuestionViolationPartial", Model)
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    Create your own questions
-                </h4>
-            </div>
-            <div class="panel-body">
-                <a href="mailto:info@twolipsdating.com">Contact us</a> to suggest some new questions. You might see yours here soon!
-            </div>
+            @Html.Partial("_QuestionAndAnswerPartial", Model)
         </div>
+        <!-- Random Question - Footer - 1 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1823005717277864"
+             data-ad-slot="2343303036"
+             data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+    <div class="col-md-4">
         @if (Model.Tags != null)
         {
             @Html.Partial("_SidebarTagsForQuestion", Model.Tags)
@@ -39,36 +43,6 @@
         {
             @Html.Partial("_SidebarOthersAnsweredCorrectlyPartial", Model.UsersAnsweredCorrectly)
         }
-    </div>
-    <div class="col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div id="alert-box" class="alert alert-info">
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <h5>Click an answer to select it. There is no time limit.</h5>
-                    }
-                    else
-                    {
-                        <h5>You can answer this question by <a href="@Url.Action("login", "account")" class="alert-link">logging in</a>.</h5>
-                    }
-                </div>
-                @if (Model != null)
-                {
-                    @Html.Partial("_QuestionRatingBarPartial", Model.Points)
-                }
-                @Html.Partial("_QuestionAndAnswerPartial", Model)
-            </div>
-        </div>
-        <!-- Random Question - Footer - 1 -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1823005717277864"
-             data-ad-slot="2343303036"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
     </div>
 </div>
 

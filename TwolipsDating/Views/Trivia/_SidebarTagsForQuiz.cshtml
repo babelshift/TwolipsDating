@@ -16,7 +16,7 @@
             <div class="tags">
                 @foreach (var tag in Model)
                 {
-                    <a href="#" class="custom-tooltip btn btn-default btn-xs" title="@tag.Description">
+                    <a href="@Url.Action("index", "search", new { tag = tag.Name })" class="custom-tooltip btn btn-default btn-xs" title="@tag.Description">
                         @tag.Name
                     </a>
                 }

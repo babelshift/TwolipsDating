@@ -89,28 +89,20 @@ function onSubmitAnswer(e, obj) {
     postJson('/trivia/submitTimedAnswer', json, function (data) {
         if (data.success) {
             if (data.correctAnswerId == selectedAnswerId) {
-                $("#alert-box").removeClass("alert-success");
-                $("#alert-box").removeClass("alert-danger");
-                $("#alert-box").removeClass("alert-info");
-                $("#alert-box").addClass("alert-success");
-                $("#alert-box").html("<h5>Correct!</h4>");
                 $("#button-next").removeClass("hidden");
                 $("#button-next").addClass("btn-success");
                 $("#button-skip").addClass("hidden");
                 //$("#button-ok").addClass("hidden");
                 //$("input[type='radio']").attr("disabled", true);
             } else {
-                $("#alert-box").removeClass("alert-success");
-                $("#alert-box").removeClass("alert-danger");
-                $("#alert-box").removeClass("alert-info");
-                $("#alert-box").addClass("alert-danger");
-                $("#alert-box").html("<h5>Incorrect!</h4>");
                 $("#button-next").removeClass("hidden");
                 $("#button-next").addClass("btn-danger");
                 $("#button-skip").addClass("hidden");
                 //$("#button-ok").addClass("hidden");
                 //$("input[type='radio']").attr("disabled", true);
             }
+
+            stopCountdown();
 
             $(".answer-link").addClass("list-group-item-danger");
             $("#answer-" + data.correctAnswerId).removeClass("list-group-item-danger");
