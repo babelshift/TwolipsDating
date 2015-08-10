@@ -328,38 +328,33 @@ input[readonly] {
     margin-bottom: 10px;
 }
 
-.quiz-rating-bar {
+.trivia-rating-bar {
     font-size: 16px;
 }
 
-.question-rating-bar {
-    font-size: 16px;
-    margin-bottom: 15px;
-}
-
-.question-rating-bar .badge, .quiz-rating-bar .badge {
+.trivia-rating-bar .badge {
     font-size: 15px;
     padding: 10px;
     border-radius: 0;
 }
 
-.question-rating-bar .marker-1, .quiz-rating-bar .marker-1 {
+.trivia-rating-bar .marker-1 {
     background: #43AC6A;
 }
-.question-rating-bar .marker-2, .quiz-rating-bar .marker-2 {
+.trivia-rating-bar .marker-2 {
     background: #94ac43;
 }
-.question-rating-bar .marker-3, .quiz-rating-bar .marker-3 {
+.trivia-rating-bar .marker-3 {
     background: #E99002;
 }
-.question-rating-bar .marker-4, .quiz-rating-bar .marker-4 {
+.trivia-rating-bar .marker-4 {
     background: #ff7500;
 }
-.question-rating-bar .marker-5, .quiz-rating-bar .marker-5 {
+.trivia-rating-bar .marker-5 {
     background: #F04124;
 }
 
-.question-rating-bar .current, .quiz-rating-bar .current {
+.trivia-rating-bar .current {
     padding: 20px;
     font-size: 25px;
 }
