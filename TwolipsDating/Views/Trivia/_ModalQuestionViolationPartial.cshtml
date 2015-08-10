@@ -1,6 +1,10 @@
 ﻿@model TwolipsDating.ViewModels.QuestionViewModel
 
-@if (User.Identity.IsAuthenticated)
+@if (User.Identity.IsAuthenticated
+    && Model != null
+    && Model.QuestionViolation != null 
+    && Model.QuestionViolation.ViolationTypes != null 
+    && Model.QuestionViolation.ViolationTypes.Count > 0)
 {
     <div class="modal fade" id="modalQuestionViolation" tabindex="-1" role="dialog" aria-labelledby="modalQuestionViolationLabel" aria-hidden="true">
         <div class="modal-dialog">

@@ -158,7 +158,10 @@ namespace TwolipsDating.Controllers
 
             QuestionViewModel viewModel = await GetRandomQuestionViewModelAsync((int)QuestionTypeValues.Random);
 
-            viewModel.QuestionViolation = await GetQuestionViolationViewModelAsync();
+            if (viewModel != null)
+            {
+                viewModel.QuestionViolation = await GetQuestionViolationViewModelAsync();
+            }
 
             return View(viewModel);
         }
@@ -229,7 +232,10 @@ namespace TwolipsDating.Controllers
 
             var viewModel = await GetRandomQuestionViewModelAsync((int)QuestionTypeValues.Timed);
 
-            viewModel.QuestionViolation = await GetQuestionViolationViewModelAsync();
+            if (viewModel != null)
+            {
+                viewModel.QuestionViolation = await GetQuestionViolationViewModelAsync();
+            }
 
             return View(viewModel);
         }

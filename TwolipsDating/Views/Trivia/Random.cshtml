@@ -20,7 +20,10 @@
                 <a href="mailto:info@twolipsdating.com">Contact us</a> to suggest some new questions. You might see yours here soon!
             </div>
         </div>
-        @Html.Partial("_SidebarTagsForQuestion", Model.Tags)
+        @if (Model != null)
+        {
+            @Html.Partial("_SidebarTagsForQuestion", Model.Tags)
+        }
         <div class="ad">
             <!-- Random Question - Sidebar - 1 -->
             <ins class="adsbygoogle"
@@ -32,7 +35,10 @@
                 (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
         </div>
-        @Html.Partial("_SidebarOthersAnsweredCorrectlyPartial", Model.UsersAnsweredCorrectly)
+        @if (Model != null)
+        {
+            @Html.Partial("_SidebarOthersAnsweredCorrectlyPartial", Model.UsersAnsweredCorrectly)
+        }
     </div>
     <div class="col-md-8">
         <div class="panel panel-default">
