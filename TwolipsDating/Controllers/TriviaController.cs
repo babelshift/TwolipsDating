@@ -352,7 +352,7 @@ namespace TwolipsDating.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        public async Task<ActionResult> Quiz(int id)
+        public async Task<ActionResult> Quiz(int id, string seoName)
         {
             await SetNotificationsAsync();
 
@@ -370,8 +370,16 @@ namespace TwolipsDating.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
+            string expectedSeoName = quiz.GetSEOName();
+            if (seoName != expectedSeoName)
+            {
+                return RedirectToAction("quiz", new { id = id, seoName = expectedSeoName });
+            }
+
             bool isAlreadyCompleted = false;
             List<QuestionViewModel> questionListViewModel = new List<QuestionViewModel>();
+
+            List<int> pointsDistribution = new List<int>();
 
             if (User.Identity.IsAuthenticated)
             {
@@ -422,10 +430,10 @@ namespace TwolipsDating.Controllers
                 IsAlreadyCompleted = isAlreadyCompleted,
                 QuizDescription = quiz.Description,
                 UsersCompletedQuiz = await GetUsersCompletedQuizAsync(id),
-                Tags = await GetTagsForQuizAsync(id)
+                Tags = await GetTagsForQuizAsync(id),
+                QuestionViolation = await GetQuestionViolationViewModelAsync(),
+                AveragePoints = questionListViewModel != null ? (int)Math.Round(questionListViewModel.Average(q => q.Points)) : 0
             };
-
-            viewModel.QuestionViolation = await GetQuestionViolationViewModelAsync();
 
             return View(viewModel);
         }

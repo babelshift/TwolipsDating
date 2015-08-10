@@ -319,6 +319,7 @@
     <Compile Include="Models\UserTitle.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\QuizExtensions.cs" />
     <Compile Include="Utilities\StoreItemExtensions.cs" />
     <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
@@ -806,6 +807,7 @@
     <Content Include="Views\Trivia\_SidebarTagsForQuiz.cshtml" />
     <Content Include="Views\Tags\Index.cshtml" />
     <Content Include="Views\Trivia\_QuestionRatingBarPartial.cshtml" />
+    <Content Include="Views\Trivia\_QuizRatingBarPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
