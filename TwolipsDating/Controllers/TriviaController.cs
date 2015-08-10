@@ -156,11 +156,19 @@ namespace TwolipsDating.Controllers
                 && !(await userService.DoesUserHaveProfileAsync(currentUserId)))
                 return RedirectToProfileIndex();
 
-            QuestionViewModel viewModel = await GetRandomQuestionViewModelAsync((int)QuestionTypeValues.Random);
+            QuestionViewModel viewModel = new QuestionViewModel();
+
+            viewModel = await GetRandomQuestionViewModelAsync((int)QuestionTypeValues.Random);
 
             if (viewModel != null)
             {
                 viewModel.QuestionViolation = await GetQuestionViolationViewModelAsync();
+            }
+            else
+            {
+                viewModel = new QuestionViewModel();
+                viewModel.Tags = new List<TagViewModel>();
+                viewModel.UsersAnsweredCorrectly = new List<UserAnsweredQuestionCorrectlyViewModel>();
             }
 
             return View(viewModel);
@@ -230,11 +238,19 @@ namespace TwolipsDating.Controllers
                 && !(await userService.DoesUserHaveProfileAsync(currentUserId)))
                 return RedirectToProfileIndex();
 
-            var viewModel = await GetRandomQuestionViewModelAsync((int)QuestionTypeValues.Timed);
+            QuestionViewModel viewModel = new QuestionViewModel();
+
+            viewModel = await GetRandomQuestionViewModelAsync((int)QuestionTypeValues.Timed);
 
             if (viewModel != null)
             {
                 viewModel.QuestionViolation = await GetQuestionViolationViewModelAsync();
+            }
+            else
+            {
+                viewModel = new QuestionViewModel();
+                viewModel.Tags = new List<TagViewModel>();
+                viewModel.UsersAnsweredCorrectly = new List<UserAnsweredQuestionCorrectlyViewModel>();
             }
 
             return View(viewModel);

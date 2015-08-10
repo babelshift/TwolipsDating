@@ -1,6 +1,6 @@
 ﻿@model TwolipsDating.ViewModels.QuestionViewModel
 
-@if (Model != null)
+@if (Model != null && !String.IsNullOrEmpty(Model.Content))
 {
     <p>
         @Model.Content
