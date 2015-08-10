@@ -326,3 +326,35 @@ input[readonly] {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.question-rating-bar {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.question-rating-bar .badge {
+    font-size: 15px;
+    padding: 10px;
+    border-radius: 0;
+}
+
+.question-rating-bar .marker-1 {
+    background: #43AC6A;
+}
+.question-rating-bar .marker-2 {
+    background: #94ac43;
+}
+.question-rating-bar .marker-3 {
+    background: #E99002;
+}
+.question-rating-bar .marker-4 {
+    background: #ff7500;
+}
+.question-rating-bar .marker-5 {
+    background: #F04124;
+}
+
+.question-rating-bar .current {
+    padding: 20px;
+    font-size: 25px;
+}

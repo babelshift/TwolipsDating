@@ -1,0 +1,48 @@
+﻿@model int
+
+<div class="text-center question-rating-bar">
+    @if (Model == 1)
+    {
+        <span title="Extremely easy - 1 point" class="custom-tooltip badge marker-1 current">1</span>
+    }
+    else
+    {
+        <span title="Extremely easy - 1 point" class="custom-tooltip badge marker-1">1</span>
+    }
+
+    @if (Model == 2)
+    {
+        <span title="Easy - 2 points" class="custom-tooltip badge marker-2 current">2</span>
+    }
+    else
+    {
+        <span title="Easy - 2 points" class="custom-tooltip badge marker-2">2</span>
+    }
+
+    @if (Model == 3)
+    {
+        <span title="Average - 3 points" class="custom-tooltip badge marker-3 current">3</span>
+    }
+    else
+    {
+        <span title="Average - 3 points" class="custom-tooltip badge marker-3">3</span>
+    }
+
+    @if (Model == 4)
+    {
+        <span title="Difficult - 4 points" class="custom-tooltip badge marker-4 current">4</span>
+    }
+    else
+    {
+        <span title="Difficult - 4 points" class="custom-tooltip badge marker-4">4</span>
+    }
+
+    @if (Model == 5)
+    {
+        <span title="Extremely difficult - 5 points" class="custom-tooltip badge marker-5 current">5</span>
+    }
+    else
+    {
+        <span title="Extremely difficult - 5 points" class="custom-tooltip badge marker-5">5</span>
+    }
+</div>

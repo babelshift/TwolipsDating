@@ -46,13 +46,17 @@
                 <div id="alert-box" class="alert alert-info">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <h5>Select an answer and then press OK. There is no time limit.</h5>
+                        <h5>Click an answer to select it. There is no time limit.</h5>
                     }
                     else
                     {
                         <h5>You can answer this question by <a href="@Url.Action("login", "account")" class="alert-link">logging in</a>.</h5>
                     }
                 </div>
+                @if (Model != null)
+                {
+                    @Html.Partial("_QuestionRatingBarPartial", Model.Points)
+                }
                 @Html.Partial("_QuestionAndAnswerPartial", Model)
             </div>
         </div>

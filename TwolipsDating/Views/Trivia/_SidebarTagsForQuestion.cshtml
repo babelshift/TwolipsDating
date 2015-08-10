@@ -7,7 +7,7 @@
             <h4 class="panel-title">
                 Tags for this question
                 <small>
-                    <i title="Answering this question correctly will count towards these tags." 
+                    <i title="Answering this question correctly will count towards these tags."
                        class="custom-tooltip glyphicon glyphicon-info-sign"></i>
                 </small>
             </h4>
@@ -16,7 +16,7 @@
             <div class="tags">
                 @foreach (var tag in Model)
                 {
-                    <a href="#" class="custom-tooltip btn btn-default btn-xs" title="@tag.Description">
+                    <a href="@Url.Action("index", "search", new { tag = tag.Name })" class="custom-tooltip btn btn-default btn-xs" title="search profiles tagged with '@tag.Name'">
                         @tag.Name
                     </a>
                 }

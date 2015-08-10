@@ -63,7 +63,7 @@ function onSubmitAnswer(e, obj) {
                 $("#alert-box").removeClass("alert-danger");
                 $("#alert-box").removeClass("alert-info");
                 $("#alert-box").addClass("alert-success");
-                $("#alert-box").html("<h4>Correct!</h4>");
+                $("#alert-box").html("<h5>Correct!</h5>");
                 $("#button-next").removeClass("hidden");
                 $("#button-next").addClass("btn-success");
                 $("#button-skip").addClass("hidden");
@@ -74,7 +74,7 @@ function onSubmitAnswer(e, obj) {
                 $("#alert-box").removeClass("alert-danger");
                 $("#alert-box").removeClass("alert-info");
                 $("#alert-box").addClass("alert-danger");
-                $("#alert-box").html("<h4>Incorrect!</h4>");
+                $("#alert-box").html("<h5>Incorrect!</h5>");
                 $("#button-next").removeClass("hidden");
                 $("#button-next").addClass("btn-danger");
                 $("#button-skip").addClass("hidden");

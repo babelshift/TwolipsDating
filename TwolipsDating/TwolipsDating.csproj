@@ -805,6 +805,7 @@
     <Content Include="Views\Trivia\_SidebarTagsForQuestion.cshtml" />
     <Content Include="Views\Trivia\_SidebarTagsForQuiz.cshtml" />
     <Content Include="Views\Tags\Index.cshtml" />
+    <Content Include="Views\Trivia\_QuestionRatingBarPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

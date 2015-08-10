@@ -53,6 +53,10 @@
                         <h5>You can answer this question by <a href="@Url.Action("login", "account")" class="alert-link">logging in</a>.</h5>
                     }
                 </div>
+                @if (Model != null)
+                {
+                    @Html.Partial("_QuestionRatingBarPartial", Model.Points)
+                }
                 @Html.Partial("_QuestionAndAnswerPartial", Model)
             </div>
         </div>
