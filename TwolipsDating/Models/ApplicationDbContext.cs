@@ -52,6 +52,7 @@ namespace TwolipsDating.Models
         public DbSet<StoreSale> StoreSales { get; set; }
         public DbSet<StoreSpotlight> StoreSpotlights { get; set; }
         public DbSet<StoreGiftSpotlight> StoreGiftSpotlights { get; set; }
+        public DbSet<TagAndSuggestedCount> TagsAndSuggestedCounts { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -105,6 +106,16 @@ namespace TwolipsDating.Models
             SetupStoreSales(modelBuilder);
             SetupStoreSpotlights(modelBuilder);
             SetupStoreGiftSpotlights(modelBuilder);
+            SetupTagsAndSuggestedCountsView(modelBuilder);
+        }
+
+        private void SetupTagsAndSuggestedCountsView(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TagAndSuggestedCount>()
+                .HasKey(m => new { m.Name });
+
+            modelBuilder.Entity<TagAndSuggestedCount>()
+                .ToTable("dbo.TagsAndSuggestedCountsView");
         }
 
         private void SetupStoreGiftSpotlights(DbModelBuilder modelBuilder)

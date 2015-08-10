@@ -18,7 +18,7 @@ namespace TwolipsDating.Controllers
         {
             await SetNotificationsAsync();
 
-            var tags = await ProfileService.GetAllTagsInUseAndCountsAsync();
+            var tags = await ProfileService.GetAllTagsAndCountsAsync();
 
             return View(tags);
         }

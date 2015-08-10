@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace TwolipsDating.ViewModels
+namespace TwolipsDating.Models
 {
-    public class TagAndCountViewModel
+    public class TagAndSuggestedCount
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public int NumberOfProfilesUsing { get; set; }
+        public int SuggestedCount { get; set; }
     }
 }

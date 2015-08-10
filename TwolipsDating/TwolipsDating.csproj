@@ -311,11 +311,24 @@
     <Compile Include="Migrations\201508071938153_AddStoreSalesAndSpotlights.Designer.cs">
       <DependentUpon>201508071938153_AddStoreSalesAndSpotlights.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508102111374_CreateTagsAndSuggestedCountsView.cs" />
+    <Compile Include="Migrations\201508102111374_CreateTagsAndSuggestedCountsView.Designer.cs">
+      <DependentUpon>201508102111374_CreateTagsAndSuggestedCountsView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508102125438_ChangeViewKey.cs" />
+    <Compile Include="Migrations\201508102125438_ChangeViewKey.Designer.cs">
+      <DependentUpon>201508102125438_ChangeViewKey.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508102128313_AlterViewColumns.cs" />
+    <Compile Include="Migrations\201508102128313_AlterViewColumns.Designer.cs">
+      <DependentUpon>201508102128313_AlterViewColumns.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
     <Compile Include="Models\StoreSale.cs" />
     <Compile Include="Models\StoreGiftSpotlight.cs" />
     <Compile Include="Models\StoreSpotlight.cs" />
+    <Compile Include="Models\TagAndSuggestedCount.cs" />
     <Compile Include="Models\UserTitle.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -633,7 +646,6 @@
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\StoreTransactionViewModel.cs" />
     <Compile Include="ViewModels\StoreViewModel.cs" />
-    <Compile Include="ViewModels\TagAndCountViewModel.cs" />
     <Compile Include="ViewModels\TagViewModel.cs" />
     <Compile Include="ViewModels\TitleViewModel.cs" />
     <Compile Include="ViewModels\TriviaMenuViewModel.cs" />
@@ -983,6 +995,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508071938153_AddStoreSalesAndSpotlights.resx">
       <DependentUpon>201508071938153_AddStoreSalesAndSpotlights.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508102111374_CreateTagsAndSuggestedCountsView.resx">
+      <DependentUpon>201508102111374_CreateTagsAndSuggestedCountsView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508102125438_ChangeViewKey.resx">
+      <DependentUpon>201508102125438_ChangeViewKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508102128313_AlterViewColumns.resx">
+      <DependentUpon>201508102128313_AlterViewColumns.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

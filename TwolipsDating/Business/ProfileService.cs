@@ -103,23 +103,11 @@ namespace TwolipsDating.Business
             return await db.SaveChangesAsync();
         }
 
-        internal async Task<IReadOnlyCollection<TagAndCountViewModel>> GetAllTagsInUseAndCountsAsync()
+        internal async Task<IReadOnlyCollection<TagAndSuggestedCount>> GetAllTagsAndCountsAsync()
         {
-            var tagsAndCounts = from tagSuggestions in db.TagSuggestions
-                                where tagSuggestions.SuggestingUser.IsActive
-                                where tagSuggestions.Profile.ApplicationUser.IsActive
-                                group tagSuggestions by new
-                                {
-                                    tagSuggestions.Tag.Name,
-                                    tagSuggestions.Tag.Description
-                                } into grouping
-                                orderby grouping.Count() descending
-                                select new TagAndCountViewModel()
-                                {
-                                    Name = grouping.Key.Name,
-                                    Description = grouping.Key.Description,
-                                    NumberOfProfilesUsing = grouping.Count()
-                                };
+            var tagsAndCounts = from tags in db.TagsAndSuggestedCounts
+                                orderby tags.SuggestedCount descending
+                                select tags;
 
             return (await tagsAndCounts.ToListAsync()).AsReadOnly();
         }

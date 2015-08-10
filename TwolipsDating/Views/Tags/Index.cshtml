@@ -1,4 +1,4 @@
-﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.TagAndCountViewModel>
+﻿@model IReadOnlyCollection<TwolipsDating.Models.TagAndSuggestedCount>
 
 @{
     ViewBag.Title = "twolips - tags";
@@ -23,7 +23,10 @@
                            data-toggle="popover" data-placement="bottom" data-container="body" data-animation="false">
                             @tag.Name
                         </a>
-                        <small style="color: #888">&times;@tag.NumberOfProfilesUsing suggested</small>
+                        @if (tag.SuggestedCount > 0)
+                        {
+                            <small style="color: #888">&times;@tag.SuggestedCount suggested</small>
+                        }
                         <br />
                         <small style="color: #888">@tag.Description</small>
                     </p>
