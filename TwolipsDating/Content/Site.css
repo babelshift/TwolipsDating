@@ -84,16 +84,16 @@ input[type="checkbox"].input-validation-error {
 }
 
 .jumbotron {
-    color: #fff; 
+    color: #fff;
     padding: 10px;
     background-color: transparent;
 }
 
-.jumbotron a {
-    color: #fff;
-    font-weight: bold;
-    text-decoration: underline;
-}
+    .jumbotron a {
+        color: #fff;
+        font-weight: bold;
+        text-decoration: underline;
+    }
 
 .footer p, .footer h4, .footer h5 {
     color: #fff;
@@ -279,7 +279,7 @@ input[readonly] {
 }
 
 .popover.bottom > .arrow:after {
-  border-bottom-color: #333;
+    border-bottom-color: #333;
 }
 
 .popover hr {
@@ -290,9 +290,18 @@ input[readonly] {
     border-color: #ddd;
 }
 
-.popover-content {
-    overflow-y: scroll;
-    max-height: 300px;
+.popover-content { 
+    padding: 0;
+}
+
+.popover-content .popover-scroll {
+    max-height: 300px; 
+    overflow-y: scroll; 
+    width: 225px;
+}
+
+.popover-content .custom-popover-content {
+    padding: 10px;
 }
 
 .ad {
@@ -300,7 +309,9 @@ input[readonly] {
 }
 
 .search-result .profile-info-wrapper {
-    display:inline-block; vertical-align: top; margin-top: 3px;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 3px;
 }
 
 .search-result .name-and-location {
@@ -311,7 +322,7 @@ input[readonly] {
     font-size: 12px;
 }
 
-.search-result hr { 
-    margin-top: 10px; 
+.search-result hr {
+    margin-top: 10px;
     margin-bottom: 10px;
 }

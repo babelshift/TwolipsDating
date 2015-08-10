@@ -37,7 +37,7 @@
             </a>
         </p>
         <div id="@String.Format("share-profile-buttons-popover-{0}", review.ReviewId)" class="hide">
-            <div class="share-buttons">
+            <div class="share-buttons custom-popover-content">
                 <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme))"
                    onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
                     <img src="~/Content/fb_16.png" alt="Share on Facebook" />

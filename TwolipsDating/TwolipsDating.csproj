@@ -726,6 +726,7 @@
     <Content Include="Scripts\Store\index.js" />
     <Content Include="Scripts\Store\gifts.js" />
     <Content Include="Scripts\Store\titles.js" />
+    <Content Include="Scripts\Tags\index.js" />
     <Content Include="Scripts\Trivia\quiz.js" />
     <Content Include="Scripts\Trivia\random.js" />
     <Content Include="Scripts\Trivia\timed.js" />

@@ -108,7 +108,7 @@
     @if (User.Identity.IsAuthenticated && ViewBag != null)
     {
         <div id="popover-gifts-content" class="hide">
-            <div id="popover-gifts-container" style="width: 225px;">
+            <div id="popover-gifts-container" class="custom-popover-content popover-scroll">
                 @if (ViewBag.GiftsReceived != null && ViewBag.GiftsReceived.Count > 0)
                 {
                     <p class="pull-left"><a href="@Url.Action("index", "profile", new{ tab = "inventory" })">View inventory</a></p>
@@ -156,28 +156,29 @@
             </div>
         </div>
         <div id="popover-announcements-content" class="hide">
-            @if (ViewBag.Announcements != null && ViewBag.Announcements.Count > 0)
-            {
-                for (int i = 0; i < ViewBag.Announcements.Count; i++)
+            <div id="popover-announcements-container" class="custom-popover-content">
+                @if (ViewBag.Announcements != null && ViewBag.Announcements.Count > 0)
                 {
-                    var announcement = ViewBag.Announcements[i];
-                    if (i == 0)
+                    for (int i = 0; i < ViewBag.Announcements.Count; i++)
                     {
-                        <p><i class="glyphicon glyphicon-info-sign"></i> @announcement.Content</p>
-                    }
-                    else
-                    {
-                        <p><i class="glyphicon glyphicon-info-sign"></i> @announcement.Content</p>
+                        var announcement = ViewBag.Announcements[i];
+                        if (i == 0)
+                        {
+                            <p><i class="glyphicon glyphicon-info-sign"></i> @announcement.Content</p>
+                        }
+                        else
+                        {
+                            <p><i class="glyphicon glyphicon-info-sign"></i> @announcement.Content</p>
+                        }
                     }
                 }
-            }
-            else
-            {
-                <p>Nothing to see here!</p>
-            }
+                else
+                {
+                    <p>Nothing to see here!</p>
+                }
+            </div>
         </div>
     }
-
     <div class="container body-content">
         @RenderBody()
     </div>

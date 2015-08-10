@@ -15,19 +15,21 @@
     if (Model.CurrentUserId == Model.ProfileUserId)
     {
         <div id="popover-titles-content" class="hide">
-            @if (Model.UserTitles != null && Model.UserTitles.Count > 0)
-            {
-                foreach (var userTitle in Model.UserTitles)
+            <div class="custom-popover-content">
+                @if (Model.UserTitles != null && Model.UserTitles.Count > 0)
                 {
-            <p>
-                @if (userTitle.TitleName == Model.SelectedTitle)
-                        {
-                        <i class="@String.Format("selected-title-item-check-{0}", userTitle.TitleId) glyphicon glyphicon-ok"></i>
-                        }
-                <a class="@String.Format("select-title-link-{0}", userTitle.TitleId)" href="#" data-title-name="@userTitle.TitleName" data-title-id="@userTitle.TitleId">@userTitle.TitleName</a>
-            </p>
+                    foreach (var userTitle in Model.UserTitles)
+                    {
+                        <p>
+                            @if (userTitle.TitleName == Model.SelectedTitle)
+                            {
+                                <i class="@String.Format("selected-title-item-check-{0}", userTitle.TitleId) glyphicon glyphicon-ok"></i>
+                            }
+                            <a class="@String.Format("select-title-link-{0}", userTitle.TitleId)" href="#" data-title-name="@userTitle.TitleName" data-title-id="@userTitle.TitleId">@userTitle.TitleName</a>
+                        </p>
+                    }
                 }
-            }
+            </div>
         </div>
     }
     if (Model.WriteReviewViolation != null && Model.WriteReviewViolation.ViolationTypes != null && Model.WriteReviewViolation.ViolationTypes.Count > 0)

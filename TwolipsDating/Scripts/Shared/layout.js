@@ -10,6 +10,7 @@ function setupPopoverWithContent(elementName, contentFunction) {
         var popover = $(this).popover({
             content: contentFunction,
             trigger: "manual",
+            html: true
         });
 
         var id = $(this).attr('id');

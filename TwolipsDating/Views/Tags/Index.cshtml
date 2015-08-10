@@ -18,15 +18,27 @@
             {
                 <div class="col-md-3" style="min-height: 85px; overflow: hidden">
                     <p>
-                        <a href="@Url.Action("index", "search", new { tag = tag.Name })" class="custom-tooltip btn btn-primary btn-xs" title="search for users tagged with '@tag.Name'" data-container="body">
+                        <a id="@String.Format("popover-tag-link-{0}", tag.Name)" class="popover-tag btn btn-primary btn-xs"
+                           title="Tag Details" data-tag-name="@tag.Name" data-style="no-scroll"
+                           data-toggle="popover" data-placement="bottom" data-container="body" data-animation="false">
                             @tag.Name
                         </a>
                         <small style="color: #888">&times;@tag.NumberOfProfilesUsing suggested</small>
                         <br />
-                        <small style ="color: #888">@tag.Description</small>
+                        <small style="color: #888">@tag.Description</small>
                     </p>
+                </div>
+                <div id="@String.Format("popover-tag-content-{0}", tag.Name)" class="hide">
+                    <div class="custom-popover-content">
+                        <p>@tag.Description</p>
+                        <a href="@Url.Action("index", "search", new{ tag = tag.Name})">see profiles</a> &bull; <a href="#">see quizzes</a>
+                    </div>
                 </div>
             }
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/Tags/index.js")" type="text/javascript"></script>
+}
