@@ -12,6 +12,7 @@
         <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-body">
+                    @{ int i = 0; }
                     @foreach (var quiz in Model)
                     {
                         <div class="search-result">
@@ -31,8 +32,12 @@
                                 <small>@quiz.QuestionCount questions</small>
                             </span>
                             <p style="color: #888"><small>@quiz.QuizDescription</small></p>
-                            <hr />
+                            @if (i < Model.Count - 1)
+                            {
+                                <hr />
+                            }
                         </div>
+                        i++;
                     }
                 </div>
             </div>

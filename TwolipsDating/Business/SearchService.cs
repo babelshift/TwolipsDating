@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TwolipsDating.Models;
@@ -35,19 +36,44 @@ namespace TwolipsDating.Business
 
         internal async Task<IReadOnlyCollection<QuizSearchResultViewModel>> GetQuizzesByTagAsync(string tag)
         {
-            var result = from quizzes in db.Quizzes
-                         from questions in quizzes.Questions
-                         group quizzes by new { quizzes.Id, quizzes.Name, quizzes.Description } into g
-                         select new QuizSearchResultViewModel()
-                         {
-                             QuizId = g.Key.Id,
-                             QuizName = g.Key.Name,
-                             QuizDescription = g.Key.Description,
-                             AveragePoints = (int)g.Average(x => x.Questions.Average(y => y.Points)),
-                             QuestionCount = g.Count()
-                         };
+            Debug.Assert(!String.IsNullOrEmpty(tag));
 
-            return (await result.ToListAsync()).AsReadOnly();
+            string sql = @"
+                select
+	                q.Id as QuizId,
+	                q.Name as QuizName,
+	                q.Description as QuizDescription,
+	                qqc.QuestionCount as QuestionCount,
+	                qqc.QuestionPointAverage as AveragePoints
+                from 
+	                dbo.Quizs q
+	                inner join 
+	                (
+		                select 
+		                qq.Quiz_Id as QuizId,
+		                avg(qu.Points) as QuestionPointAverage,
+		                count(qq.Question_Id) as QuestionCount
+		                from dbo.QuizQuestions qq
+		                inner join dbo.questions qu on qu.Id = qq.Question_Id
+		                group by qq.Quiz_Id
+	                ) qqc on qqc.QuizId = q.Id
+	                inner join dbo.QuizQuestions as qq on qq.Quiz_Id = q.Id
+	                inner join dbo.questions qu on qu.Id = qq.Question_Id
+	                inner join dbo.TagQuestions tq on tq.Question_Id = qu.Id
+	                inner join dbo.Tags t on t.TagId = tq.Tag_TagId
+                where 
+	                t.Name in (@tagList)
+                group by 
+	                q.Id,
+	                q.Name,
+	                q.Description,
+	                qqc.QuestionCount,
+	                qqc.QuestionPointAverage
+            ";
+
+            var results = await QueryAsync<QuizSearchResultViewModel>(sql, new { tagList = tag });
+
+            return results.ToList().AsReadOnly();
         }
     }
 }
