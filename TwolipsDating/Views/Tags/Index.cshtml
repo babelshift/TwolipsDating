@@ -5,15 +5,15 @@
     ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
     ViewBag.ImageUrl = Url.Content("~/Content/twolipsicon-white-180x180.png");
 }
-<div class="panel panel-default">
-    <div class="panel-body">
-        Tags are used to identify users by a variety of categories. This is helpful when you want to view users who have earned or been identified as something specific. Tags are attached to profiles when other
-        users suggest those tags for a profile or when a user earns a tag through an achievement.
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            Tags are used to identify users by a variety of categories. This is helpful when you want to view users who have earned or been identified as something specific. Tags are attached to profiles when other
+            users suggest those tags for a profile or when a user earns a tag through an achievement.
+        </div>
     </div>
-</div>
-<div class="panel panel-default">
-    <div class="panel-body">
-        <div class="row">
+    <div class="panel panel-default">
+        <div class="panel-body">
             @foreach (var tag in Model)
             {
                 <div class="col-xs-6 col-sm-4 col-md-3" style="height: 95px; overflow: hidden; margin-bottom: 5px">
