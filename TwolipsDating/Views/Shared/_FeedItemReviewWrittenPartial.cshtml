@@ -41,11 +41,14 @@ else
        data-html="true" data-toggle="popover" data-placement="bottom" data-title="Share" data-animation="false">
         <i class="glyphicon glyphicon-share-alt"></i>
     </a>
-    &nbsp;
-    <a href="#" class="label label-default" data-toggle="modal" data-target="#modalReviewViolation" data-review-id="@Model.ReviewId"
-       data-review-author="@Model.AuthorUserName" title="Flag for review">
-        <i class="glyphicon glyphicon-flag"></i>
-    </a>
+    @if (User.Identity.IsAuthenticated)
+    {
+        @:&nbsp;
+        <a href="#" class="label label-default" data-toggle="modal" data-target="#modalReviewViolation" data-review-id="@Model.ReviewId"
+           data-review-author="@Model.AuthorUserName" title="Flag for review">
+            <i class="glyphicon glyphicon-flag"></i>
+        </a>
+    }
 </p>
 <div id="@String.Format("share-profile-buttons-popover-{0}", Model.ReviewId)" class="hide">
     <div class="share-buttons custom-popover-content">

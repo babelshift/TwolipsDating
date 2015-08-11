@@ -20,7 +20,8 @@ namespace TwolipsDating.Models
         gamer = 13,
         foody = 14,
         creative = 15,
-        film_critic = 16
+        film_critic = 16,
+        technocratic = 17
     }
 
     public class Tag

@@ -81,50 +81,50 @@
                 </div>
                 @if (Model.ViewerInventoryItems != null && Model.ViewerInventoryItems.Count > 0)
                 {
-                <div class="modal-body">
-                    <div class="form-group">
-                        <div class="row">
-                            @foreach (var item in Model.ViewerInventoryItems)
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="row">
+                                @foreach (var item in Model.ViewerInventoryItems)
                                 {
-                                <div id="@String.Format("gift-image-wrapper-{0}", item.GiftId)" class="col-xs-3 col-md-2 text-center">
-                                    <a id="@item.InventoryItemId" data-gift-name="@item.GiftName" data-gift-id="@item.GiftId" href="#" onclick="onSelectGiftClick(event, this)">
-                                        <img src="@item.GiftIconFilePath">
-                                    </a>
-                                    <p id="@String.Format("gift-count-{0}", item.InventoryItemId)" class="bg-info">@item.ItemCount</p>
-                                </div>
+                                    <div id="@String.Format("gift-image-wrapper-{0}", item.GiftId)" class="col-xs-3 col-md-2 text-center">
+                                        <a id="@item.InventoryItemId" data-gift-name="@item.GiftName" data-gift-id="@item.GiftId" href="#" onclick="onSelectGiftClick(event, this)">
+                                            <img src="@item.GiftIconFilePath">
+                                        </a>
+                                        <p id="@String.Format("gift-count-{0}", item.InventoryItemId)" class="bg-info">@item.ItemCount</p>
+                                    </div>
                                 }
+                            </div>
                         </div>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button id="button-gift-send" type="button" class="btn btn-primary" onclick="onSendGift(event, this)">Send</button>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+                        <div id="gift-error" class="alert alert-danger" role="alert">
+                            <p id="gift-error-text">Something happened which prevented your gift from being sent.</p>
+                        </div>
+                        <div id="gift-success" class="alert alert-success" role="alert">
+                            <p>Gift sent successfully.</p>
+                        </div>
+                        <table id="gift-send-log" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Gifts successfully sent so far:</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        @Html.HiddenFor(m => m.SendGift.GiftId)
+                        @Html.HiddenFor(m => m.SendGift.InventoryItemId)
+                        <input type="hidden" id="selected-gift-name" />
                     </div>
-                    <div class="pull-right">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button id="button-gift-send" type="button" class="btn btn-primary" onclick="onSendGift(event, this)">Send</button>
-                    </div>
-                    <div class="clearfix"></div>
-                    <br />
-                    <div id="gift-error" class="alert alert-danger" role="alert">
-                        <p id="gift-error-text">Something happened which prevented your gift from being sent.</p>
-                    </div>
-                    <div id="gift-success" class="alert alert-success" role="alert">
-                        <p>Gift sent successfully.</p>
-                    </div>
-                    <table id="gift-send-log" class="table">
-                        <thead>
-                            <tr>
-                                <th>Gifts successfully sent so far:</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                    @Html.HiddenFor(m => m.SendGift.GiftId)
-                    @Html.HiddenFor(m => m.SendGift.InventoryItemId)
-                    <input type="hidden" id="selected-gift-name" />
-                </div>
                 }
                 else
                 {
-                <div class="modal-body">
-                    <p>You don't have any items to send. Go get some and come back!</p>
-                </div>
+                    <div class="modal-body">
+                        <p>You don't have any items to send. Go get some and come back!</p>
+                    </div>
                 }
             </div>
         </div>
@@ -207,38 +207,38 @@
                     {
                         using (Html.BeginForm("changeimage", "profile", FormMethod.Post))
                         {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary()
-                    <div class="modal-body">
-                        <div class="row">
-                            @foreach (var userImage in Model.UploadImage.UserImages)
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary()
+                            <div class="modal-body">
+                                <div class="row">
+                                    @foreach (var userImage in Model.UploadImage.UserImages)
                                     {
-                                    <div class="col-xs-6 col-md-3">
-                                        <a id="@userImage.Id" href="#" class="thumbnail" onclick="onSelectProfileImageClick(event, this)">
-                                            <img src="@userImage.Path" style="max-height: 128px;">
-                                        </a>
-                                    </div>
+                                        <div class="col-xs-6 col-md-3">
+                                            <a id="@userImage.Id" href="#" class="thumbnail" onclick="onSelectProfileImageClick(event, this)">
+                                                <img src="@userImage.Path" style="max-height: 128px;">
+                                            </a>
+                                        </div>
                                     }
-                        </div>
-                    </div>
-                    @Html.HiddenFor(m => m.ChangeImage.UserImageId)
-                    @Html.HiddenFor(m => m.ProfileUserId)
-                    @Html.HiddenFor(m => m.ProfileId)
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">OK</button>
-                    </div>
+                                </div>
+                            </div>
+                            @Html.HiddenFor(m => m.ChangeImage.UserImageId)
+                            @Html.HiddenFor(m => m.ProfileUserId)
+                            @Html.HiddenFor(m => m.ProfileId)
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">OK</button>
+                            </div>
                         }
                     }
                     else
                     {
-                    <div class="modal-body">
-                        <h4>You can't change your profile image because you haven't uploaded any images.</h4>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">OK</button>
-                    </div>
+                        <div class="modal-body">
+                            <h4>You can't change your profile image because you haven't uploaded any images.</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">OK</button>
+                        </div>
                     }
                 </div>
             </div>
@@ -253,34 +253,34 @@
                 </div>
                 @using (Html.BeginForm("sendmessage", "profile", FormMethod.Post))
                 {
-                @Html.AntiForgeryToken()
-                <div class="modal-body">
-                    <div class="tags">
-                        @foreach (var tag in Model.AllTags)
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        <div class="tags">
+                            @foreach (var tag in Model.AllTags)
                             {
                                 if (tag.DidUserSuggest)
                                 {
-                            <a href="#" id="@String.Format("{0}-tag-button", tag.TagId)" onclick="onSuggestTag(event, this, @tag.TagId)" class="custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
-                                <span id="@String.Format("{0}-tag-count", tag.TagId)" class="badge">@tag.TagCount</span> @tag.TagName
-                            </a>
-                            <a href="#" onclick="onSuggestTag(event, this, @tag.TagId)"><i id="@String.Format("{0}-tag-glyph", tag.TagId)" class="glyphicon glyphicon-minus"></i></a>
+                                    <a href="#" id="@String.Format("{0}-tag-button", tag.TagId)" onclick="onSuggestTag(event, this, @tag.TagId)" class="custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
+                                        <span id="@String.Format("{0}-tag-count", tag.TagId)" class="badge">@tag.TagCount</span> @tag.TagName
+                                    </a>
+                                    <a href="#" onclick="onSuggestTag(event, this, @tag.TagId)"><i id="@String.Format("{0}-tag-glyph", tag.TagId)" class="glyphicon glyphicon-minus"></i></a>
                                 }
                                 else
                                 {
-                            <a href="#" id="@String.Format("{0}-tag-button", tag.TagId)" onclick="onSuggestTag(event, this, @tag.TagId)" class="custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
-                                <span id="@String.Format("{0}-tag-count", tag.TagId)" class="badge">@tag.TagCount</span> @tag.TagName
-                            </a>
-                            <a href="#" onclick="onSuggestTag(event, this, @tag.TagId)"><i id="@String.Format("{0}-tag-glyph", tag.TagId)" class="glyphicon glyphicon-plus"></i></a>
+                                    <a href="#" id="@String.Format("{0}-tag-button", tag.TagId)" onclick="onSuggestTag(event, this, @tag.TagId)" class="custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
+                                        <span id="@String.Format("{0}-tag-count", tag.TagId)" class="badge">@tag.TagCount</span> @tag.TagName
+                                    </a>
+                                    <a href="#" onclick="onSuggestTag(event, this, @tag.TagId)"><i id="@String.Format("{0}-tag-glyph", tag.TagId)" class="glyphicon glyphicon-plus"></i></a>
                                 }
-                            <input id="@String.Format("{0}-tag-hidden", tag.TagId)" type="hidden" value="@tag.DidUserSuggest.ToString().ToLower()" />
-                            @:&nbsp;
-                            @:&nbsp;
+                                <input id="@String.Format("{0}-tag-hidden", tag.TagId)" type="hidden" value="@tag.DidUserSuggest.ToString().ToLower()" />
+                                @:&nbsp;
+                                @:&nbsp;
                             }
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
                 }
             </div>
         </div>
@@ -391,10 +391,11 @@
                 }
             }
             <div class="panel panel-default">
-                <div class="panel-heading text-center">
-                    <p class="custom-tooltip panel-title" title="Tags that have been awarded to the user based on community activities">
-                        <i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tags awarded
-                    </p>
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Awarded tags
+                        <small><i class="custom-tooltip glyphicon glyphicon-info-sign" title="Tags that have been awarded to the user based on community activities"></i></small>
+                    </h4>
                 </div>
                 <div class="panel-body">
                     @if (Model.AwardedTags != null && Model.AwardedTags.Count > 0)
@@ -425,8 +426,11 @@
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading text-center">
-                    <p class="panel-title" style="display: inline-block"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tags suggested by users</p>
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Suggested tags
+                        <small><i class="custom-tooltip glyphicon glyphicon-info-sign" title="Tags that have been suggested by other users based on their perception"></i></small>
+                    </h4>
                     @if (User.Identity.IsAuthenticated && Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
                     {
                         <a style="display: inline-block" href="#" class="custom-tooltip" title="Suggest some tags to be displayed on this user's profile"
