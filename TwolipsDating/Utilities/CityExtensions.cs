@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using TwolipsDating.Models;
 
 namespace TwolipsDating.Utilities
@@ -11,7 +12,12 @@ namespace TwolipsDating.Utilities
 
             if (geoCity != null)
             {
-                if(geoCity.GeoState.GeoCountry.Name == "United States")
+                if (geoCity.Name == "Unknown")
+                {
+                    return String.Empty;
+                }
+
+                if (geoCity.GeoState.GeoCountry.Name == "United States")
                 {
                     sb.AppendFormat("{0}, {1}", geoCity.Name, geoCity.GeoState.Abbreviation);
                 }

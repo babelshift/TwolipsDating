@@ -286,13 +286,34 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-sm-4">
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <div class="panel panel-default hidden-sm hidden-md hidden-lg">
+                    <div class="panel-body">
+                        <h5>You are viewing this profile anonymously. You can interact with it by <a href="@Url.Action("login", "account")">logging in</a>.</h5>
+                    </div>
+                </div>
+            }
             <div class="panel panel-default">
                 <div class="panel-body text-center">
-                    @if (User.Identity.IsAuthenticated && Model.CurrentUserId == Model.ProfileUserId)
-                    {
-                        <a href="#" data-toggle="modal" data-target="#modalProfileImage" data-keyboard="true" title="Change your profile image">
-                            @if (!String.IsNullOrEmpty(Model.ProfileImagePath))
+                    <div style="display: inline-block; vertical-align: top">
+                        @if (User.Identity.IsAuthenticated && Model.CurrentUserId == Model.ProfileUserId)
+                        {
+                            <a href="#" data-toggle="modal" data-target="#modalProfileImage" data-keyboard="true" title="Change your profile image">
+                                @if (!String.IsNullOrEmpty(Model.ProfileImagePath))
+                                {
+                                    <img src="@Model.ProfileImagePath" style="max-height: 128px">
+                                }
+                                else
+                                {
+                                    <img src="~/Content/Placeholder.png">
+                                }
+                            </a>
+                        }
+                        else
+                        {
+                            if (!String.IsNullOrEmpty(Model.ProfileImagePath))
                             {
                                 <img src="@Model.ProfileImagePath" style="max-height: 128px">
                             }
@@ -300,47 +321,39 @@
                             {
                                 <img src="~/Content/Placeholder.png">
                             }
-                        </a>
-                    }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(Model.ProfileImagePath))
-                        {
-                            <img src="@Model.ProfileImagePath" style="max-height: 128px">
                         }
-                        else
-                        {
-                            <img src="~/Content/Placeholder.png">
-                        }
-                    }
-                    <h3 style="margin-top: 5px">
-                        @Model.UserName
-                    </h3>
-                    <h5>
-                        <a id="selected-title" href="#" class="label label-success"
-                           data-title="Select your title" data-container="body" data-toggle="popover" data-placement="bottom"
-                           data-animation="false">
-                            @if (!String.IsNullOrEmpty(Model.SelectedTitle))
-                            {
-                                @Model.SelectedTitle
+                    </div>
+                    <div style="display: inline-block; vertical-align: top; margin-left: 5px">
+                        <h3 style="margin: 0">
+                            @Model.UserName
+                        </h3>
+                        <h5>
+                            <a id="selected-title" href="#" class="label label-success"
+                               data-title="Select your title" data-container="body" data-toggle="popover" data-placement="bottom"
+                               data-animation="false">
+                                @if (!String.IsNullOrEmpty(Model.SelectedTitle))
+                                {
+                                    @Model.SelectedTitle
+                                }
+                                else
+                                {
+                                    @:Newbie
                             }
-                            else
+                            </a>
+                        </h5>
+                        <h5>
+                            @Model.Age&nbsp;&bull;&nbsp;@Model.Gender&nbsp;&bull;&nbsp;@Model.Location
+                            <br />
+                            @for (int i = 1; i <= Model.AverageRatingValue; i++)
                             {
-                                @:Newbie
+                                <i class="glyphicon glyphicon-star"></i>
                             }
-                        </a>
-                    </h5>
-                    <h5>@Model.Age&nbsp;&bull;&nbsp;@Model.Gender&nbsp;&bull;&nbsp;@Model.Location</h5>
-                    <h5>
-                        @for (int i = 1; i <= Model.AverageRatingValue; i++)
-                        {
-                            <i class="glyphicon glyphicon-star"></i>
-                        }
-                        @for (int j = 1; j <= 5 - Model.AverageRatingValue; j++)
-                        {
-                            <i class="glyphicon glyphicon-star-empty"></i>
-                        }
-                    </h5>
+                            @for (int j = 1; j <= 5 - Model.AverageRatingValue; j++)
+                            {
+                                <i class="glyphicon glyphicon-star-empty"></i>
+                            }
+                        </h5>
+                    </div>
                     @*
                         <p>
                         <span style="margin-right: 10px;">
@@ -496,7 +509,7 @@
             @*@Html.Partial("_SidebarAdvertisementPartial")*@
         </div>
 
-        <div class="col-md-8">
+        <div class="col-sm-8">
             @if (User.Identity.IsAuthenticated)
             {
                 if (Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
@@ -537,7 +550,7 @@
             }
             else
             {
-                <div class="panel panel-default">
+                <div class="panel panel-default hidden-xs">
                     <div class="panel-body">
                         <h4>You are viewing this profile anonymously. You can interact with it by <a href="@Url.Action("login", "account")">logging in</a>.</h4>
                     </div>
