@@ -23,10 +23,13 @@
         <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @foreach (var profile in Model.SearchResults)
-                    {
-                        <div class="search-result">
-                            @if (!String.IsNullOrEmpty(profile.ProfileImagePath))
+                    <h2 style="margin-top: 0">@Model.SearchResults.Count results</h2>
+                    <div class="search-result">
+                        <hr />
+                        @{ int k = 0; }
+                        @foreach (var profile in Model.SearchResults)
+                        {
+                            if (!String.IsNullOrEmpty(profile.ProfileImagePath))
                             {
                                 <div class="circular-image-wrapper">
                                     <img class="circular-image" src="@profile.ProfileImagePath" />
@@ -57,7 +60,7 @@
                                     @profile.ReviewCount reviews
                                 </span>
                             </div>
-                            @if (profile.SuggestedTags.Count > 0)
+                            if (profile.SuggestedTags.Count > 0)
                             {
                                 <div class="tags">
                                     @foreach (var tag in profile.SuggestedTags)
@@ -68,9 +71,13 @@
                                     }
                                 </div>
                             }
-                            <hr />
-                        </div>
-                    }
+                            if (k < Model.SearchResults.Count - 1)
+                            {
+                                <hr />
+                            }
+                            k++;
+                        }
+                    </div>
                 </div>
             </div>
         </div>
