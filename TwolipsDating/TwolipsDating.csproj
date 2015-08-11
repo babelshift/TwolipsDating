@@ -820,6 +820,8 @@
     <Content Include="Views\Tags\Index.cshtml" />
     <Content Include="Views\Trivia\_QuestionRatingBarPartial.cshtml" />
     <Content Include="Views\Trivia\_QuizRatingBarPartial.cshtml" />
+    <Content Include="Views\Search\_SearchResultsProfilesPartial.cshtml" />
+    <Content Include="Views\Search\Tag.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
