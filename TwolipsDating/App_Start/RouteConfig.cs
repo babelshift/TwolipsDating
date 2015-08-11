@@ -10,6 +10,12 @@ namespace TwolipsDating
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "SearchQuizByTag",
+                url: "search/quiz/{tag}",
+                defaults: new { controller = "Search", action = "Quiz" }
+            );
+
+            routes.MapRoute(
                 name: "SearchByTag",
                 url: "search/tag/{tag}",
                 defaults: new { controller = "Search", action = "Tag" }

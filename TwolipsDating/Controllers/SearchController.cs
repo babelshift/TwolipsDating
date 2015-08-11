@@ -37,21 +37,7 @@ namespace TwolipsDating.Controllers
             {
                 var results = await searchService.SearchProfilesByUserName(user);
 
-                viewModel.SearchResults = Mapper.Map<IReadOnlyCollection<TwolipsDating.Models.Profile>, IReadOnlyCollection<ProfileViewModel>>(results);
-
-                // TODO: optimize this by eager loading?
-                foreach (var profileViewModel in viewModel.SearchResults)
-                {
-                    var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profileViewModel.ProfileUserId);
-                    profileViewModel.AverageRatingValue = reviews.AverageRating();
-                    profileViewModel.ReviewCount = reviews.Count;
-
-                    // tag suggestions and awards
-                    // this will break for anonymous users
-                    profileViewModel.SuggestedTags = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profileViewModel.ProfileId);
-                }
-
-                viewModel.User = user;
+                await SetupViewModel(user, currentUserId, viewModel, results);
             }
 
             return View(viewModel);
@@ -69,24 +55,40 @@ namespace TwolipsDating.Controllers
             {
                 var results = await searchService.SearchProfilesByTagName(tag);
 
-                viewModel.SearchResults = Mapper.Map<IReadOnlyCollection<TwolipsDating.Models.Profile>, IReadOnlyCollection<ProfileViewModel>>(results);
-
-                // TODO: optimize this by eager loading?
-                foreach (var profileViewModel in viewModel.SearchResults)
-                {
-                    var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profileViewModel.ProfileUserId);
-                    profileViewModel.AverageRatingValue = reviews.AverageRating();
-                    profileViewModel.ReviewCount = reviews.Count;
-
-                    // tag suggestions and awards
-                    // this will break for anonymous users
-                    profileViewModel.SuggestedTags = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profileViewModel.ProfileId);
-                }
-
-                viewModel.User = tag;
+                await SetupViewModel(tag, currentUserId, viewModel, results);
             }
 
             return View(viewModel);
+        }
+
+        private async Task SetupViewModel(string tag, string currentUserId, SearchResultViewModel viewModel, IReadOnlyCollection<Models.Profile> results)
+        {
+            viewModel.SearchResults = Mapper.Map<IReadOnlyCollection<TwolipsDating.Models.Profile>, IReadOnlyCollection<ProfileViewModel>>(results);
+
+            // TODO: optimize this by eager loading?
+            foreach (var profileViewModel in viewModel.SearchResults)
+            {
+                var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profileViewModel.ProfileUserId);
+                profileViewModel.AverageRatingValue = reviews.AverageRating();
+                profileViewModel.ReviewCount = reviews.Count;
+
+                // tag suggestions and awards
+                // this will break for anonymous users
+                profileViewModel.SuggestedTags = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profileViewModel.ProfileId);
+            }
+
+            viewModel.User = tag;
+        }
+
+        public async Task<ActionResult> Quiz(string tag)
+        {
+            string currentUserId = User.Identity.GetUserId();
+
+            await SetNotificationsAsync();
+
+            var quizzes = await searchService.GetQuizzesByTagAsync(tag);
+
+            return View(quizzes);
         }
 
         /// <summary>
@@ -95,9 +97,13 @@ namespace TwolipsDating.Controllers
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && searchService != null)
+            if (disposing != null)
             {
-                searchService.Dispose();
+                if (searchService != null)
+                {
+                    searchService.Dispose();
+                    searchService = null;
+                }
             }
 
             base.Dispose(disposing);

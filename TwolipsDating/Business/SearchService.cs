@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using TwolipsDating.Models;
+using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
 {
@@ -32,9 +33,21 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<Profile>> SearchProfilesByUserNameAndTagName(string userName, string tagName)
+        internal async Task<IReadOnlyCollection<QuizSearchResultViewModel>> GetQuizzesByTagAsync(string tag)
         {
-            throw new NotImplementedException();
+            var result = from quizzes in db.Quizzes
+                         from questions in quizzes.Questions
+                         group quizzes by new { quizzes.Id, quizzes.Name, quizzes.Description } into g
+                         select new QuizSearchResultViewModel()
+                         {
+                             QuizId = g.Key.Id,
+                             QuizName = g.Key.Name,
+                             QuizDescription = g.Key.Description,
+                             AveragePoints = (int)g.Average(x => x.Questions.Average(y => y.Points)),
+                             QuestionCount = g.Count()
+                         };
+
+            return (await result.ToListAsync()).AsReadOnly();
         }
     }
 }

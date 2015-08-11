@@ -334,6 +334,7 @@
     </Compile>
     <Compile Include="Utilities\QuizExtensions.cs" />
     <Compile Include="Utilities\StoreItemExtensions.cs" />
+    <Compile Include="ViewModels\QuizSearchResultViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
     <Compile Include="ViewModels\SpotlightSaleViewModel.cs" />
@@ -822,6 +823,8 @@
     <Content Include="Views\Trivia\_QuizRatingBarPartial.cshtml" />
     <Content Include="Views\Search\_SearchResultsProfilesPartial.cshtml" />
     <Content Include="Views\Search\Tag.cshtml" />
+    <Content Include="Views\Search\Quiz.cshtml" />
+    <Content Include="Views\Search\_QuizRatingBarPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
