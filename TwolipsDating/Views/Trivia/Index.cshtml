@@ -14,14 +14,12 @@
                     <h4 class="panel-title"><i class="glyphicon glyphicon-education"></i> Trivia</h4>
                 </div>
                 <div class="panel-body text-center">
-                    <div class="col-md-5 col-sm-5 col-sm-offset-1 col-md-offset-1">
-                        <h1><i class="glyphicon glyphicon-random"></i></h1>
-                        <h3><a href="@Url.Action("random")">Random</a></h3>
+                    <div class="col-sm-6">
+                        <h3><i class="glyphicon glyphicon-random"></i> <a href="@Url.Action("random")">Random</a></h3>
                         <p>Each question is randomly selected from a pool of questions without any time limit.</p>
                     </div>
-                    <div class="col-md-5 col-sm-5">
-                        <h1><i class="glyphicon glyphicon-time"></i></h1>
-                        <h3><a href="@Url.Action("timed")">Timed</a></h3>
+                    <div class="col-sm-6">
+                        <h3><i class="glyphicon glyphicon-time"></i> <a href="@Url.Action("timed")">Timed</a></h3>
                         <p>Each question is randomly selected from a pool of questions with a 10 second time limit.</p>
                     </div>
                 </div>
@@ -53,9 +51,17 @@
                             }
                             else
                             {
-                                <p class="label label-primary">@quiz.Points points</p>
+                                if (quiz.AveragePoints > 0)
+                                {
+                                    @Html.Partial("_DashboardQuizRatingBarPartial", quiz.AveragePoints)
+                                }
+                                else
+                                {
+                                    <p class="label label-danger">No bonus</p>
+                                }
                             }
-                            <p style="margin-top: 5px;">@quiz.Description</p>
+                            <br />
+                            <small style="margin-top: 5px;">@quiz.Description</small>
                         </div>
                     }
                 </div>

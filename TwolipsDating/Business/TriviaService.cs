@@ -16,7 +16,7 @@ namespace TwolipsDating.Business
         {
             Debug.Assert(quizId > 0);
 
-            var quizResult = from quiz in db.Quizzes
+            var quizResult = from quiz in db.Quizzes.Include(t => t.Questions)
                              where quiz.Id == quizId
                              select quiz;
 
@@ -36,7 +36,7 @@ namespace TwolipsDating.Business
 
         internal async Task<IReadOnlyCollection<Quiz>> GetNewQuizzesAsync()
         {
-            var quizzes = from quiz in db.Quizzes
+            var quizzes = from quiz in db.Quizzes.Include(t => t.Questions)
                           where quiz.IsActive
                           orderby quiz.DateCreated descending
                           select quiz;
@@ -392,7 +392,7 @@ namespace TwolipsDating.Business
 
             // if the user got enough questions right, give them points
             var quiz = await GetQuizAsync(quizId);
-            double percentageOfCorrectQuestions = numberOfCorrectAnswers / quiz.Questions.Count;
+            double percentageOfCorrectQuestions = (double)numberOfCorrectAnswers / (double)quiz.Questions.Count;
             if (percentageOfCorrectQuestions >= 0.8)
             {
                 var user = db.Users.Find(userId);

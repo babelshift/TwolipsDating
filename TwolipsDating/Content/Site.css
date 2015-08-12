@@ -328,18 +328,18 @@ input[readonly] {
     margin-bottom: 10px;
 }
 
-.search-result-quiz-rating-bar {
+.search-result-quiz-rating-bar, .dashboard-trivia-rating-bar {
     font-size: 14px;
     display: inline-block;
 }
 
-.search-result-quiz-rating-bar .badge {
+.search-result-quiz-rating-bar .badge, .dashboard-trivia-rating-bar .badge {
     font-size: 13px;
     padding: 5px;
     border-radius: 0;
 }
 
-.search-result-quiz-rating-bar .current {
+.search-result-quiz-rating-bar .current, .dashboard-trivia-rating-bar .current {
     padding: 10px;
     font-size: 15px;
 }
@@ -354,19 +354,19 @@ input[readonly] {
     border-radius: 0;
 }
 
-.trivia-rating-bar .marker-1, .search-result-quiz-rating-bar .marker-1 {
+.trivia-rating-bar .marker-1, .search-result-quiz-rating-bar .marker-1, .dashboard-trivia-rating-bar .marker-1 {
     background: #43AC6A;
 }
-.trivia-rating-bar .marker-2, .search-result-quiz-rating-bar .marker-2 {
+.trivia-rating-bar .marker-2, .search-result-quiz-rating-bar .marker-2, .dashboard-trivia-rating-bar .marker-2 {
     background: #94ac43;
 }
-.trivia-rating-bar .marker-3, .search-result-quiz-rating-bar .marker-3 {
+.trivia-rating-bar .marker-3, .search-result-quiz-rating-bar .marker-3, .dashboard-trivia-rating-bar .marker-3 {
     background: #E99002;
 }
-.trivia-rating-bar .marker-4, .search-result-quiz-rating-bar .marker-4 {
+.trivia-rating-bar .marker-4, .search-result-quiz-rating-bar .marker-4, .dashboard-trivia-rating-bar .marker-4 {
     background: #ff7500;
 }
-.trivia-rating-bar .marker-5, .search-result-quiz-rating-bar .marker-5 {
+.trivia-rating-bar .marker-5, .search-result-quiz-rating-bar .marker-5, .dashboard-trivia-rating-bar .marker-5 {
     background: #F04124;
 }
 

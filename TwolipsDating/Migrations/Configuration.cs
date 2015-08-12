@@ -138,8 +138,8 @@ namespace TwolipsDating.Migrations
                 new MilestoneType() { Id = (int)MilestoneTypeValues.QuizCompletedSuccessfully, Name = "Quiz Completed Successfully" });
 
             context.Quizzes.AddOrUpdate(m => m.Id,
-                new Quiz() { Id = 1, Name = "Technical Guru", Description = "If you can finish this, you're probably good with programming a VCR.", DateCreated = DateTime.Now, Points = 25, IsActive = true },
-                new Quiz() { Id = 2, Name = "Gamer God", Description = "You'll only succeed at this quiz if you know the differences between World of Warcraft and Call of Duty.", DateCreated = DateTime.Now, Points = 0, IsActive = true },
+                new Quiz() { Id = 1, Name = "Technical Guru", Description = "If you can finish this, you're probably good with programming a VCR.", DateCreated = DateTime.Now, Points = 20, IsActive = true },
+                new Quiz() { Id = 2, Name = "Gamer God", Description = "You'll only succeed at this quiz if you know the differences between World of Warcraft and Call of Duty.", DateCreated = DateTime.Now, Points = 20, IsActive = true },
                 new Quiz() { Id = 3, Name = "Creative Genius", Description = "Try to study up on your color theory and sewing terminology.", DateCreated = DateTime.Now, Points = 0, IsActive = true },
                 new Quiz() { Id = 4, Name = "Business Sense", Description = "The former CEO of Enron would probably fail this one.", DateCreated = DateTime.Now, Points = 0, IsActive = true },
                 new Quiz() { Id = 5, Name = "Language Linguist", Description = "The multilingual users among you will have an advantage.", DateCreated = DateTime.Now, Points = 0, IsActive = true });

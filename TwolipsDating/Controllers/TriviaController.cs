@@ -413,13 +413,13 @@ namespace TwolipsDating.Controllers
                 // if it hasn't been completed, get unanswered questions for quiz
                 else
                 {
-                    questionListViewModel = await GetQuizQuestions(id, questionListViewModel);
+                    questionListViewModel = Mapper.Map<ICollection<Question>, List<QuestionViewModel>>(quiz.Questions);
                 }
             }
             // user isn't authenticated, so anonymous users the questions
             else
             {
-                questionListViewModel = await GetQuizQuestions(id, questionListViewModel);
+                questionListViewModel = Mapper.Map<ICollection<Question>, List<QuestionViewModel>>(quiz.Questions);
             }
 
             QuizViewModel viewModel = new QuizViewModel()
@@ -432,23 +432,12 @@ namespace TwolipsDating.Controllers
                 UsersCompletedQuiz = await GetUsersCompletedQuizAsync(id),
                 Tags = await GetTagsForQuizAsync(id),
                 QuestionViolation = await GetQuestionViolationViewModelAsync(),
-                AveragePoints = questionListViewModel != null ? (int)Math.Round(questionListViewModel.Average(q => q.Points)) : 0
+                AveragePoints = questionListViewModel != null && questionListViewModel.Count > 0 
+                    ? (int)Math.Round(questionListViewModel.Average(q => q.Points)) 
+                    : 0
             };
 
             return View(viewModel);
-        }
-
-        /// <summary>
-        /// Returns a collection of questions for a quiz.
-        /// </summary>
-        /// <param name="quizId"></param>
-        /// <param name="questionListViewModel"></param>
-        /// <returns></returns>
-        private async Task<List<QuestionViewModel>> GetQuizQuestions(int quizId, List<QuestionViewModel> questionListViewModel)
-        {
-            var quizQuestions = await triviaService.GetQuizQuestionsAsync(quizId);
-            questionListViewModel = Mapper.Map<IReadOnlyCollection<Question>, List<QuestionViewModel>>(quizQuestions);
-            return questionListViewModel;
         }
 
         /// <summary>

@@ -61,3 +61,17 @@ insert into @answers(Content, IsCorrect) values('Blue', 1);
 insert into @answers(Content, IsCorrect) values('Black', 0);
 insert into @answers(Content, IsCorrect) values('Brown', 0);
 exec dbo.InsertQuizQuestion 'Which color of Cherry MX mechanical keyboard switches has an audible click?', 5, 1, @answers;
+
+delete from @answers;
+
+insert into @answers(Content, IsCorrect) values('SLI', 1);
+insert into @answers(Content, IsCorrect) values('LIS', 0);
+insert into @answers(Content, IsCorrect) values('APC', 0);
+insert into @answers(Content, IsCorrect) values('CPU', 0);
+exec dbo.InsertQuizQuestion 'What acronym is used to describe the use of multiple NVIDIA GPUs in a single PC.', 4, 1, @answers;
+
+delete from @answers;
+
+insert into @answers(Content, IsCorrect) values('TRUE', 1);
+insert into @answers(Content, IsCorrect) values('FALSE', 0);
+exec dbo.InsertQuizQuestion 'HDMI is capable of carrying both video and audio. True or false?', 2, 1, @answers;

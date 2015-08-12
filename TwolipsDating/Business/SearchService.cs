@@ -51,7 +51,7 @@ namespace TwolipsDating.Business
 	                (
 		                select 
 		                qq.Quiz_Id as QuizId,
-		                avg(qu.Points) as QuestionPointAverage,
+                        round(avg(cast(qu.Points as float)), 0) as QuestionPointAverage,
 		                count(qq.Question_Id) as QuestionCount
 		                from dbo.QuizQuestions qq
 		                inner join dbo.questions qu on qu.Id = qq.Question_Id
