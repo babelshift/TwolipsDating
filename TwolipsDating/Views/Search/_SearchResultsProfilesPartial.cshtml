@@ -17,16 +17,17 @@
         </div>
     </div>
 </div>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- Search - Header - 1 -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-1823005717277864"
-     data-ad-slot="9119376635"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+<div class="ad">
+    <!-- Search - Header - 1 -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-1823005717277864"
+         data-ad-slot="9119376635"
+         data-ad-format="auto"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
 @if (Model.SearchResults != null && Model.SearchResults.Count > 0)
 {
     <div class="row">
@@ -55,7 +56,14 @@
                                 <span class="name-and-location">
                                     <a href="@Url.Action("index", "profile", new { id = profile.ProfileId })">@profile.UserName</a>
                                     &bull;
-                                    @String.Format("{0}, {1}, {2}", profile.Age, profile.Gender, profile.Location)
+                                    @if (!String.IsNullOrEmpty(profile.Location))
+                                    {
+                                        <span>@String.Format("{0}, {1}, {2}", profile.Age, profile.Gender, profile.Location)</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@String.Format("{0}, {1}", profile.Age, profile.Gender);</span>
+                                    }
                                 </span>
                                 <br />
                                 <span class="rating">
@@ -117,4 +125,7 @@
             </div>
         </div>
     </div>
+}
+@section Scripts {
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 }
