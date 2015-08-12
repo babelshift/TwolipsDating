@@ -21,7 +21,16 @@ namespace TwolipsDating.Models
         foody = 14,
         creative = 15,
         film_critic = 16,
-        technocratic = 17
+        technocratic = 17,
+        gossip = 18,
+        fashionista = 19,
+        top_chef = 20,
+        linguist = 21,
+        scientist = 22,
+        philosopher = 23,
+        quiet = 24,
+        drone = 25,
+        chief_executive = 26
     }
 
     public class Tag

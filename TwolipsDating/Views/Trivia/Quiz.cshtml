@@ -40,16 +40,18 @@
 }
 
 <div class="row">
-    <div style="margin-bottom: 21px;">
-        <!-- Quiz - Top - 1 -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1823005717277864"
-             data-ad-slot="9186755439"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+    <div class="ad">
+        <div style="margin-bottom: 21px;">
+            <!-- Quiz - Top - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="9186755439"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
     </div>
     <div class="col-md-8">
         <div class="panel panel-default">
@@ -185,15 +187,17 @@
         {
             @Html.Partial("_SidebarTagsForQuiz", Model.Tags)
         }
-        <!-- Quiz - Sidebar - 1 -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1823005717277864"
-             data-ad-slot="7710022230"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+        <div class="ad">
+            <!-- Quiz - Sidebar - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="7710022230"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
         @if (Model != null)
         {
             @Html.Partial("_SidebarOthersCompletedQuizPartial", Model.UsersCompletedQuiz)

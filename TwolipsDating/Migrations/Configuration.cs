@@ -60,7 +60,13 @@ namespace TwolipsDating.Migrations
                 new Gender() { Id = 8, Name = "Troll" },
                 new Gender() { Id = 9, Name = "Ogre" },
                 new Gender() { Id = 10, Name = "Orc" },
-                new Gender() { Id = 11, Name = "Elf" }
+                new Gender() { Id = 11, Name = "Elf" },
+                new Gender() { Id = 13, Name = "Fluid" },
+                new Gender() { Id = 14, Name = "Undead" },
+                new Gender() { Id = 15, Name = "Mystic" },
+                new Gender() { Id = 16, Name = "Augmented" },
+                new Gender() { Id = 17, Name = "Dog" },
+                new Gender() { Id = 18, Name = "Cat" }
             );
 
             context.MessageStatuses.AddOrUpdate(m => m.Id,
@@ -94,7 +100,16 @@ namespace TwolipsDating.Migrations
                 new Tag() { TagId = (int)TagValues.foody, Name = "foody", Description = "Likes food, makes food, eats food, a lot" },
                 new Tag() { TagId = (int)TagValues.creative, Name = "creative", Description = "Someone who can draw the door and show you through it." },
                 new Tag() { TagId = (int)TagValues.film_critic, Name = "film-critic", Description = "Able to find flaws in absolutely every movie and beyond." },
-                new Tag() { TagId = (int)TagValues.technocratic, Name = "technocratic", Description = "Probably part of the technological elitist revolution. Beware of augmentations." }
+                new Tag() { TagId = (int)TagValues.technocratic, Name = "technocratic", Description = "Probably part of the technological elitist revolution. Beware of augmentations." },
+                new Tag() { TagId = (int)TagValues.drone, Name = "drone", Description = "A person who does monotonous work day in and day out. Usually works in a cubicle." },
+                new Tag() { TagId = (int)TagValues.fashionista, Name = "fashionista", Description = "Truly devoted to all fashion-related causes, especially unique or high fashion." },
+                new Tag() { TagId = (int)TagValues.gossip, Name = "gossip", Description = "Absolutely unable to keep any secrets. Anything you tell them will most likely end up on Facebook within minutes." },
+                new Tag() { TagId = (int)TagValues.linguist, Name = "linguist", Description = "Interested in the study of spelling, grammar, and languages. Look to this person in case you forgot your dictionary or thesaurus." },
+                new Tag() { TagId = (int)TagValues.philosopher, Name = "philosopher", Description = "Often ponders age old questions such as the nature of self, the origin of the universe, and why cats are so cute." },
+                new Tag() { TagId = (int)TagValues.quiet, Name = "quiet", Description = "When tasked with needing to stay silent, they will excel to a professional level." },
+                new Tag() { TagId = (int)TagValues.scientist, Name = "scientist", Description = "Engaged in the systemitc activity to acquire knowledge through observation and experimentation." },
+                new Tag() { TagId = (int)TagValues.top_chef, Name = "top-chef", Description = "Could handily defeat Alton Brown and Anthony Bourdain in a cook off." },
+                new Tag() { TagId = (int)TagValues.chief_executive, Name = "chief-executive", Description = "Likes to run the show, lead the people, and then take the golden parachute when the company explodes." }
             );
 
             context.ViolationTypes.AddOrUpdate(v => v.Id,
@@ -138,11 +153,14 @@ namespace TwolipsDating.Migrations
                 new MilestoneType() { Id = (int)MilestoneTypeValues.QuizCompletedSuccessfully, Name = "Quiz Completed Successfully" });
 
             context.Quizzes.AddOrUpdate(m => m.Id,
-                new Quiz() { Id = 1, Name = "Technical Guru", Description = "If you can finish this, you're probably good with programming a VCR.", DateCreated = DateTime.Now, Points = 20, IsActive = true },
-                new Quiz() { Id = 2, Name = "Gamer God", Description = "You'll only succeed at this quiz if you know the differences between World of Warcraft and Call of Duty.", DateCreated = DateTime.Now, Points = 20, IsActive = true },
-                new Quiz() { Id = 3, Name = "Creative Genius", Description = "Try to study up on your color theory and sewing terminology.", DateCreated = DateTime.Now, Points = 0, IsActive = true },
-                new Quiz() { Id = 4, Name = "Business Sense", Description = "The former CEO of Enron would probably fail this one.", DateCreated = DateTime.Now, Points = 0, IsActive = true },
-                new Quiz() { Id = 5, Name = "Language Linguist", Description = "The multilingual users among you will have an advantage.", DateCreated = DateTime.Now, Points = 0, IsActive = true });
+                new Quiz() { Id = 1, Name = "Technical Guru", Description = "If you can finish this, you're probably good with programming a VCR.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
+                new Quiz() { Id = 2, Name = "Gamer God", Description = "You'll only succeed at this quiz if you know the differences between World of Warcraft and Call of Duty.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
+                new Quiz() { Id = 3, Name = "Creative Genius", Description = "Try to study up on your color theory and sewing terminology.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
+                new Quiz() { Id = 4, Name = "Business Sense", Description = "The former CEO of Enron would probably fail this one.", DateCreated = new DateTime(2015, 8, 1), Points = 15, IsActive = true },
+                new Quiz() { Id = 5, Name = "Language Linguist", Description = "The multilingual users among you will have an advantage.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
+                new Quiz() { Id = 6, Name = "World of Warcraft (Scout)", Description = "This entry level quiz will require you to be accustomed with the basics of World of Warcraft.", DateCreated = new DateTime(2015, 8, 12), Points = 10, IsActive = true },
+                new Quiz() { Id = 7, Name = "World of Warcraft (Champion)", Description = "This intermediate level quiz should only be completed by regulars of Azeroth.", DateCreated = new DateTime(2015, 8, 12), Points = 20, IsActive = true },
+                new Quiz() { Id = 8, Name = "World of Warcraft (High Warlord)", Description = "Can you master the most difficult trivia only for seasoned veterans?", DateCreated = new DateTime(2015, 8, 12), Points = 30, IsActive = true });
 
             SaveChanges(context);
         }
