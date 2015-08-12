@@ -6,18 +6,13 @@
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary()
-        <div class="row">
-            <div class="col-md-12">
-                <div class="input-group">
-                    <span class="input-group-btn">
-                        <span class="btn btn-xs btn-default btn-file">
-                            <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;Add Pictures
-                            @Html.TextBoxFor(x => x.UploadedImages, new { type = "file", multiple = "multiple", accept = "image/jpeg,image/gif,image/bmp,image/png" })
-                        </span>
-                    </span>
-                    @*<input type="text" class="form-control" readonly>*@
-                </div>
-            </div>
+        <div class="input-group">
+            <span class="input-group-btn">
+                <span class="btn btn-xs btn-default btn-file">
+                    <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;Add Pictures
+                    @Html.TextBoxFor(x => x.UploadedImages, new { type = "file", multiple = "multiple", accept = "image/jpeg,image/gif,image/bmp,image/png" })
+                </span>
+            </span>
             @Html.HiddenFor(m => m.ProfileUserId)
         </div>
     }
@@ -25,16 +20,16 @@
 }
 @if (Model.UserImages != null && Model.UserImages.Count > 0)
 {
-    <div class="row wrapper">
+    <div class="wrapper">
         @foreach (var userImage in Model.UserImages)
         {
             <div id="@String.Format("{0}-image-div", userImage.Id)" class="col-xs-6 col-sm-3 text-center">
                 @if (Model.CurrentUserId == Model.ProfileUserId)
                 {
                     <button onclick="onDeleteImage(event, this, @userImage.Id, '@userImage.FileName', '@Model.ProfileUserId')"
-                            style="position: absolute; top: 0; right: 15px;"
+                            style="position: absolute; top: 0; right: 5px;"
                             class="btn btn-default btn-xs custom-tooltip"
-                            title="Delete this picture permanently">
+                            title="Delete this picture">
                         <i class="glyphicon glyphicon-remove"></i>
                     </button>
                 }
