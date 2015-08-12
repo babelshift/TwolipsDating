@@ -160,7 +160,14 @@
                                     @userProfile.UserName
                                 </a>
                             </h4>
-                            <h5>@userProfile.Age &bull; @userProfile.Gender &bull; @userProfile.Location</h5>
+                            <h5>
+                                @userProfile.Age &bull; @userProfile.Gender
+                                @if (!String.IsNullOrEmpty(userProfile.Location))
+                                {
+                                    @:&bull;
+                                    @userProfile.Location
+                                }
+                            </h5>
                         </div>
                     }
                 </div>
