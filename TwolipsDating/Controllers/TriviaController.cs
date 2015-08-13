@@ -189,9 +189,9 @@ namespace TwolipsDating.Controllers
 
                 int? currentUserProfileId = await userService.GetProfileIdAsync(currentUserId);
 
+                // only allow submit answer if the user has a profile
                 if (currentUserProfileId.HasValue)
                 {
-                    // log the answer for this user's question history
                     int correctAnswerId = await triviaService.RecordAnsweredQuestionAsync(
                         currentUserId,
                         currentUserProfileId.Value,

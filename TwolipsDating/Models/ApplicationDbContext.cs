@@ -439,6 +439,10 @@ namespace TwolipsDating.Models
                 .HasRequired(t => t.MilestoneType)
                 .WithMany(t => t.Milestones)
                 .HasForeignKey(t => t.MilestoneTypeId);
+
+            modelBuilder.Entity<Milestone>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
         }
 
         private void SetupMilestoneAchievements(DbModelBuilder modelBuilder)

@@ -12,6 +12,29 @@ namespace TwolipsDating.Business
 {
     public class ProfileService : BaseService
     {
+        public ProfileService() : base() { }
+
+        public ProfileService(ApplicationDbContext db) : base(db) { }
+
+        internal async Task<int> GetReviewsWrittenCountByUserAsync(string userId)
+        {
+            int reviewsWrittenCount = await (from review in db.Reviews
+                                             where review.AuthorUserId == userId
+                                             select review).CountAsync();
+
+            return reviewsWrittenCount;
+        }
+
+        internal async Task<int> GetPointsForUserAsync(string userId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            var points = await (from user in db.Users
+                                select user.Points).FirstOrDefaultAsync();
+
+            return points;
+        }
+
         /// <summary>
         /// Returns a view model object containing a user's complete trivia statistics
         /// </summary>
@@ -845,6 +868,29 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
+        internal async Task<int> GetSentGiftCountForUserAsync(string userId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            var sentGiftCount = await (from gift in db.GiftTransactions
+                                       where gift.FromUserId == userId
+                                       select gift).CountAsync();
+
+            return sentGiftCount;
+        }
+
+        internal async Task<int> GetPurchasedGiftCountForUserAsync(string userId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            var purchasedGiftCount = await (from gift in db.StoreTransactions
+                                            where gift.UserId == userId
+                                            where gift.StoreItem.ItemTypeId == (int)StoreItemTypeValues.Gift
+                                            select gift).CountAsync();
+
+            return purchasedGiftCount;
+        }
+
         /// <summary>
         /// Adds
         /// </summary>
@@ -1149,6 +1195,15 @@ namespace TwolipsDating.Business
             }
 
             return randomProfiles.AsReadOnly();
+        }
+
+        internal async Task<int> GetImagesUploadedCountByUserAsync(string userId)
+        {
+            var imagesUploadedCount = await (from image in db.UserImages
+                                             where image.ApplicationUserId == userId
+                                             select image).CountAsync();
+
+            return imagesUploadedCount;
         }
     }
 }

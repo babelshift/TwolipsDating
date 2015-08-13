@@ -19,6 +19,11 @@ namespace TwolipsDating.Business
 #endif
         }
 
+        public BaseService(ApplicationDbContext db) : this()
+        {
+            this.db = db;
+        }
+
         /// <summary>
         /// Uses Dapper to perform an asynchronous query to the default connection.
         /// </summary>

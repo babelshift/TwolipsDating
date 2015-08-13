@@ -5,8 +5,15 @@ namespace TwolipsDating.Models
 {
     public enum MilestoneTypeValues
     {
-        QuestionAnsweredCorrectly = 1,
-        QuizCompletedSuccessfully = 2
+        QuestionsAnsweredCorrectly = 1,
+        QuizzesCompletedSuccessfully = 2,
+        ProfileReviewsWritten = 3,
+        ProfileImagesUploaded = 4,
+        GiftSent = 5,
+        GiftsPurchased = 6,
+        TitlesPurchased = 7,
+        TagsAwarded = 8,
+        PointsObtained = 9
     }
 
     public class MilestoneType
