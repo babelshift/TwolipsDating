@@ -94,58 +94,64 @@
                     </div>
                 </div>
             </div>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <!-- Dashboard - Sidebar - 1 -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1823005717277864"
-                 data-ad-slot="9881746234"
-                 data-ad-format="auto"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
-        <div class="col-md-8">
-            @*@if (Model.Items.Count == 0 && Model.UsersToFollow != null && Model.UsersToFollow.Count > 0)
-                {*@
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-title text-center">
-                        <i class="glyphicon glyphicon-globe"></i> Users to Follow
+            <div class="ad">
+                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <!-- Dashboard - Sidebar - 1 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1823005717277864"
+                     data-ad-slot="9881746234"
+                     data-ad-format="auto"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+            @if (Model.UsersToFollow != null && Model.UsersToFollow.Count > 0)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title text-center">
+                            <i class="glyphicon glyphicon-globe"></i> Users to Follow
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        @foreach (var userProfile in Model.UsersToFollow)
+                        {
+                            <div id="@String.Format("user-to-follow-{0}", userProfile.ProfileId)" class="user-to-follow">
+                                <div style="margin-left: 55px;">
+                                    <a href="@Url.Action("index", "profile", new{ id = userProfile.ProfileId })">
+                                        @if (!String.IsNullOrEmpty(userProfile.ProfileImagePath))
+                                        {
+                                            <img src="@userProfile.ProfileImagePath">
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Content/Placeholder.png">
+                                        }
+                                        <span class="user-to-follow-name">
+                                            @userProfile.UserName
+                                        </span>
+                                    </a>
+                                    <small class="user-to-follow-location">
+                                        @userProfile.Age
+                                        @if (!String.IsNullOrEmpty(userProfile.Location))
+                                        {
+                                            @:&bull;
+                                            @userProfile.Location
+                                        }
+                                    </small>
+                                </div>
+                                <button id="@String.Format("button-toggle-favorite-{0}", userProfile.ProfileId)" style="position: absolute; right: 0; top: 6px;" class="btn btn-default btn-sm custom-tooltip follow-user"
+                                        data-profile-id="@userProfile.ProfileId" data-user-id="@userProfile.ProfileUserId">
+                                    <i id="@String.Format("icon-toggle-favorite-{0}", userProfile.ProfileId)" class="glyphicon glyphicon-heart-empty"></i> Follow
+                                </button>
+                            </div>
+                        }
                     </div>
                 </div>
-                <div class="panel-body text-center">
-                    @foreach (var userProfile in Model.UsersToFollow)
-                    {
-                        <div class="col-sm-3" style="min-height: 185px;">
-                            <a href="@Url.Action("index", "profile", new{ id = userProfile.ProfileId })">
-                                @if (!String.IsNullOrEmpty(userProfile.ProfileImagePath))
-                                {
-                                    <img src="@userProfile.ProfileImagePath" style="max-height: 84px">
-                                }
-                                else
-                                {
-                                    <img src="~/Content/Placeholder.png" style="max-height: 84px">
-                                }
-                            </a>
-                            <h4 style="margin-top: 5px">
-                                <a href="@Url.Action("index", "profile", new{ id = userProfile.ProfileId })">
-                                    @userProfile.UserName
-                                </a>
-                            </h4>
-                            <h5>
-                                @userProfile.Age &bull; @userProfile.Gender
-                                @if (!String.IsNullOrEmpty(userProfile.Location))
-                                {
-                                    @:&bull;
-                                    @userProfile.Location
-                                }
-                            </h5>
-                        </div>
-                    }
-                </div>
-            </div>
-            @*}*@
+            }
+        </div>
+        <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-body">
                     @if (Model.Items.Count > 0)

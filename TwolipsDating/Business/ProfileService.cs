@@ -1195,13 +1195,24 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="profilesToRetrieve"></param>
         /// <returns></returns>
-        internal async Task<IReadOnlyCollection<Profile>> GetRandomProfilesAsync(int profilesToRetrieve)
+        internal async Task<IReadOnlyCollection<Profile>> GetRandomProfilesForDashboardAsync(string currentUserId, int profilesToRetrieve)
         {
             var allProfiles = await (from profiles in db.Profiles
                                      where profiles.ApplicationUser.IsActive
+                                     where profiles.ApplicationUser.Id != currentUserId
+                                     where !(from favorite in db.FavoriteProfiles
+                                             where favorite.UserId == currentUserId
+                                             select favorite.ProfileId)
+                                             .Contains(profiles.Id)
                                      select profiles).ToListAsync();
 
             List<Profile> randomProfiles = new List<Profile>();
+
+            if(allProfiles == null || allProfiles.Count == 0)
+            {
+                return randomProfiles.AsReadOnly();
+            }
+
             Random random = new Random();
             for (int i = 0; i < profilesToRetrieve; i++)
             {

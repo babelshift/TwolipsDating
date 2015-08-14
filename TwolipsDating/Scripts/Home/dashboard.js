@@ -171,4 +171,39 @@ $(document).ready(function () {
     $(".answer-link").on("click", function (e) {
         onSubmitAnswer(e, this);
     });
+
+    $('.follow-user').on('click', function (e) {
+        e.preventDefault();
+
+        var profileUserId = $(this).attr('data-user-id');
+        var profileId = $(this).attr('data-profile-id');
+
+        var json = '{"profileUserId":"' + profileUserId + '", "profileId":' + profileId + '}';
+
+        postJson('/profile/toggleFavoriteProfile', json, function (data) {
+            if (data.success) {
+                toggleFavoriteProfileIcon(profileId, data.isFavorite);
+
+                $('#user-to-follow-' + profileId).fadeOut('normal', function () {
+                    $(this).remove();
+                });
+            } else {
+                alert(data.error);
+            }
+        });
+    });
 });
+
+function toggleFavoriteProfileIcon(profileId, isFavorite) {
+    if (isFavorite) {
+        $('#icon-toggle-favorite-' + profileId).removeClass("glyphicon-heart-empty");
+        $('#icon-toggle-favorite-' + profileId).addClass("glyphicon-heart");
+        $('#button-toggle-favorite-' + profileId).removeClass("btn-default");
+        $('#button-toggle-favorite-' + profileId).addClass("btn-success");
+    } else {
+        $('#icon-toggle-favorite-' + profileId).removeClass("glyphicon-heart");
+        $('#icon-toggle-favorite-' + profileId).addClass("glyphicon-heart-empty");
+        $('#button-toggle-favorite-' + profileId).removeClass("btn-success");
+        $('#button-toggle-favorite-' + profileId).addClass("btn-default");
+    }
+}

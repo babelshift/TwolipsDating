@@ -57,7 +57,7 @@ namespace TwolipsDating.Controllers
 
                 await SetupQuizzesOnDashboardAsync(currentUserId, viewModel);
 
-                await SetupUsersToFollowAsync(viewModel);
+                await SetupUsersToFollowAsync(currentUserId, viewModel);
 
                 return View("dashboard", viewModel);
             }
@@ -69,10 +69,10 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private async Task SetupUsersToFollowAsync(DashboardViewModel viewModel)
+        private async Task SetupUsersToFollowAsync(string currentUserId, DashboardViewModel viewModel)
         {
             int profilesToRetrieve = 8;
-            var profiles = await ProfileService.GetRandomProfilesAsync(profilesToRetrieve);
+            var profiles = await ProfileService.GetRandomProfilesForDashboardAsync(currentUserId, profilesToRetrieve);
             viewModel.UsersToFollow = Mapper.Map<IReadOnlyCollection<Models.Profile>, IReadOnlyCollection<ProfileViewModel>>(profiles);
         }
 
