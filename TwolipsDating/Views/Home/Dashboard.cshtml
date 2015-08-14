@@ -54,7 +54,10 @@
                 @if (Model.RandomQuestion != null)
                 {
                     <div class="panel-body">
-                        <h5 id="random-question-content">@Model.RandomQuestion.Content <small><span class="badge">@Model.RandomQuestion.Points points</span></small></h5>
+                        <h5 style="margin-top: 0;" id="random-question-content">@Model.RandomQuestion.Content</h5>
+                        <div class="text-center">
+                            @Html.Partial("_QuestionRatingBarPartial", Model.RandomQuestion.Points)
+                        </div>
                     </div>
                     <div class="list-group">
                         <div id="answers">
@@ -81,7 +84,9 @@
                 }
                 else
                 {
-                    <p>You've answered all the random questions for now. <a href="@Url.Action("index", "trivia")">Want more?</a></p>
+                    <div class="panel-body">
+                        <p style="margin: 0;">You've answered all the random questions for now. <a href="@Url.Action("index", "trivia")">Want more?</a></p>
+                    </div>
                 }
                 <div class="panel-footer">
                     <div class="text-center">

@@ -835,6 +835,7 @@
     <Content Include="Views\Search\Quiz.cshtml" />
     <Content Include="Views\Search\_QuizRatingBarPartial.cshtml" />
     <Content Include="Views\Trivia\_DashboardQuizRatingBarPartial.cshtml" />
+    <Content Include="Views\Home\_QuestionRatingBarPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

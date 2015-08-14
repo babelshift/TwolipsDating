@@ -4,9 +4,27 @@
     get('/trivia/randomJson', function (data) {
         if (data.Success) {
             // show the new question
-            var content = data.Content + ' <small><span class="badge">' + data.Points + ' points</span></small>';
+            var content = data.Content;
             $('#random-question-content').html(content);
             $('#RandomQuestion_QuestionId').val(data.QuestionId);
+
+            // show the new difficulty rating
+            $('.marker-1').removeClass('current');
+            $('.marker-2').removeClass('current');
+            $('.marker-3').removeClass('current');
+            $('.marker-4').removeClass('current');
+            $('.marker-5').removeClass('current');
+            if (data.Points == 1) {
+                $('.marker-1').addClass('current');
+            } else if (data.Points == 2) {
+                $('.marker-2').addClass('current');
+            } else if (data.Points == 3) {
+                $('.marker-3').addClass('current');
+            } else if (data.Points == 4) {
+                $('.marker-4').addClass('current');
+            } else if (data.Points == 5) {
+                $('.marker-5').addClass('current');
+            }
 
             // show the new answers
             var answersHtml = '';
@@ -30,7 +48,7 @@
             // reset the OK button
             $('#result-alert').addClass("hidden");
             $('#button-next').addClass("hidden");
-            $('#button-ok').removeClass("hidden");
+            $('#button-skip').removeClass("hidden");
         } else {
             $('#trivia-panel').fadeOut('normal', function () {
                 $(this).remove();
@@ -96,7 +114,7 @@ function onSubmitAnswer(e, obj) {
             $("#icon-incorrect-" + data.correctAnswerId).addClass("hidden");
             $("#icon-correct-" + data.correctAnswerId).removeClass("hidden");
 
-            $("#button-skip").hide();
+            $("#button-skip").addClass('hidden');
         } else {
             alert(data.error);
         }

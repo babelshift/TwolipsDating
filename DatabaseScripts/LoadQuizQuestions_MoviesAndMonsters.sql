@@ -36,7 +36,7 @@ insert into @answers(Content, IsCorrect) values('Spear of Destiny', 0);
 insert into @answers(Content, IsCorrect) values('Golden Fleece', 1);
 insert into @answers(Content, IsCorrect) values('Flaming Torch', 0);
 insert into @answers(Content, IsCorrect) values('Leaves of Wisdom', 0);
-exec dbo.InsertQuizQuestion 'In Jason and the Argonauts, what object was Jason searching for?', 5, 9, @answers;
+exec dbo.InsertQuizQuestion 'In the movie "Jason and the Argonauts", what object was Jason searching for?', 5, 9, @answers;
 
 delete from @answers;
 
@@ -52,28 +52,28 @@ insert into @answers(Content, IsCorrect) values('It wants to kill her', 0);
 insert into @answers(Content, IsCorrect) values('It wants to learn more about her', 0);
 insert into @answers(Content, IsCorrect) values('It fell in love with her', 1);
 insert into @answers(Content, IsCorrect) values('It was tired of being bullied', 0);
-exec dbo.InsertQuizQuestion 'Why does the creature in "The Creature from the Black Lagoon" capture a woman?', 4, 9, @answers;
+exec dbo.InsertQuizQuestion 'Why does the creature in The Creature from the Black Lagoon capture a woman?', 4, 9, @answers;
 
 delete from @answers;
 
-insert into @answers(Content, IsCorrect) values('2', 0);
-insert into @answers(Content, IsCorrect) values('3', 0);
-insert into @answers(Content, IsCorrect) values('4', 0);
-insert into @answers(Content, IsCorrect) values('5', 1);
-exec dbo.InsertQuizQuestion 'What is the maximum party size?', 1, 9, @answers;
+insert into @answers(Content, IsCorrect) values('For the Fourth of July celebrations', 1);
+insert into @answers(Content, IsCorrect) values('Because scientific studies need to occur', 0);
+insert into @answers(Content, IsCorrect) values('He wants to go to the beach', 0);
+insert into @answers(Content, IsCorrect) values('He likes to see sharks attack people', 0);
+exec dbo.InsertQuizQuestion 'In the movie Jaws, why does the mayor want to keep the beach open? ', 3, 9, @answers;
 
 delete from @answers;
 
-insert into @answers(Content, IsCorrect) values('2', 0);
-insert into @answers(Content, IsCorrect) values('4', 0);
-insert into @answers(Content, IsCorrect) values('6', 0);
-insert into @answers(Content, IsCorrect) values('8', 1);
-exec dbo.InsertQuizQuestion 'How many races were included in the original game?', 2, 9, @answers;
+insert into @answers(Content, IsCorrect) values('Wes Craven', 0);
+insert into @answers(Content, IsCorrect) values('John Carpenter', 1);
+insert into @answers(Content, IsCorrect) values('Stanley Kubrick', 0);
+insert into @answers(Content, IsCorrect) values('Alfred Hitchcock', 0);
+exec dbo.InsertQuizQuestion 'Who directed the 1982 version of The Thing?', 2, 9, @answers;
 
 delete from @answers;
 
-insert into @answers(Content, IsCorrect) values('3', 0);
-insert into @answers(Content, IsCorrect) values('6', 0);
-insert into @answers(Content, IsCorrect) values('9', 1);
-insert into @answers(Content, IsCorrect) values('12', 0);
-exec dbo.InsertQuizQuestion 'How many classes were included in the original game?', 2, 9, @answers;
+insert into @answers(Content, IsCorrect) values('Magnifying glass', 0);
+insert into @answers(Content, IsCorrect) values('Sunglasses', 1);
+insert into @answers(Content, IsCorrect) values('Television', 0);
+insert into @answers(Content, IsCorrect) values('Cell phone camera', 0);
+exec dbo.InsertQuizQuestion 'In the movie They Live, what object allows people to see into another dimension?', 4, 9, @answers;
