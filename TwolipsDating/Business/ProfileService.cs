@@ -175,6 +175,17 @@ namespace TwolipsDating.Business
             return results;
         }
 
+        internal async Task<int> GetTagAwardCountForUserAsync(string userId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            var tagAwardCount = await (from tagAward in db.TagAwards
+                                       where tagAward.Profile.ApplicationUser.Id == userId
+                                       select tagAward).CountAsync();
+
+            return tagAwardCount;
+        }
+
         /// <summary>
         ///
         /// </summary>
@@ -879,13 +890,13 @@ namespace TwolipsDating.Business
             return sentGiftCount;
         }
 
-        internal async Task<int> GetPurchasedGiftCountForUserAsync(string userId)
+        internal async Task<int> GetPurchasedItemCountForUserAsync(string userId, int storeItemTypeId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
             var purchasedGiftCount = await (from gift in db.StoreTransactions
                                             where gift.UserId == userId
-                                            where gift.StoreItem.ItemTypeId == (int)StoreItemTypeValues.Gift
+                                            where gift.StoreItem.ItemTypeId == storeItemTypeId
                                             select gift).CountAsync();
 
             return purchasedGiftCount;

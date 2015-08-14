@@ -56,7 +56,7 @@ namespace TwolipsDating.Business
                     }
                     else if (milestone.MilestoneTypeId == (int)MilestoneTypeValues.GiftsPurchased)
                     {
-                        amount = await profileService.GetPurchasedGiftCountForUserAsync(userId);
+                        amount = await profileService.GetPurchasedItemCountForUserAsync(userId, (int)StoreItemTypeValues.Gift);
                     }
                     else if (milestone.MilestoneTypeId == (int)MilestoneTypeValues.PointsObtained)
                     {
@@ -69,6 +69,14 @@ namespace TwolipsDating.Business
                     else if (milestone.MilestoneTypeId == (int)MilestoneTypeValues.ProfileImagesUploaded)
                     {
                         amount = await profileService.GetImagesUploadedCountByUserAsync(userId);
+                    }
+                    else if(milestone.MilestoneTypeId == (int)MilestoneTypeValues.TitlesPurchased)
+                    {
+                        amount = await profileService.GetPurchasedItemCountForUserAsync(userId, (int)StoreItemTypeValues.Title);
+                    }
+                    else if(milestone.MilestoneTypeId == (int)MilestoneTypeValues.TagsAwarded)
+                    {
+                        amount = await profileService.GetTagAwardCountForUserAsync(userId);
                     }
 
                     if (amount >= milestone.AmountRequired)
