@@ -369,7 +369,11 @@ namespace TwolipsDating.Business
             userImage.DateUploaded = DateTime.Now;
 
             db.UserImages.Add(userImage);
-            return await db.SaveChangesAsync();
+            int count = await db.SaveChangesAsync();
+
+            await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.ProfileImagesUploaded);
+
+            return count;
         }
 
         /// <summary>
@@ -426,7 +430,12 @@ namespace TwolipsDating.Business
             review.RatingValue = ratingValue;
 
             db.Reviews.Add(review);
-            return await db.SaveChangesAsync();
+
+            int count = await db.SaveChangesAsync();
+
+            await AwardAchievedMilestonesForUserAsync(authorUserId, (int)MilestoneTypeValues.ProfileReviewsWritten);
+
+            return count;
         }
 
         /// <summary>
@@ -826,13 +835,17 @@ namespace TwolipsDating.Business
             Debug.Assert(giftId > 0);
             Debug.Assert(inventoryItemId > 0);
 
+            // remove the gift from the sender's inventory and add a gift to the receiver's inventory
             int giftCount = await RemoveItemFromUserInventoryAsync(fromUserId, inventoryItemId);
-
             await AddItemToUserInventoryAsync(toUserId, giftId);
 
+            // save a log of the gift send transaction to the database
             LogGiftTransaction(fromUserId, toUserId, giftId);
 
+            // save any changes in our current transaction
             await db.SaveChangesAsync();
+
+            await AwardAchievedMilestonesForUserAsync(fromUserId, (int)MilestoneTypeValues.GiftSent);
 
             return giftCount;
         }

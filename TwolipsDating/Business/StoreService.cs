@@ -95,10 +95,16 @@ namespace TwolipsDating.Business
 
                 db.UserTitles.Add(userTitle);
 
+                LogStoreTransaction(userId, storeItemId, 1);
+
                 user.Points -= pointsCost;
             }
 
-            return await db.SaveChangesAsync();
+            int count = await db.SaveChangesAsync();
+
+            await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.TitlesPurchased);
+
+            return count;
         }
 
         /// <summary>
@@ -147,20 +153,29 @@ namespace TwolipsDating.Business
                     db.InventoryItems.Add(item);
                 }
 
-                StoreTransactionLog log = new StoreTransactionLog()
-                {
-                    UserId = userId,
-                    StoreItemId = storeItemId,
-                    ItemCount = buyCount,
-                    DateTransactionOccurred = DateTime.Now
-                };
-
-                db.StoreTransactions.Add(log);
+                LogStoreTransaction(userId, storeItemId, buyCount);
 
                 user.Points -= pointsCost * buyCount;
             }
 
-            return await db.SaveChangesAsync();
+            int count = await db.SaveChangesAsync();
+
+            await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.GiftsPurchased);
+
+            return count;
+        }
+
+        private void LogStoreTransaction(string userId, int storeItemId, int buyCount)
+        {
+            StoreTransactionLog log = new StoreTransactionLog()
+            {
+                UserId = userId,
+                StoreItemId = storeItemId,
+                ItemCount = buyCount,
+                DateTransactionOccurred = DateTime.Now
+            };
+
+            db.StoreTransactions.Add(log);
         }
 
         private async Task<int> GetAdjustedSalePrice(int storeItemId, int originalPointsPrice)
@@ -176,7 +191,7 @@ namespace TwolipsDating.Business
 
             if (saleForItem != null)
             {
-                salePointsPrice -= (int)(salePointsPrice * saleForItem.Discount);
+                salePointsPrice -= (int)Math.Round(salePointsPrice * saleForItem.Discount);
             }
 
             return salePointsPrice;

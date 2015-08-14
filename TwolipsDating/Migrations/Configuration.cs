@@ -198,14 +198,15 @@ namespace TwolipsDating.Migrations
                 new Milestone() { Id = (int)MilestoneValues.PointsObtained4, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 1000 });
 
             context.Quizzes.AddOrUpdate(m => m.Id,
-                new Quiz() { Id = 1, Name = "Technical Guru", Description = "If you can finish this, you're probably good with programming a VCR.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
-                new Quiz() { Id = 2, Name = "Gamer God", Description = "You'll only succeed at this quiz if you know the differences between World of Warcraft and Call of Duty.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
+                new Quiz() { Id = 1, Name = "Technical Guru", Description = "If you can finish this, you're probably good with gadgets.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
+                new Quiz() { Id = 2, Name = "Gamer God", Description = "Pull out your Playstation and gear up to claim victory.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
                 new Quiz() { Id = 3, Name = "Creative Genius", Description = "Try to study up on your color theory and sewing terminology.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
                 new Quiz() { Id = 4, Name = "Business Sense", Description = "The former CEO of Enron would probably fail this one.", DateCreated = new DateTime(2015, 8, 1), Points = 15, IsActive = true },
-                new Quiz() { Id = 5, Name = "Language Linguist", Description = "The multilingual users among you will have an advantage.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
-                new Quiz() { Id = 6, Name = "World of Warcraft (Scout)", Description = "This entry level quiz will require you to be accustomed with the basics of World of Warcraft.", DateCreated = new DateTime(2015, 8, 12), Points = 10, IsActive = true },
-                new Quiz() { Id = 7, Name = "World of Warcraft (Champion)", Description = "This intermediate level quiz should only be completed by regulars of Azeroth.", DateCreated = new DateTime(2015, 8, 12), Points = 20, IsActive = true },
-                new Quiz() { Id = 8, Name = "World of Warcraft (High Warlord)", Description = "Can you master the most difficult trivia only for seasoned veterans?", DateCreated = new DateTime(2015, 8, 12), Points = 30, IsActive = true });
+                new Quiz() { Id = 5, Name = "Language Linguist", Description = "If you're interested in the science of language, then this is the quiz for you.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
+                new Quiz() { Id = 6, Name = "World of Warcraft (Scout)", Description = "This entry level quiz will require you to know the basics of World of Warcraft.", DateCreated = new DateTime(2015, 8, 12), Points = 10, IsActive = true },
+                new Quiz() { Id = 7, Name = "World of Warcraft (Champion)", Description = "This intermediate level quiz should only be completed by regulars of Azeroth.", DateCreated = new DateTime(2015, 8, 12), Points = 15, IsActive = true },
+                new Quiz() { Id = 8, Name = "World of Warcraft (High Warlord)", Description = "Can you master the most difficult trivia only for seasoned veterans?", DateCreated = new DateTime(2015, 8, 12), Points = 25, IsActive = true },
+                new Quiz() { Id = 9, Name = "Movies and Monsters", Description = "Giant spiders, spooky skeletons, swarms of ants, and a whole lot of stop motion animation.", DateCreated = new DateTime(2015, 8, 14), Points = 20, IsActive = true });
 
             SaveChanges(context);
         }

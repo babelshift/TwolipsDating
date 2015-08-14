@@ -139,16 +139,19 @@ namespace TwolipsDating.Business
                 IncreaseUserPoints(user, questionPoints);
             }
 
+            // award the user any tags for question-related points
+            await HandleTagAwards(userId, profileId);
+
             // save the changes regarding the answered question
-            int count = await db.SaveChangesAsync();
+            await db.SaveChangesAsync();
 
             MilestoneService milestoneService = new MilestoneService(db);
 
             // award the user any question-related milestones if they have enough question-related points
             await milestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.QuestionsAnsweredCorrectly);
 
-            // award the user any tags for question-related points
-            await HandleTagAwards(userId, profileId);
+            // save the milestone and tag award changes
+            await db.SaveChangesAsync();
 
             return correctAnswerId;
         }
@@ -173,7 +176,7 @@ namespace TwolipsDating.Business
             // for each tag, check how many tags he should have and award the missing
             foreach (var tag in tagsForAnsweredQuestions)
             {
-                // user gets a tag award for every 15 points per tag-related question, this is how many should be present
+                // user gets a tag award for every 25 points per tag-related question, this is how many should be present
                 int supposedTagAwardCount = (int)Math.Round((double)tag.Points / 25.0);
 
                 // get the actual number of awarded tags of this type for the user
@@ -325,7 +328,11 @@ namespace TwolipsDating.Business
                 IncreaseUserPoints(user, quiz.Points);
             }
 
-            return await db.SaveChangesAsync();
+            int count = await db.SaveChangesAsync();
+
+            await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.QuizzesCompletedSuccessfully);
+
+            return count;
         }
 
         private static void IncreaseUserPoints(ApplicationUser user, int points)

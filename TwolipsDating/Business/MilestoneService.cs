@@ -31,60 +31,78 @@ namespace TwolipsDating.Business
             var milestones = await GetMilestonesByTypeAsync(milestoneTypeId); // all milestones
             var milestonesAchieved = await GetMilestonesAchievedByUserAsync(userId, milestoneTypeId); // milestones achieved by user
 
+            // look up the "amount" of whatever milestone type requirement calls for
+            int amount = await GetAmountForMilestoneTypeAsync(userId, milestoneTypeId);
+
             foreach (var milestone in milestones)
             {
                 // only bother with this milestone if the user hasn't already achieved it
                 if (!HasUserAlreadyAchievedMilestone(userId, milestone.Id, milestonesAchieved))
                 {
-                    int amount = 0;
-
-                    TriviaService triviaService = new TriviaService(db);
-                    ProfileService profileService = new ProfileService(db);
-
-                    if (milestone.MilestoneTypeId == (int)MilestoneTypeValues.QuestionsAnsweredCorrectly)
-                    {
-                        amount = await triviaService.GetQuestionsAnsweredCorrectlyCountAsync(userId);
-                    }
-                    else if (milestone.MilestoneTypeId == (int)MilestoneTypeValues.QuizzesCompletedSuccessfully)
-                    {
-                        var completedQuizzes = await triviaService.GetCompletedQuizzesForUserAsync(userId);
-                        amount = completedQuizzes.Count;
-                    }
-                    else if (milestone.MilestoneTypeId == (int)MilestoneTypeValues.GiftSent)
-                    {
-                        amount = await profileService.GetSentGiftCountForUserAsync(userId);
-                    }
-                    else if (milestone.MilestoneTypeId == (int)MilestoneTypeValues.GiftsPurchased)
-                    {
-                        amount = await profileService.GetPurchasedItemCountForUserAsync(userId, (int)StoreItemTypeValues.Gift);
-                    }
-                    else if (milestone.MilestoneTypeId == (int)MilestoneTypeValues.PointsObtained)
-                    {
-                        amount = await profileService.GetPointsForUserAsync(userId);
-                    }
-                    else if (milestone.MilestoneTypeId == (int)MilestoneTypeValues.ProfileReviewsWritten)
-                    {
-                        amount = await profileService.GetReviewsWrittenCountByUserAsync(userId);
-                    }
-                    else if (milestone.MilestoneTypeId == (int)MilestoneTypeValues.ProfileImagesUploaded)
-                    {
-                        amount = await profileService.GetImagesUploadedCountByUserAsync(userId);
-                    }
-                    else if(milestone.MilestoneTypeId == (int)MilestoneTypeValues.TitlesPurchased)
-                    {
-                        amount = await profileService.GetPurchasedItemCountForUserAsync(userId, (int)StoreItemTypeValues.Title);
-                    }
-                    else if(milestone.MilestoneTypeId == (int)MilestoneTypeValues.TagsAwarded)
-                    {
-                        amount = await profileService.GetTagAwardCountForUserAsync(userId);
-                    }
-
+                    // if the user has met or exceeded the milestone's requirements, award them the milestone
                     if (amount >= milestone.AmountRequired)
                     {
                         AwardMilestoneToUser(userId, milestone.Id);
                     }
                 }
             }
+        }
+
+        private async Task<int> GetAmountForMilestoneTypeAsync(string userId, int milestoneTypeId)
+        {
+            int amount = 0;
+
+            TriviaService triviaService = new TriviaService(db);
+            ProfileService profileService = new ProfileService(db);
+
+            // get the number of questions answered correctly
+            if (milestoneTypeId == (int)MilestoneTypeValues.QuestionsAnsweredCorrectly)
+            {
+                amount = await triviaService.GetQuestionsAnsweredCorrectlyCountAsync(userId);
+            }
+            // get the number of quizzes completed successfully
+            else if (milestoneTypeId == (int)MilestoneTypeValues.QuizzesCompletedSuccessfully)
+            {
+                var completedQuizzes = await triviaService.GetCompletedQuizzesForUserAsync(userId);
+                amount = completedQuizzes.Count;
+            }
+            // get the number of gifts sent
+            else if (milestoneTypeId == (int)MilestoneTypeValues.GiftSent)
+            {
+                amount = await profileService.GetSentGiftCountForUserAsync(userId);
+            }
+            // get the number of gifts purchased
+            else if (milestoneTypeId == (int)MilestoneTypeValues.GiftsPurchased)
+            {
+                amount = await profileService.GetPurchasedItemCountForUserAsync(userId, (int)StoreItemTypeValues.Gift);
+            }
+            // get the number of points obtained
+            else if (milestoneTypeId == (int)MilestoneTypeValues.PointsObtained)
+            {
+                amount = await profileService.GetPointsForUserAsync(userId);
+            }
+            // get the number of profiles reviewed
+            else if (milestoneTypeId == (int)MilestoneTypeValues.ProfileReviewsWritten)
+            {
+                amount = await profileService.GetReviewsWrittenCountByUserAsync(userId);
+            }
+            // get the number of images uploaded
+            else if (milestoneTypeId == (int)MilestoneTypeValues.ProfileImagesUploaded)
+            {
+                amount = await profileService.GetImagesUploadedCountByUserAsync(userId);
+            }
+            // get the number of titles purchased
+            else if (milestoneTypeId == (int)MilestoneTypeValues.TitlesPurchased)
+            {
+                amount = await profileService.GetPurchasedItemCountForUserAsync(userId, (int)StoreItemTypeValues.Title);
+            }
+            // get the number of tags awarded
+            else if (milestoneTypeId == (int)MilestoneTypeValues.TagsAwarded)
+            {
+                amount = await profileService.GetTagAwardCountForUserAsync(userId);
+            }
+
+            return amount;
         }
 
         /// <summary>

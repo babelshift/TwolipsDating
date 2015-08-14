@@ -25,6 +25,20 @@ namespace TwolipsDating.Business
         }
 
         /// <summary>
+        /// This will commit any pending transaction.
+        /// </summary>
+        /// <param name="fromUserId"></param>
+        /// <param name="milestoneTypeId"></param>
+        /// <returns></returns>
+        protected async Task AwardAchievedMilestonesForUserAsync(string fromUserId, int milestoneTypeId)
+        {
+            // handle and save any milestones that the user may have met
+            MilestoneService milestoneService = new MilestoneService(db);
+            await milestoneService.AwardAchievedMilestonesAsync(fromUserId, milestoneTypeId);
+            await db.SaveChangesAsync();
+        }
+
+        /// <summary>
         /// Uses Dapper to perform an asynchronous query to the default connection.
         /// </summary>
         /// <typeparam name="T"></typeparam>
