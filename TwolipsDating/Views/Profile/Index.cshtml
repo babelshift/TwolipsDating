@@ -667,16 +667,14 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
                                     </div>
                                     <div class="form-group">
                                         <p class="control-label">When were you born?</p>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                @Html.TextBoxFor(m => m.CreateProfile.BirthMonth, new { @class = "form-control", @placeholder = "MM", maxlength = "2" })
-                                            </div>
-                                            <div class="col-md-4">
-                                                @Html.TextBoxFor(m => m.CreateProfile.BirthDayOfMonth, new { @class = "form-control", @placeholder = "DD", maxlength = "2" })
-                                            </div>
-                                            <div class="col-md-4">
-                                                @Html.TextBoxFor(m => m.CreateProfile.BirthYear, new { @class = "form-control", @placeholder = "YYYY", maxlength = "4" })
-                                            </div>
+                                        <div class="col-md-4">
+                                            @Html.TextBoxFor(m => m.CreateProfile.BirthMonth, new { @class = "form-control", @placeholder = "MM", maxlength = "2" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            @Html.TextBoxFor(m => m.CreateProfile.BirthDayOfMonth, new { @class = "form-control", @placeholder = "DD", maxlength = "2" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            @Html.TextBoxFor(m => m.CreateProfile.BirthYear, new { @class = "form-control", @placeholder = "YYYY", maxlength = "4" })
                                         </div>
                                     </div>
                                     <div class="form-group">

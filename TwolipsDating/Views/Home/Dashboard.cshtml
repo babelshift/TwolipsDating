@@ -45,7 +45,17 @@
         </div>
     </div>
 </div>
-
+<div class="ad">
+    <!-- Dashboard - Top - 1 -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-1823005717277864"
+         data-ad-slot="6266655036"
+         data-ad-format="auto"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
 <div class="row">
     @if (Model.IsCurrentUserEmailConfirmed)
     {
@@ -93,18 +103,6 @@
                         <a href="@Url.Action("random", "trivia")"><small>See more questions</small></a>
                     </div>
                 </div>
-            </div>
-            <div class="ad">
-                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <!-- Dashboard - Sidebar - 1 -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1823005717277864"
-                     data-ad-slot="9881746234"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
             </div>
             @if (Model.UsersToFollow != null && Model.UsersToFollow.Count > 0)
             {
@@ -215,6 +213,19 @@
         </div>
     }
 </div>
+<div class="ad">
+    <!-- Dashboard - Sidebar - 1 -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-1823005717277864"
+         data-ad-slot="9881746234"
+         data-ad-format="auto"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
 @section Scripts {
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script src="@Url.Content("~/Scripts/Home/dashboard.js")" type="text/javascript"></script>
 }
