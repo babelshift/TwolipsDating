@@ -126,3 +126,14 @@ delete from @answers;
 insert into @answers(Content, IsCorrect) values('TRUE',1);
 insert into @answers(Content, IsCorrect) values('FALSE',0);
 exec dbo.InsertQuestion 'Geology is important to the study of the history of the Earth. True or false?',1,1, @answers;
+
+-- 8/14/2015
+
+declare @answers as dbo.AnswerType;
+
+delete from @answers;
+insert into @answers(Content, IsCorrect) values('Karl Landsteiner',1);
+insert into @answers(Content, IsCorrect) values('Wilhelm Wundt',0);
+insert into @answers(Content, IsCorrect) values('Gustav Fechner',0);
+insert into @answers(Content, IsCorrect) values('Ernst Weber',0);
+exec dbo.InsertQuestion 'Who discovered the concept of blood types?',4,1, @answers;
