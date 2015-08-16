@@ -688,7 +688,11 @@
     <Content Include="Content\cancel-off.png" />
     <Content Include="Content\cancel-on.png" />
     <Content Include="Content\ekko-lightbox.css" />
+    <Content Include="Content\fb-icon-16.png" />
+    <Content Include="Content\fb-icon-32.png" />
     <Content Include="Content\fb_16.png" />
+    <Content Include="Content\gp-icon-16.png" />
+    <Content Include="Content\gp-icon-32.png" />
     <Content Include="Content\gplus-16.png" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.min.css" />
@@ -699,6 +703,8 @@
     <Content Include="Content\star-half.png" />
     <Content Include="Content\star-off.png" />
     <Content Include="Content\star-on.png" />
+    <Content Include="Content\tw-icon-16.png" />
+    <Content Include="Content\tw-icon-32.png" />
     <Content Include="Content\twolipsico.ico" />
     <Content Include="Content\twolipsicon-white-180x180.png" />
     <Content Include="Content\twolipsicon-white.png" />

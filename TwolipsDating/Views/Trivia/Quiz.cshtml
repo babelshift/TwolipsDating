@@ -1,7 +1,7 @@
 ﻿@model TwolipsDating.ViewModels.QuizViewModel
 
 @{
-    ViewBag.Title = "twolips - " + Model.QuizName;
+    ViewBag.Title = Model.QuizName;
     ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
     ViewBag.ImageUrl = Url.Content("~/Content/twolipsicon-white-180x180.png");
 }
@@ -130,17 +130,17 @@
                             }
                             @Html.HiddenFor(m => Model.Questions[i].QuestionId)
                             <div id="@String.Format("share-question-buttons-popover-{0}", question.QuestionId)" class="hide">
-                                <div class="share-buttons custom-popover-content">
+                                <div class="share-buttons custom-popover-content text-center">
                                     <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
                                        onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-                                        <img src="~/Content/fb_16.png" alt="Share on Facebook" />
+                                        <img src="~/Content/fb-icon-32.png" alt="Share on Facebook" />
                                     </a>
                                     <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(question.Content + " #trivia") + "&url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))">
-                                        <img src="~/Content/bird_blue_16.png" alt="Tweet" />
+                                        <img src="~/Content/tw-icon-32.png" alt="Tweet" />
                                     </a>
                                     <a href="@("https://plus.google.com/share?url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
                                        onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-                                        <img src="~/Content/gplus-16.png" alt="Share on Google+" />
+                                        <img src="~/Content/gp-icon-32.png" alt="Share on Google+" />
                                     </a>
                                 </div>
                             </div>

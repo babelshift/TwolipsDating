@@ -1,7 +1,7 @@
 ﻿@model TwolipsDating.ViewModels.QuestionViewModel
 
 @{
-    ViewBag.Title = "twolips - answering a random question";
+    ViewBag.Title = "answering a random question";
     ViewBag.Description = Model != null && Model.Content != null ? Model.Content : "An error occurred while loading the question";
     ViewBag.ImageUrl = Url.Content("~/Content/twolipsicon-white-180x180.png");
 }
@@ -66,17 +66,17 @@
 </div>
 
 <div id="share-question-popover" class="hide">
-    <div class="share-buttons custom-popover-content">
+    <div class="share-buttons custom-popover-content text-center">
         <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("index", "trivia", null, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-            <img src="~/Content/fb_16.png" alt="Share on Facebook" />
+            <img src="~/Content/fb-icon-32.png" alt="Share on Facebook" />
         </a>
         <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("{0} {1}", Model.Content, "#trivia")) + "&url=" + Url.Action("index", "trivia", null, Request.Url.Scheme))">
-            <img src="~/Content/bird_blue_16.png" alt="Tweet" />
+            <img src="~/Content/tw-icon-32.png" alt="Tweet" />
         </a>
         <a href="@("https://plus.google.com/share?url=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-            <img src="~/Content/gplus-16.png" alt="Share on Google+" />
+            <img src="~/Content/gp-icon-32.png" alt="Share on Google+" />
         </a>
     </div>
 </div>

@@ -1,7 +1,7 @@
 ﻿@model TwolipsDating.ViewModels.HomeViewModel
 
 @{
-    ViewBag.Title = "twolips - free online dating games and entertainment";
+    ViewBag.Title = "free online dating games and entertainment";
     ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
     ViewBag.ImageUrl = Url.Content("~/Content/twolipsicon-white-180x180.png");
 }
@@ -14,7 +14,7 @@
                     <h1>The most entertaining way to meet new people and make new friends.</h1>
                     <h2>Get in free. Start a profile. Attract people. Earn, collect, and trade items.</h2>
                 </div>
-                <div class="col-sm-4 col-md-offset-2">
+                <div class="col-sm-6 col-md-4 col-md-offset-2">
                     @using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = "" }, FormMethod.Post))
                     {
                         @Html.AntiForgeryToken()
@@ -24,22 +24,22 @@
                         <div class="form-group text-center">
                             <div style="margin-bottom: 10px;">
                                 <button style="width: 100%;" type="submit" class="btn btn-info" id="Twitter" name="provider" value="Twitter" title="Log in using your Twitter account">
-                                    <img src="~/Content/bird_blue_16.png" />&nbsp;&nbsp;Twitter
+                                    <img src="~/Content/tw-icon-16.png" />&nbsp;&nbsp;Twitter
                                 </button>
                             </div>
                             <div style="margin-bottom: 10px;">
                                 <button style="width: 100%;" type="submit" class="btn btn-primary" id="Facebook" name="provider" value="Facebook" title="Log in using your Facebook account">
-                                    <img src="~/Content/fb_16.png" />&nbsp;&nbsp;Facebook
+                                    <img src="~/Content/fb-icon-16.png" />&nbsp;&nbsp;Facebook
                                 </button>
                             </div>
                             <button style="width: 100%;" type="submit" class="btn btn-danger" id="Google" name="provider" value="Google" title="Log in using your Google account">
-                                <img src="~/Content/gplus-16.png" />&nbsp;&nbsp;Google
+                                <img src="~/Content/gp-icon-16.png" />&nbsp;&nbsp;Google
                             </button>
                             <small>We don't post anything without your permission</small>
                         </div>
                     }
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-6 col-md-4">
                     <div class="text-center">
                         <h3>Or create an account</h3>
                     </div>

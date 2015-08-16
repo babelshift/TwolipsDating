@@ -1,7 +1,7 @@
 ﻿@model TwolipsDating.ViewModels.ProfileViewModel
 
 @{
-    ViewBag.Title = "twolips - your profile";
+    ViewBag.Title = "your profile";
 }
 
 @Html.HiddenFor(m => m.IsFavoritedByCurrentUser)
@@ -385,30 +385,30 @@
             {
                 if (Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
                 {
-                    <div class="visible-xs" style="display: inline-block; margin: 10px auto; width: 270px">
+                    <div class="visible-xs" style="display: inline-block; margin: 10px auto; width: 215px">
                         <ul class="nav nav-pills">
                             <li role="presentation">
-                                <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
-                                    <i class="glyphicon glyphicon-gift"></i> Send
+                                <button type="button" class="custom-tooltip btn btn-primary" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
+                                    <i class="glyphicon glyphicon-gift"></i>
                                 </button>
                             </li>
                             <li role="presentation">
-                                <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
-                                    <i class="glyphicon glyphicon-envelope"></i> Message
+                                <button type="button" class="custom-tooltip btn btn-primary" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
+                                    <i class="glyphicon glyphicon-envelope"></i>
                                 </button>
                             </li>
                             <li role="presentation">
-                                <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review">
-                                    <i class="glyphicon glyphicon-edit"></i> Review
+                                <button type="button" class="custom-tooltip btn btn-primary" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review">
+                                    <i class="glyphicon glyphicon-edit"></i>
                                 </button>
                             </li>
                             <li role="presentation">
-                                <button class="custom-tooltip button-toggle-ignored btn btn-primary btn-xs" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.ProfileUserId')">
+                                <button class="custom-tooltip button-toggle-ignored btn btn-primary" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.ProfileUserId')">
                                     <i class="button-toggle-ignored-icon glyphicon glyphicon-volume-up"></i>
                                 </button>
                             </li>
                             <li role="presentation">
-                                <button type="button" class="custom-tooltip button-toggle-favorite btn btn-primary btn-xs" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
+                                <button type="button" class="custom-tooltip button-toggle-favorite btn btn-primary" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
                                     <i class="button-toggle-favorite-icon glyphicon glyphicon-heart-empty"></i>
                                 </button>
                             </li>
@@ -456,7 +456,7 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title" style="margin-bottom: 5px;">
+                    <h4 class="panel-title">
                         <i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Suggested tags
                         <small><i class="custom-tooltip glyphicon glyphicon-info-sign" title="Tags that have been suggested by other users based on their perception"></i></small>
                     </h4>

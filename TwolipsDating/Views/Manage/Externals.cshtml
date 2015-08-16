@@ -1,7 +1,7 @@
 ﻿@model TwolipsDating.Models.ManageLoginsViewModel
 @using Microsoft.Owin.Security
 @{
-    ViewBag.Title = "twolips - manage social logins";
+    ViewBag.Title = "manage social logins";
     ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
     ViewBag.ImageUrl = Url.Content("~/Content/twolipsicon-white-180x180.png");
 }
@@ -55,7 +55,7 @@
                                                     <button type="submit" style="width:100%" class="btn btn-danger btn-sm"
                                                             id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
                                                             title="Log in using your @account.LoginProvider account">
-                                                        <img src="~/Content/gplus-16.png" /> @account.LoginProvider
+                                                        <img src="~/Content/gp-icon-16.png" /> @account.LoginProvider
                                                     </button>
                                                 }
                                                 else if (account.LoginProvider == "Twitter")
@@ -63,7 +63,7 @@
                                                     <button type="submit" style="width:100%" class="btn btn-info btn-sm"
                                                             id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
                                                             title="Log in using your @account.LoginProvider account">
-                                                        <img src="~/Content/bird_blue_16.png" /> @account.LoginProvider
+                                                        <img src="~/Content/tw-icon-16.png" /> @account.LoginProvider
                                                     </button>
                                                 }
                                                 else if (account.LoginProvider == "Facebook")
@@ -71,7 +71,7 @@
                                                     <button type="submit" style="width:100%" class="btn btn-primary btn-sm"
                                                             id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
                                                             title="Log in using your @account.LoginProvider account">
-                                                        <img src="~/Content/fb_16.png" /> @account.LoginProvider
+                                                        <img src="~/Content/fb-icon-16.png" /> @account.LoginProvider
                                                     </button>
                                                 }
                                             }
@@ -83,7 +83,7 @@
                                                 <button type="button" style="width:100%" class="btn btn-danger btn-sm"
                                                         id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
                                                         title="You cannot remove your only login provider" disabled="disabled">
-                                                    <img src="~/Content/gplus-16.png" /> @account.LoginProvider
+                                                    <img src="~/Content/gp-icon-16.png" /> @account.LoginProvider
                                                 </button>
                                             }
                                             else if (account.LoginProvider == "Twitter")
@@ -91,7 +91,7 @@
                                                 <button type="button" style="width:100%" class="btn btn-info btn-sm"
                                                         id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
                                                         title="You cannot remove your only login provider" disabled="disabled">
-                                                    <img src="~/Content/bird_blue_16.png" /> @account.LoginProvider
+                                                    <img src="~/Content/tw-icon-16.png" /> @account.LoginProvider
                                                 </button>
                                             }
                                             else if (account.LoginProvider == "Facebook")
@@ -99,7 +99,7 @@
                                                 <button type="button" style="width:100%" class="btn btn-primary btn-sm"
                                                         id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
                                                         title="You cannot remove your only login provider" disabled="disabled">
-                                                    <img src="~/Content/fb_16.png" /> @account.LoginProvider
+                                                    <img src="~/Content/fb-icon-16.png" /> @account.LoginProvider
                                                 </button>
                                             }
                                         }
@@ -128,7 +128,7 @@
                                                 <button type="submit" style="width:100%" class="btn btn-danger btn-sm"
                                                         id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType"
                                                         title="Log in using your @p.Caption account">
-                                                    <img src="~/Content/gplus-16.png" /> @p.AuthenticationType
+                                                    <img src="~/Content/gp-icon-16.png" /> @p.AuthenticationType
                                                 </button>
                                             }
                                             else if (p.AuthenticationType == "Twitter")
@@ -136,7 +136,7 @@
                                                 <button type="submit" style="width:100%" class="btn btn-info btn-sm"
                                                         id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType"
                                                         title="Log in using your @p.Caption account">
-                                                    <img src="~/Content/bird_blue_16.png" /> @p.AuthenticationType
+                                                    <img src="~/Content/tw-icon-16.png" /> @p.AuthenticationType
                                                 </button>
                                             }
                                             else if (p.AuthenticationType == "Facebook")
@@ -144,7 +144,7 @@
                                                 <button type="submit" style="width:100%" class="btn btn-primary btn-sm"
                                                         id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType"
                                                         title="Log in using your @p.Caption account">
-                                                    <img src="~/Content/fb_16.png" /> @p.AuthenticationType
+                                                    <img src="~/Content/fb-icon-16.png" /> @p.AuthenticationType
                                                 </button>
                                             }
                                         </td>

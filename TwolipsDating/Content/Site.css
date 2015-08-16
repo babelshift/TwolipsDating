@@ -409,3 +409,7 @@ input[readonly] {
 .user-to-follow .user-to-follow-location {
     color: #999;
 }
+
+.share-buttons {
+    width: 140px;
+}
