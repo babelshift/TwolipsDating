@@ -51,8 +51,8 @@ namespace TwolipsDating.Migrations
         {
             context.Genders.AddOrUpdate(g => g.Id,
                 new Gender() { Id = 1, Name = "Unknown" },
-                new Gender() { Id = 2, Name = "Man" },
-                new Gender() { Id = 3, Name = "Woman" },
+                new Gender() { Id = 2, Name = "Male" },
+                new Gender() { Id = 3, Name = "Female" },
                 new Gender() { Id = 4, Name = "Genderless" },
                 new Gender() { Id = 5, Name = "Hobbit" },
                 new Gender() { Id = 6, Name = "Robot" },
@@ -66,7 +66,9 @@ namespace TwolipsDating.Migrations
                 new Gender() { Id = 15, Name = "Mystic" },
                 new Gender() { Id = 16, Name = "Augmented" },
                 new Gender() { Id = 17, Name = "Dog" },
-                new Gender() { Id = 18, Name = "Cat" }
+                new Gender() { Id = 18, Name = "Cat" },
+                new Gender() { Id = 19, Name = "Klingon" },
+                new Gender() { Id = 20, Name = "Romulan" }
             );
 
             context.MessageStatuses.AddOrUpdate(m => m.Id,
