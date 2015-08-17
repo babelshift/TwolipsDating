@@ -199,9 +199,14 @@ input[type="checkbox"].input-validation-error {
     height: 48px;
 }
 
-.circular-image-wrapper {
+.list-group-item .circular-image-wrapper {
     width: 48px;
     height: 48px;
+}
+
+.circular-image-wrapper {
+    width: 32px;
+    height: 32px;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -412,4 +417,8 @@ input[readonly] {
 
 .share-buttons {
     width: 140px;
+}
+
+.share-buttons a:hover {
+    text-decoration: none;
 }

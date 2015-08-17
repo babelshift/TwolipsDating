@@ -56,24 +56,24 @@ exec dbo.InsertQuizQuestion 'What is the name of the second Legend of Zelda game
 
 delete from @answers;
 
-insert into @answers(Content, IsCorrect) values('2', 0);
-insert into @answers(Content, IsCorrect) values('3', 0);
-insert into @answers(Content, IsCorrect) values('4', 0);
-insert into @answers(Content, IsCorrect) values('5', 1);
-exec dbo.InsertQuizQuestion 'What is the maximum party size?', 1, 10, @answers;
+insert into @answers(Content, IsCorrect) values('Ganon', 0);
+insert into @answers(Content, IsCorrect) values('Ganondorf', 1);
+insert into @answers(Content, IsCorrect) values('Sheik', 0);
+insert into @answers(Content, IsCorrect) values('Link', 0);
+exec dbo.InsertQuizQuestion 'What is Ganon''s name when in human form?', 3, 10, @answers;
 
 delete from @answers;
 
-insert into @answers(Content, IsCorrect) values('2', 0);
-insert into @answers(Content, IsCorrect) values('4', 0);
-insert into @answers(Content, IsCorrect) values('6', 0);
-insert into @answers(Content, IsCorrect) values('8', 1);
-exec dbo.InsertQuizQuestion 'How many races were included in the original game?', 2, 10, @answers;
+insert into @answers(Content, IsCorrect) values('Top and Bottom', 0);
+insert into @answers(Content, IsCorrect) values('Good and Evil', 0);
+insert into @answers(Content, IsCorrect) values('Dark and Light', 1);
+insert into @answers(Content, IsCorrect) values('Smart and Stupid', 1);
+exec dbo.InsertQuizQuestion 'What is the name of the two opposing worlds/dimensions in A Link to the Past?', 3, 10, @answers;
 
 delete from @answers;
 
-insert into @answers(Content, IsCorrect) values('3', 0);
-insert into @answers(Content, IsCorrect) values('6', 0);
-insert into @answers(Content, IsCorrect) values('9', 1);
-insert into @answers(Content, IsCorrect) values('12', 0);
-exec dbo.InsertQuizQuestion 'How many classes were included in the original game?', 2, 10, @answers;
+insert into @answers(Content, IsCorrect) values('Deku seeds', 1);
+insert into @answers(Content, IsCorrect) values('Pebbles', 0);
+insert into @answers(Content, IsCorrect) values('Tree nuts', 0);
+insert into @answers(Content, IsCorrect) values('Apple cores', 0);
+exec dbo.InsertQuizQuestion 'What is the name of the item that can be used as slingshot ammo in Ocarina of Time?', 4, 10, @answers;

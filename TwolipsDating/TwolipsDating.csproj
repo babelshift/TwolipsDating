@@ -768,6 +768,7 @@
     <Content Include="Scripts\Trivia\random.js" />
     <Content Include="Scripts\Trivia\timed.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="sitemap.xml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

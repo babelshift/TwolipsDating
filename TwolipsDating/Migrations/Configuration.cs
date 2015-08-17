@@ -209,7 +209,7 @@ namespace TwolipsDating.Migrations
                 new Quiz() { Id = 7, Name = "World of Warcraft (Champion)", Description = "This intermediate level quiz should only be completed by regulars of Azeroth.", DateCreated = new DateTime(2015, 8, 12), Points = 15, IsActive = true, ImageFileName = "WoW.jpg" },
                 new Quiz() { Id = 8, Name = "World of Warcraft (High Warlord)", Description = "Can you master the most difficult trivia only for seasoned veterans?", DateCreated = new DateTime(2015, 8, 12), Points = 25, IsActive = true, ImageFileName = "WoW.jpg" },
                 new Quiz() { Id = 9, Name = "Movies and Monsters", Description = "Giant spiders, spooky skeletons, swarms of ants, and a whole lot of stop motion animation.", DateCreated = new DateTime(2015, 8, 14), Points = 20, IsActive = true, ImageFileName = "MonstersAndMovies.jpg" },
-                new Quiz() { Id = 10, Name = "Legend of Zelda", Description = "The triforce can be yours with the completion of this one. OK, so the triforce isn't real, but this quiz is.", DateCreated = new DateTime(2015, 8, 17), Points = 20, IsActive = true });
+                new Quiz() { Id = 10, Name = "Legend of Zelda", Description = "The triforce can be yours with the completion of this one. OK, so the triforce isn't real, but this quiz is.", DateCreated = new DateTime(2015, 8, 17), Points = 20, IsActive = true, ImageFileName = "Zelda.jpg" });
 
             SaveChanges(context);
         }
