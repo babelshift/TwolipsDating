@@ -60,7 +60,7 @@ namespace TwolipsDating.Utilities
             }
             else if (totalMinutesAgo > minutesInHour && totalMinutesAgo < minutesInDay) // between 1 hour and 24 hour
             {
-                timeAgoNumber = (totalMinutesAgo / minutesInHour).ToString("F0");
+                timeAgoNumber = Math.Round((double)totalMinutesAgo / (double)minutesInHour).ToString("F0");
                 timeAgoSpecifier = "hours ago";
             }
             else if (totalMinutesAgo == minutesInDay) // exactly 24 hours (1 day)
@@ -70,7 +70,7 @@ namespace TwolipsDating.Utilities
             }
             else if (totalMinutesAgo > minutesInDay && totalMinutesAgo < minutesInWeek) // greater than 1 day
             {
-                timeAgoNumber = (totalMinutesAgo / minutesInHour / hoursInDay).ToString("F0");
+                timeAgoNumber = Math.Round((double)totalMinutesAgo / (double)minutesInHour / (double)hoursInDay).ToString("F0");
                 timeAgoSpecifier = "days ago";
             }
             else if (totalMinutesAgo >= minutesInWeek)

@@ -434,7 +434,8 @@ namespace TwolipsDating.Controllers
                 QuestionViolation = await GetQuestionViolationViewModelAsync(),
                 AveragePoints = questionListViewModel != null && questionListViewModel.Count > 0 
                     ? (int)Math.Round(questionListViewModel.Average(q => q.Points)) 
-                    : 0
+                    : 0,
+                ImageUrl = quiz.GetImageUrl()
             };
 
             return View(viewModel);

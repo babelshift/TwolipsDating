@@ -96,12 +96,16 @@
                     <div class="list-group">
                         @foreach (var quiz in Model.RecentlyCompletedQuizzes)
                         {
-                            <a href="@Url.Action("index", "profile", new { id = quiz.ProfileId })" class="list-group-item">
-                                <span class="badge" style="margin-top: 7px">@quiz.TimeAgo</span>
+                            <a href="@Url.Action("index", "profile", new { id = quiz.ProfileId })" class="list-group-item" style="padding: 5px 10px">
+                                <span class="badge" style="margin-top: 15px">@quiz.TimeAgo</span>
                                 @Html.Partial("_ProfileImagePartial", quiz.ProfileImagePath)
-                                <p style="display: inline-block; vertical-align: top; margin-top: 4px; font-size: 14px">
-                                    @quiz.UserName &bull; @quiz.QuizName
-                                </p>
+                                <div class="profile-info-wrapper">
+                                    <span class="name-and-location">
+                                        @quiz.UserName
+                                    </span>
+                                    <br />
+                                    <span style="color: #999">@quiz.QuizName</span>
+                                </div>
                             </a>
                         }
                     </div>

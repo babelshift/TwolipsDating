@@ -88,6 +88,7 @@ namespace TwolipsDating.Controllers
             viewModel.TargetProfileId = profileForOtherUser.Id;
             viewModel.TargetUserId = id;
             viewModel.TargetProfileImagePath = profileForOtherUser.GetProfileImagePath();
+            viewModel.TargetApplicationUserId = id;
 
             return View(viewModel);
         }

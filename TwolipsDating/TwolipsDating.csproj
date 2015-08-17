@@ -332,6 +332,14 @@
     <Compile Include="Migrations\201508131354148_RemoveMilestoneIdentity.Designer.cs">
       <DependentUpon>201508131354148_RemoveMilestoneIdentity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508171853350_AddImageUrlToQuiz.cs" />
+    <Compile Include="Migrations\201508171853350_AddImageUrlToQuiz.Designer.cs">
+      <DependentUpon>201508171853350_AddImageUrlToQuiz.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508171856230_AddImageUrlToQuiz2.cs" />
+    <Compile Include="Migrations\201508171856230_AddImageUrlToQuiz2.Designer.cs">
+      <DependentUpon>201508171856230_AddImageUrlToQuiz2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
     <Compile Include="Models\StoreSale.cs" />
@@ -1032,6 +1040,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508131354148_RemoveMilestoneIdentity.resx">
       <DependentUpon>201508131354148_RemoveMilestoneIdentity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508171853350_AddImageUrlToQuiz.resx">
+      <DependentUpon>201508171853350_AddImageUrlToQuiz.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508171856230_AddImageUrlToQuiz2.resx">
+      <DependentUpon>201508171856230_AddImageUrlToQuiz2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

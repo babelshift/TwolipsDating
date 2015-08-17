@@ -15,6 +15,7 @@ namespace TwolipsDating.Models
         public DateTime DateCreated { get; set; }
         public int Points { get; set; }
         public bool IsActive { get; set; }
+        public string ImageFileName { get; set; }
 
         public virtual ICollection<Question> Questions { get; set; }
         public virtual ICollection<CompletedQuiz> CompletedByUsers { get; set; }

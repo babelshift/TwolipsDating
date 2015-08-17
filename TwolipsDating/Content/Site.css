@@ -200,8 +200,8 @@ input[type="checkbox"].input-validation-error {
 }
 
 .circular-image-wrapper {
-    width: 32px;
-    height: 32px;
+    width: 48px;
+    height: 48px;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -298,7 +298,7 @@ input[readonly] {
 .popover-content .popover-scroll {
     max-height: 300px; 
     overflow-y: scroll; 
-    width: 225px;
+    width: 250px;
 }
 
 .popover-content .custom-popover-content {
@@ -309,13 +309,13 @@ input[readonly] {
     margin-bottom: 10px;
 }
 
-.search-result .profile-info-wrapper {
+.profile-info-wrapper {
     display: inline-block;
     vertical-align: top;
     margin-top: 3px;
 }
 
-.search-result .name-and-location {
+.name-and-location {
     font-size: 14px;
 }
 

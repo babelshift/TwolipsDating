@@ -43,6 +43,7 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Tag(string tag)
         {
             string currentUserId = User.Identity.GetUserId();
@@ -80,6 +81,7 @@ namespace TwolipsDating.Controllers
             viewModel.User = tag;
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Quiz(string tag)
         {
             string currentUserId = User.Identity.GetUserId();
