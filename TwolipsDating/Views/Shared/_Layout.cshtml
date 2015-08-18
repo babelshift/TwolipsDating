@@ -47,30 +47,28 @@
                         }
                     }*@
                 <ul id="navbar-main" class="nav navbar-nav visible-md visible-lg">
-                    <li><a href="@Url.Action("index", "profile", new { id = (int?)null })"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
-                    <li><a href="@Url.Action("index", "tags")"><i class="glyphicon glyphicon-tags"></i>&nbsp;Tags</a></li>
-                    <li><a href="@Url.Action("index", "search", new { id = (int?)null })"><i class="glyphicon glyphicon-search"></i>&nbsp;Search</a></li>
+                    <li><a href="@Url.Action("index", "tags")"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tags</a></li>
+                    <li><a href="@Url.Action("index", "search", new { id = (int?)null })"><i class="glyphicon glyphicon-search"></i>&nbsp;&nbsp;Search</a></li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-education"></i>&nbsp;Trivia <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-education"></i>&nbsp;&nbsp;Trivia <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="@Url.Action("index", "trivia")"><i class="glyphicon glyphicon-dashboard"></i>&nbsp;Dashboard</a></li>
-                            <li><a href="@Url.Action("random", "trivia")"><i class="glyphicon glyphicon-random"></i>&nbsp;Random</a></li>
-                            <li><a href="@Url.Action("timed", "trivia")"><i class="glyphicon glyphicon-time"></i>&nbsp;Timed</a></li>
+                            <li><a href="@Url.Action("index", "trivia")"><i class="glyphicon glyphicon-dashboard"></i>&nbsp;&nbsp;Dashboard</a></li>
+                            <li><a href="@Url.Action("random", "trivia")"><i class="glyphicon glyphicon-random"></i>&nbsp;&nbsp;Random</a></li>
+                            <li><a href="@Url.Action("timed", "trivia")"><i class="glyphicon glyphicon-time"></i>&nbsp;&nbsp;Timed</a></li>
                         </ul>
                     </li>
-                    <li><a href="@Url.Action("index", "store")"><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp;Store</a></li>
+                    <li><a href="@Url.Action("index", "store")"><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp;&nbsp;Store</a></li>
                 </ul>
                 <ul id="navbar-main" class="nav navbar-nav visible-xs visible-sm">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-search"></i>&nbsp;Explore <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-search"></i>&nbsp;&nbsp;Explore <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="@Url.Action("index", "profile", new { id = (int?)null })"><i class="glyphicon glyphicon-user"></i>&nbsp;Profile</a></li>
-                            <li><a href="@Url.Action("index", "search")"><i class="glyphicon glyphicon-search"></i>&nbsp;Search</a></li>
-                            <li><a href="@Url.Action("index", "tags")"><i class="glyphicon glyphicon-tags"></i>&nbsp;Tags</a></li>
-                            <li><a href="@Url.Action("conversation", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;Messages</a></li>
-                            <li><a href="@Url.Action("index", "trivia")"><i class="glyphicon glyphicon-education"></i>&nbsp;Trivia</a></li>
-                            <li><a href="@Url.Action("index", "store")"><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp;Store</a></li>
-                            <li><a href="@Url.Action("points", "account")"><i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;Points</a></li>
+                            <li><a href="@Url.Action("index", "tags")"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;Tags</a></li>
+                            <li><a href="@Url.Action("index", "search")"><i class="glyphicon glyphicon-search"></i>&nbsp;&nbsp;Search</a></li>
+                            <li><a href="@Url.Action("conversation", "message")"><i class="glyphicon glyphicon-envelope"></i>&nbsp;&nbsp;Messages</a></li>
+                            <li><a href="@Url.Action("index", "trivia")"><i class="glyphicon glyphicon-education"></i>&nbsp;&nbsp;Trivia</a></li>
+                            <li><a href="@Url.Action("index", "store")"><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp;&nbsp;Store</a></li>
+                            <li><a href="@Url.Action("points", "account")"><i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;&nbsp;Points</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -83,18 +81,18 @@
                                 <i class="glyphicon glyphicon-piggy-bank"></i>&nbsp;&nbsp;<span id="span-points-count">@ViewBag.PointsCount</span>
                             </a>
                         </li>
-                        <li>
+                        <li style="background: @(ViewBag.MessageNotificationCount > 0 ? "#e55f00" : String.Empty)">
                             <a href="@Url.Action("conversation", "message")" title="Unread messages">
                                 <i class="glyphicon glyphicon-envelope"></i>&nbsp;&nbsp;@ViewBag.MessageNotificationCount
                             </a>
                         </li>
-                        <li>
+                        <li style="background: @(ViewBag.GiftNotificationCount > 0 ? "#e55f00" : String.Empty)">
                             <a id="popover-gifts" href="#" title="Received Gifts" data-placement="bottom" data-container="body" data-animation="false">
                                 <i class="glyphicon glyphicon-gift"></i>&nbsp;&nbsp;<span id="span-gift-notification-count">@ViewBag.GiftNotificationCount</span>&nbsp;<span class="caret"></span>
                             </a>
                             <input id="gift-notification-count" type="hidden" value="@ViewBag.GiftNotificationCount" />
                         </li>
-                        <li>
+                        <li style="background: @(ViewBag.AnnouncementNotificationCount > 0 ? "#e55f00" : String.Empty)">
                             <a id="popover-announcements" href="#" title="Announcements" data-toggle="popover" data-placement="bottom" data-container="body" data-animation="false">
                                 <i class="glyphicon glyphicon-bullhorn"></i>&nbsp;&nbsp;@ViewBag.AnnouncementNotificationCount&nbsp;<span class="caret"></span>
                             </a>

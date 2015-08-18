@@ -28,16 +28,16 @@ namespace TwolipsDating
             );
 
             routes.MapRoute(
-                name: "QuizDefaultWithSeoName",
-                url: "{controller}/{action}/{id}/{seoName}",
-                defaults: new { controller = "Trivia", action = "Quiz", id = UrlParameter.Optional },
+                name: "ProfileDefaultWithSeoName",
+                url: "{controller}/{id}/{seoName}",
+                defaults: new { controller = "Profile", action = "Index", id = UrlParameter.Optional },
                 constraints: new { id = @"^\d+$" }
             );
 
             routes.MapRoute(
-                name: "ProfileDefaultWithSeoName",
-                url: "{controller}/{id}/{seoName}",
-                defaults: new { controller = "Profile", action = "Index", id = UrlParameter.Optional },
+                name: "QuizDefaultWithSeoName",
+                url: "{controller}/{action}/{id}/{seoName}",
+                defaults: new { controller = "Trivia", action = "Quiz", id = UrlParameter.Optional },
                 constraints: new { id = @"^\d+$" }
             );
 

@@ -1,7 +1,9 @@
 ﻿@model TwolipsDating.ViewModels.ProfileViewModel
 
 @{
-    ViewBag.Title = "your profile";
+    ViewBag.Title = String.Format("{0}, {1}", Model.UserName, Model.SelectedTitle);
+    ViewBag.ImageUrl = Model.ProfileImagePath;
+    ViewBag.Description = String.Format("Profile for {0}, {1}", Model.UserName, Model.SelectedTitle);
 }
 
 @Html.HiddenFor(m => m.IsFavoritedByCurrentUser)
