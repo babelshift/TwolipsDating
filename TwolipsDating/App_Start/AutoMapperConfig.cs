@@ -37,7 +37,8 @@ namespace TwolipsDating
             Mapper.CreateMap<UserImage, UserImageViewModel>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(source => source.Id))
                 .ForMember(dest => dest.FileName, opts => opts.MapFrom(source => source.FileName))
-                .ForMember(dest => dest.Path, opts => opts.MapFrom(source => String.Format("{0}/{1}", cdn, source.FileName)))
+                .ForMember(dest => dest.Path, opts => opts.MapFrom(source => source.GetPath()))
+                .ForMember(dest => dest.ThumbnailPath, opts => opts.MapFrom(source => source.GetThumbnailPath()))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateUploaded.GetTimeAgo()));
 
             Mapper.CreateMap<UserImage, UploadedImageFeedViewModel>()
@@ -47,7 +48,8 @@ namespace TwolipsDating
                 .ForMember(dest => dest.DateOccurred, opts => opts.MapFrom(source => source.DateUploaded))
                 .ForMember(dest => dest.UploaderProfileId, opts => opts.MapFrom(source => source.ApplicationUser.Profile.Id))
                 .ForMember(dest => dest.UploaderUserId, opts => opts.MapFrom(source => source.ApplicationUser.Id))
-                .AfterMap((source, dest) => dest.UploadedImagesPaths = new List<string> { String.Format("{0}/{1}", cdn, source.FileName) });
+                .ForMember(dest => dest.UploadedImagesPaths, opts => opts.UseValue(new List<UploadedImageViewModel>()))
+                .AfterMap((source, dest) => dest.UploadedImagesPaths.Add(new UploadedImageViewModel() { Path = source.GetPath(), ThumbnailPath = source.GetThumbnailPath() }));
 
             Mapper.CreateMap<Message, MessageFeedViewModel>()
                 .ForMember(dest => dest.SenderUserName, opts => opts.MapFrom(source => source.SenderApplicationUser.UserName))
@@ -135,7 +137,7 @@ namespace TwolipsDating
             Mapper.CreateMap<Quiz, QuizOverviewViewModel>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(source => source.Id))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(source => source.Name))
-                .ForMember(dest => dest.AveragePoints, opts => opts.MapFrom(source => 
+                .ForMember(dest => dest.AveragePoints, opts => opts.MapFrom(source =>
                     source.Questions != null && source.Questions.Count > 0 ? (int)Math.Round(source.Questions.Average(x => x.Points)) : 0));
 
             Mapper.CreateMap<StoreItem, StoreItemViewModel>()

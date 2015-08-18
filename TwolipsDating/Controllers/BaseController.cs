@@ -19,7 +19,6 @@ namespace TwolipsDating.Controllers
     {
         #region Members
 
-        private readonly string cdn = ConfigurationManager.AppSettings["cdnUrl"];
         private ProfileService profileService = new ProfileService();
         private NotificationService notificationService = new NotificationService();
         private ApplicationUserManager userManager;

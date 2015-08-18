@@ -351,6 +351,7 @@
     </Compile>
     <Compile Include="Utilities\QuizExtensions.cs" />
     <Compile Include="Utilities\StoreItemExtensions.cs" />
+    <Compile Include="Utilities\UserImageExtensions.cs" />
     <Compile Include="ViewModels\QuizSearchResultViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
@@ -667,6 +668,7 @@
     <Compile Include="ViewModels\TagViewModel.cs" />
     <Compile Include="ViewModels\TitleViewModel.cs" />
     <Compile Include="ViewModels\TriviaMenuViewModel.cs" />
+    <Compile Include="ViewModels\UploadedImageViewModel.cs" />
     <Compile Include="ViewModels\UploadedImageFeedViewModel.cs" />
     <Compile Include="ViewModels\UploadImageViewModel.cs" />
     <Compile Include="ViewModels\UserAnsweredQuestionCorrectlyViewModel.cs" />

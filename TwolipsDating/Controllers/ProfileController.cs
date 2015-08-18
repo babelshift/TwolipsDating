@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Microsoft.Azure;
-using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
@@ -11,6 +10,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using TwolipsDating.Business;
 using TwolipsDating.Models;
@@ -26,7 +27,7 @@ namespace TwolipsDating.Controllers
         private UserService userService = new UserService();
         private ViolationService violationService = new ViolationService();
 
-        #endregion
+        #endregion Members
 
         #region Toggle Favorite and Ignore
 
@@ -97,7 +98,7 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        #endregion
+        #endregion Toggle Favorite and Ignore
 
         #region Suggest Tags
 
@@ -152,7 +153,7 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        #endregion
+        #endregion Suggest Tags
 
         #region Send Gifts
 
@@ -266,7 +267,7 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        #endregion
+        #endregion Send Gifts
 
         #region Send Messages
 
@@ -321,7 +322,7 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        #endregion
+        #endregion Send Messages
 
         #region Write Reviews
 
@@ -377,7 +378,7 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        #endregion
+        #endregion Write Reviews
 
         #region Manage Image Uploads
 
@@ -440,8 +441,8 @@ namespace TwolipsDating.Controllers
         }
 
         /// <summary>
-        /// Uploads multiple images from a user's selection. 
-        /// Does nothing if attempting to upload to someone else's profile. 
+        /// Uploads multiple images from a user's selection.
+        /// Does nothing if attempting to upload to someone else's profile.
         /// Does nothing if the current user's email is not confirmed.
         /// Does nothing if attempting to upload non image files.
         /// This will upload the image reference in Azure SQL Server and the physical file in Azure Storage Blobs.
@@ -480,7 +481,9 @@ namespace TwolipsDating.Controllers
                 try
                 {
                     string fileType = Path.GetExtension(uploadedImage.FileName);
-                    string fileName = String.Format("{0}{1}", Guid.NewGuid(), fileType);
+                    Guid guid = Guid.NewGuid();
+                    string fileName = String.Format("{0}{1}", guid, fileType);
+                    string fileNameThumb = String.Format("{0}_{2}{1}", guid, fileType, "thumb");
 
                     // add the image id to our database
                     int changes = await ProfileService.AddUploadedImageForUserAsync(currentUserId, fileName);
@@ -491,20 +494,20 @@ namespace TwolipsDating.Controllers
                         CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
                         CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
                         CloudBlobContainer container = blobClient.GetContainerReference("twolipsdatingcdn");
-                        CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
 
+                        CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
                         blockBlob.Properties.ContentType = uploadedImage.ContentType;
 
-                        using (var stream = uploadedImage.InputStream)
-                        {
-                            await blockBlob.UploadFromStreamAsync(stream);
-                        }
+                        // upload the full image and return it in case it had to be resized
+                        WebImage image = await UploadFullImageAsync(uploadedImage, blockBlob);
+
+                        // upload the thumbnail of the now possibly resized image
+                        await UploadThumbnailAsync(uploadedImage, fileNameThumb, container, image);
                     }
                     else
                     {
                         Log.Warn(
-                            "UploadImage",
-                            ErrorMessages.UserImageNotUploaded,
+                            "UploadImage", ErrorMessages.UserImageNotUploaded,
                             parameters: new { currentUserId = currentUserId, fileType = fileType, fileName = fileName }
                         );
 
@@ -514,7 +517,6 @@ namespace TwolipsDating.Controllers
                 catch (DbUpdateException e)
                 {
                     Log.Error("UploadImage", e);
-
                     AddError(ErrorMessages.UserImageNotUploaded);
                 }
             }
@@ -522,9 +524,53 @@ namespace TwolipsDating.Controllers
             return RedirectToIndex(new { tab = "pictures" });
         }
 
+        private static async Task UploadThumbnailAsync(System.Web.HttpPostedFileBase uploadedImage, string fileNameThumb, CloudBlobContainer container, WebImage image)
+        {
+            CreateThumbnail(image);
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileNameThumb);
+            blockBlob.Properties.ContentType = uploadedImage.ContentType;
+            byte[] rawImageThumb = image.GetBytes();
+            await blockBlob.UploadFromByteArrayAsync(rawImageThumb, 0, rawImageThumb.Length);
+        }
+
+        private static async Task<WebImage> UploadFullImageAsync(HttpPostedFileBase uploadedImage, CloudBlockBlob blockBlob)
+        {
+            WebImage image = new WebImage(uploadedImage.InputStream);
+
+            // resize the image if it's too big
+            if (image.Width > 1000 || image.Height > 1000)
+            {
+                image = image.Resize(1000, 1000, true);
+                byte[] rawImage = image.GetBytes();
+                await blockBlob.UploadFromByteArrayAsync(rawImage, 0, rawImage.Length);
+            }
+            else
+            {
+                await blockBlob.UploadFromStreamAsync(uploadedImage.InputStream);
+            }
+
+            return image;
+        }
+
+        private static void CreateThumbnail(WebImage image)
+        {
+            image = image.Resize(128, 128, true);
+
+            if (image.Width > image.Height)
+            {
+                int cropAmount = (image.Width - image.Height) / 2;
+                image.Crop(0, cropAmount, 0, cropAmount);
+            }
+            else
+            {
+                int cropAmount = (image.Height - image.Width) / 2;
+                image.Crop(cropAmount, 0, cropAmount, 0);
+            }
+        }
+
         /// <summary>
         /// Changes a user's displayed profile image based on a selected image.
-        /// Does nothing if attempting to change someone else's profile. 
+        /// Does nothing if attempting to change someone else's profile.
         /// Does nothing if the current user's email is not confirmed.
         /// </summary>
         /// <param name="viewModel"></param>
@@ -572,7 +618,7 @@ namespace TwolipsDating.Controllers
             return RedirectToIndex(new { tab = viewModel.ActiveTab });
         }
 
-        #endregion
+        #endregion Manage Image Uploads
 
         #region Index and Show Profile
 
@@ -876,10 +922,10 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
-        #endregion
+        #endregion Index and Show Profile
 
         #region Create Profile
-        
+
         [HttpPost]
         public async Task<ActionResult> Create(ProfileViewModel viewModel)
         {
@@ -942,7 +988,7 @@ namespace TwolipsDating.Controllers
             return RedirectToIndex();
         }
 
-        #endregion
+        #endregion Create Profile
 
         #region Select Title
 
@@ -997,7 +1043,7 @@ namespace TwolipsDating.Controllers
             );
         }
 
-        #endregion
+        #endregion Select Title
 
         /// <summary>
         /// Disposes of all services.
@@ -1013,7 +1059,7 @@ namespace TwolipsDating.Controllers
                     userService = null;
                 }
 
-                if(violationService != null)
+                if (violationService != null)
                 {
                     violationService.Dispose();
                     violationService = null;

@@ -11,6 +11,6 @@ namespace TwolipsDating.ViewModels
         public string UploaderUserName { get; set; }
         public string UploaderProfileImagePath { get; set; }
         public string TimeAgo { get; set; }
-        public IList<string> UploadedImagesPaths { get; set; }
+        public IList<UploadedImageViewModel> UploadedImagesPaths { get; set; }
     }
 }

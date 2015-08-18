@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
 using System.Text.RegularExpressions;
 using TwolipsDating.Models;
 
@@ -41,7 +42,10 @@ namespace TwolipsDating.Utilities
 
         private static string GetImagePath(string fileName)
         {
-            return String.Format("{0}/{1}", cdn, fileName);
+            string realFileName = Path.GetFileNameWithoutExtension(fileName);
+            string fileType = Path.GetExtension(fileName);
+            
+            return String.Format("{0}/{1}_{2}{3}", cdn, realFileName, "thumb", fileType);
         }
 
         public static string GetSEOProfileName(string userName)
