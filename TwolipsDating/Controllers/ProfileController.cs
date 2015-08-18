@@ -395,6 +395,10 @@ namespace TwolipsDating.Controllers
         {
             string currentUserId = User.Identity.GetUserId();
             bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+
+            // look up user that uploaded the image by file name
+            // if the user that uploaded the image isn't the current user, reject
+
             if (profileUserId != currentUserId || !isCurrentUserEmailConfirmed)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
@@ -411,9 +415,10 @@ namespace TwolipsDating.Controllers
                     CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
                     CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
                     CloudBlobContainer container = blobClient.GetContainerReference("twolipsdatingcdn");
-                    CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
 
-                    await blockBlob.DeleteAsync();
+                    await DeleteFullSizeImageAsync(fileName, container);
+
+                    await DeleteThumbnailImageAsync(fileName, container);
 
                     return Json(new { success = true });
                 }
@@ -438,6 +443,21 @@ namespace TwolipsDating.Controllers
 
                 return Json(new { success = false, error = ErrorMessages.UserImageNotDeleted });
             }
+        }
+
+        private static async Task DeleteThumbnailImageAsync(string fileName, CloudBlobContainer container)
+        {
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+            string fileExtension = Path.GetExtension(fileName);
+            string thumbnailName = String.Format("{0}_{1}{2}", fileNameWithoutExtension, "thumb", fileExtension);
+            CloudBlockBlob blockBlobThumbnail = container.GetBlockBlobReference(thumbnailName);
+            await blockBlobThumbnail.DeleteAsync();
+        }
+
+        private static async Task DeleteFullSizeImageAsync(string fileName, CloudBlobContainer container)
+        {
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
+            await blockBlob.DeleteAsync();
         }
 
         /// <summary>
@@ -536,18 +556,16 @@ namespace TwolipsDating.Controllers
         private static async Task<WebImage> UploadFullImageAsync(HttpPostedFileBase uploadedImage, CloudBlockBlob blockBlob)
         {
             WebImage image = new WebImage(uploadedImage.InputStream);
+            byte[] rawImage = image.GetBytes();
 
             // resize the image if it's too big
             if (image.Width > 1000 || image.Height > 1000)
             {
                 image = image.Resize(1000, 1000, true);
-                byte[] rawImage = image.GetBytes();
-                await blockBlob.UploadFromByteArrayAsync(rawImage, 0, rawImage.Length);
+                rawImage = image.GetBytes();
             }
-            else
-            {
-                await blockBlob.UploadFromStreamAsync(uploadedImage.InputStream);
-            }
+
+            await blockBlob.UploadFromByteArrayAsync(rawImage, 0, rawImage.Length);
 
             return image;
         }
