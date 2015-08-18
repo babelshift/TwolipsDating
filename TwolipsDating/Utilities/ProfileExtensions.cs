@@ -10,6 +10,16 @@ namespace TwolipsDating.Utilities
     {
         private static readonly string cdn = ConfigurationManager.AppSettings["cdnUrl"];
 
+        public static string GetProfileImagePath(string fileName)
+        {
+            if (String.IsNullOrEmpty(fileName))
+            {
+                return String.Empty;
+            }
+
+            return GetImagePath(fileName);
+        }
+
         public static string GetProfileImagePath(this Profile profile)
         {
             if (profile != null && profile.UserImage != null)

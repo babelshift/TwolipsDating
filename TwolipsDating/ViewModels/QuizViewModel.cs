@@ -11,6 +11,7 @@ namespace TwolipsDating.ViewModels
         public bool IsAlreadyCompleted { get; set; }
         public int AveragePoints { get; set; }
         public string ImageUrl { get; set; }
+        public int UserScorePercent { get; set; }
 
         public IReadOnlyCollection<UserCompletedQuizViewModel> UsersCompletedQuiz { get; set; }
 

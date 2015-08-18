@@ -3,7 +3,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <h4 class="panel-title">
-            <i class="glyphicon glyphicon-user"></i> Completed recently
+            <i class="glyphicon glyphicon-user"></i> Recently Completed
         </h4>
     </div>
     @if (Model != null && Model.Count > 0)
@@ -11,12 +11,16 @@
         <div class="list-group">
             @foreach (var user in Model)
             {
-                <a href="@Url.Action("index", "profile", new { id = user.ProfileId })" class="list-group-item">
-                    <span class="badge" style="margin-top: 7px">@user.TimeAgo</span>
+                <a href="@Url.Action("index", "profile", new { id = user.ProfileId })" class="list-group-item" style="padding: 5px 10px">
+                    <span class="badge" style="margin-top: 17px">@user.TimeAgo</span>
                     @Html.Partial("_ProfileImagePartial", user.ProfileImagePath)
-                    <p style="display: inline-block; vertical-align: top; margin-top: 4px; font-size: 14px">
-                        @user.UserName
-                    </p>
+                    <div class="profile-info-wrapper">
+                        <span class="name-and-location">
+                            @user.UserName
+                        </span>
+                        <br />
+                        <span style="color: #999">Score: @String.Format("{0}%", user.UserScorePercent)</span>
+                    </div>
                 </a>
             }
         </div>

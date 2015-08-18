@@ -41,26 +41,46 @@
 
 <div class="row">
     <div class="ad">
-        <div style="margin-bottom: 21px;">
-            <!-- Quiz - Top - 1 -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1823005717277864"
-                 data-ad-slot="9186755439"
-                 data-ad-format="auto"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
+        <!-- Quiz - Top - 1 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1823005717277864"
+             data-ad-slot="9186755439"
+             data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
     </div>
     <div class="col-md-8">
         <div class="panel panel-default">
             <div class="panel-body">
                 @if (Model.Questions != null && Model.Questions.Count > 0)
                 {
-                    <h3>@Model.QuizName</h3>
+                    <h3 class="pull-left" style="margin-top: 5px">@Model.QuizName</h3>
+                    <div class="pull-right share-buttons text-right">
+                        <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
+                           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                            <img src="~/Content/fb-icon-32.png" alt="Share on Facebook" />
+                        </a>
+                        @if (Model.IsAlreadyCompleted)
+                        {
+                            <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("I just scored {0}% on the {1} quiz! #trivia", Model.UserScorePercent, Model.QuizName)) + "&url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))">
+                                <img src="~/Content/tw-icon-32.png" alt="Tweet" />
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(Model.QuizDescription + " #trivia") + "&url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))">
+                                <img src="~/Content/tw-icon-32.png" alt="Tweet" />
+                            </a>
+                        }
+                        <a href="@("https://plus.google.com/share?url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
+                           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                            <img src="~/Content/gp-icon-32.png" alt="Share on Google+" />
+                        </a>
+                    </div>
+                    <div class="clearfix"></div>
                     <h4>@Model.QuizDescription</h4>
-
                     using (Html.BeginForm("quiz", "trivia", FormMethod.Post, new { role = "form" }))
                     {
                         if (User.Identity.IsAuthenticated)
@@ -68,7 +88,7 @@
                             if (Model.IsAlreadyCompleted)
                             {
                                 <div id="alert-box" class="alert alert-success">
-                                    <h5>You've completed this quiz. View your selected answers below.</h5>
+                                    <h5>You scored <strong>@String.Format("{0}%", Model.UserScorePercent)</strong>. View your answers below.</h5>
                                 </div>
                             }
                             else
@@ -86,23 +106,30 @@
                         for (int i = 0; i < Model.Questions.Count; i++)
                         {
                             var question = Model.Questions[i];
-                            <p>
+                            <span class="pull-left">
                                 @String.Format("{0}. {1}", i + 1, question.Content)
-                                <button type="button" id="@String.Format("share-question-link-{0}", question.QuestionId)"
-                                        class="share-question-link btn btn-primary btn-xs" data-question-id="@question.QuestionId"
-                                        data-html="true" data-toggle="popover" data-placement="bottom" data-title="Share" data-animation="false">
-                                    <i class="glyphicon glyphicon-share-alt"></i>
-                                </button>
-                                @if (User.Identity.IsAuthenticated)
-                                {
-                                    <a href="#" data-toggle="modal" data-target="#modalQuestionViolation" data-question-id="@question.QuestionId" class="btn btn-default btn-xs">
-                                        <i class="glyphicon glyphicon-flag"></i>
-                                    </a>
-                                }
-                            </p>
+                            </span>
+                            if (User.Identity.IsAuthenticated)
+                            {
+                                <a href="#" data-toggle="modal" data-target="#modalQuestionViolation" data-question-id="@question.QuestionId" class="btn btn-default btn-xs pull-right">
+                                    <i class="glyphicon glyphicon-flag"></i> Report 
+                                </a>
+                            }
+                            <div class="clearfix"></div>
                             foreach (var answer in question.Answers)
                             {
                                 <div class="radio">
+                                    @if (Model.Questions[i].IsAlreadyAnswered)
+                                    {
+                                        if (answer.IsCorrect)
+                                        {
+                                            <span class="text-success"><i class="glyphicon glyphicon-ok"></i></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger"><i class="glyphicon glyphicon-remove"></i></span>
+                                        }
+                                    }
                                     <label>
                                         @if (Model.Questions[i].IsAlreadyAnswered || !User.Identity.IsAuthenticated)
                                         {
@@ -113,37 +140,10 @@
                                             @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId)
                                         }
                                         @answer.Content
-                                        &nbsp;&nbsp;
-                                        @if (Model.Questions[i].IsAlreadyAnswered)
-                                        {
-                                            if (answer.IsCorrect)
-                                            {
-                                                <span class="label label-success">correct</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="label label-danger">incorrect</span>
-                                            }
-                                        }
                                     </label>
                                 </div>
                             }
                             @Html.HiddenFor(m => Model.Questions[i].QuestionId)
-                            <div id="@String.Format("share-question-buttons-popover-{0}", question.QuestionId)" class="hide">
-                                <div class="share-buttons custom-popover-content text-center">
-                                    <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
-                                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-                                        <img src="~/Content/fb-icon-32.png" alt="Share on Facebook" />
-                                    </a>
-                                    <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(question.Content + " #trivia") + "&url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))">
-                                        <img src="~/Content/tw-icon-32.png" alt="Tweet" />
-                                    </a>
-                                    <a href="@("https://plus.google.com/share?url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
-                                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-                                        <img src="~/Content/gp-icon-32.png" alt="Share on Google+" />
-                                    </a>
-                                </div>
-                            </div>
                             <hr />
                         }
 

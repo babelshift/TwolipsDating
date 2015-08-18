@@ -50,8 +50,8 @@ delete from @answers;
 
 insert into @answers(Content, IsCorrect) values('Crossroads', 0)
 insert into @answers(Content, IsCorrect) values('Westboro', 0);
-insert into @answers(Content, IsCorrect) values('Goldshire', 0);
-insert into @answers(Content, IsCorrect) values('Zangarmarsh', 1);
+insert into @answers(Content, IsCorrect) values('Goldshire', 1);
+insert into @answers(Content, IsCorrect) values('Zangarmarsh', 0);
 exec dbo.InsertQuizQuestion 'What is the name of the Human starting area?', 3, 7, @answers;
 
 delete from @answers;

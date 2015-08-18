@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TwolipsDating.Models;
+using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
@@ -384,16 +385,52 @@ namespace TwolipsDating.Business
             return await usersAnsweredCorrectly.ToListAsync();
         }
 
-        internal async Task<IReadOnlyCollection<CompletedQuiz>> GetUsersCompletedQuizAsync(int quizId)
+        internal async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int quizId)
         {
-            var usersCompletedQuiz = from completedQuizzes in db.CompletedQuizzes
-                                     where completedQuizzes.QuizId == quizId
-                                     join users in db.Users on completedQuizzes.UserId equals users.Id
-                                     where users.IsActive
-                                     orderby completedQuizzes.DateCompleted descending
-                                     select completedQuizzes;
+            string sql = @"
+                select 
+	                q.Id,
+	                q.Name QuizName,
+	                u.UserName,
+	                cq.DateCompleted,
+	                ui.FileName ProfileImagePath,
+	                p.Id ProfileId,
+	                count(*) CorrectAnswerCount,
+	                (
+		                select count(*) 
+		                from dbo.QuizQuestions qq2
+		                where qq2.Quiz_Id = q.Id
+	                ) TotalAnswerCount
+                from 
+	                dbo.CompletedQuizs cq
+	                inner join dbo.AspNetUsers u on u.Id = cq.UserId
+	                inner join dbo.Profiles p on p.ApplicationUser_Id = u.Id
+	                left join dbo.UserImages ui on ui.Id = p.UserImageId
+	                inner join dbo.Quizs q on q.Id = cq.QuizId
+	                inner join dbo.QuizQuestions qq on qq.Quiz_Id = q.Id
+	                inner join dbo.AnsweredQuestions aq on aq.UserId = cq.UserId and aq.QuestionId = qq.Question_Id
+	                inner join dbo.Questions qu on qu.Id = aq.QuestionId
+                where 
+	                aq.AnswerId = qu.CorrectAnswerId
+                    and q.Id = @quizId
+                group by
+	                q.Id,
+	                q.Name,
+	                u.UserName,
+	                cq.DateCompleted,
+	                ui.FileName,
+	                p.Id
+                order by
+                    cq.DateCompleted desc";
 
-            return await usersCompletedQuiz.ToListAsync();
+            var results = await QueryAsync<UserCompletedQuizViewModel>(sql, new { quizId = quizId });
+
+            foreach(var viewModel in results)
+            {
+                viewModel.ProfileImagePath = ProfileExtensions.GetProfileImagePath(viewModel.ProfileImagePath);
+            }
+
+            return results.ToList().AsReadOnly();
         }
 
         internal async Task<IReadOnlyCollection<CompletedQuiz>> GetUsersCompletedQuizzesAsync()

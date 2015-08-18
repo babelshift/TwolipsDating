@@ -378,8 +378,7 @@ namespace TwolipsDating.Controllers
 
             bool isAlreadyCompleted = false;
             List<QuestionViewModel> questionListViewModel = new List<QuestionViewModel>();
-
-            List<int> pointsDistribution = new List<int>();
+            int correctAnswerCount = 0;
 
             if (User.Identity.IsAuthenticated)
             {
@@ -396,6 +395,7 @@ namespace TwolipsDating.Controllers
                     var quizQuestions = await triviaService.GetQuizQuestionsAsync(id);
                     questionListViewModel = Mapper.Map<IReadOnlyCollection<Question>, List<QuestionViewModel>>(quizQuestions);
 
+
                     // match up the already selected answers with the questions for this quiz
                     foreach (var questionViewModel in questionListViewModel)
                     {
@@ -403,12 +403,20 @@ namespace TwolipsDating.Controllers
                         questionViewModel.SelectedAnswerId = answeredQuizQuestion.AnswerId;
                         questionViewModel.IsAlreadyAnswered = true;
 
+                        // if the user selected the correct answer
+                        if (questionViewModel.SelectedAnswerId == questionViewModel.CorrectAnswerId)
+                        {
+                            correctAnswerCount++;
+                        }
+
                         // mark the correct answer to show the user
                         foreach (var answer in questionViewModel.Answers)
                         {
                             answer.IsCorrect = (answer.AnswerId == questionViewModel.CorrectAnswerId);
                         }
                     }
+
+
                 }
                 // if it hasn't been completed, get unanswered questions for quiz
                 else
@@ -432,10 +440,11 @@ namespace TwolipsDating.Controllers
                 UsersCompletedQuiz = await GetUsersCompletedQuizAsync(id),
                 Tags = await GetTagsForQuizAsync(id),
                 QuestionViolation = await GetQuestionViolationViewModelAsync(),
-                AveragePoints = questionListViewModel != null && questionListViewModel.Count > 0 
-                    ? (int)Math.Round(questionListViewModel.Average(q => q.Points)) 
+                AveragePoints = questionListViewModel != null && questionListViewModel.Count > 0
+                    ? (int)Math.Round(questionListViewModel.Average(q => q.Points))
                     : 0,
-                ImageUrl = quiz.GetImageUrl()
+                ImageUrl = quiz.GetImageUrl(),
+                UserScorePercent = (int)Math.Round(((double)correctAnswerCount / (double)questionListViewModel.Count) * 100)
             };
 
             return View(viewModel);
@@ -488,7 +497,7 @@ namespace TwolipsDating.Controllers
         private async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int quizId)
         {
             var usersCompletedQuiz = await triviaService.GetUsersCompletedQuizAsync(quizId);
-            return Mapper.Map<IReadOnlyCollection<CompletedQuiz>, IReadOnlyCollection<UserCompletedQuizViewModel>>(usersCompletedQuiz);
+            return usersCompletedQuiz;
         }
 
         /// <summary>
