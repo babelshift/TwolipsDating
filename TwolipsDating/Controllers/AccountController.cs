@@ -205,7 +205,7 @@ namespace TwolipsDating.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("index", "home");
+                    return View("ConfirmEmailSent");
                 }
 
                 AddErrors(result);

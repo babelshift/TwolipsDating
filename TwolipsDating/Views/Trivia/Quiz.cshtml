@@ -53,11 +53,13 @@
     </div>
     <div class="col-md-8">
         <div class="panel panel-default">
-            <div class="panel-body">
+            <div class="panel-body quiz-body">
                 @if (Model.Questions != null && Model.Questions.Count > 0)
                 {
-                    <h3 class="pull-left" style="margin-top: 0">@Model.QuizName</h3>
-                    <div class="pull-right share-buttons text-right">
+                    <div class="col-xs-7 col-sm-9" style="padding-left: 0; padding-right: 0">
+                        <h3 style="margin-top: 0">@Model.QuizName</h3>
+                    </div>
+                    <div class="col-xs-5 col-sm-3 share-buttons text-right" style="padding-left: 0; padding-right: 0">
                         <small style="color: #999">share</small>
                         <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
                            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
@@ -82,6 +84,28 @@
                     </div>
                     <div class="clearfix"></div>
                     <h4 style="margin-top: 0">@Model.QuizDescription</h4>
+                    if (Model.Tags != null && Model.Tags.Count > 0)
+                    {
+                        <i class="glyphicon glyphicon-tags"></i>
+                        @:&nbsp;
+                        <div class="tags" style="display: inline-block">
+                            @foreach (var tag in Model.Tags)
+                            {
+                                <a href="@Url.Action("tag", "search", new { tag = tag.Name })" class="custom-tooltip btn btn-default btn-xs" title="@tag.Description">
+                                    @tag.Name
+                                </a>
+                            }
+                        </div>
+                    }
+
+                    if (!Model.IsAlreadyCompleted)
+                    {
+                        <br />
+                        <i class="glyphicon glyphicon-piggy-bank"></i>
+                        @:&nbsp;
+                        @Html.Partial("_QuizRatingBarPartial", Model.AveragePoints)
+                    }
+
                     using (Html.BeginForm("quiz", "trivia", FormMethod.Post, new { role = "form" }))
                     {
                         if (User.Identity.IsAuthenticated)
@@ -107,14 +131,20 @@
                         for (int i = 0; i < Model.Questions.Count; i++)
                         {
                             var question = Model.Questions[i];
-                            <span class="pull-left">
-                                @String.Format("{0}. {1}", i + 1, question.Content)
-                            </span>
                             if (User.Identity.IsAuthenticated)
                             {
-                                <a href="#" data-toggle="modal" data-target="#modalQuestionViolation" data-question-id="@question.QuestionId" class="btn btn-default btn-xs pull-right">
-                                    <i class="glyphicon glyphicon-flag"></i> Report 
-                                </a>
+                                <div class="col-xs-9" style="padding-left: 0; padding-right: 0">
+                                    @String.Format("{0}. {1}", i + 1, question.Content)
+                                </div>
+                                <div class="col-sm-3" style="padding-left: 0; padding-right: 0">
+                                    <a href="#" data-toggle="modal" data-target="#modalQuestionViolation" data-question-id="@question.QuestionId" class="btn btn-default btn-xs pull-right">
+                                        <i class="glyphicon glyphicon-flag"></i> Report
+                                    </a>
+                                </div>
+                            }
+                            else
+                            {
+                                @String.Format("{0}. {1}", i + 1, question.Content)
                             }
                             <div class="clearfix"></div>
                             foreach (var answer in question.Answers)
@@ -166,28 +196,30 @@
             </div>
         </div>
     </div>
+
     <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <i class="glyphicon glyphicon-piggy-bank"></i> Bonus points
-                    <small>
-                        <i title="Completing this quiz with a high score will award bonus points"
-                           class="custom-tooltip glyphicon glyphicon-info-sign"></i>
-                    </small>
-                </h4>
-            </div>
-            @if (Model != null)
-            {
-                <div class="panel-body">
-                    @Html.Partial("_QuizRatingBarPartial", Model.AveragePoints)
-                </div>
-            }
-        </div>
         @if (Model != null)
         {
-            @Html.Partial("_SidebarTagsForQuiz", Model.Tags)
+            @Html.Partial("_SidebarOthersCompletedQuizPartial", Model.UsersCompletedQuiz)
         }
+        @*
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="glyphicon glyphicon-piggy-bank"></i> Bonus points
+                        <small>
+                            <i title="Completing this quiz with a high score will award bonus points"
+                               class="custom-tooltip glyphicon glyphicon-info-sign"></i>
+                        </small>
+                    </h4>
+                </div>
+                @if (Model != null)
+                {
+                    <div class="panel-body">
+                        @Html.Partial("_QuizRatingBarPartial", Model.AveragePoints)
+                    </div>
+                }
+            </div>*@
         <div class="ad">
             <!-- Quiz - Sidebar - 1 -->
             <ins class="adsbygoogle"
@@ -199,10 +231,6 @@
                 (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
         </div>
-        @if (Model != null)
-        {
-            @Html.Partial("_SidebarOthersCompletedQuizPartial", Model.UsersCompletedQuiz)
-        }
     </div>
 </div>
 

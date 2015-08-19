@@ -225,6 +225,6 @@ exec dbo.InsertQuestion 'The word ''tomato'' derives from which ancient civiliza
 delete from @answers;
 insert into @answers(Content, IsCorrect) values('Tennessee and Ohio',1);
 insert into @answers(Content, IsCorrect) values('Florida and Georgia',0);
-insert into @answers(Content, IsCorrect) values('Alaska and Hawaii',1);
+insert into @answers(Content, IsCorrect) values('Alaska and Hawaii',0);
 insert into @answers(Content, IsCorrect) values('Kentucky and West Virginia',0);
 exec dbo.InsertQuestion 'The tomato is the state fruit of which two U.S. states?',3,1, @answers;

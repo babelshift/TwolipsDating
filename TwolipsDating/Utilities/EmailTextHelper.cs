@@ -8,7 +8,7 @@ namespace TwolipsDating.Utilities
         {
             public const string Subject = "Confirm your twolips dating account";
 
-            private const string Body = @"<img src=""http://www.twolipsdating.com/Content/twolipsicon-white-180x180.png"" width=""32"" height=""32"" style=""float: left;"" />
+            private const string Body = @"<img src=""https://www.twolipsdating.com/Content/twolipsicon-white-180x180.png"" width=""32"" height=""32"" style=""float: left;"" />
 <div style=""font-family: Helvetica,Arial,sans-serif; font-size: 24px; margin-left: 35px;"">
     twolips dating - the most entertaining way to meet new people and make new friends.
 </div>

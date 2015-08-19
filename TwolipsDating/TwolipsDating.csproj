@@ -854,6 +854,7 @@
     <Content Include="Views\Search\_QuizRatingBarPartial.cshtml" />
     <Content Include="Views\Trivia\_DashboardQuizRatingBarPartial.cshtml" />
     <Content Include="Views\Home\_QuestionRatingBarPartial.cshtml" />
+    <Content Include="Views\Account\ConfirmEmailSent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

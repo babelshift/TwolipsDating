@@ -424,3 +424,5 @@ input[readonly] {
 .share-buttons a:hover {
     text-decoration: none;
 }
+
+.quiz-body hr { margin-top: 5px; margin-bottom: 10px; }

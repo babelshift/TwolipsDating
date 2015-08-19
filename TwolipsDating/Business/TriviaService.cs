@@ -178,7 +178,7 @@ namespace TwolipsDating.Business
             foreach (var tag in tagsForAnsweredQuestions)
             {
                 // user gets a tag award for every 25 points per tag-related question, this is how many should be present
-                int supposedTagAwardCount = (int)Math.Round((double)tag.Points / 25.0);
+                int supposedTagAwardCount = tag.Points / 25;
 
                 // get the actual number of awarded tags of this type for the user
                 int actualTagAwardCount = await GetUsersAwardedTagCountForTag(profileId, tag.TagId);
