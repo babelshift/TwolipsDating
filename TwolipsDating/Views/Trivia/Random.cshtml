@@ -64,22 +64,6 @@
     </div>
 </div>
 
-<div id="share-question-popover" class="hide">
-    <div class="share-buttons custom-popover-content text-center">
-        <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("index", "trivia", null, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
-           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-            <img src="~/Content/fb-icon-32.png" alt="Share on Facebook" />
-        </a>
-        <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("{0} {1}", Model.Content, "#trivia")) + "&url=" + Url.Action("index", "trivia", null, Request.Url.Scheme))">
-            <img src="~/Content/tw-icon-32.png" alt="Tweet" />
-        </a>
-        <a href="@("https://plus.google.com/share?url=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
-           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-            <img src="~/Content/gp-icon-32.png" alt="Share on Google+" />
-        </a>
-    </div>
-</div>
-
 @section Scripts {
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script src="@Url.Content("~/Scripts/Trivia/random.js")" type="text/javascript"></script>

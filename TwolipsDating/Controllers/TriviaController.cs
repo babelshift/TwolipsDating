@@ -102,8 +102,7 @@ namespace TwolipsDating.Controllers
         /// <returns></returns>
         private async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizzesAsync()
         {
-            var usersCompletedQuiz = await triviaService.GetUsersCompletedQuizzesAsync();
-            return Mapper.Map<IReadOnlyCollection<CompletedQuiz>, IReadOnlyCollection<UserCompletedQuizViewModel>>(usersCompletedQuiz);
+            return await triviaService.GetUsersCompletedQuizzesAsync();
         }
 
         #endregion

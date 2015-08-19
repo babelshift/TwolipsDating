@@ -56,7 +56,7 @@
             <div class="panel-body">
                 @if (Model.Questions != null && Model.Questions.Count > 0)
                 {
-                    <h3 class="pull-left" style="margin-top: 5px">@Model.QuizName</h3>
+                    <h3 class="pull-left" style="margin-top: 0">@Model.QuizName</h3>
                     <div class="pull-right share-buttons text-right">
                         <small style="color: #999">share</small>
                         <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
@@ -81,7 +81,7 @@
                         </a>
                     </div>
                     <div class="clearfix"></div>
-                    <h4>@Model.QuizDescription</h4>
+                    <h4 style="margin-top: 0">@Model.QuizDescription</h4>
                     using (Html.BeginForm("quiz", "trivia", FormMethod.Post, new { role = "form" }))
                     {
                         if (User.Identity.IsAuthenticated)

@@ -1,11 +1,4 @@
 ﻿$(document).ready(function () {
-    setupPopoverWithContent("#share-question-link", function () {
-        var shareButtonsDiv = "#share-question-popover";
-        var clone = $(shareButtonsDiv).clone(true);
-        var cloneUnhide = clone.removeClass('hide');
-        return cloneUnhide.html();
-    });
-
     $(".answer-link").on("click", function (e) {
         onSubmitAnswer(e, this);
     });

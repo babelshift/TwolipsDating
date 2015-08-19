@@ -385,10 +385,10 @@ namespace TwolipsDating.Business
             return await usersAnsweredCorrectly.ToListAsync();
         }
 
-        internal async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int quizId)
+        internal async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int? quizId = null)
         {
-            string sql = @"
-                select 
+            string sql = String.Format(@"
+                select top 10
 	                q.Id,
 	                q.Name QuizName,
 	                u.UserName,
@@ -412,7 +412,7 @@ namespace TwolipsDating.Business
 	                inner join dbo.Questions qu on qu.Id = aq.QuestionId
                 where 
 	                aq.AnswerId = qu.CorrectAnswerId
-                    and q.Id = @quizId
+                    {0}
                 group by
 	                q.Id,
 	                q.Name,
@@ -421,9 +421,19 @@ namespace TwolipsDating.Business
 	                ui.FileName,
 	                p.Id
                 order by
-                    cq.DateCompleted desc";
+                    cq.DateCompleted desc"
+                , quizId.HasValue ? "and q.Id = @quizId" : String.Empty);
 
-            var results = await QueryAsync<UserCompletedQuizViewModel>(sql, new { quizId = quizId });
+            IEnumerable<UserCompletedQuizViewModel> results = null;
+
+            if (quizId.HasValue)
+            {
+                results = await QueryAsync<UserCompletedQuizViewModel>(sql, new { quizId = quizId });
+            }
+            else
+            {
+                results = await QueryAsync<UserCompletedQuizViewModel>(sql, new { });
+            }
 
             foreach(var viewModel in results)
             {
@@ -433,15 +443,9 @@ namespace TwolipsDating.Business
             return results.ToList().AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<CompletedQuiz>> GetUsersCompletedQuizzesAsync()
+        internal async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizzesAsync()
         {
-            var usersCompletedQuiz = from completedQuizzes in db.CompletedQuizzes
-                                     join users in db.Users on completedQuizzes.UserId equals users.Id
-                                     where users.IsActive
-                                     orderby completedQuizzes.DateCompleted descending
-                                     select completedQuizzes;
-
-            return await usersCompletedQuiz.ToListAsync();
+            return await GetUsersCompletedQuizAsync();
         }
 
         internal async Task<IReadOnlyCollection<Tag>> GetTagsForQuestionAsync(int questionId)

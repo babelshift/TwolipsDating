@@ -315,6 +315,11 @@ input[readonly] {
     margin-bottom: 10px;
 }
 
+.recently-completed-quizzes .profile-info-wrapper {
+    margin-top: 0;
+    line-height: 15px;
+}
+
 .profile-info-wrapper {
     display: inline-block;
     vertical-align: top;
@@ -414,10 +419,6 @@ input[readonly] {
 
 .user-to-follow .user-to-follow-location {
     color: #999;
-}
-
-.share-buttons {
-    width: 140px;
 }
 
 .share-buttons a:hover {

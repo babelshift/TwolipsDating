@@ -111,7 +111,13 @@ namespace TwolipsDating.Migrations
                 new Tag() { TagId = (int)TagValues.quiet, Name = "quiet", Description = "When tasked with needing to stay silent, they will excel to a professional level." },
                 new Tag() { TagId = (int)TagValues.scientist, Name = "scientist", Description = "Engaged in the systemitc activity to acquire knowledge through observation and experimentation." },
                 new Tag() { TagId = (int)TagValues.top_chef, Name = "top-chef", Description = "Could handily defeat Alton Brown and Anthony Bourdain in a cook off." },
-                new Tag() { TagId = (int)TagValues.chief_executive, Name = "chief-executive", Description = "Likes to run the show, lead the people, and then take the golden parachute when the company explodes." }
+                new Tag() { TagId = (int)TagValues.chief_executive, Name = "chief-executive", Description = "Likes to run the show, lead the people, and then take the golden parachute when the company explodes." },
+                new Tag() { TagId = (int)TagValues.health_nut, Name = "health-nut", Description = "Carefully measures each and every molecule that enters their body just in case one of them might be unhealthy." },
+                new Tag() { TagId = (int)TagValues.doctor, Name = "doctor", Description = "Managed to endure many years of unresponsive advisors and whining students without going insane." },
+                new Tag() { TagId = (int)TagValues.athlete, Name = "athlete", Description = "May or may not have competed in the Olympics. Regardless, he or she is probably fit." },
+                new Tag() { TagId = (int)TagValues.rockstar, Name = "rockstar", Description = "Anyone unlucky enough to get this tag will forever be stuck with an awful business buzzword." },
+                new Tag() { TagId = (int)TagValues.princess, Name = "princess", Description = "Enjoys colored dresses, slippers, and hairstyles. Also constantly bothered by evil family members." },
+                new Tag() { TagId = (int)TagValues.prince, Name = "prince", Description = "Will become the ruler of his family's kingdom regardless of his credentials." }
             );
 
             context.ViolationTypes.AddOrUpdate(v => v.Id,

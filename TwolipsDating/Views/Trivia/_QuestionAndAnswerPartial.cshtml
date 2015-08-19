@@ -21,7 +21,7 @@
         <span class="pull-left">
             @Model.Content
         </span>
-        <span class="pull-right">
+        <div class="pull-right share-buttons text-right">
             <small style="color: #999">share</small>
             <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("index", "trivia", null, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
                onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
@@ -40,7 +40,7 @@
                     <i class="glyphicon glyphicon-flag"></i> Report
                 </a>
             }
-        </span>
+        </div>
     </div>
     <div class="list-group">
         @foreach (var answer in @Model.Answers)

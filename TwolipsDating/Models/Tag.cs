@@ -30,7 +30,13 @@ namespace TwolipsDating.Models
         philosopher = 23,
         quiet = 24,
         drone = 25,
-        chief_executive = 26
+        chief_executive = 26,
+        health_nut = 27,
+        doctor = 28,
+        athlete = 29,
+        rockstar = 30,
+        princess = 31,
+        prince = 32
     }
 
     public class Tag

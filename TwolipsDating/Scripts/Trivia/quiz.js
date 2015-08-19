@@ -1,12 +1,4 @@
 ﻿$(document).ready(function () {
-    setupPopoverWithContent(".share-question-link", function () {
-        var questionId = $(this).attr('data-question-id'); // extract the review ID
-        var shareButtonsDiv = "#share-question-buttons-popover-" + questionId;
-        var clone = $(shareButtonsDiv).clone(true);
-        var cloneUnhide = clone.removeClass('hide');
-        return cloneUnhide.html();
-    });
-
     $('#violation-error').hide();
     $('#violation-success').hide();
 
