@@ -697,6 +697,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\cancel-off.png" />
     <Content Include="Content\cancel-on.png" />
+    <Content Include="Content\CellPhoneImage1.png" />
     <Content Include="Content\ekko-lightbox.css" />
     <Content Include="Content\fb-icon-16.png" />
     <Content Include="Content\fb-icon-32.png" />
@@ -706,6 +707,7 @@
     <Content Include="Content\gplus-16.png" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.min.css" />
+    <Content Include="Content\MonitorImage1.png" />
     <Content Include="Content\Placeholder.png" />
     <Content Include="Content\SplashHowTo1.png" />
     <Content Include="Content\SplashHowTo2.png" />
@@ -713,6 +715,8 @@
     <Content Include="Content\star-half.png" />
     <Content Include="Content\star-off.png" />
     <Content Include="Content\star-on.png" />
+    <Content Include="Content\TabletImage1.png" />
+    <Content Include="Content\TriviaDashboard.png" />
     <Content Include="Content\tw-icon-16.png" />
     <Content Include="Content\tw-icon-32.png" />
     <Content Include="Content\twolipsico.ico" />
@@ -844,7 +848,6 @@
     <Content Include="Views\Trivia\_ModalQuestionViolationPartial.cshtml" />
     <Content Include="Views\Trivia\_SidebarOthersCompletedQuizPartial.cshtml" />
     <Content Include="Views\Trivia\_SidebarTagsForQuestion.cshtml" />
-    <Content Include="Views\Trivia\_SidebarTagsForQuiz.cshtml" />
     <Content Include="Views\Tags\Index.cshtml" />
     <Content Include="Views\Trivia\_QuestionRatingBarPartial.cshtml" />
     <Content Include="Views\Trivia\_QuizRatingBarPartial.cshtml" />

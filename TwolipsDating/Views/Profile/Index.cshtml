@@ -1,7 +1,9 @@
 ﻿@model TwolipsDating.ViewModels.ProfileViewModel
 
 @{
-    ViewBag.Title = Model.IsCurrentUserEmailConfirmed && !String.IsNullOrEmpty(Model.UserName) ? String.Format("{0}, {1}", Model.UserName, Model.SelectedTitle) : "Your profile will be here soon";
+    ViewBag.Title = Model.IsCurrentUserEmailConfirmed && !String.IsNullOrEmpty(Model.UserName) 
+        ? String.Format("{0}, {1}", Model.UserName, !String.IsNullOrEmpty(Model.SelectedTitle) ? Model.SelectedTitle : "Newbie") 
+        : "Your profile will be here soon";
     ViewBag.ImageUrl = Model.ProfileImagePath;
     ViewBag.Description = String.Format("Profile for {0}, {1}", Model.UserName, Model.SelectedTitle);
 }
