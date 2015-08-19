@@ -5,6 +5,7 @@ using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -396,12 +397,33 @@ namespace TwolipsDating.Controllers
             return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
         }
 
+        private async Task<ExternalLoginInfo> GetExternalLoginInfoWorkaroundAsync()
+        {
+            ExternalLoginInfo loginInfo = null;
+
+            var result = await AuthenticationManager.AuthenticateAsync(DefaultAuthenticationTypes.ExternalCookie);
+
+            if (result != null && result.Identity != null)
+            {
+                var idClaim = result.Identity.FindFirst(ClaimTypes.NameIdentifier);
+                if (idClaim != null)
+                {
+                    loginInfo = new ExternalLoginInfo()
+                    {
+                        DefaultUserName = result.Identity.Name == null ? "" : result.Identity.Name.Replace(" ", ""),
+                        Login = new UserLoginInfo(idClaim.Issuer, idClaim.Value)
+                    };
+                }
+            }
+            return loginInfo;
+        }
+
         //
         // GET: /Account/ExternalLoginCallback
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
-            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+            var loginInfo = await GetExternalLoginInfoWorkaroundAsync();
             if (loginInfo == null)
             {
                 return RedirectToAction("Login");

@@ -39,12 +39,15 @@ namespace TwolipsDating.Utilities
         {
             public const string Subject = "Welcome to twolips dating";
 
-            private const string Body = @"<img src=""http://www.twolipsdating.com/Content/twolipsicon-white-180x180.png"" width=""32"" height=""32"" style=""float: left;"" />
+            private const string Body = @"<img src=""https://www.twolipsdating.com/Content/twolipsicon-white-180x180.png"" width=""32"" height=""32"" style=""float: left;"" />
 <div style=""font-family: Helvetica,Arial,sans-serif; font-size: 24px; margin-left: 35px;"">
     twolips dating - the most entertaining way to meet new people and make new friends.
 </div>
 <div style=""font-family: Helvetica,Arial,sans-serif; margin-left: 25px; width: 550px; margin-bottom: 15px;"">
-	<p>Thank you for confirming your email address. Read below about how you can begin participating.</p>
+	<p>Thank you for confirming your email address. Please connect with us on Twitter, Facebook, and Google+ to stay updated.</p>
+	<a href=""http://twitter.com/twolipsdating""><img src=""https://www.twolipsdating.com/Content/tw-icon-32.png"" alt=""Twitter""/></a>
+	<a href=""http://facebook.com/twolipsdating""><img src=""https://www.twolipsdating.com/Content/fb-icon-32.png"" alt=""Facebook""/></a>
+	<a href=""http://plus.google.com/+twolipsdating""><img src=""https://www.twolipsdating.com/Content/gp-icon-32.png"" alt=""Google+""/></a>
     <div style=""color: #4b4b4b;"">
         <h3>Get Started</h3>
 		<div style=""font-size: 12px"">
@@ -65,9 +68,9 @@ namespace TwolipsDating.Utilities
 		<h3>Answer Trivia with Friends</h3>
 		<div style=""font-size: 12px"">
 			<ul>
-				<li>Answer random questions directly from your <a href=""https://www.twolipsdating.com/dashboard"">dashboard</a>.</li>
+				<li>Answer questions and complete quizzes from your <a href=""https://www.twolipsdating.com/dashboard"">trivia dashboard</a>.</li>
 				<li>Visit the <a href=""https://www.twolipsdating.com/trivia"">trivia section</a> to answer random and timed questions.</li>
-				<li>Earn points by answering questions correctly and completing quizzes.</li>
+				<li>Earn points and tags by answering questions correctly and completing quizzes.</li>
 				<li>Show off your knowledge by earning profile tags based on the questions you answer.</li>
 			</ul>
 		</div>
