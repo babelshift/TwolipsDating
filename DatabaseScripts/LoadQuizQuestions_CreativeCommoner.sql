@@ -12,7 +12,7 @@ insert into @answers(Content, IsCorrect) values('Ballet', 1);
 insert into @answers(Content, IsCorrect) values('Modern', 0);
 insert into @answers(Content, IsCorrect) values('Square', 0);
 insert into @answers(Content, IsCorrect) values('Ballroom', 0);
-exec dbo.InsertQuizQuestion 'A tutu is tradtionally worn during which type of dance performance?', 1, 3, @answers;
+exec dbo.InsertQuizQuestion 'A tutu is traditionally worn during which type of dance performance?', 1, 3, @answers;
 
 delete from @answers;
 

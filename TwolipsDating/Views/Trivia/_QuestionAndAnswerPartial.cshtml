@@ -18,20 +18,29 @@
                 </div>
             }
         }
-        <p>
+        <span class="pull-left">
             @Model.Content
-            &nbsp;
-            <button type="button" id="share-question-link" class="btn btn-primary btn-xs"
-                    data-html="true" data-toggle="popover" data-placement="bottom" data-title="Share" data-animation="false">
-                <i class="glyphicon glyphicon-share-alt"></i>
-            </button>
+        </span>
+        <span class="pull-right">
+            <small style="color: #999">share</small>
+            <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("index", "trivia", null, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
+               onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                <img src="~/Content/fb-icon-32.png" alt="Share on Facebook" />
+            </a>
+            <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("{0} {1}", Model.Content, "#trivia")) + "&url=" + Url.Action("index", "trivia", null, Request.Url.Scheme))">
+                <img src="~/Content/tw-icon-32.png" alt="Tweet" />
+            </a>
+            <a href="@("https://plus.google.com/share?url=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
+               onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                <img src="~/Content/gp-icon-32.png" alt="Share on Google+" />
+            </a>
             @if (User.Identity.IsAuthenticated)
             {
                 <a href="#" data-toggle="modal" data-target="#modalQuestionViolation" class="btn btn-default btn-xs">
-                    <i class="glyphicon glyphicon-flag"></i>
+                    <i class="glyphicon glyphicon-flag"></i> Report
                 </a>
             }
-        </p>
+        </span>
     </div>
     <div class="list-group">
         @foreach (var answer in @Model.Answers)

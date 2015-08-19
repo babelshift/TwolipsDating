@@ -572,18 +572,18 @@ namespace TwolipsDating.Controllers
 
         private static void CreateThumbnail(WebImage image)
         {
-            image = image.Resize(128, 128, true);
-
             if (image.Width > image.Height)
             {
                 int cropAmount = (image.Width - image.Height) / 2;
-                image.Crop(0, cropAmount, 0, cropAmount);
+                image = image.Crop(0, cropAmount, 0, cropAmount);
             }
             else
             {
                 int cropAmount = (image.Height - image.Width) / 2;
-                image.Crop(cropAmount, 0, cropAmount, 0);
+                image = image.Crop(cropAmount, 0, cropAmount, 0);
             }
+
+            image.Resize(128, 128, true);
         }
 
         /// <summary>

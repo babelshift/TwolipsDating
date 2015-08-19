@@ -66,9 +66,9 @@ namespace TwolipsDating.Utilities
 		<div style=""font-size: 12px"">
 			<ul>
 				<li>Answer random questions directly from your <a href=""https://www.twolipsdating.com/dashboard"">dashboard</a>.</li>
-				<li>Visit the <a href=""https://www.twolipsdating.com/trivia"">trivia section</a> to answer random and timed questions</li>
-				<li>Earn points by answering questions correctly and completing quizzes</li>
-				<li>Show off your knowledge by earning profile tags based on the questions you answer</li>
+				<li>Visit the <a href=""https://www.twolipsdating.com/trivia"">trivia section</a> to answer random and timed questions.</li>
+				<li>Earn points by answering questions correctly and completing quizzes.</li>
+				<li>Show off your knowledge by earning profile tags based on the questions you answer.</li>
 			</ul>
 		</div>
     </div>
