@@ -60,7 +60,6 @@
                         <h3 style="margin-top: 0">@Model.QuizName</h3>
                     </div>
                     <div class="col-xs-5 col-sm-3 share-buttons text-right" style="padding-left: 0; padding-right: 0">
-                        <small style="color: #999">share</small>
                         <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
                            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
                             <img src="~/Content/fb-icon-32.png" alt="Share on Facebook" />
