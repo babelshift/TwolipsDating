@@ -217,7 +217,8 @@ namespace TwolipsDating.Migrations
                 new Quiz() { Id = 9, Name = "Movies and Monsters", Description = "Giant spiders, spooky skeletons, swarms of ants, and a whole lot of stop motion animation.", DateCreated = new DateTime(2015, 8, 14), Points = 20, IsActive = true, ImageFileName = "MonstersAndMovies.jpg" },
                 new Quiz() { Id = 10, Name = "Legend of Zelda", Description = "The triforce can be yours with the completion of this one. OK, so the triforce isn't real, but this quiz is.", DateCreated = new DateTime(2015, 8, 17), Points = 20, IsActive = true, ImageFileName = "Zelda.jpg" },
                 new Quiz() { Id = 11, Name = "Movie Quotes", Description = "\"The force will be with you Harry.\" -Gandalf", DateCreated = new DateTime(2015, 8, 18), Points = 20, IsActive = true, ImageFileName = "MovieQuotes.gif" },
-                new Quiz() { Id = 12, Name = "Harry Potter", Description = "Get out your wands and head to Hogwarts. There's a foul smell in the air. Only you can solve this problem.", DateCreated = new DateTime(2015, 8, 18), Points = 20, IsActive = true, ImageFileName = "HarryPotter.jpg" });
+                new Quiz() { Id = 12, Name = "Harry Potter", Description = "Get out your wands and head to Hogwarts. There's a foul smell in the air. Only you can solve this problem.", DateCreated = new DateTime(2015, 8, 18), Points = 20, IsActive = true, ImageFileName = "HarryPotter.jpg" },
+                new Quiz() { Id = 13, Name = "Spaceballs: The Quiz", Description = "Brought to you by the makers of Spaceballs: The Blanket and Spaceballs: The Toilet Paper.", DateCreated = new DateTime(2015, 8, 19), Points = 25, IsActive = true, ImageFileName = "Spaceballs.jpg" });
 
             SaveChanges(context);
         }

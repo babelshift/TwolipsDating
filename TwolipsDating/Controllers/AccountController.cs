@@ -205,6 +205,8 @@ namespace TwolipsDating.Controllers
 
                 if (result.Succeeded)
                 {
+                    await SetNotificationsAsync();
+
                     return View("ConfirmEmailSent");
                 }
 
