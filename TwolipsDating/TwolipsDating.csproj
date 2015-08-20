@@ -699,6 +699,7 @@
     <Content Include="Content\cancel-on.png" />
     <Content Include="Content\CellPhoneImage1.png" />
     <Content Include="Content\ekko-lightbox.css" />
+    <Content Include="Content\EmailConfirmedStar.png" />
     <Content Include="Content\fb-icon-16.png" />
     <Content Include="Content\fb-icon-32.png" />
     <Content Include="Content\fb_16.png" />
@@ -713,6 +714,7 @@
     <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\MailSent.png" />
     <Content Include="Content\MonitorImage1.png" />
+    <Content Include="Content\PasswordResetLock.png" />
     <Content Include="Content\Placeholder.png" />
     <Content Include="Content\SplashHowTo1.png" />
     <Content Include="Content\SplashHowTo2.png" />

@@ -217,6 +217,26 @@ namespace TwolipsDating.Controllers
             return View(model);
         }
 
+        public async Task<ActionResult> SendConfirmEmail()
+        {
+            string userId = User.Identity.GetUserId();
+
+            ApplicationUser user = await UserManager.FindByIdAsync(userId);
+
+            if(user.EmailConfirmed)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                await SendRegistrationConfirmationEmail(user);
+            }
+
+            await SetNotificationsAsync();
+
+            return View("ConfirmEmailSent");
+        }
+
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
