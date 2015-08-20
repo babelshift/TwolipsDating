@@ -705,6 +705,10 @@
     <Content Include="Content\gp-icon-16.png" />
     <Content Include="Content\gp-icon-32.png" />
     <Content Include="Content\gplus-16.png" />
+    <Content Include="Content\green-search-icon-72.png" />
+    <Content Include="Content\green-star-icon-72.png" />
+    <Content Include="Content\green-tag-icon-72.png" />
+    <Content Include="Content\green-talk-icon-72.png" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\MailSent.png" />
