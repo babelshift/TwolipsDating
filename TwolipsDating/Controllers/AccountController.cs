@@ -448,6 +448,8 @@ namespace TwolipsDating.Controllers
             var loginInfo = await GetExternalLoginInfoWorkaroundAsync();
             if (loginInfo == null)
             {
+                Log.Error("External login information is null, returning to Login page.", String.Empty);
+
                 return RedirectToAction("Login");
             }
 

@@ -1,8 +1,8 @@
 ﻿@model TwolipsDating.ViewModels.ProfileViewModel
 
 @{
-    ViewBag.Title = Model.IsCurrentUserEmailConfirmed && !String.IsNullOrEmpty(Model.UserName) 
-        ? String.Format("{0}, {1}", Model.UserName, !String.IsNullOrEmpty(Model.SelectedTitle) ? Model.SelectedTitle : "Newbie") 
+    ViewBag.Title = Model.IsCurrentUserEmailConfirmed && !String.IsNullOrEmpty(Model.UserName)
+        ? String.Format("{0}, {1}", Model.UserName, !String.IsNullOrEmpty(Model.SelectedTitle) ? Model.SelectedTitle : "Newbie")
         : "Your profile will be here soon";
     ViewBag.ImageUrl = Model.ProfileImagePath;
     ViewBag.Description = String.Format("Profile for {0}, {1}", Model.UserName, Model.SelectedTitle);
@@ -475,23 +475,55 @@
                     }
                     @if (Model.SuggestedTags != null && Model.SuggestedTags.Count > 0)
                     {
-                        <div class="tags">
+                        <ul class="list-unstyled">
                             @foreach (var tag in Model.SuggestedTags)
                             {
-                                if (tag.DidUserSuggest)
-                                {
-                                    <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" class="custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
-                                        <span class="badge">@tag.TagCount</span> @tag.TagName
-                                    </a>
-                                }
-                                else
-                                {
-                                    <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" class="custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
-                                        <span class="badge">@tag.TagCount</span> @tag.TagName
-                                    </a>
-                                }
+                                <li class="profile-tag-suggestion-list-item">
+                                    @if (tag.DidUserSuggest)
+                                    {
+                                        <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" style="margin-right: 10px" class="pull-left custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
+                                            <span class="badge">@tag.TagCount</span> @tag.TagName
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" style="margin-right: 10px" class="pull-left custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
+                                            <span class="badge">@tag.TagCount</span> @tag.TagName
+                                        </a>
+                                    }
+                                    <div class="suggesting-users">
+                                        <span class="pull-right" style="margin-left: 9px">
+                                            @foreach (var user in tag.SuggestionUsers)
+                                            {
+                                                <a class="pull-left" style="margin-left: 1px;" href="@Url.Action("index", "profile", new { id = user.UserProfileId })">
+                                                    <img src="@user.UserProfileImagePath" width="24" height="24" />
+                                                </a>
+                                            }
+                                        </span>
+                                        <div class="separator"></div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </li>
                             }
-                        </div>
+                        </ul>
+
+                        @*<div class="tags">
+                                @foreach (var tag in Model.SuggestedTags)
+                                {
+                                    if (tag.DidUserSuggest)
+                                    {
+                                        <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" class="custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
+                                            <span class="badge">@tag.TagCount</span> @tag.TagName
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" class="custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
+                                            <span class="badge">@tag.TagCount</span> @tag.TagName
+                                        </a>
+                                    }
+                                }
+                            </div>*@
                     }
                     else
                     {
@@ -513,6 +545,7 @@
                         <span class="label label-warning"><i class="glyphicon glyphicon-baby-formula"></i></span>
                     *@
                 </div>
+
             </div>
         </div>
         <div class="col-sm-8">

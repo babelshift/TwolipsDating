@@ -439,3 +439,23 @@ input[readonly] {
     vertical-align: middle;
     float: none;
 }
+
+.profile-tag-suggestion-list-item {
+    margin-bottom: 3px;
+}
+
+    .profile-tag-suggestion-list-item .suggesting-users {
+        overflow: hidden;
+    }
+
+        .profile-tag-suggestion-list-item .suggesting-users .separator {
+            margin-top: 12px;
+            border-top: 1px solid #eee;
+            overflow: hidden;
+            display: block;
+        }
+
+        .profile-tag-suggestion-list-item .suggesting-users .user-image {
+            float: left;
+            margin-right: 2px;
+        }

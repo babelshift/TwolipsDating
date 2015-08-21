@@ -205,6 +205,7 @@ namespace TwolipsDating.Business
                              where tag.TagId == tagSuggestion.TagId
                              where tagSuggestion.ProfileId == profileId
                              where tagSuggestion.SuggestingUser.IsActive // only show suggestions from active users
+                             orderby tagSuggestion.DateSuggested descending
                              select new ProfileTagSuggestionViewModel()
                             {
                                 TagId = tag.TagId,
@@ -218,6 +219,7 @@ namespace TwolipsDating.Business
             var secondQuery = from f in firstQuery
                               group f by new { f.TagId, f.TagName, f.TagDescription }
                                   into grouping
+                                  orderby grouping.Count() descending
                                   select new ProfileTagSuggestionViewModel()
                                   {
                                       TagId = grouping.Key.TagId,
@@ -236,7 +238,38 @@ namespace TwolipsDating.Business
                 tag.DidUserSuggest = didUserSuggest;
             }
 
+            var results = secondResults.AsReadOnly();
+
+            foreach(var tag in results)
+            {
+                // get users that suggested the tag for the profile
+                tag.SuggestionUsers = await GetUsersWhoSuggestedTagForProfileAsync(tag.TagId, profileId);
+            }
+
             return secondResults.AsReadOnly();
+        }
+
+        private async Task<IReadOnlyCollection<TagSuggestionUserViewModel>> GetUsersWhoSuggestedTagForProfileAsync(int tagId, int profileId)
+        {
+            var users = from tagSuggestion in db.TagSuggestions
+                        where tagSuggestion.ProfileId == profileId
+                        where tagSuggestion.TagId == tagId
+                        select new TagSuggestionUserViewModel()
+                        {
+                            UserId = tagSuggestion.SuggestingUserId,
+                            UserName = tagSuggestion.SuggestingUser.UserName,
+                            UserProfileId = tagSuggestion.SuggestingUser.Profile.Id,
+                            UserProfileImagePath = tagSuggestion.SuggestingUser.Profile.UserImage != null ? tagSuggestion.SuggestingUser.Profile.UserImage.FileName : String.Empty
+                        };
+
+            var results = (await users.Take(6).ToListAsync()).AsReadOnly();
+
+            foreach(var user in results)
+            {
+                user.UserProfileImagePath = ProfileExtensions.GetProfileImagePath(user.UserProfileImagePath);
+            }
+
+            return results;
         }
 
         /// <summary>
@@ -1208,7 +1241,7 @@ namespace TwolipsDating.Business
 
             List<Profile> randomProfiles = new List<Profile>();
 
-            if(allProfiles == null || allProfiles.Count == 0)
+            if (allProfiles == null || allProfiles.Count == 0)
             {
                 return randomProfiles.AsReadOnly();
             }
