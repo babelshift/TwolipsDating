@@ -14,7 +14,7 @@ namespace TwolipsDating.Utilities
             {
                 if (geoCity.Name == "Unknown")
                 {
-                    return String.Empty;
+                    return "Unknown";
                 }
 
                 if (geoCity.GeoState.GeoCountry.Name == "United States")

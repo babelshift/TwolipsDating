@@ -97,6 +97,7 @@ function onWriteReview(e, obj) {
             if (data.success) {
                 $('#review-success').show();
                 $('#WriteReview_ReviewContent').val('');
+                $('#button-review-write').hide();
             } else {
                 $('#review-error').show();
                 $('#review-error-text').text(data.error);

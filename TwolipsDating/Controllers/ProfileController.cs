@@ -717,6 +717,7 @@ namespace TwolipsDating.Controllers
             viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
             viewModel.CurrentUserId = currentUserId;
             viewModel.AverageRatingValue = reviews.AverageRating();
+            viewModel.ReviewCount = reviews.Count;
             viewModel.ViewMode = ProfileViewModel.ProfileViewMode.ShowProfile;
 
             // tag suggestions and awards
