@@ -25,23 +25,26 @@
         </div>
     </div>
     <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <i class="glyphicon glyphicon-scale"></i> Difficulty rating
-                    <small>
-                        <i title="Answering this question correctly will award points based on difficulty"
-                           class="custom-tooltip glyphicon glyphicon-info-sign"></i>
-                    </small>
-                </h4>
-            </div>
-            @if (Model != null)
-            {
-                <div class="panel-body">
-                    @Html.Partial("_QuestionRatingBarPartial", Model.Points)
+        @if (Model != null && !String.IsNullOrEmpty(Model.Content))
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="glyphicon glyphicon-scale"></i> Difficulty rating
+                        <small>
+                            <i title="Answering this question correctly will award points based on difficulty"
+                               class="custom-tooltip glyphicon glyphicon-info-sign"></i>
+                        </small>
+                    </h4>
                 </div>
-            }
-        </div>
+                @if (Model != null)
+                {
+                    <div class="panel-body">
+                        @Html.Partial("_QuestionRatingBarPartial", Model.Points)
+                    </div>
+                }
+            </div>
+        }
         @if (Model.Tags != null)
         {
             @Html.Partial("_SidebarTagsForQuestion", Model.Tags)

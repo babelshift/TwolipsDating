@@ -1,9 +1,36 @@
 ﻿@model System.Web.Mvc.HandleErrorInfo
 
 @{
-    ViewBag.Title = "500 Internal Server Error";
+    ViewBag.Title = "Uh oh, something broke";
 }
 
-<h3><strong>500 Internal Server Error</strong></h3>
-<h3>Something really bad happened. It probably isn't your fault. Maybe.</h3>
-
+<div class="row">
+    <div class="col-md-8 col-md-offset-2 col-lg-6 col-md-offset-3 col-lg-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="text-center" style="width: 100%">
+                    <img src="~/Content/ErrorGeneric.png" />
+                </div>
+                <h4>Something happened that our servers didn't like. Don't worry, we'll figure it out.</h4>
+                <p>If you need help, connect with us on Twitter, Facebook, and Google+.</p>
+                <div class="row" style="margin-left: 0; margin-right: 0;">
+                    <div class="col-sm-4">
+                        <a href="http://twitter.com/twolipsdating" style="width: 100%;" class="btn btn-info" title="Follow us on Twitter">
+                            <img src="~/Content/tw-icon-16.png" />&nbsp;&nbsp;Twitter
+                        </a>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="http://facebook.com/twolipsdating" style="width: 100%;" type="submit" class="btn btn-primary" title="Like us on Facebook">
+                            <img src="~/Content/fb-icon-16.png" />&nbsp;&nbsp;Facebook
+                        </a>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="http://plus.google.com/+twolipsdating" style="width: 100%;" class="btn btn-danger" title="Follow us on Google+">
+                            <img src="~/Content/gp-icon-16.png" />&nbsp;&nbsp;Google
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

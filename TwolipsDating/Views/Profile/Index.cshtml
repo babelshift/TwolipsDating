@@ -390,7 +390,7 @@
                     @if (Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
                     {
                         <div class="col-sm-2">
-                            <div class="hidden-xs text-right">
+                            <div class="hidden-xs text-right" style="margin-top: 10px">
                                 <div class="btn-group-vertical" role="group">
                                     <button type="button" class="button-toggle-favorite btn btn-default " title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
                                         <i class="button-toggle-favorite-icon glyphicon glyphicon-ok"></i> <span class="button-toggle-favorite-text">Following</span>

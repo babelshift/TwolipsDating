@@ -705,6 +705,7 @@
     <Content Include="Content\CellPhoneImage1.png" />
     <Content Include="Content\ekko-lightbox.css" />
     <Content Include="Content\EmailConfirmedStar.png" />
+    <Content Include="Content\ErrorGeneric.png" />
     <Content Include="Content\fb-icon-16.png" />
     <Content Include="Content\fb-icon-32.png" />
     <Content Include="Content\fb_16.png" />
