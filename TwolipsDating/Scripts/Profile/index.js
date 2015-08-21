@@ -414,17 +414,19 @@ function onToggleFavoriteProfile(e, obj, profileUserId, profileId) {
 
 function toggleFavoriteProfileIcon(isFavorite) {
     if (isFavorite) {
-        $(".button-toggle-favorite-icon").removeClass("glyphicon-heart-empty");
-        $(".button-toggle-favorite-icon").addClass("glyphicon-heart");
-        $(".button-toggle-favorite").removeClass("btn-primary");
-        $(".button-toggle-favorite").addClass("btn-success");
-        $(".button-toggle-favorite").attr("title", "Remove from favorites");
-    } else {
         $(".button-toggle-favorite-icon").removeClass("glyphicon-heart");
-        $(".button-toggle-favorite-icon").addClass("glyphicon-heart-empty");
+        $(".button-toggle-favorite-icon").addClass("glyphicon-ok");
+        $(".button-toggle-favorite").removeClass("btn-default");
+        $(".button-toggle-favorite").addClass("btn-success");
+        $(".button-toggle-favorite").attr("title", "Stop following updates");
+        $(".button-toggle-favorite-text").text("Following");
+    } else {
+        $(".button-toggle-favorite-icon").removeClass("glyphicon-ok");
+        $(".button-toggle-favorite-icon").addClass("glyphicon-heart");
         $(".button-toggle-favorite").removeClass("btn-success");
-        $(".button-toggle-favorite").addClass("btn-primary");
-        $(".button-toggle-favorite").attr("title", "Add to favorites");
+        $(".button-toggle-favorite").addClass("btn-default");
+        $(".button-toggle-favorite").attr("title", "Start following updates");
+        $(".button-toggle-favorite-text").text("Follow");
     }
 }
 
@@ -432,15 +434,17 @@ function toggleIgnoredUserIcon(isIgnored) {
     if (isIgnored) {
         $(".button-toggle-ignored-icon").removeClass("glyphicon-volume-up");
         $(".button-toggle-ignored-icon").addClass("glyphicon-volume-off");
-        $(".button-toggle-ignored").removeClass("btn-primary");
+        $(".button-toggle-ignored").removeClass("btn-default");
         $(".button-toggle-ignored").addClass("btn-danger");
         $(".button-toggle-ignored").attr("title", "Not receiving updates and messages from this user");
+        $(".button-toggle-ignored-text").text("Ignoring");
     } else {
         $(".button-toggle-ignored-icon").removeClass("glyphicon-volume-off");
         $(".button-toggle-ignored-icon").addClass("glyphicon-volume-up");
         $(".button-toggle-ignored").removeClass("btn-danger");
-        $(".button-toggle-ignored").addClass("btn-primary");
+        $(".button-toggle-ignored").addClass("btn-default");
         $(".button-toggle-ignored").attr("title", "Receiving updates and messages from this user");
+        $(".button-toggle-ignored-text").text("Ignore");
     }
 }
 

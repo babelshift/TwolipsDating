@@ -444,6 +444,10 @@ input[readonly] {
     margin-bottom: 3px;
 }
 
+    .profile-tag-suggestion-list-item .profile-tag {
+        margin-right: 10px;
+    }
+
     .profile-tag-suggestion-list-item .suggesting-users {
         overflow: hidden;
     }
@@ -455,7 +459,36 @@ input[readonly] {
             display: block;
         }
 
-        .profile-tag-suggestion-list-item .suggesting-users .user-image {
-            float: left;
-            margin-right: 2px;
+        .profile-tag-suggestion-list-item .suggesting-users .user-images {
+            margin-left: 9px;
         }
+
+            .profile-tag-suggestion-list-item .suggesting-users .user-images .user-image {
+                margin-left: 1px;
+            }
+
+
+@media (max-width: 767px) {
+    .text-center-xs {
+        text-align: center;
+    }
+}
+
+.profile-banner-info {
+    line-height: 12px;
+    font-weight: 300;
+    padding-top: 4px;
+}
+
+    .profile-banner-info .user-name {
+        font-size: 22px;
+        font-weight: 400;
+    }
+
+    .profile-banner-info .rating {
+        font-size: 18px;
+    }
+
+    .profile-banner-info .user-info, .profile-banner-info .user-location, .profile-banner-info .user-title {
+        font-size: 16px;
+    }

@@ -1029,6 +1029,10 @@ namespace TwolipsDating.Models
             modelBuilder.Entity<ApplicationUser>()
                 .Property(a => a.DateLastLogin)
                 .IsRequired();
+
+            modelBuilder.Entity<ApplicationUser>()
+                .Property(a => a.UserName)
+                .HasMaxLength(24);
         }
 
         //private void SetupCityEntity(DbModelBuilder modelBuilder)
@@ -1114,6 +1118,14 @@ namespace TwolipsDating.Models
             modelBuilder.Entity<Profile>()
                 .Property(p => p.Birthday)
                 .IsRequired();
+
+            modelBuilder.Entity<Profile>()
+                .Property(p => p.SelfDescription)
+                .IsRequired();
+
+            modelBuilder.Entity<Profile>()
+                .Property(p => p.SelfDescription)
+                .HasMaxLength(200);
         }
     }
 }

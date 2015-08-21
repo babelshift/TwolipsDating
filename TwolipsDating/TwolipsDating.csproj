@@ -340,6 +340,10 @@
     <Compile Include="Migrations\201508171856230_AddImageUrlToQuiz2.Designer.cs">
       <DependentUpon>201508171856230_AddImageUrlToQuiz2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508211322300_UserNameLengthAndProfileSelfDescription.cs" />
+    <Compile Include="Migrations\201508211322300_UserNameLengthAndProfileSelfDescription.Designer.cs">
+      <DependentUpon>201508211322300_UserNameLengthAndProfileSelfDescription.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
     <Compile Include="Models\StoreSale.cs" />
@@ -1062,6 +1066,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508171856230_AddImageUrlToQuiz2.resx">
       <DependentUpon>201508171856230_AddImageUrlToQuiz2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508211322300_UserNameLengthAndProfileSelfDescription.resx">
+      <DependentUpon>201508211322300_UserNameLengthAndProfileSelfDescription.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

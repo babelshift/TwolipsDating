@@ -19,6 +19,7 @@ namespace TwolipsDating.Models
         public int? GeoCityId { get; set; }
         public int? UserImageId { get; set; }
         public int? SelectedTitleId { get; set; }
+        public string SelfDescription { get; set; }
 
         public virtual UserImage UserImage { get; set; }
         public virtual Gender Gender { get; set; }

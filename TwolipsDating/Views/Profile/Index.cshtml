@@ -1,9 +1,24 @@
 ﻿@model TwolipsDating.ViewModels.ProfileViewModel
 
 @{
-    ViewBag.Title = Model.IsCurrentUserEmailConfirmed && !String.IsNullOrEmpty(Model.UserName)
-        ? String.Format("{0}, {1}", Model.UserName, !String.IsNullOrEmpty(Model.SelectedTitle) ? Model.SelectedTitle : "Newbie")
-        : "Your profile will be here soon";
+    string title = String.Empty;
+    if (User.Identity.IsAuthenticated)
+    {
+        if (Model.IsCurrentUserEmailConfirmed && !String.IsNullOrEmpty(Model.UserName))
+        {
+            title = String.Format("{0}, {1}", Model.UserName, !String.IsNullOrEmpty(Model.SelectedTitle) ? Model.SelectedTitle : "Newbie");
+        }
+        else
+        {
+            title = "Your profile will be here soon";
+        }
+    }
+    else
+    {
+        title = String.Format("{0}, {1}", Model.UserName, !String.IsNullOrEmpty(Model.SelectedTitle) ? Model.SelectedTitle : "Newbie");
+    }
+
+    ViewBag.Title = title;
     ViewBag.ImageUrl = Model.ProfileImagePath;
     ViewBag.Description = String.Format("Profile for {0}, {1}", Model.UserName, Model.SelectedTitle);
 }
@@ -301,18 +316,10 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-4">
-            @if (!User.Identity.IsAuthenticated)
-            {
-                <div class="panel panel-default hidden-sm hidden-md hidden-lg">
-                    <div class="panel-body">
-                        <h5>You are viewing this profile anonymously. You can interact with it by <a href="@Url.Action("login", "account")">logging in</a>.</h5>
-                    </div>
-                </div>
-            }
+        <div class="col-sm-12">
             <div class="panel panel-default">
-                <div class="panel-body text-center">
-                    <div style="display: inline-block; vertical-align: top">
+                <div class="panel-body text-center-xs">
+                    <div class="col-sm-3 col-md-2">
                         @if (User.Identity.IsAuthenticated && Model.CurrentUserId == Model.ProfileUserId)
                         {
                             <a href="#" data-toggle="modal" data-target="#modalProfileImage" data-keyboard="true" title="Change your profile image">
@@ -338,11 +345,32 @@
                             }
                         }
                     </div>
-                    <div style="display: inline-block; vertical-align: top; margin-top: 5px; margin-left: 5px">
-                        <h3 style="margin: 0">
+                    <div class="col-sm-7 col-md-8 profile-banner-info" style="">
+                        <p class="user-name">
                             @Model.UserName
-                        </h3>
-                        <h5 style="margin-top: 5px">
+                        </p>
+                        <p class="rating">
+                            @for (int i = 1; i <= Model.AverageRatingValue; i++)
+                            {
+                                <i class="glyphicon glyphicon-star" style="color: #D08002"></i>
+                            }
+                            @for (int j = 1; j <= 5 - Model.AverageRatingValue; j++)
+                            {
+                                <i class="glyphicon glyphicon-star-empty" style="color: #D08002"></i>
+                            }
+                        </p>
+                        <p class="user-info">
+                            <i class="glyphicon glyphicon-user"></i>
+                            @Model.Age &bull; @Model.Gender
+                        </p>
+                        <p class="user-location">
+                            @if (!String.IsNullOrEmpty(Model.Location))
+                            {
+                                <i class="glyphicon glyphicon-map-marker"></i>
+                                @Model.Location
+                            }
+                        </p>
+                        <p class="user-title">
                             <a id="selected-title" href="#" class="label label-success"
                                data-title="Select your title" data-container="body" data-toggle="popover" data-placement="bottom"
                                data-animation="false">
@@ -355,71 +383,111 @@
                                     @:Newbie
                             }
                             </a>
-                        </h5>
-                        <h5>
-                            @Model.Age &bull; @Model.Gender
-                            @if (!String.IsNullOrEmpty(Model.Location))
-                            {
-                                @:&bull;
-                                @Model.Location
-                            }
-                            <br />
-                            @for (int i = 1; i <= Model.AverageRatingValue; i++)
-                            {
-                                <i class="glyphicon glyphicon-star"></i>
-                            }
-                            @for (int j = 1; j <= 5 - Model.AverageRatingValue; j++)
-                            {
-                                <i class="glyphicon glyphicon-star-empty"></i>
-                            }
-                        </h5>
-                    </div>
-                    @*
-                        <p>
-                        <span style="margin-right: 10px;">
-                        <button class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-heart"></i></button>&nbsp;3472
-                        </span>
-                        <span style="margin-right: 10px;"><button class="btn btn-success btn-xs"><i class="glyphicon glyphicon-thumbs-up"></i></button>&nbsp;51</span>
-                        <button class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-thumbs-down"></i></button>&nbsp;7
                         </p>
-                    *@
+                    </div>
+
+                    @if (Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
+                    {
+                        <div class="col-sm-2">
+                            <div class="hidden-xs text-right">
+                                <div class="btn-group-vertical" role="group">
+                                    <button type="button" class="button-toggle-favorite btn btn-default " title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
+                                        <i class="button-toggle-favorite-icon glyphicon glyphicon-ok"></i> <span class="button-toggle-favorite-text">Following</span>
+                                    </button>
+                                    <button type="button" class="btn btn-default " data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
+                                        <i class="glyphicon glyphicon-comment"></i> Message
+                                    </button>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="glyphicon glyphicon-option-horizontal"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li>
+                                                <button type="button" class="btn btn-default  btn-block" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
+                                                    <i class="glyphicon glyphicon-gift"></i> Gift
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button type="button" class="btn btn-default  btn-block" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review">
+                                                    <i class="glyphicon glyphicon-edit"></i> Review
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button type="button" class="button-toggle-ignored btn btn-default  btn-block" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.ProfileUserId')">
+                                                    <i class="button-toggle-ignored-icon glyphicon glyphicon-volume-up"></i> <span class="button-toggle-ignored-text">Ignoring</span>
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button type="button" class="btn btn-default  btn-block">
+                                                    <i class="glyphicon glyphicon-flag"></i> Report
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    @*
+                                        <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
+                                    *@
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <div class="panel panel-warning hidden-md hidden-lg">
+                    <div class="panel-body text-center">
+                        <a class="btn btn-warning" href="@Url.Action("login", "account")">Login to contact this user</a>
+                    </div>
+                </div>
+            }
             @if (User.Identity.IsAuthenticated)
             {
                 if (Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
                 {
-                    <div class="visible-xs" style="display: inline-block; margin: 10px auto; width: 215px">
-                        <ul class="nav nav-pills">
-                            <li role="presentation">
-                                <button type="button" class="custom-tooltip btn btn-primary" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
-                                    <i class="glyphicon glyphicon-gift"></i>
+                    <div class="visible-xs" style="display: inline-block; margin-bottom: 10px; margin-left: auto; margin-right: auto; width: 260px">
+                        <div class="btn-group">
+                            <button type="button" class="custom-tooltip button-toggle-favorite btn btn-primary" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
+                                <i class="button-toggle-favorite-icon glyphicon glyphicon-heart"></i> <span class="button-toggle-favorite-text">Following</span>
+                            </button>
+                            <button type="button" class="custom-tooltip btn btn-default" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
+                                <i class="glyphicon glyphicon-comment"></i> Message
+                            </button>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="glyphicon glyphicon-option-vertical"></i>
                                 </button>
-                            </li>
-                            <li role="presentation">
-                                <button type="button" class="custom-tooltip btn btn-primary" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
-                                    <i class="glyphicon glyphicon-envelope"></i>
-                                </button>
-                            </li>
-                            <li role="presentation">
-                                <button type="button" class="custom-tooltip btn btn-primary" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review">
-                                    <i class="glyphicon glyphicon-edit"></i>
-                                </button>
-                            </li>
-                            <li role="presentation">
-                                <button class="custom-tooltip button-toggle-ignored btn btn-primary" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.ProfileUserId')">
-                                    <i class="button-toggle-ignored-icon glyphicon glyphicon-volume-up"></i>
-                                </button>
-                            </li>
-                            <li role="presentation">
-                                <button type="button" class="custom-tooltip button-toggle-favorite btn btn-primary" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
-                                    <i class="button-toggle-favorite-icon glyphicon glyphicon-heart-empty"></i>
-                                </button>
-                            </li>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li>
+                                        <button type="button" class="btn btn-default  btn-block" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
+                                            <i class="glyphicon glyphicon-gift"></i> Gift
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button type="button" class="btn btn-default  btn-block" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review">
+                                            <i class="glyphicon glyphicon-edit"></i> Review
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button type="button" class="button-toggle-ignored btn btn-default  btn-block" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.ProfileUserId')">
+                                            <i class="button-toggle-ignored-icon glyphicon glyphicon-volume-up"></i> <span class="button-toggle-ignored-text">Ignoring</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button type="button" class="btn btn-default  btn-block">
+                                            <i class="glyphicon glyphicon-flag"></i> Report
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
                             @*
                                 <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
                             *@
-                        </ul>
+                        </div>
                     </div>
                 }
             }
@@ -470,7 +538,7 @@
                     {
                         <a href="#" style="margin-bottom: 5px" class="btn btn-xs btn-default custom-tooltip" title="Suggest tags to be displayed on this profile"
                            data-toggle="modal" data-target="#modalSuggestTags" data-keyboard="true">
-                            <i class="glyphicon glyphicon-tag"></i> Add
+                            <i class="glyphicon glyphicon-tag"></i> Add &amp; Remove
                         </a>
                     }
                     @if (Model.SuggestedTags != null && Model.SuggestedTags.Count > 0)
@@ -481,24 +549,25 @@
                                 <li class="profile-tag-suggestion-list-item">
                                     @if (tag.DidUserSuggest)
                                     {
-                                        <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" style="margin-right: 10px" class="pull-left custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
+                                        <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" class="profile-tag pull-left custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
                                             <span class="badge">@tag.TagCount</span> @tag.TagName
                                         </a>
                                     }
                                     else
                                     {
-                                        <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" style="margin-right: 10px" class="pull-left custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
+                                        <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" class="profile-tag pull-left custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
                                             <span class="badge">@tag.TagCount</span> @tag.TagName
                                         </a>
                                     }
                                     <div class="suggesting-users">
-                                        <span class="pull-right" style="margin-left: 9px">
+                                        <span class="pull-right user-images">
                                             @foreach (var user in tag.SuggestionUsers)
                                             {
-                                                <a class="pull-left" style="margin-left: 1px;" href="@Url.Action("index", "profile", new { id = user.UserProfileId })">
+                                                <a class="pull-left user-image custom-tooltip" title="@user.UserName" href="@Url.Action("index", "profile", new { id = user.UserProfileId })">
                                                     <img src="@user.UserProfileImagePath" width="24" height="24" />
                                                 </a>
                                             }
+                                            <small><a href="#"><i class="glyphicon glyphicon-triangle-right"></i></a></small>
                                         </span>
                                         <div class="separator"></div>
                                     </div>
@@ -506,24 +575,6 @@
                                 </li>
                             }
                         </ul>
-
-                        @*<div class="tags">
-                                @foreach (var tag in Model.SuggestedTags)
-                                {
-                                    if (tag.DidUserSuggest)
-                                    {
-                                        <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" class="custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
-                                            <span class="badge">@tag.TagCount</span> @tag.TagName
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" class="custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
-                                            <span class="badge">@tag.TagCount</span> @tag.TagName
-                                        </a>
-                                    }
-                                }
-                            </div>*@
                     }
                     else
                     {
@@ -548,54 +599,19 @@
 
             </div>
         </div>
-        <div class="col-sm-8">
+        <div class="col-md-8">
             @if (User.Identity.IsAuthenticated)
             {
-                if (Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
-                {
-                    <div class="pull-right hidden-xs" style="display: inline-block; margin-bottom: 10px">
-                        <ul class="nav nav-pills">
-                            <li role="presentation">
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
-                                    <i class="glyphicon glyphicon-gift"></i>&nbsp;Gift
-                                </button>
-                            </li>
-                            <li role="presentation">
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
-                                    <i class="glyphicon glyphicon-envelope"></i>&nbsp;Message
-                                </button>
-                            </li>
-                            <li role="presentation">
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review">
-                                    <i class="glyphicon glyphicon-edit"></i>&nbsp;Review
-                                </button>
-                            </li>
-                            <li role="presentation">
-                                <button type="button" class="button-toggle-ignored btn btn-primary" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.ProfileUserId')">
-                                    <i class="button-toggle-ignored-icon glyphicon glyphicon-volume-up"></i>
-                                </button>
-                            </li>
-                            <li role="presentation">
-                                <button type="button" class="button-toggle-favorite btn btn-primary" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
-                                    <i class="button-toggle-favorite-icon glyphicon glyphicon-heart-empty"></i>
-                                </button>
-                            </li>
-                            @*
-                                <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
-                            *@
-                        </ul>
-                    </div>
-                }
+
             }
             else
             {
-                <div class="panel panel-default hidden-xs">
-                    <div class="panel-body">
-                        <h4>You are viewing this profile anonymously. You can interact with it by <a href="@Url.Action("login", "account")">logging in</a>.</h4>
+                <div class="panel panel-warning hidden-xs hidden-sm">
+                    <div class="panel-body text-center">
+                        <a class="btn btn-warning" href="@Url.Action("login", "account")">Login to contact this user</a>
                     </div>
                 </div>
             }
-            <div class="clearfix"></div>
             <div class="panel panel-default">
                 <div class="panel-body">
                     <ul class="nav nav-pills">
