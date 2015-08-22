@@ -356,6 +356,9 @@
     <Compile Include="Utilities\QuizExtensions.cs" />
     <Compile Include="Utilities\StoreItemExtensions.cs" />
     <Compile Include="Utilities\UserImageExtensions.cs" />
+    <Compile Include="ViewModels\AchievementFeedViewModel.cs" />
+    <Compile Include="ViewModels\CompletedQuizFeedViewModel.cs" />
+    <Compile Include="ViewModels\GiftReceivedFeedViewModel.cs" />
     <Compile Include="ViewModels\QuizSearchResultViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
@@ -670,6 +673,7 @@
     <Compile Include="ViewModels\StoreTransactionViewModel.cs" />
     <Compile Include="ViewModels\StoreViewModel.cs" />
     <Compile Include="ViewModels\ProfileTagSuggestionUser.cs" />
+    <Compile Include="ViewModels\TagSuggestionReceivedFeedViewModel.cs" />
     <Compile Include="ViewModels\TagViewModel.cs" />
     <Compile Include="ViewModels\TitleViewModel.cs" />
     <Compile Include="ViewModels\TriviaMenuViewModel.cs" />
@@ -875,6 +879,7 @@
     <Content Include="Views\Trivia\_DashboardQuizRatingBarPartial.cshtml" />
     <Content Include="Views\Home\_QuestionRatingBarPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmailSent.cshtml" />
+    <Content Include="Views\Shared\_FeedItemGiftTransactionPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

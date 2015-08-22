@@ -56,5 +56,23 @@ namespace TwolipsDating.Business
             var results = await reviewsWrittenByFavorites.Union(reviewsWrittenAboutFavorites).ToListAsync();
             return results.AsReadOnly();
         }
+
+        internal async Task<IReadOnlyCollection<GiftTransactionLog>> GetRecentFollowerGiftTransactionsAsync(string userId)
+        {
+            var giftsFromUser = from gifts in db.GiftTransactions
+                                   join favoritedProfiles in db.FavoriteProfiles on gifts.FromUser.Profile.Id equals favoritedProfiles.ProfileId
+                                   where favoritedProfiles.UserId == userId
+                                   where gifts.FromUser.IsActive
+                                   select gifts;
+
+            var giftsToUser = from gifts in db.GiftTransactions
+                                   join favoritedProfiles in db.FavoriteProfiles on gifts.ToUser.Profile.Id equals favoritedProfiles.ProfileId
+                                   where favoritedProfiles.UserId == userId
+                                   where gifts.ToUser.IsActive
+                                   select gifts;
+
+            var results = await giftsFromUser.Union(giftsToUser).ToListAsync();
+            return results.AsReadOnly();
+        }
     }
 }

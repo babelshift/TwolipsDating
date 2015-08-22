@@ -78,6 +78,20 @@ namespace TwolipsDating
                 .ForMember(dest => dest.AuthorProfileId, opts => opts.MapFrom(source => source.AuthorUser.Profile.Id))
                 .ForMember(dest => dest.TargetProfileId, opts => opts.MapFrom(source => source.TargetUser.Profile.Id));
 
+            Mapper.CreateMap<GiftTransactionLog, GiftReceivedFeedViewModel>()
+                .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateTransactionOccurred))
+                .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateTransactionOccurred.GetTimeAgo()))
+                .ForMember(dest => dest.GiftDescription, opts => opts.MapFrom(source => source.StoreItem.Description))
+                .ForMember(dest => dest.GiftImagePath, opts => opts.MapFrom(source => source.StoreItem.GetIconPath()))
+                .ForMember(dest => dest.GiftName, opts => opts.MapFrom(source => source.StoreItem.Name))
+                .ForMember(dest => dest.GiftSentCount, opts => opts.MapFrom(source => source.ItemCount))
+                .ForMember(dest => dest.ReceiverUserName, opts => opts.MapFrom(source => source.ToUser.UserName))
+                .ForMember(dest => dest.ReceiverProfileImagePath, opts => opts.MapFrom(source => source.ToUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.ReceiverProfileId, opts => opts.MapFrom(source => source.ToUser.Profile.Id))
+                .ForMember(dest => dest.SenderUserName, opts => opts.MapFrom(source => source.FromUser.UserName))
+                .ForMember(dest => dest.SenderProfileId, opts => opts.MapFrom(source => source.FromUser.Profile.Id))
+                .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.FromUser.Profile.GetProfileImagePath()));
+
             Mapper.CreateMap<Tag, TagViewModel>();
 
             Mapper.CreateMap<Tag, ProfileTagSuggestionViewModel>()

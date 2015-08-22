@@ -41,6 +41,8 @@ namespace TwolipsDating.Controllers
 
                 await AddUploadedImagesToFeedAsync(currentUserId, dashboardItems);
 
+                await AddGiftTransactionsToFeedAsync(currentUserId, dashboardItems);
+
                 await SetNotificationsAsync();
 
                 DashboardViewModel viewModel = new DashboardViewModel();
@@ -66,6 +68,22 @@ namespace TwolipsDating.Controllers
             {
                 HomeViewModel viewModel = new HomeViewModel();
                 return View(String.Empty, "~/Views/Shared/_LayoutSplash.cshtml", viewModel);
+            }
+        }
+
+        private async Task AddGiftTransactionsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
+        {
+            var giftTransactions = await dashboardService.GetRecentFollowerGiftTransactionsAsync(currentUserId);
+            var giftTransactionViewModels = Mapper.Map<IReadOnlyCollection<GiftTransactionLog>, IReadOnlyCollection<GiftReceivedFeedViewModel>>(giftTransactions);
+
+            foreach (var giftTransactionViewModel in giftTransactionViewModels)
+            {
+                dashboardItems.Add(new DashboardItemViewModel()
+                {
+                    ItemType = DashboardFeedItemType.GiftTransaction,
+                    DateOccurred = giftTransactionViewModel.DateSent,
+                    GiftReceivedFeedItem = giftTransactionViewModel
+                });
             }
         }
 

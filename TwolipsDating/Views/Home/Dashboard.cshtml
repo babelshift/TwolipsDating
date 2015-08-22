@@ -149,15 +149,15 @@
             }
         </div>
         <div class="col-md-8">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    @if (Model.Items.Count > 0)
-                    {
-                        for (int i = 0; i < Model.Items.Count; i++)
-                        {
-                            var feedItem = Model.Items[i];
+            @if (Model.Items.Count > 0)
+            {
+                for (int i = 0; i < Model.Items.Count; i++)
+                {
+                    var feedItem = Model.Items[i];
 
-                            if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.Message)
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            @if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.Message)
                             {
                                 Html.RenderPartial("_FeedItemMessagesPartial", feedItem.MessageFeedItem);
                             }
@@ -169,36 +169,39 @@
                             {
                                 Html.RenderPartial("_FeedItemReviewWrittenPartial", feedItem.ReviewWrittenFeedItem);
                             }
-
-                            if (i < Model.Items.Count - 1)
+                            else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.GiftTransaction)
                             {
-                                <hr />
+                                Html.RenderPartial("_FeedItemGiftTransactionPartial", feedItem.GiftReceivedFeedItem);
                             }
-                        }
-                    }
-                    else
-                    {
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
                         <h4>You will start seeing updates here when you send and receive messages or follow user profiles.</h4>
-                    }
-                    @*
-                        <p>
-                            <a href="#">jskiles1</a> completed the challenge <a href="#" class="label label-primary">Bring Out Your Dead</a>
-                            <br />
-                            <small>3 minutes ago</small>
-                        </p>
-                        <p>
-                            <a href="#">jskiles1</a> defeated <a href="#">joanne123</a> in a game of <a href="#" class="label label-primary">Chicken</a>
-                            <br />
-                            <small>5 hours ago</small>
-                        </p>
-                        <p>
-                            <a href="#">jskiles1</a> made an announcement: <strong>all I do is win!</strong>
-                            <br />
-                            <small>7 hours ago</small>
-                        </p>
-                    *@
+                    </div>
                 </div>
-            </div>
+            }
+            @*
+                <p>
+                    <a href="#">jskiles1</a> completed the challenge <a href="#" class="label label-primary">Bring Out Your Dead</a>
+                    <br />
+                    <small>3 minutes ago</small>
+                </p>
+                <p>
+                    <a href="#">jskiles1</a> defeated <a href="#">joanne123</a> in a game of <a href="#" class="label label-primary">Chicken</a>
+                    <br />
+                    <small>5 hours ago</small>
+                </p>
+                <p>
+                    <a href="#">jskiles1</a> made an announcement: <strong>all I do is win!</strong>
+                    <br />
+                    <small>7 hours ago</small>
+                </p>
+            *@
         </div>
     }
     else
@@ -225,6 +228,6 @@
 </div>
 
 @section Scripts {
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script src="@Url.Content("~/Scripts/Home/dashboard.js")" type="text/javascript"></script>
 }
