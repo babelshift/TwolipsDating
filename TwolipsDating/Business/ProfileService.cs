@@ -142,6 +142,7 @@ namespace TwolipsDating.Business
         internal async Task<IReadOnlyCollection<Tag>> GetAllTagsAsync()
         {
             var tags = from tag in db.Tags
+                       orderby tag.Name
                        select tag;
 
             var result = await tags.ToListAsync();

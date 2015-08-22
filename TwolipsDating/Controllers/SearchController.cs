@@ -25,7 +25,7 @@ namespace TwolipsDating.Controllers
         /// <param name="tag"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        public async Task<ActionResult> Index(string user)
+        public async Task<ActionResult> Index(string[] tags)
         {
             string currentUserId = User.Identity.GetUserId();
 
@@ -33,36 +33,32 @@ namespace TwolipsDating.Controllers
 
             SearchResultViewModel viewModel = new SearchResultViewModel();
 
-            if (!String.IsNullOrEmpty(user))
-            {
-                var results = await searchService.SearchProfilesByUserName(user);
+            viewModel.SearchTags = await GetSearchableTags();
 
-                await SetupViewModel(user, currentUserId, viewModel, results);
+            if (tags != null && tags.Length > 0)
+            {
+                var results = await searchService.SearchProfilesByTagNames(tags);
+
+                await SetupViewModel(tags, currentUserId, viewModel, results);
             }
 
             return View(viewModel);
         }
 
-        [AllowAnonymous]
-        public async Task<ActionResult> Tag(string tag)
+        private async Task<Dictionary<string, string>> GetSearchableTags()
         {
-            string currentUserId = User.Identity.GetUserId();
+            var allTags = await ProfileService.GetAllTagsAsync();
+            Dictionary<string, string> d = new Dictionary<string, string>();
 
-            await SetNotificationsAsync();
-
-            SearchResultViewModel viewModel = new SearchResultViewModel();
-
-            if (!String.IsNullOrEmpty(tag))
+            foreach (var tag in allTags)
             {
-                var results = await searchService.SearchProfilesByTagName(tag);
-
-                await SetupViewModel(tag, currentUserId, viewModel, results);
+                d.Add(tag.Name, tag.Name);
             }
 
-            return View(viewModel);
+            return d;
         }
 
-        private async Task SetupViewModel(string tag, string currentUserId, SearchResultViewModel viewModel, IReadOnlyCollection<Models.Profile> results)
+        private async Task SetupViewModel(string[] tags, string currentUserId, SearchResultViewModel viewModel, IReadOnlyCollection<Models.Profile> results)
         {
             viewModel.SearchResults = Mapper.Map<IReadOnlyCollection<TwolipsDating.Models.Profile>, IReadOnlyCollection<ProfileViewModel>>(results);
 
@@ -78,7 +74,11 @@ namespace TwolipsDating.Controllers
                 profileViewModel.SuggestedTags = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profileViewModel.ProfileId);
             }
 
-            viewModel.User = tag;
+            viewModel.Tags = new List<string>();
+            foreach(var tag in tags)
+            {
+                viewModel.Tags.Add(tag);
+            }
         }
 
         [AllowAnonymous]

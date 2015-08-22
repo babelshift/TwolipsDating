@@ -34,6 +34,19 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
+        internal async Task<IReadOnlyCollection<Profile>> SearchProfilesByTagNames(string[] tags)
+        {
+            var results = await (from profiles in db.Profiles
+                                 join tagSuggestions in db.TagSuggestions on profiles.Id equals tagSuggestions.ProfileId
+                                 where tags.Contains(tagSuggestions.Tag.Name)
+                                 where profiles.ApplicationUser.IsActive
+                                 select profiles)
+                                 .Distinct()
+                                 .ToListAsync();
+
+            return results.AsReadOnly();
+        }
+
         internal async Task<IReadOnlyCollection<QuizSearchResultViewModel>> GetQuizzesByTagAsync(string tag)
         {
             Debug.Assert(!String.IsNullOrEmpty(tag));

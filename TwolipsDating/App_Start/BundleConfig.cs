@@ -28,10 +28,14 @@ namespace TwolipsDating
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                     "~/Content/site.css",
-                    "~/Content/ekko-lightbox.css"));
+                    "~/Content/ekko-lightbox.css",
+                    "~/Content/chosen.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/lightbox").Include(
                     "~/Scripts/ekko-lightbox.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/chosen").Include(
+                    "~/Scripts/chosen.jquery.js"));
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862

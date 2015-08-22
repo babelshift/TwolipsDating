@@ -5,8 +5,7 @@ namespace TwolipsDating.ViewModels
     public class SearchResultViewModel
     {
         public IReadOnlyCollection<ProfileViewModel> SearchResults { get; set; }
-
-        public string User { get; set; }
-        public string Tag { get; set; }
+        public List<string> Tags { get; set; }
+        public IDictionary<string, string> SearchTags { get; set; }
     }
 }

@@ -16,18 +16,6 @@ namespace TwolipsDating
             );
 
             routes.MapRoute(
-                name: "SearchByTag",
-                url: "search/tag/{tag}",
-                defaults: new { controller = "Search", action = "Tag" }
-            );
-
-            routes.MapRoute(
-                name: "SearchByUser",
-                url: "search/{user}",
-                defaults: new { controller = "Search", action = "Index"}
-            );
-
-            routes.MapRoute(
                 name: "ProfileDefaultWithSeoName",
                 url: "{controller}/{id}/{seoName}",
                 defaults: new { controller = "Profile", action = "Index", id = UrlParameter.Optional },

@@ -27,11 +27,11 @@ else
         &nbsp;&bull;&nbsp;
         @for (int i = 1; i <= Model.ReviewRatingValue; i++)
         {
-            <i class="glyphicon glyphicon-star"></i>
+            <i class="glyphicon glyphicon-star review-rating-color"></i>
         }
         @for (int j = 1; j <= 5 - Model.ReviewRatingValue; j++)
         {
-            <i class="glyphicon glyphicon-star-empty"></i>
+            <i class="glyphicon glyphicon-star-empty review-rating-color"></i>
         }
         &nbsp;&bull;&nbsp;&nbsp;@Model.TimeAgo
     </small>

@@ -703,6 +703,9 @@
     <Content Include="Content\cancel-off.png" />
     <Content Include="Content\cancel-on.png" />
     <Content Include="Content\CellPhoneImage1.png" />
+    <Content Include="Content\chosen-sprite%402x.png" />
+    <Content Include="Content\chosen-sprite.png" />
+    <Content Include="Content\chosen.css" />
     <Content Include="Content\ekko-lightbox.css" />
     <Content Include="Content\EmailConfirmedStar.png" />
     <Content Include="Content\ErrorGeneric.png" />
@@ -757,6 +760,7 @@
     <Content Include="Scripts\analytics.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\chosen.jquery.js" />
     <Content Include="Scripts\ekko-lightbox.js" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\Home\dashboard.js" />

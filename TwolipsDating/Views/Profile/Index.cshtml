@@ -352,11 +352,11 @@
                         <p class="rating">
                             @for (int i = 1; i <= Model.AverageRatingValue; i++)
                             {
-                                <i class="glyphicon glyphicon-star" style="color: #D08002"></i>
+                                <i class="glyphicon glyphicon-star review-rating-color"></i>
                             }
                             @for (int j = 1; j <= 5 - Model.AverageRatingValue; j++)
                             {
-                                <i class="glyphicon glyphicon-star-empty" style="color: #D08002"></i>
+                                <i class="glyphicon glyphicon-star-empty review-rating-color"></i>
                             }
                             <small>@Model.ReviewCount @(Model.ReviewCount == 1 ? "review" : "reviews")</small>
                         </p>

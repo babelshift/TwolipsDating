@@ -129,7 +129,7 @@
                                     <img class="circular-image" src="@gift.SenderProfileImagePath" />
                                 </div>
                             }
-                            <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 5px;">
+                            <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 5px; max-width: 90px" class="overflow-ellipsis">
                                 <a href="@Url.Action("index", "profile", new { id = gift.SenderProfileId })">@gift.SenderUserName</a>
                             </p>
                             <div class="circular-image-wrapper">
