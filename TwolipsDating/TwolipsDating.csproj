@@ -358,6 +358,7 @@
     <Compile Include="Utilities\UserImageExtensions.cs" />
     <Compile Include="ViewModels\AchievementFeedViewModel.cs" />
     <Compile Include="ViewModels\CompletedQuizFeedViewModel.cs" />
+    <Compile Include="ViewModels\GiftReceivedFeedItemViewModel.cs" />
     <Compile Include="ViewModels\GiftReceivedFeedViewModel.cs" />
     <Compile Include="ViewModels\QuizSearchResultViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
@@ -613,8 +614,8 @@
     <Compile Include="Utilities\LogHelper.cs" />
     <Compile Include="Utilities\ProfileExtensions.cs" />
     <Compile Include="Utilities\ReviewExtensions.cs" />
-    <Compile Include="Utilities\UploadedImageFeedKey.cs" />
-    <Compile Include="Utilities\UserImageListExtensions.cs" />
+    <Compile Include="Utilities\FeedItemKey.cs" />
+    <Compile Include="Utilities\FeedItemExtensions.cs" />
     <Compile Include="ViewModels\ActiveMenuText.cs" />
     <Compile Include="ViewModels\AnswerViewModel.cs" />
     <Compile Include="ViewModels\ChangeProfileImageViewModel.cs" />

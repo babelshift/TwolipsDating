@@ -1,16 +1,16 @@
 ﻿namespace TwolipsDating.Utilities
 {
-    public class UploadedImageFeedKey
+    public class FeedItemKey
     {
         public string UserId { get; set; }
         public string TimeAgo { get; set; }
 
         public override bool Equals(object obj)
         {
-            var uploadedImageFeed = obj as UploadedImageFeedKey;
-            if (uploadedImageFeed != null)
+            var feedItem = obj as FeedItemKey;
+            if (feedItem != null)
             {
-                if (UserId == uploadedImageFeed.UserId && TimeAgo == uploadedImageFeed.TimeAgo)
+                if (UserId == feedItem.UserId && TimeAgo == feedItem.TimeAgo)
                 {
                     return true;
                 }

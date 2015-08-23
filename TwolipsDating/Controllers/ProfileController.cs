@@ -893,7 +893,7 @@ namespace TwolipsDating.Controllers
                 });
             }
 
-            var uploadedImagesConsolidated = uploadedImages.GetConsolidatedImagesForFeed();
+            var uploadedImagesConsolidated = uploadedImages.GetConsolidatedImages();
 
             foreach (var uploadedImage in uploadedImagesConsolidated)
             {

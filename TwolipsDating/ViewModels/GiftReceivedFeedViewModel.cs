@@ -10,14 +10,12 @@ namespace TwolipsDating.ViewModels
         public string SenderUserName { get; set; }
         public int SenderProfileId { get; set; }
         public string SenderProfileImagePath { get; set; }
+        public string SenderUserId { get; set; }
         public string ReceiverUserName { get; set; }
         public int ReceiverProfileId { get; set; }
         public string ReceiverProfileImagePath { get; set; }
         public DateTime DateSent { get; set; }
         public string TimeAgo { get; set; }
-        public string GiftImagePath { get; set; }
-        public string GiftName { get; set; }
-        public string GiftDescription { get; set; }
-        public int GiftSentCount { get; set; }
+        public IDictionary<int, GiftReceivedFeedItemViewModel> Gifts { get; set; }
     }
 }

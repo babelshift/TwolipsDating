@@ -74,9 +74,9 @@ namespace TwolipsDating.Controllers
         private async Task AddGiftTransactionsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
             var giftTransactions = await dashboardService.GetRecentFollowerGiftTransactionsAsync(currentUserId);
-            var giftTransactionViewModels = Mapper.Map<IReadOnlyCollection<GiftTransactionLog>, IReadOnlyCollection<GiftReceivedFeedViewModel>>(giftTransactions);
+            var giftTransactionsConsolidated = giftTransactions.GetConsolidatedGiftTransactions();
 
-            foreach (var giftTransactionViewModel in giftTransactionViewModels)
+            foreach (var giftTransactionViewModel in giftTransactionsConsolidated)
             {
                 dashboardItems.Add(new DashboardItemViewModel()
                 {
@@ -149,7 +149,7 @@ namespace TwolipsDating.Controllers
         private async Task AddUploadedImagesToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
             var uploadedImages = await dashboardService.GetRecentFollowerImagesAsync(currentUserId);
-            var uploadedImagesConsolidated = uploadedImages.GetConsolidatedImagesForFeed();
+            var uploadedImagesConsolidated = uploadedImages.GetConsolidatedImages();
 
             foreach (var userImageViewModel in uploadedImagesConsolidated)
             {

@@ -13,7 +13,17 @@ else
     </div>
 }
 <div class="feed-item-headline">
-    <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId })">@Model.SenderUserName</a> sent a gift to
+    <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId })">@Model.SenderUserName</a>
+
+    @if (@Model.Gifts.Count > 1)
+    {
+        @:sent gifts to
+    }
+    else
+    {
+        @:sent a gift to
+    }
+    
     @if (Model.ReceiverUserName == User.Identity.Name)
     {
         @:you
@@ -26,5 +36,13 @@ else
     <small>@Model.TimeAgo</small>
 </div>
 <div class="clearfix"></div>
-<img src="@Model.GiftImagePath" width="46" height="46">
-<span class="label label-default">@Model.GiftSentCount</span>
+@foreach (var gift in Model.Gifts)
+{
+    <div class="col-xs-4 col-sm-2">
+        <img src="@gift.Value.GiftImagePath" width="46" height="46">
+        @if (gift.Value.GiftSentCount > 1)
+        {
+            <span class="label label-default">@gift.Value.GiftSentCount</span>
+        }
+    </div>
+}
