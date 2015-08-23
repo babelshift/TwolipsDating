@@ -84,6 +84,20 @@ namespace TwolipsDating.Controllers
             return View();
         }
 
+        private async Task<SignInStatus> PasswordSignInByEmailAsync(string email, string password, bool rememberMe)
+        {
+            var user = await UserManager.FindByEmailAsync(email);
+
+            if(user != null)
+            {
+                string userName = user.UserName;
+                var result = await SignInManager.PasswordSignInAsync(user.UserName, password, rememberMe, shouldLockout: true);
+                return result;
+            }
+
+            return SignInStatus.Failure;
+        }
+
         //
         // POST: /Account/Login
         [HttpPost]
@@ -97,7 +111,7 @@ namespace TwolipsDating.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: true);
+            var result = await PasswordSignInByEmailAsync(model.Email, model.Password, model.RememberMe);
             switch (result)
             {
                 case SignInStatus.Success:
