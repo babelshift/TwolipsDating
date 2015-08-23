@@ -504,3 +504,23 @@ input[readonly] {
 .review-rating-color {
     color: #D08002;
 }
+
+.feed-item-headline {
+    line-height: 14px;
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.feed-item-headline small {
+    color: #999;
+}
+
+.feed-item-buttons {
+    margin-top: 0;
+}
+
+.feed-item-comment {
+    margin-bottom: 0;
+}

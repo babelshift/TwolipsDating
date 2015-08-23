@@ -12,7 +12,7 @@ else
         <img class="circular-image" src="~/Content/Placeholder.png">
     </div>
 }
-<p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
+<div class="feed-item-headline">
     @{
         string text = String.Empty;
         if (Model.UploadedImagesPaths.Count > 1)
@@ -23,9 +23,11 @@ else
         {
             text = "uploaded an image";
         }
-        <a href="@Url.Action("index", "profile", new { id = Model.UploaderProfileId })">@Model.UploaderUserName</a> @text <small>&bull; @Model.TimeAgo</small>
+        <a href="@Url.Action("index", "profile", new { id = Model.UploaderProfileId })">@Model.UploaderUserName</a> @text
+        <br />
+        <small>@Model.TimeAgo</small>
     }
-</p>
+</div>
 <div class="row">
     @foreach (var uploadedImage in Model.UploadedImagesPaths)
     {

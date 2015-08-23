@@ -1,0 +1,9 @@
+﻿@model int
+@for (int i = 1; i <= Model; i++)
+{
+    <i class="glyphicon glyphicon-star review-rating-color"></i>
+}
+@for (int j = 1; j <= 5 - Model; j++)
+{
+    <i class="glyphicon glyphicon-star-empty review-rating-color"></i>
+}

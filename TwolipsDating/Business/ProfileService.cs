@@ -741,8 +741,8 @@ namespace TwolipsDating.Business
 
             var userMessages = from messages in db.Messages
                                where messages.ReceiverApplicationUserId == userId
-                               || messages.SenderApplicationUserId == userId
-                               where messages.ReceiverApplicationUser.IsActive
+                               //|| messages.SenderApplicationUserId == userId
+                               //where messages.ReceiverApplicationUser.IsActive
                                && messages.SenderApplicationUser.IsActive
                                select messages;
             var results = await userMessages.ToListAsync();

@@ -126,7 +126,7 @@ namespace TwolipsDating.Controllers
 
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "The entered username or password is incorrect.");
+                    ModelState.AddModelError("", "The entered email address or password is incorrect.");
                     return View(model);
             }
         }

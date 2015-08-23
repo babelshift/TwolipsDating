@@ -12,24 +12,19 @@ else
         <img class="circular-image" src="~/Content/Placeholder.png">
     </div>
 }
-<p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
+<div class="feed-item-headline">
     <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId })">@Model.SenderUserName</a> sent a gift to
-</p>
-@if (!String.IsNullOrEmpty(Model.ReceiverProfileImagePath))
-{
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="@Model.ReceiverProfileImagePath" />
-    </div>
-}
-else
-{
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="~/Content/Placeholder.png">
-    </div>
-}
-<p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
-    <a href="@Url.Action("index", "profile", new { id = Model.ReceiverProfileId })">@Model.ReceiverUserName</a> <small>&bull; @Model.TimeAgo</small>
-</p>
-<br />
+    @if (Model.ReceiverUserName == User.Identity.Name)
+    {
+        @:you
+    }
+    else
+    {
+        <a href="@Url.Action("index", "profile", new { id = Model.ReceiverProfileId })">@Model.ReceiverUserName</a>
+    }
+    <br />
+    <small>@Model.TimeAgo</small>
+</div>
+<div class="clearfix"></div>
 <img src="@Model.GiftImagePath" width="46" height="46">
 <span class="label label-default">@Model.GiftSentCount</span>

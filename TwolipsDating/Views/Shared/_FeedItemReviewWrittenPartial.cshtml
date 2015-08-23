@@ -6,39 +6,18 @@
         <img class="circular-image" src="@Model.AuthorProfileImagePath" />
     </div>
 }
-<p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
-    <a href="@Url.Action("index", "profile", new { id = Model.AuthorProfileId })">@Model.AuthorUserName</a> writes about
-</p>
-@if (!String.IsNullOrEmpty(Model.TargetProfileImagePath))
-{
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="@Model.TargetProfileImagePath" />
-    </div>
-}
-else
-{
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="~/Content/Placeholder.png">
-    </div>
-}
-<p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
+<div class="feed-item-headline">
+    <a href="@Url.Action("index", "profile", new { id = Model.AuthorProfileId })">@Model.AuthorUserName</a>
+    writes about
     <a href="@Url.Action("index", "profile", new { id = Model.TargetProfileId })">@Model.TargetUserName</a>
+    <br />
     <small>
-        &nbsp;&bull;&nbsp;
-        @for (int i = 1; i <= Model.ReviewRatingValue; i++)
-        {
-            <i class="glyphicon glyphicon-star review-rating-color"></i>
-        }
-        @for (int j = 1; j <= 5 - Model.ReviewRatingValue; j++)
-        {
-            <i class="glyphicon glyphicon-star-empty review-rating-color"></i>
-        }
-        &nbsp;&bull;&nbsp;&nbsp;@Model.TimeAgo
+        @Model.TimeAgo
     </small>
-</p>
-<p style="margin-top: 5px;" class="pull-right">
+</div>
+<span class="pull-right feed-item-buttons">
     <a href="#" id="@String.Format("share-profile-link-{0}", Model.ReviewId)" data-review-id="@Model.ReviewId" class="btn btn-primary btn-xs
-       data-html="true" data-toggle="popover" data-placement="bottom" data-title="Share" data-animation="false">
+       data-html=" true" data-toggle="popover" data-placement="bottom" data-title="Share" data-animation="false">
         <i class="glyphicon glyphicon-share-alt"></i> Share
     </a>
     @if (User.Identity.IsAuthenticated)
@@ -49,7 +28,7 @@ else
             <i class="glyphicon glyphicon-flag"></i> Report
         </a>
     }
-</p>
+</span>
 <div id="@String.Format("share-profile-buttons-popover-{0}", Model.ReviewId)" class="hide">
     <div class="share-buttons custom-popover-content text-center">
         <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("index", "profile", new { id = Model.TargetProfileId }, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("index", "profile", new { id = Model.TargetProfileId }, Request.Url.Scheme))"
@@ -66,6 +45,10 @@ else
     </div>
 </div>
 <div class="clearfix"></div>
-<div class="well well-sm wrap-long-lines" style="margin-bottom: 0">
-    <small>@Model.ReviewContent</small>
+<div class="well well-sm wrap-long-lines feed-item-comment">
+    <small>
+        @Html.Partial("_StarRatingPartial", Model.ReviewRatingValue)
+        <br />
+        @Model.ReviewContent
+    </small>
 </div>
