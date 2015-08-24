@@ -48,7 +48,7 @@
             <div class="tags" style="display: inline-block">
                 @foreach (var tag in Model.Tags)
                 {
-                    <a href="@Url.Action("tag", "search", new { tag = tag.Name })" class="custom-tooltip btn btn-default btn-xs" title="@tag.Description">
+                    <a href="@Url.Action("index", "search", new { tags = tag.Name })" class="custom-tooltip btn btn-default btn-xs" title="@tag.Description">
                         @tag.Name
                     </a>
                 }

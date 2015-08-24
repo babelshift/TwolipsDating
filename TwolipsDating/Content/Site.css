@@ -326,6 +326,11 @@ input[readonly] {
     margin-top: 3px;
 }
 
+.search-result .profile-info-wrapper {
+    margin-top: 0;
+    line-height: 15px;
+}
+
 .name-and-location {
     font-size: 14px;
 }

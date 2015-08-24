@@ -83,7 +83,7 @@
                                 <div class="tags">
                                     @foreach (var tag in profile.SuggestedTags)
                                     {
-                                        <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" class="btn btn-default btn-xs" title="@String.Format("Search for all profiles tagged with '{0}'", tag.TagName)">
+                                        <a href="@Url.Action("index", "search", new { tags = tag.TagName })" class="btn btn-default btn-xs" title="@String.Format("Search for all profiles tagged with '{0}'", tag.TagName)">
                                             <span class="badge">@tag.TagCount</span> @tag.TagName
                                         </a>
                                     }

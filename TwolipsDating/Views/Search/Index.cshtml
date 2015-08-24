@@ -19,13 +19,6 @@
                             <button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                         </span>
                     </div>
-
-                    @*<div class="input-group">
-                            @Html.TextBoxFor(m => m.User, null, new { @id = "searchUserName", @class = "form-control", @placeholder = "Search for someone by name" })
-                            <span class="input-group-btn">
-                                <button class="btn btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-                            </span>
-                        </div>*@
                 }
             </div>
         </div>
@@ -70,7 +63,7 @@
                             <div class="profile-info-wrapper">
                                 <span class="name-and-location">
                                     <a href="@Url.Action("index", "profile", new { id = profile.ProfileId })">@profile.UserName</a>
-                                    &bull;
+                                    <br />
                                     @if (!String.IsNullOrEmpty(profile.Location))
                                     {
                                         <span>@String.Format("{0}, {1}, {2}", profile.Age, profile.Gender, profile.Location)</span>
@@ -90,7 +83,7 @@
                                     {
                                         <i class="glyphicon glyphicon-star-empty review-rating-color"></i>
                                     }
-                                    @profile.ReviewCount reviews
+                                    <span style="color: #999">@profile.ReviewCount reviews</span>
                                 </span>
                             </div>
                             if (profile.SuggestedTags.Count > 0)
@@ -98,7 +91,7 @@
                                 <div class="tags">
                                     @foreach (var tag in profile.SuggestedTags)
                                     {
-                                        <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" class="btn btn-default btn-xs" title="@String.Format("Search for all profiles tagged with '{0}'", tag.TagName)">
+                                        <a href="@Url.Action("index", "search", new { tags = tag.TagName })" class="btn btn-default btn-xs" title="@String.Format("Search for all profiles tagged with '{0}'", tag.TagName)">
                                             <span class="badge">@tag.TagCount</span> @tag.TagName
                                         </a>
                                     }

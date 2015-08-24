@@ -44,7 +44,7 @@
                 <div id="@String.Format("popover-tag-content-{0}", tag.Name)" class="hide">
                     <div class="custom-popover-content">
                         <p>@tag.Description</p>
-                        <a href="@Url.Action("tag", "search", new { tag = tag.Name })">see profiles</a>
+                        <a href="@Url.Action("index", "search", new { tags = tag.Name })">see profiles</a>
                         &bull;
                         <a href="@Url.Action("quiz", "search", new { tag = tag.Name })">see quizzes</a>
                     </div>

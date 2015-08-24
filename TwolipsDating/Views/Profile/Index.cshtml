@@ -507,7 +507,7 @@
                             <div class="tags">
                                 @foreach (var tag in Model.AwardedTags)
                                 {
-                                    <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" class="custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
+                                    <a href="@Url.Action("index", "search", new { tags = tag.TagName })" class="custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
                                         <span class="badge">@tag.TagCount</span> @tag.TagName
                                     </a>
                                 }
@@ -550,13 +550,13 @@
                                 <li class="profile-tag-suggestion-list-item">
                                     @if (tag.DidUserSuggest)
                                     {
-                                        <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" class="profile-tag pull-left custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
+                                        <a href="@Url.Action("index", "search", new { tags = tag.TagName })" class="profile-tag pull-left custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
                                             <span class="badge">@tag.TagCount</span> @tag.TagName
                                         </a>
                                     }
                                     else
                                     {
-                                        <a href="@Url.Action("tag", "search", new { tag = tag.TagName })" class="profile-tag pull-left custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
+                                        <a href="@Url.Action("index", "search", new { tags = tag.TagName })" class="profile-tag pull-left custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
                                             <span class="badge">@tag.TagCount</span> @tag.TagName
                                         </a>
                                     }
