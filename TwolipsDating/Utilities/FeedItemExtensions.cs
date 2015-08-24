@@ -8,6 +8,54 @@ namespace TwolipsDating.Utilities
 {
     public static class FeedItemExtensions
     {
+        public static IReadOnlyCollection<TagSuggestionReceivedFeedViewModel> GetConsolidatedTagsSuggested(this IReadOnlyCollection<TagSuggestion> tagSuggestions)
+        {
+            // translates the collection of entities into the view models that we want to work with
+            var tagSuggestionViewModels = Mapper.Map<IReadOnlyCollection<TagSuggestion>, IReadOnlyCollection<TagSuggestionReceivedFeedViewModel>>(tagSuggestions);
+
+            // a dictionary containing the unique transactions
+            var consolidatedTagSuggestionViewModels = new Dictionary<TagSuggestionFeedItemKey, TagSuggestionReceivedFeedViewModel>();
+
+            // for every transaction, loop and consolidate
+            foreach (var tagSuggestionViewModel in tagSuggestionViewModels)
+            {
+                UpdateTagSuggestionCollection(consolidatedTagSuggestionViewModels, tagSuggestionViewModel);
+            }
+
+            return consolidatedTagSuggestionViewModels.Values.ToList().AsReadOnly();
+        }
+
+        private static void UpdateTagSuggestionCollection(Dictionary<TagSuggestionFeedItemKey, TagSuggestionReceivedFeedViewModel> consolidatedTagSuggestionViewModels, 
+            TagSuggestionReceivedFeedViewModel tagSuggestionFeed)
+        {
+            // the key to identify if a transaction is unique or not depends on the user id and the time since the transaction occurred
+            TagSuggestionFeedItemKey feedKey = new TagSuggestionFeedItemKey()
+            {
+                UserId = tagSuggestionFeed.SuggestUserId,
+                TimeAgo = tagSuggestionFeed.TimeAgo,
+                ProfileId = tagSuggestionFeed.ReceiverProfileId
+            };
+
+            TagSuggestionReceivedFeedViewModel existingTagSuggestionFeed = new TagSuggestionReceivedFeedViewModel();
+
+            // check if the transaction for this user and time is already accounted for
+            bool tagSuggestionAlreadyInCollection = consolidatedTagSuggestionViewModels.TryGetValue(feedKey, out existingTagSuggestionFeed);
+
+            // if it isn't, then add it to our consolidated collection to begin consolidating
+            if (!tagSuggestionAlreadyInCollection)
+            {
+                consolidatedTagSuggestionViewModels.Add(feedKey, tagSuggestionFeed);
+            }
+            // if it is, then add the image path to the consolidated collection
+            else
+            {
+                if (tagSuggestionFeed.Tags.Count > 0)
+                {
+                    existingTagSuggestionFeed.Tags.Add(tagSuggestionFeed.Tags[0]);
+                }
+            }
+        }
+
         /// <summary>
         /// On the user's feed, we want to consolidate multiple "Sent gift" notices into a single line item. For example, the following transactions should be consolidated:
         /// "jskiles sent a 'Red Rose' gift to justin on Aug 10"

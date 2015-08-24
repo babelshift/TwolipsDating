@@ -45,6 +45,8 @@ namespace TwolipsDating.Controllers
 
                 await AddCompletedQuizzesToFeedAsync(currentUserId, dashboardItems);
 
+                await AddTagSuggestionsToFeedAsync(currentUserId, dashboardItems);
+
                 await SetNotificationsAsync();
 
                 DashboardViewModel viewModel = new DashboardViewModel();
@@ -219,6 +221,22 @@ namespace TwolipsDating.Controllers
                     ItemType = DashboardFeedItemType.QuizCompletion,
                     DateOccurred = quizCompletionViewModel.DateCompleted,
                     CompletedQuizFeedItem = quizCompletionViewModel
+                });
+            }
+        }
+
+        private async Task AddTagSuggestionsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
+        {
+            var tagsSuggested = await dashboardService.GetRecentFollowerTagSuggestionsAsync(currentUserId);
+            var tagsSuggestedConsolidated = tagsSuggested.GetConsolidatedTagsSuggested();
+
+            foreach (var tagsSuggestedViewModel in tagsSuggestedConsolidated)
+            {
+                dashboardItems.Add(new DashboardItemViewModel()
+                {
+                    ItemType = DashboardFeedItemType.TagSuggestion,
+                    DateOccurred = tagsSuggestedViewModel.DateSuggested,
+                    TagSuggestionReceivedFeedItem = tagsSuggestedViewModel
                 });
             }
         }

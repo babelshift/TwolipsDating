@@ -67,6 +67,7 @@ namespace TwolipsDating.Business
                                 join favoritedProfiles in db.FavoriteProfiles on gifts.FromUser.Profile.Id equals favoritedProfiles.ProfileId
                                 where favoritedProfiles.UserId == userId
                                 where gifts.FromUser.IsActive
+                                where gifts.ToUser.IsActive
                                 select gifts;
 
             var giftsToUser = from gifts in db.GiftTransactions
@@ -74,6 +75,7 @@ namespace TwolipsDating.Business
                               .Include(g => g.FromUser)
                               join favoritedProfiles in db.FavoriteProfiles on gifts.ToUser.Profile.Id equals favoritedProfiles.ProfileId
                               where favoritedProfiles.UserId == userId
+                              where gifts.FromUser.IsActive
                               where gifts.ToUser.IsActive
                               select gifts;
 
@@ -116,13 +118,32 @@ where
 
             var results = await QueryAsync<CompletedQuizFeedViewModel>(sql, new { userId = userId });
 
-            foreach(var result in results)
+            foreach (var result in results)
             {
                 result.SourceProfileImagePath = ProfileExtensions.GetProfileImagePath(result.SourceProfileImagePath);
-                result.TimeAgo = result.DateCompleted.GetTimeAgo();
             }
 
             return results.ToList().AsReadOnly();
+        }
+
+        internal async Task<IReadOnlyCollection<TagSuggestion>> GetRecentFollowerTagSuggestionsAsync(string userId)
+        {
+            var tagSuggestionForFavorite = from tagSuggestion in db.TagSuggestions
+                                           join favoritedProfiles in db.FavoriteProfiles on tagSuggestion.Profile.Id equals favoritedProfiles.ProfileId
+                                           where favoritedProfiles.UserId == userId
+                                           where tagSuggestion.SuggestingUser.IsActive
+                                           where tagSuggestion.Profile.ApplicationUser.IsActive
+                                           select tagSuggestion;
+
+            var tagSuggestionByFavorite = from tagSuggestion in db.TagSuggestions
+                                          join favoritedProfiles in db.FavoriteProfiles on tagSuggestion.SuggestingUser.Profile.Id equals favoritedProfiles.ProfileId
+                                          where favoritedProfiles.UserId == userId
+                                          where tagSuggestion.SuggestingUser.IsActive
+                                          where tagSuggestion.Profile.ApplicationUser.IsActive
+                                          select tagSuggestion;
+
+            var results = await tagSuggestionForFavorite.Union(tagSuggestionByFavorite).ToListAsync();
+            return results.AsReadOnly();
         }
     }
 }

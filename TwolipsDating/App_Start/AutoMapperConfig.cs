@@ -80,7 +80,6 @@ namespace TwolipsDating
 
             Mapper.CreateMap<GiftTransactionLog, GiftReceivedFeedViewModel>()
                 .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateTransactionOccurred))
-                .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateTransactionOccurred.GetTimeAgo()))
                 .ForMember(dest => dest.Gifts, opts => opts.UseValue(new Dictionary<int, GiftReceivedFeedItemViewModel>()))
                 .ForMember(dest => dest.ReceiverUserName, opts => opts.MapFrom(source => source.ToUser.UserName))
                 .ForMember(dest => dest.ReceiverProfileImagePath, opts => opts.MapFrom(source => source.ToUser.Profile.GetProfileImagePath()))
@@ -96,8 +95,18 @@ namespace TwolipsDating
                 .ForMember(dest => dest.QuizName, opts => opts.MapFrom(source => source.Quiz.Name))
                 .ForMember(dest => dest.SourceProfileId, opts => opts.MapFrom(source => source.User.Profile.Id))
                 .ForMember(dest => dest.SourceProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileImagePath()))
-                .ForMember(dest => dest.SourceUserName, opts => opts.MapFrom(source => source.User.UserName))
-                .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateCompleted.GetTimeAgo()));
+                .ForMember(dest => dest.SourceUserName, opts => opts.MapFrom(source => source.User.UserName));
+
+            Mapper.CreateMap<TagSuggestion, TagSuggestionReceivedFeedViewModel>()
+                .ForMember(dest => dest.DateSuggested, opts => opts.MapFrom(source => source.DateSuggested))
+                .ForMember(dest => dest.ReceiverProfileId, opts => opts.MapFrom(source => source.ProfileId))
+                .ForMember(dest => dest.ReceiverUserName, opts => opts.MapFrom(source => source.Profile.ApplicationUser.UserName))
+                .ForMember(dest => dest.SuggestProfileId, opts => opts.MapFrom(source => source.SuggestingUser.Profile.Id))
+                .ForMember(dest => dest.SuggestProfileImagePath, opts => opts.MapFrom(source => source.SuggestingUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.SuggestUserId, opts => opts.MapFrom(source => source.SuggestingUserId))
+                .ForMember(dest => dest.SuggestUserName, opts => opts.MapFrom(source => source.SuggestingUser.UserName))
+                .ForMember(dest => dest.Tags, opts => opts.UseValue(new List<string>()))
+                .AfterMap((source, dest) => dest.Tags.Add(source.Tag.Name));
 
             Mapper.CreateMap<Tag, TagViewModel>();
 

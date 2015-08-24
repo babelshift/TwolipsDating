@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.ViewModels
 {
@@ -15,7 +16,7 @@ namespace TwolipsDating.ViewModels
         public int UserScorePercent { get { return (int)Math.Round(((double)CorrectAnswerCount / (double)TotalAnswerCount) * 100); } }
         public string QuizName { get; set; }
         public int QuizId { get; set; }
-        public string TimeAgo { get; set; }
+        public string TimeAgo { get { return DateCompleted.GetTimeAgo(); } }
         public DateTime DateCompleted { get; set; }
     }
 }

@@ -357,6 +357,7 @@
     <Compile Include="Models\UserTitle.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\TagSuggestionFeedItemKey.cs" />
     <Compile Include="Utilities\QuizExtensions.cs" />
     <Compile Include="Utilities\StoreItemExtensions.cs" />
     <Compile Include="Utilities\UserImageExtensions.cs" />
@@ -887,6 +888,7 @@
     <Content Include="Views\Shared\_FeedItemGiftTransactionPartial.cshtml" />
     <Content Include="Views\Shared\_StarRatingPartial.cshtml" />
     <Content Include="Views\Shared\_FeedItemCompletedQuizPartial.cshtml" />
+    <Content Include="Views\Shared\_FeedItemTagSuggestionPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
