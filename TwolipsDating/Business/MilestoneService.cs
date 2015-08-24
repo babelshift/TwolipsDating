@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
@@ -11,8 +12,8 @@ namespace TwolipsDating.Business
 {
     public class MilestoneService : BaseService
     {
-        public MilestoneService(ApplicationDbContext db)
-            : base(db)
+        public MilestoneService(ApplicationDbContext db, IIdentityMessageService emailService)
+            : base(db, emailService)
         {
         }
 
@@ -52,8 +53,8 @@ namespace TwolipsDating.Business
         {
             int amount = 0;
 
-            TriviaService triviaService = new TriviaService(db);
-            ProfileService profileService = new ProfileService(db);
+            TriviaService triviaService = new TriviaService(db, EmailService);
+            ProfileService profileService = new ProfileService(db, EmailService);
 
             // get the number of questions answered correctly
             if (milestoneTypeId == (int)MilestoneTypeValues.QuestionsAnsweredCorrectly)

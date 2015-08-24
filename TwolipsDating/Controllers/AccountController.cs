@@ -26,7 +26,6 @@ namespace TwolipsDating.Controllers
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
-            : base(userManager)
         {
             SignInManager = signInManager;
         }

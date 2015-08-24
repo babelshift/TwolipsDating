@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -11,6 +12,7 @@ namespace TwolipsDating.Business
     public class BaseService
     {
         protected ApplicationDbContext db = new ApplicationDbContext();
+        protected IIdentityMessageService EmailService;
 
         public BaseService()
         {
@@ -19,9 +21,16 @@ namespace TwolipsDating.Business
 #endif
         }
 
-        public BaseService(ApplicationDbContext db) : this()
+        public BaseService(IIdentityMessageService emailService)
+            : this()
+        {
+            this.EmailService = emailService;
+        }
+
+        public BaseService(ApplicationDbContext db, IIdentityMessageService emailService) : this()
         {
             this.db = db;
+            this.EmailService = emailService;
         }
 
         /// <summary>
@@ -33,7 +42,7 @@ namespace TwolipsDating.Business
         protected async Task AwardAchievedMilestonesForUserAsync(string fromUserId, int milestoneTypeId)
         {
             // handle and save any milestones that the user may have met
-            MilestoneService milestoneService = new MilestoneService(db);
+            MilestoneService milestoneService = new MilestoneService(db, EmailService);
             await milestoneService.AwardAchievedMilestonesAsync(fromUserId, milestoneTypeId);
             await db.SaveChangesAsync();
         }

@@ -19,23 +19,26 @@ namespace TwolipsDating.Controllers
     {
         #region Members
 
-        private ProfileService profileService = new ProfileService();
+        private ProfileService profileService;
         private NotificationService notificationService = new NotificationService();
         private ApplicationUserManager userManager;
 
         #endregion Members
 
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+            profileService = new ProfileService(UserManager.EmailService);
+        }
+
         #region Properties
+
+        public ProfileService ProfileService { get { return profileService; } }
 
         /// <summary>
         /// Allows inherited controllers to properly log any events.
         /// </summary>
         protected LogHelper Log { get; private set; }
-
-        /// <summary>
-        /// Allows inherited controllers access to any services related to a user profile.
-        /// </summary>
-        protected ProfileService ProfileService { get { return profileService; } }
 
         /// <summary>
         /// Allows inherited controllers access to managing the user entities.
@@ -61,16 +64,6 @@ namespace TwolipsDating.Controllers
         /// </summary>
         public BaseController()
         {
-            Log = new LogHelper(GetType().FullName);
-        }
-
-        /// <summary>
-        /// Constructor with user manager overload allows specific user manager and log setup
-        /// </summary>
-        /// <param name="userManager"></param>
-        public BaseController(ApplicationUserManager userManager)
-        {
-            UserManager = userManager;
             Log = new LogHelper(GetType().FullName);
         }
 

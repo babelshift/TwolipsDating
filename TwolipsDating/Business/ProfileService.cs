@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -14,7 +15,9 @@ namespace TwolipsDating.Business
     {
         public ProfileService() : base() { }
 
-        public ProfileService(ApplicationDbContext db) : base(db) { }
+        public ProfileService(IIdentityMessageService emailService) : base(emailService) { }
+
+        public ProfileService(ApplicationDbContext db, IIdentityMessageService emailService) : base(db, emailService) { }
 
         internal async Task<int> GetReviewsWrittenCountByUserAsync(string userId)
         {
@@ -241,7 +244,7 @@ namespace TwolipsDating.Business
 
             var results = secondResults.AsReadOnly();
 
-            foreach(var tag in results)
+            foreach (var tag in results)
             {
                 // get users that suggested the tag for the profile
                 tag.SuggestionUsers = await GetUsersWhoSuggestedTagForProfileAsync(tag.TagId, profileId);
@@ -265,7 +268,7 @@ namespace TwolipsDating.Business
 
             var results = (await users.Take(6).ToListAsync()).AsReadOnly();
 
-            foreach(var user in results)
+            foreach (var user in results)
             {
                 user.UserProfileImagePath = ProfileExtensions.GetProfileImagePath(user.UserProfileImagePath);
             }
@@ -741,8 +744,8 @@ namespace TwolipsDating.Business
 
             var userMessages = from messages in db.Messages
                                where messages.ReceiverApplicationUserId == userId
-                               //|| messages.SenderApplicationUserId == userId
-                               //where messages.ReceiverApplicationUser.IsActive
+                                   //|| messages.SenderApplicationUserId == userId
+                                   //where messages.ReceiverApplicationUser.IsActive
                                && messages.SenderApplicationUser.IsActive
                                select messages;
             var results = await userMessages.ToListAsync();
@@ -1019,7 +1022,7 @@ namespace TwolipsDating.Business
         /// <param name="currentUserId"></param>
         /// <param name="profileId"></param>
         /// <returns></returns>
-        public async Task<bool> ToggleFavoriteProfileAsync(string currentUserId, int profileId)
+        public async Task<bool> ToggleFavoriteProfileAsync(string currentUserId, string currentUserName, int profileId)
         {
             Debug.Assert(!String.IsNullOrEmpty(currentUserId));
             Debug.Assert(profileId > 0);
@@ -1035,22 +1038,37 @@ namespace TwolipsDating.Business
             if (favoriteEntity != null)
             {
                 db.FavoriteProfiles.Remove(favoriteEntity);
+
+                await db.SaveChangesAsync();
             }
             // else, add it
             else
             {
-                FavoriteProfile favoriteProfile = new FavoriteProfile()
-                {
-                    UserId = currentUserId,
-                    ProfileId = profileId,
-                    DateFavorited = DateTime.Now
-                };
+                var favoriteProfileEntity = db.Profiles.Find(profileId);
+
+                FavoriteProfile favoriteProfile = db.FavoriteProfiles.Create();
+                favoriteProfile.UserId = currentUserId;
+                favoriteProfile.ProfileId = profileId;
+                favoriteProfile.Profile = favoriteProfileEntity;
+                favoriteProfile.DateFavorited = DateTime.Now;
 
                 db.FavoriteProfiles.Add(favoriteProfile);
                 isFavorite = true;
-            }
 
-            await db.SaveChangesAsync();
+                await db.SaveChangesAsync();
+
+                string followingUserName = favoriteProfile.Profile.ApplicationUser.UserName;
+                string followingProfileImagePath = favoriteProfile.Profile.GetProfileImagePath();
+                string followerUserName = currentUserName;
+
+                IdentityMessage message = new IdentityMessage()
+                {
+                    Body = EmailTextHelper.NewFollowerEmail.GetBody(followingUserName, followingProfileImagePath, followerUserName),
+                    Destination = favoriteProfile.Profile.ApplicationUser.Email,
+                    Subject = EmailTextHelper.NewFollowerEmail.GetSubject(followerUserName)
+                };
+                await EmailService.SendAsync(message);
+            }
 
             return isFavorite;
         }
