@@ -77,26 +77,66 @@ namespace TwolipsDating.Utilities
         {
             public const string Subject = "Confirm your twolips dating account";
 
-            private const string Body = @"<img src=""https://www.twolipsdating.com/Content/twolipsicon-white-180x180.png"" width=""32"" height=""32"" style=""float: left;"" />
-<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 24px; margin-left: 35px;"">
-    twolips dating - the most entertaining way to meet new people and make new friends.
-</div>
-<div style=""font-family: Helvetica,Arial,sans-serif; margin-left: 25px; width: 500px; margin-bottom: 15px;"">
-    <p style=""font-weight: bold;"">Hello and thank you for registering for <strong>twolips dating</strong>!</p>
+            private const string Body = @"<!DOCTYPE html PUBLIC ""-//W3C//DTD HTML 4.01//EN"" ""http://www.w3.org/TR/html4/strict.dtd"">
+<html>
+	<head>
+		<meta http-equiv=""Content-Type"" content=""text/html; charset=utf-8"" />
+		<meta name=""viewport"" content=""width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"" />
+	</head>
+	<body style=""margin: 0; padding: 0; background: #fff"">
+		<table cellpadding=""0"" cellspacing=""0"" border=""0"" width=""100%"" style=""background: #ddd"">
+		<tbody>
+			<tr>
+				<td>
+					<table align=""center"" cellpadding=""0"" cellspacing=""0"" border=""0"" width=""670"" style=""background: #fff; border-left: 1px solid #ccc; border-right: 1px solid #ccc;"">
+						<tbody>
+							<tr>
+								<td style=""background: #eee; padding: 15px"">
+									<table cellpadding=""0"" cellspacing=""0"" border=""0"">
+										<tr>
+											<td>
+												<img src=""https://www.twolipsdating.com/Content/twolipsicon-white-180x180.png"" width=""32"" height=""32"" />
+											</td>
+											<td style=""padding-left: 5px;"">
+												<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 20px;"">
+													twolips dating
+												</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td style=""border-top: 1px solid #ccc; padding: 15px;"">
+									<div style=""font-family: Helvetica,Arial,sans-serif; margin-bottom: 15px;"">
+										<h2>Hello and thank you for registering!</h2>
 
-    <div style=""font-size: 12px; color: #4b4b4b;"">
-        <p>We're sending you this message to confirm your new account. If you think that this message is not intended for you, please ignore it.</p>
+										<div style=""font-size: 12px; color: #4b4b4b;"">
+											<p>We're sending you this message to confirm your new account. If you think that this message is not intended for you, please ignore it.</p>
 
-        <p>
-            If you're the right person, please <a href=""{0}"">click here to confirm your account</a> as soon as possible to begin contributing to the community.
-            Please be aware that you will be unable to login and perform certain activities until your account is confirmed.
-        </p>
-    </div>
-</div>
-<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 12px; margin-left: 25px; width: 500px; margin-top: 7px;"">
-    <a href=""https://www.twolipsdating.com/about/privacy"">Privacy Policy</a> | <a href=""mailto:info@twolipsdating.com"">Contact Us</a> | <a href=""https://www.twolipsdating.com/"">Home</a>
-    <p><small>Twolips Dating, Orlando, FL, USA</small></p>
-</div>";
+											<h3><a href=""{0}"">Click to confirm your account</a></h3>
+											
+											<p>Please be aware that you will be unable to login and perform certain activities until your account is confirmed.
+											</p>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td style=""background: #eee; padding: 15px; border-top: 1px solid #ccc"">
+									<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 12px; margin-left: 25px; width: 500px; margin-top: 7px;"">
+										<a href=""https://www.twolipsdating.com/"">Home</a> | <a href=""https://www.twolipsdating.com/about/privacy"">Privacy Policy</a> | <a href=""mailto:info@twolipsdating.com"">Contact Us</a> | <a href=""http://twitter.com/twolipsdating/"">Follow Us on Twitter</a> | <a href=""http://facebook.com/twolipsdating"">Like Us on Facebook</a>
+										<p><small>Twolips Dating - PO Box 780835, Orlando, FL, 32878-0835</small></p>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>";
 
             public static string GetBody(string callbackUrl)
             {
@@ -123,18 +163,29 @@ namespace TwolipsDating.Utilities
 						<tbody>
 							<tr>
 								<td style=""background: #eee; padding: 15px"">
-									<img src=""https://www.twolipsdating.com/Content/twolipsicon-white-180x180.png"" width=""32"" height=""32"" style=""float: left;"" />
-									<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 20px; margin-top: 3px; margin-left: 38px;"">
-										twolips dating
-									</div>
+									<table cellpadding=""0"" cellspacing=""0"" border=""0"">
+										<tr>
+											<td>
+												<img src=""https://www.twolipsdating.com/Content/twolipsicon-white-180x180.png"" width=""32"" height=""32"" />
+											</td>
+											<td style=""padding-left: 5px;"">
+												<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 20px;"">
+													twolips dating
+												</div>
+											</td>
+										</tr>
+									</table>
 								</td>
 							</tr>
 							<tr>
 								<td style=""border-top: 1px solid #ccc; padding: 15px;"">
 									<div style=""font-family: Helvetica,Arial,sans-serif;"">
+										<h2>Welcome!</h2>
 										<p>Thank you for confirming your email address. Please connect with us on Twitter, Facebook, and Google+ to stay updated.</p>
 										<a href=""http://twitter.com/twolipsdating""><img src=""https://www.twolipsdating.com/Content/tw-icon-32.png"" alt=""Twitter""/></a>
+										&nbsp;
 										<a href=""http://facebook.com/twolipsdating""><img src=""https://www.twolipsdating.com/Content/fb-icon-32.png"" alt=""Facebook""/></a>
+										&nbsp;
 										<a href=""http://plus.google.com/+twolipsdating""><img src=""https://www.twolipsdating.com/Content/gp-icon-32.png"" alt=""Google+""/></a>
 										<div style=""color: #4b4b4b;"">
 											<h3>Get Started</h3>
