@@ -344,6 +344,10 @@
     <Compile Include="Migrations\201508211322300_UserNameLengthAndProfileSelfDescription.Designer.cs">
       <DependentUpon>201508211322300_UserNameLengthAndProfileSelfDescription.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508240108529_RemovedSelfDescriptionRequirement.cs" />
+    <Compile Include="Migrations\201508240108529_RemovedSelfDescriptionRequirement.Designer.cs">
+      <DependentUpon>201508240108529_RemovedSelfDescriptionRequirement.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
     <Compile Include="Models\StoreSale.cs" />
@@ -882,6 +886,7 @@
     <Content Include="Views\Account\ConfirmEmailSent.cshtml" />
     <Content Include="Views\Shared\_FeedItemGiftTransactionPartial.cshtml" />
     <Content Include="Views\Shared\_StarRatingPartial.cshtml" />
+    <Content Include="Views\Shared\_FeedItemCompletedQuizPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1081,6 +1086,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508211322300_UserNameLengthAndProfileSelfDescription.resx">
       <DependentUpon>201508211322300_UserNameLengthAndProfileSelfDescription.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508240108529_RemovedSelfDescriptionRequirement.resx">
+      <DependentUpon>201508240108529_RemovedSelfDescriptionRequirement.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

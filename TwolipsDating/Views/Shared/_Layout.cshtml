@@ -16,7 +16,7 @@
     <meta property="og:image" content="@(!String.IsNullOrEmpty(ViewBag.ImageUrl) ? Url.Content(ViewBag.ImageUrl) : Request.Url.Scheme + "://" + Request.Url.Authority + Url.Content("~/Content/twolipsicon-white-200x200.png"))" />
     <meta property="og:site_name" content="twolips dating community" />
     <meta name="google-site-verification" content="4eyILTchd7WANbxkEX7K1ZVlHy6WgoXrerg26xS8XHM" />
-    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:card" content="@(!String.IsNullOrEmpty(ViewBag.ImageUrl) ? "summary_large_image" : "summary")">
     <meta name="twitter:site" content="&#64;twolipsdating">
     <meta name="twitter:title" content="@ViewBag.Title">
     <meta name="twitter:description" content="@ViewBag.Description">

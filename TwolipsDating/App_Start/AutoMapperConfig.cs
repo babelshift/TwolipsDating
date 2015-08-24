@@ -81,12 +81,7 @@ namespace TwolipsDating
             Mapper.CreateMap<GiftTransactionLog, GiftReceivedFeedViewModel>()
                 .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateTransactionOccurred))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateTransactionOccurred.GetTimeAgo()))
-                //.ForMember(dest => dest.GiftDescription, opts => opts.MapFrom(source => source.StoreItem.Description))
-                //.ForMember(dest => dest.GiftImagePath, opts => opts.MapFrom(source => source.StoreItem.GetIconPath()))
-                //.ForMember(dest => dest.GiftName, opts => opts.MapFrom(source => source.StoreItem.Name))
-                //.ForMember(dest => dest.GiftSentCount, opts => opts.MapFrom(source => source.ItemCount))
                 .ForMember(dest => dest.Gifts, opts => opts.UseValue(new Dictionary<int, GiftReceivedFeedItemViewModel>()))
-                //.ForMember(dest => dest.StoreItemId, opts => opts.MapFrom(source => source.StoreItemId))
                 .ForMember(dest => dest.ReceiverUserName, opts => opts.MapFrom(source => source.ToUser.UserName))
                 .ForMember(dest => dest.ReceiverProfileImagePath, opts => opts.MapFrom(source => source.ToUser.Profile.GetProfileImagePath()))
                 .ForMember(dest => dest.ReceiverProfileId, opts => opts.MapFrom(source => source.ToUser.Profile.Id))
@@ -94,6 +89,15 @@ namespace TwolipsDating
                 .ForMember(dest => dest.SenderUserId, opts => opts.MapFrom(source => source.FromUser.Id))
                 .ForMember(dest => dest.SenderProfileId, opts => opts.MapFrom(source => source.FromUser.Profile.Id))
                 .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.FromUser.Profile.GetProfileImagePath()));
+
+            Mapper.CreateMap<CompletedQuiz, CompletedQuizFeedViewModel>()
+                .ForMember(dest => dest.DateCompleted, opts => opts.MapFrom(source => source.DateCompleted))
+                .ForMember(dest => dest.QuizId, opts => opts.MapFrom(source => source.QuizId))
+                .ForMember(dest => dest.QuizName, opts => opts.MapFrom(source => source.Quiz.Name))
+                .ForMember(dest => dest.SourceProfileId, opts => opts.MapFrom(source => source.User.Profile.Id))
+                .ForMember(dest => dest.SourceProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.SourceUserName, opts => opts.MapFrom(source => source.User.UserName))
+                .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateCompleted.GetTimeAgo()));
 
             Mapper.CreateMap<Tag, TagViewModel>();
 

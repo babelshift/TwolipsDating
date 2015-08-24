@@ -173,6 +173,10 @@
                             {
                                 Html.RenderPartial("_FeedItemGiftTransactionPartial", feedItem.GiftReceivedFeedItem);
                             }
+                            else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.QuizCompletion)
+                            {
+                                Html.RenderPartial("_FeedItemCompletedQuizPartial", feedItem.CompletedQuizFeedItem);
+                            }
                         </div>
                     </div>
                 }

@@ -43,6 +43,8 @@ namespace TwolipsDating.Controllers
 
                 await AddGiftTransactionsToFeedAsync(currentUserId, dashboardItems);
 
+                await AddCompletedQuizzesToFeedAsync(currentUserId, dashboardItems);
+
                 await SetNotificationsAsync();
 
                 DashboardViewModel viewModel = new DashboardViewModel();
@@ -68,22 +70,6 @@ namespace TwolipsDating.Controllers
             {
                 HomeViewModel viewModel = new HomeViewModel();
                 return View(String.Empty, "~/Views/Shared/_LayoutSplash.cshtml", viewModel);
-            }
-        }
-
-        private async Task AddGiftTransactionsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
-        {
-            var giftTransactions = await dashboardService.GetRecentFollowerGiftTransactionsAsync(currentUserId);
-            var giftTransactionsConsolidated = giftTransactions.GetConsolidatedGiftTransactions();
-
-            foreach (var giftTransactionViewModel in giftTransactionsConsolidated)
-            {
-                dashboardItems.Add(new DashboardItemViewModel()
-                {
-                    ItemType = DashboardFeedItemType.GiftTransaction,
-                    DateOccurred = giftTransactionViewModel.DateSent,
-                    GiftReceivedFeedItem = giftTransactionViewModel
-                });
             }
         }
 
@@ -202,6 +188,37 @@ namespace TwolipsDating.Controllers
                     ItemType = DashboardFeedItemType.Message,
                     DateOccurred = messageFeed.DateOccurred,
                     MessageFeedItem = messageFeed
+                });
+            }
+        }
+
+        private async Task AddGiftTransactionsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
+        {
+            var giftTransactions = await dashboardService.GetRecentFollowerGiftTransactionsAsync(currentUserId);
+            var giftTransactionsConsolidated = giftTransactions.GetConsolidatedGiftTransactions();
+
+            foreach (var giftTransactionViewModel in giftTransactionsConsolidated)
+            {
+                dashboardItems.Add(new DashboardItemViewModel()
+                {
+                    ItemType = DashboardFeedItemType.GiftTransaction,
+                    DateOccurred = giftTransactionViewModel.DateSent,
+                    GiftReceivedFeedItem = giftTransactionViewModel
+                });
+            }
+        }
+
+        private async Task AddCompletedQuizzesToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
+        {
+            var completedQuizzes = await dashboardService.GetRecentFollowerQuizCompletionsAsync(currentUserId);
+
+            foreach (var quizCompletionViewModel in completedQuizzes)
+            {
+                dashboardItems.Add(new DashboardItemViewModel()
+                {
+                    ItemType = DashboardFeedItemType.QuizCompletion,
+                    DateOccurred = quizCompletionViewModel.DateCompleted,
+                    CompletedQuizFeedItem = quizCompletionViewModel
                 });
             }
         }

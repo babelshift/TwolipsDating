@@ -412,6 +412,7 @@ namespace TwolipsDating.Business
 	                inner join dbo.Questions qu on qu.Id = aq.QuestionId
                 where 
 	                aq.AnswerId = qu.CorrectAnswerId
+                    and u.IsActive = 1
                     {0}
                 group by
 	                q.Id,

@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TwolipsDating.Models;
+using TwolipsDating.Utilities;
+using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
 {
@@ -77,6 +79,50 @@ namespace TwolipsDating.Business
 
             var results = await giftsFromUser.Union(giftsToUser).ToListAsync();
             return results.AsReadOnly();
+        }
+
+        internal async Task<IReadOnlyCollection<CompletedQuizFeedViewModel>> GetRecentFollowerQuizCompletionsAsync(string userId)
+        {
+            string sql = @"
+select 
+	p.Id SourceProfileId,
+	u.UserName SourceUserName,
+	ui.FileName SourceProfileImagePath,
+	q.Name QuizName,
+	q.Id QuizId,
+	cq.DateCompleted DateCompleted,
+	(
+		select count(*)
+		from dbo.QuizQuestions qq2
+		inner join dbo.AnsweredQuestions aq on aq.UserId = cq.UserId and aq.QuestionId = qq2.Question_Id
+		inner join dbo.Questions qu on qu.Id = aq.QuestionId
+		where qq2.Quiz_Id = q.Id
+		and aq.AnswerId = qu.CorrectAnswerId
+	) CorrectAnswerCount,
+	(
+		select count(*) 
+		from dbo.QuizQuestions qq2
+		where qq2.Quiz_Id = q.Id
+	) TotalAnswerCount
+from dbo.CompletedQuizs cq
+inner join dbo.Quizs q on cq.QuizId = q.Id
+inner join dbo.AspNetUsers u on cq.UserId = u.Id
+inner join dbo.Profiles p on p.ApplicationUser_Id = u.Id
+left join dbo.UserImages ui on p.UserImageId = ui.Id
+inner join dbo.FavoriteProfiles fp on p.Id = fp.ProfileId
+where
+	fp.UserId = @userId
+	and u.IsActive = 1";
+
+            var results = await QueryAsync<CompletedQuizFeedViewModel>(sql, new { userId = userId });
+
+            foreach(var result in results)
+            {
+                result.SourceProfileImagePath = ProfileExtensions.GetProfileImagePath(result.SourceProfileImagePath);
+                result.TimeAgo = result.DateCompleted.GetTimeAgo();
+            }
+
+            return results.ToList().AsReadOnly();
         }
     }
 }

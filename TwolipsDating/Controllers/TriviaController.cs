@@ -394,7 +394,6 @@ namespace TwolipsDating.Controllers
                     var quizQuestions = await triviaService.GetQuizQuestionsAsync(id);
                     questionListViewModel = Mapper.Map<IReadOnlyCollection<Question>, List<QuestionViewModel>>(quizQuestions);
 
-
                     // match up the already selected answers with the questions for this quiz
                     foreach (var questionViewModel in questionListViewModel)
                     {
@@ -414,8 +413,6 @@ namespace TwolipsDating.Controllers
                             answer.IsCorrect = (answer.AnswerId == questionViewModel.CorrectAnswerId);
                         }
                     }
-
-
                 }
                 // if it hasn't been completed, get unanswered questions for quiz
                 else

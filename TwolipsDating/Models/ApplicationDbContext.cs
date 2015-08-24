@@ -1121,10 +1121,6 @@ namespace TwolipsDating.Models
 
             modelBuilder.Entity<Profile>()
                 .Property(p => p.SelfDescription)
-                .IsRequired();
-
-            modelBuilder.Entity<Profile>()
-                .Property(p => p.SelfDescription)
                 .HasMaxLength(200);
         }
     }
