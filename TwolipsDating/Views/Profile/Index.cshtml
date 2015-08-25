@@ -21,6 +21,7 @@
     ViewBag.Title = title;
     ViewBag.ImageUrl = Model.ProfileImagePath;
     ViewBag.Description = String.Format("Profile for {0}, {1}", Model.UserName, Model.SelectedTitle);
+    ViewBag.TwitterCardType = "summary";
 }
 
 @Html.HiddenFor(m => m.IsFavoritedByCurrentUser)

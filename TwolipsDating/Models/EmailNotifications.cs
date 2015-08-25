@@ -12,6 +12,7 @@ namespace TwolipsDating.Models
         public bool SendTagNotifications { get; set; }
         public bool SendGiftNotifications { get; set; }
         public bool SendMessageNotifications { get; set; }
+        public bool SendReviewNotifications { get; set; }
 
         public virtual ApplicationUser ApplicationUser { get; set; }
     }

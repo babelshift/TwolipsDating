@@ -11,5 +11,6 @@ namespace TwolipsDating.ViewModels
         public bool SendTagNotifications { get; set; }
         public bool SendGiftNotifications { get; set; }
         public bool SendMessageNotifications { get; set; }
+        public bool SendReviewNotifications { get; set; }
     }
 }
