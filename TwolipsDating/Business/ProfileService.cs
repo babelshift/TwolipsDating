@@ -1022,17 +1022,17 @@ namespace TwolipsDating.Business
         /// <summary>
         /// Toggles if a user is favoritng a profile.
         /// </summary>
-        /// <param name="currentUserId"></param>
-        /// <param name="profileId"></param>
+        /// <param name="followerUserId"></param>
+        /// <param name="followingProfileId"></param>
         /// <returns></returns>
-        public async Task<bool> ToggleFavoriteProfileAsync(string currentUserId, string currentUserName, int profileId)
+        public async Task<bool> ToggleFavoriteProfileAsync(string followerUserId, int followingProfileId)
         {
-            Debug.Assert(!String.IsNullOrEmpty(currentUserId));
-            Debug.Assert(profileId > 0);
+            Debug.Assert(!String.IsNullOrEmpty(followerUserId));
+            Debug.Assert(followingProfileId > 0);
 
             var favoriteEntity = await (from favoriteProfiles in db.FavoriteProfiles
-                                        where favoriteProfiles.UserId == currentUserId
-                                        where favoriteProfiles.ProfileId == profileId
+                                        where favoriteProfiles.UserId == followerUserId
+                                        where favoriteProfiles.ProfileId == followingProfileId
                                         select favoriteProfiles).FirstOrDefaultAsync();
 
             bool isFavorite = false;
@@ -1047,44 +1047,39 @@ namespace TwolipsDating.Business
             // else, add it
             else
             {
-                var favoriteProfileEntity = db.Profiles.Find(profileId);
-
                 FavoriteProfile favoriteProfile = db.FavoriteProfiles.Create();
-                favoriteProfile.UserId = currentUserId;
-                favoriteProfile.ProfileId = profileId;
-                favoriteProfile.Profile = favoriteProfileEntity;
+                favoriteProfile.UserId = followerUserId;
+                favoriteProfile.ProfileId = followingProfileId;
                 favoriteProfile.DateFavorited = DateTime.Now;
-
                 db.FavoriteProfiles.Add(favoriteProfile);
-                isFavorite = true;
 
                 await db.SaveChangesAsync();
 
-                await SendNewFollowerNotificationAsync(currentUserId, currentUserName, favoriteProfile);
+                isFavorite = true;
+
+                await SendNewFollowerNotificationAsync(followerUserId, followingProfileId);
             }
 
             return isFavorite;
         }
 
-        private async Task SendNewFollowerNotificationAsync(string currentUserId, string currentUserName, FavoriteProfile favoriteProfile)
+        private async Task SendNewFollowerNotificationAsync(string followerUserId, int followingProfileId)
         {
             // the "following" user is the person who is being followed
-            string followingUserName = favoriteProfile.Profile.ApplicationUser.UserName;
+            var followingProfile = await db.Profiles.FindAsync(followingProfileId);
+            string followingUserName = followingProfile.ApplicationUser.UserName;
+            string followingUserEmail = followingProfile.ApplicationUser.Email;
+            string followingUserId = followingProfile.ApplicationUser.Id;
 
             // the follower is the person who did the follow action
-            string followerUserName = currentUserName;
-            var followerProfile = await db.Profiles.FirstAsync(p => p.ApplicationUser.Id == currentUserId);
+            var followerProfile = await db.Profiles.FirstAsync(p => p.ApplicationUser.Id == followerUserId);
             string followerProfileImagePath = followerProfile.GetProfileImagePath();
             string followerProfileUrl = String.Format("{0}/{1}", ProfileIndexUrlRoot, followerProfile.Id);
+            string followerUserName = followerProfile.ApplicationUser.UserName;
 
-            // compose and send the email
-            IdentityMessage message = new IdentityMessage()
-            {
-                Body = EmailTextHelper.NewFollowerEmail.GetBody(followingUserName, followerProfileImagePath, followerUserName, followerProfileUrl),
-                Destination = favoriteProfile.Profile.ApplicationUser.Email,
-                Subject = EmailTextHelper.NewFollowerEmail.GetSubject(followerUserName)
-            };
-            await EmailService.SendAsync(message);
+            UserService userService = new UserService(EmailService, ProfileIndexUrlRoot);
+            await userService.SendNewFollowerEmailNotificationAsync(followerUserId, followerProfileImagePath, followerUserName, followerProfileUrl,
+                followingUserId, followingUserName, followingUserEmail);
         }
 
         /// <summary>

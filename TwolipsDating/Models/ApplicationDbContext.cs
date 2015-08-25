@@ -53,6 +53,7 @@ namespace TwolipsDating.Models
         public DbSet<StoreSpotlight> StoreSpotlights { get; set; }
         public DbSet<StoreGiftSpotlight> StoreGiftSpotlights { get; set; }
         public DbSet<TagAndSuggestedCount> TagsAndSuggestedCounts { get; set; }
+        public DbSet<EmailNotifications> EmailNotifications { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -107,6 +108,17 @@ namespace TwolipsDating.Models
             SetupStoreSpotlights(modelBuilder);
             SetupStoreGiftSpotlights(modelBuilder);
             SetupTagsAndSuggestedCountsView(modelBuilder);
+            SetupEmailNotifications(modelBuilder);
+        }
+
+        private void SetupEmailNotifications(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<EmailNotifications>()
+                .HasKey(c => c.ApplicationUserId);
+
+            modelBuilder.Entity<EmailNotifications>()
+                .HasRequired(a => a.ApplicationUser)
+                .WithOptional(a => a.EmailNotifications);
         }
 
         private void SetupTagsAndSuggestedCountsView(DbModelBuilder modelBuilder)
@@ -1016,6 +1028,10 @@ namespace TwolipsDating.Models
         {
             modelBuilder.Entity<ApplicationUser>()
                 .HasOptional(a => a.Profile)
+                .WithRequired(e => e.ApplicationUser);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOptional(a => a.EmailNotifications)
                 .WithRequired(e => e.ApplicationUser);
 
             modelBuilder.Entity<ApplicationUser>()

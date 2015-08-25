@@ -1,17 +1,8 @@
 ﻿@model TwolipsDating.ViewModels.UploadedImageFeedViewModel
 
-@if (!String.IsNullOrEmpty(Model.UploaderProfileImagePath))
-{
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="@Model.UploaderProfileImagePath" />
-    </div>
-}
-else
-{
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="~/Content/Placeholder.png">
-    </div>
-}
+<div class="circular-image-wrapper">
+    <img class="circular-image" src="@Model.UploaderProfileImagePath" />
+</div>
 <div class="feed-item-headline">
     @{
         string text = String.Empty;

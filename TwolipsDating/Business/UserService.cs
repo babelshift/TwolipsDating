@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
@@ -6,11 +7,20 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TwolipsDating.Models;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.Business
 {
     public class UserService : BaseService
     {
+        public UserService() : base() { }
+        
+        public UserService(IIdentityMessageService emailService, string profileIndexUrlRoot)
+            : base(emailService, profileIndexUrlRoot) { }
+
+        public UserService(ApplicationDbContext db, IIdentityMessageService emailService, string profileIndexUrlRoot)
+            : base(db, emailService, profileIndexUrlRoot) { }
+
         /// <summary>
         /// Returns a boolean indicating if a user has ignored another user.
         /// </summary>
@@ -97,6 +107,77 @@ namespace TwolipsDating.Business
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
             return (await GetProfileIdAsync(userId)).HasValue;
+        }
+
+        internal async Task SendNewFollowerEmailNotificationAsync(string followerUserId, string followerProfileImagePath, string followerUserName, string followerProfileUrl,
+            string followingUserId, string followingUserName, string followingEmail)
+        {
+            var emailNotifications = await GetEmailNotificationsForUserAsync(followingUserId);
+
+            // only send an email if the user wants to be notified of this event
+            if (emailNotifications.SendNewFollowerNotifications)
+            {
+                IdentityMessage message = new IdentityMessage()
+                {
+                    Body = EmailTextHelper.NewFollowerEmail.GetBody(followingUserName, followerProfileImagePath, followerUserName, followerProfileUrl),
+                    Destination = followingEmail,
+                    Subject = EmailTextHelper.NewFollowerEmail.GetSubject(followerUserName)
+                };
+                await EmailService.SendAsync(message);
+            }
+        }
+
+        internal async Task<EmailNotifications> GetEmailNotificationsForUserAsync(string userId)
+        {
+            var emailNotifications = from emailNotification in db.EmailNotifications
+                                     where emailNotification.ApplicationUserId == userId
+                                     select emailNotification;
+
+            var result = await emailNotifications.FirstOrDefaultAsync();
+
+            if(result == null)
+            {
+                result = new EmailNotifications()
+                {
+                    ApplicationUserId = userId,
+                    SendGiftNotifications = false,
+                    SendMessageNotifications = false,
+                    SendNewFollowerNotifications = false,
+                    SendTagNotifications = false
+                };
+            }
+
+            return result;
+        }
+
+        internal async Task SaveEmailNotificationChangesAsync(string currentUserId, 
+            bool sendGiftNotifications, 
+            bool sendMessageNotifications, 
+            bool sendNewFollowerNotifications, 
+            bool sendTagNotifications)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(currentUserId));
+
+            EmailNotifications emailNotifications = await db.EmailNotifications.FindAsync(currentUserId);
+            if(emailNotifications == null)
+            {
+                emailNotifications = new EmailNotifications();
+                emailNotifications.ApplicationUserId = currentUserId;
+                emailNotifications.SendGiftNotifications = sendGiftNotifications;
+                emailNotifications.SendMessageNotifications = sendMessageNotifications;
+                emailNotifications.SendNewFollowerNotifications = sendNewFollowerNotifications;
+                emailNotifications.SendTagNotifications = sendTagNotifications;
+                db.EmailNotifications.Add(emailNotifications);
+            }
+            else
+            {
+                emailNotifications.SendGiftNotifications = sendGiftNotifications;
+                emailNotifications.SendMessageNotifications = sendMessageNotifications;
+                emailNotifications.SendNewFollowerNotifications = sendNewFollowerNotifications;
+                emailNotifications.SendTagNotifications = sendTagNotifications;
+            }
+
+            await db.SaveChangesAsync();
         }
     }
 }

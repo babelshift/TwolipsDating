@@ -347,6 +347,11 @@
     <Compile Include="Migrations\201508240108529_RemovedSelfDescriptionRequirement.Designer.cs">
       <DependentUpon>201508240108529_RemovedSelfDescriptionRequirement.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508251251587_AddEmailNotificationsTable.cs" />
+    <Compile Include="Migrations\201508251251587_AddEmailNotificationsTable.Designer.cs">
+      <DependentUpon>201508251251587_AddEmailNotificationsTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EmailNotifications.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
     <Compile Include="Models\StoreSale.cs" />
@@ -1092,6 +1097,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508240108529_RemovedSelfDescriptionRequirement.resx">
       <DependentUpon>201508240108529_RemovedSelfDescriptionRequirement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508251251587_AddEmailNotificationsTable.resx">
+      <DependentUpon>201508251251587_AddEmailNotificationsTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

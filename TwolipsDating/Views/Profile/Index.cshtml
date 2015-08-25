@@ -323,26 +323,12 @@
                         @if (User.Identity.IsAuthenticated && Model.CurrentUserId == Model.ProfileUserId)
                         {
                             <a href="#" data-toggle="modal" data-target="#modalProfileImage" data-keyboard="true" title="Change your profile image">
-                                @if (!String.IsNullOrEmpty(Model.ProfileImagePath))
-                                {
-                                    <img src="@Model.ProfileImagePath" style="max-height: 128px">
-                                }
-                                else
-                                {
-                                    <img src="~/Content/Placeholder.png">
-                                }
+                                <img src="@Model.ProfileImagePath" style="max-height: 128px">
                             </a>
                         }
                         else
                         {
-                            if (!String.IsNullOrEmpty(Model.ProfileImagePath))
-                            {
-                                <img src="@Model.ProfileImagePath" style="max-height: 128px">
-                            }
-                            else
-                            {
-                                <img src="~/Content/Placeholder.png">
-                            }
+                            <img src="@Model.ProfileImagePath" style="max-height: 128px">
                         }
                     </div>
                     <div class="col-sm-7 col-md-8 profile-banner-info" style="">

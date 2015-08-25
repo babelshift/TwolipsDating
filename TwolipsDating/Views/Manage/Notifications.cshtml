@@ -33,32 +33,32 @@
             <div class="alert alert-info">
                 <p>Some actions in our service will cause email notifications to be sent to you.</p>
             </div>
-            <p>Send me an email when:</p>
+            <p>Send me an email when someone:</p>
             @using (Html.BeginForm("notifications", "manage", FormMethod.Post, new { role = "form" }))
             {
                 <div class="form-group">
                     <div class="checkbox">
                         <label>
                             @Html.CheckBoxFor(c => c.SendNewFollowerNotifications)
-                            Someone follows me
+                            Follows me
                         </label>
                     </div>
                     <div class="checkbox">
                         <label>
-                            @Html.CheckBox("dummy")
-                            Someone tags me
+                            @Html.CheckBoxFor(c => c.SendTagNotifications)
+                            Tags me
                         </label>
                     </div>
                     <div class="checkbox">
                         <label>
-                            @Html.CheckBox("dummy")
-                            Someone sends me a gift
+                            @Html.CheckBoxFor(c => c.SendGiftNotifications)
+                            Sends me a gift
                         </label>
                     </div>
                     <div class="checkbox">
                         <label>
-                            @Html.CheckBox("dummy")
-                            Someone messages me
+                            @Html.CheckBoxFor(c => c.SendMessageNotifications)
+                            Messages me
                         </label>
                     </div>
                 </div>

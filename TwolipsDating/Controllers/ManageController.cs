@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System.Collections.Generic;
@@ -135,7 +136,7 @@ namespace TwolipsDating.Controllers
             return View(model);
         }
 
-        private async Task UpdateProfileGender(int? selectedGenderId, Profile profile)
+        private async Task UpdateProfileGender(int? selectedGenderId, TwolipsDating.Models.Profile profile)
         {
             if (selectedGenderId.HasValue
                 && profile != null
@@ -555,7 +556,34 @@ namespace TwolipsDating.Controllers
         public async Task<ActionResult> Notifications()
         {
             await SetNotificationsAsync();
-            ManageNotificationsViewModel viewModel = new ManageNotificationsViewModel();
+
+            var currentUserId = User.Identity.GetUserId();
+
+            var emailNotifications = await userService.GetEmailNotificationsForUserAsync(currentUserId);
+
+            ManageNotificationsViewModel viewModel = Mapper.Map<EmailNotifications, ManageNotificationsViewModel>(emailNotifications);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Notifications(ManageNotificationsViewModel viewModel)
+        {
+            await SetNotificationsAsync();
+
+            if(!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            var currentUserId = User.Identity.GetUserId();
+
+            await userService.SaveEmailNotificationChangesAsync(currentUserId,
+                viewModel.SendGiftNotifications,
+                viewModel.SendMessageNotifications,
+                viewModel.SendNewFollowerNotifications,
+                viewModel.SendTagNotifications);
+
             return View(viewModel);
         }
     }

@@ -15,6 +15,8 @@ namespace TwolipsDating
         {
             string cdn = ConfigurationManager.AppSettings["cdnUrl"];
 
+            Mapper.CreateMap<EmailNotifications, ManageNotificationsViewModel>();
+
             Mapper.CreateMap<TwolipsDating.Models.Profile, ProfileViewModel>()
                 .ForMember(dest => dest.UserName, opts => opts.MapFrom(source => source.ApplicationUser.UserName))
                 .ForMember(dest => dest.Age, opts => opts.MapFrom(source => source.Birthday.GetAge()))

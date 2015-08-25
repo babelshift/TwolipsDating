@@ -42,7 +42,6 @@ namespace TwolipsDating.Controllers
         public async Task<JsonResult> ToggleFavoriteProfile(string profileUserId, int profileId)
         {
             var currentUserId = User.Identity.GetUserId();
-            var currentUserName = User.Identity.Name;
 
             try
             {
@@ -52,7 +51,7 @@ namespace TwolipsDating.Controllers
                     return Json(new { success = false, error = ErrorMessages.CannotFavoriteOwnProfile });
                 }
 
-                bool isFavorite = await ProfileService.ToggleFavoriteProfileAsync(currentUserId, currentUserName, profileId);
+                bool isFavorite = await ProfileService.ToggleFavoriteProfileAsync(currentUserId, profileId);
 
                 return Json(new { success = true, isFavorite = isFavorite });
             }

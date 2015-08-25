@@ -1,17 +1,8 @@
 ﻿@model TwolipsDating.ViewModels.TagSuggestionReceivedFeedViewModel
 
-@if (!String.IsNullOrEmpty(Model.SuggestProfileImagePath))
-{
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="@Model.SuggestProfileImagePath" />
-    </div>
-}
-else
-{
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="~/Content/Placeholder.png">
-    </div>
-}
+<div class="circular-image-wrapper">
+    <img class="circular-image" src="@Model.SuggestProfileImagePath" />
+</div>
 <div class="feed-item-headline">
     <a href="@Url.Action("index", "profile", new { id = Model.SuggestProfileId })">@Model.SuggestUserName</a>
     tagged

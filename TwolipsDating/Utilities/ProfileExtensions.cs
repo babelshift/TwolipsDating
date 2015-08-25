@@ -9,14 +9,10 @@ namespace TwolipsDating.Utilities
     public static class ProfileExtensions
     {
         private static readonly string cdn = ConfigurationManager.AppSettings["cdnUrl"];
+        private const string placeholderFileName = "Placeholder.png";
 
         public static string GetProfileImagePath(string fileName)
         {
-            if (String.IsNullOrEmpty(fileName))
-            {
-                return String.Empty;
-            }
-
             return GetImagePath(fileName);
         }
 
@@ -26,8 +22,10 @@ namespace TwolipsDating.Utilities
             {
                 return GetImagePath(profile.UserImage.FileName);
             }
-
-            return String.Empty;
+            else
+            {
+                return GetImagePath(placeholderFileName);
+            }
         }
 
         public static string GetSenderProfileImagePath(this MessageConversation messageConversation)
@@ -36,8 +34,10 @@ namespace TwolipsDating.Utilities
             {
                 return GetImagePath(messageConversation.SenderProfileImageFileName);
             }
-
-            return String.Empty;
+            else
+            {
+                return GetImagePath(placeholderFileName);
+            }
         }
 
         public static string GetReceiverProfileImagePath(this MessageConversation messageConversation)
@@ -46,12 +46,19 @@ namespace TwolipsDating.Utilities
             {
                 return GetImagePath(messageConversation.ReceiverProfileImageFileName);
             }
-
-            return String.Empty;
+            else
+            {
+                return GetImagePath(placeholderFileName);
+            }
         }
 
         private static string GetImagePath(string fileName)
         {
+            if (String.IsNullOrEmpty(fileName))
+            {
+                fileName = placeholderFileName;
+            }
+
             string realFileName = Path.GetFileNameWithoutExtension(fileName);
             string fileType = Path.GetExtension(fileName);
             

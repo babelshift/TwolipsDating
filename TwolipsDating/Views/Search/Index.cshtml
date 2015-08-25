@@ -48,18 +48,9 @@
                         @{ int k = 0; }
                         @foreach (var profile in Model.SearchResults)
                         {
-                            if (!String.IsNullOrEmpty(profile.ProfileImagePath))
-                            {
-                                <div class="circular-image-wrapper">
-                                    <img class="circular-image" src="@profile.ProfileImagePath" />
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="circular-image-wrapper">
-                                    <img class="circular-image" src="~/Content/Placeholder.png">
-                                </div>
-                            }
+                            <div class="circular-image-wrapper">
+                                <img class="circular-image" src="@profile.ProfileImagePath" />
+                            </div>
                             <div class="profile-info-wrapper">
                                 <span class="name-and-location">
                                     <a href="@Url.Action("index", "profile", new { id = profile.ProfileId })">@profile.UserName</a>

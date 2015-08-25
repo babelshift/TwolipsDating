@@ -117,14 +117,7 @@
                             <div id="@String.Format("user-to-follow-{0}", userProfile.ProfileId)" class="user-to-follow">
                                 <div style="margin-left: 55px;">
                                     <a href="@Url.Action("index", "profile", new{ id = userProfile.ProfileId })">
-                                        @if (!String.IsNullOrEmpty(userProfile.ProfileImagePath))
-                                        {
-                                            <img src="@userProfile.ProfileImagePath">
-                                        }
-                                        else
-                                        {
-                                            <img src="~/Content/Placeholder.png">
-                                        }
+                                        <img src="@userProfile.ProfileImagePath">
                                         <span class="user-to-follow-name">
                                             @userProfile.UserName
                                         </span>

@@ -1,17 +1,8 @@
 ﻿@model TwolipsDating.ViewModels.CompletedQuizFeedViewModel
 
-@if (!String.IsNullOrEmpty(Model.SourceProfileImagePath))
-{
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="@Model.SourceProfileImagePath" />
-    </div>
-}
-else
-{
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="~/Content/Placeholder.png">
-    </div>
-}
+<div class="circular-image-wrapper">
+    <img class="circular-image" src="@Model.SourceProfileImagePath" />
+</div>
 <div class="feed-item-headline">
     <a href="@Url.Action("index", "profile", new { id = Model.SourceProfileId })">@Model.SourceUserName</a>
     completed

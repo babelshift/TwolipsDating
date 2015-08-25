@@ -1,17 +1,8 @@
 ﻿@model TwolipsDating.ViewModels.GiftReceivedFeedViewModel
 
-@if (!String.IsNullOrEmpty(Model.SenderProfileImagePath))
-{
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="@Model.SenderProfileImagePath" />
-    </div>
-}
-else
-{
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="~/Content/Placeholder.png">
-    </div>
-}
+<div class="circular-image-wrapper">
+    <img class="circular-image" src="@Model.SenderProfileImagePath" />
+</div>
 <div class="feed-item-headline">
     <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId })">@Model.SenderUserName</a>
 
@@ -23,7 +14,7 @@ else
     {
         @:sent a gift to
     }
-    
+
     @if (Model.ReceiverUserName == User.Identity.Name)
     {
         @:you

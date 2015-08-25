@@ -1,14 +1,5 @@
 ﻿@model string
 
-@if (!String.IsNullOrEmpty(Model))
-{
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="@Model" />
-    </div>
-}
-else
-{
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="~/Content/Placeholder.png">
-    </div>
-}
+<div class="circular-image-wrapper">
+    <img class="circular-image" src="@Model" />
+</div>
