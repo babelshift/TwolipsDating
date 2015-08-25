@@ -17,8 +17,8 @@ namespace TwolipsDating.Business
         public TriviaService() 
             : base() { }
 
-        public TriviaService(ApplicationDbContext db, IIdentityMessageService emailService, string profileIndexUrlRoot)
-            : base(db, emailService, profileIndexUrlRoot) { }
+        public TriviaService(ApplicationDbContext db, IIdentityMessageService emailService)
+            : base(db, emailService) { }
 
         internal async Task<Quiz> GetQuizAsync(int quizId)
         {
@@ -149,7 +149,7 @@ namespace TwolipsDating.Business
             // save the changes regarding the answered question
             await db.SaveChangesAsync();
 
-            MilestoneService milestoneService = new MilestoneService(db, EmailService, ProfileIndexUrlRoot);
+            MilestoneService milestoneService = new MilestoneService(db, EmailService);
 
             // award the user any question-related milestones if they have enough question-related points
             await milestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.QuestionsAnsweredCorrectly);

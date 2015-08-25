@@ -29,7 +29,7 @@ namespace TwolipsDating.Controllers
         {
             base.OnActionExecuting(filterContext);
             string profileUrlRoot = Url.ActionWithFullUrl(Request, "index", "profile", new { id = (int?)null });
-            profileService = new ProfileService(UserManager.EmailService, profileUrlRoot);
+            profileService = new ProfileService(UserManager.EmailService);
         }
 
         #region Properties

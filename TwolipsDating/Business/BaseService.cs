@@ -11,13 +11,10 @@ namespace TwolipsDating.Business
 {
     public class BaseService
     {
-        private string profileIndexUrlRoot;
         private IIdentityMessageService emailService;
         protected ApplicationDbContext db = new ApplicationDbContext();
 
         protected IIdentityMessageService EmailService { get { return emailService; } }
-
-        protected string ProfileIndexUrlRoot { get { return profileIndexUrlRoot; } }
 
         public BaseService()
         {
@@ -26,19 +23,17 @@ namespace TwolipsDating.Business
 #endif
         }
 
-        public BaseService(IIdentityMessageService emailService, string profileIndexUrlRoot)
+        public BaseService(IIdentityMessageService emailService)
             : this()
         {
             this.emailService = emailService;
-            this.profileIndexUrlRoot = profileIndexUrlRoot;
         }
 
-        public BaseService(ApplicationDbContext db, IIdentityMessageService emailService, string profileIndexUrlRoot)
+        public BaseService(ApplicationDbContext db, IIdentityMessageService emailService)
             : this()
         {
             this.db = db;
             this.emailService = emailService;
-            this.profileIndexUrlRoot = profileIndexUrlRoot;
         }
 
         /// <summary>
@@ -50,7 +45,7 @@ namespace TwolipsDating.Business
         protected async Task AwardAchievedMilestonesForUserAsync(string fromUserId, int milestoneTypeId)
         {
             // handle and save any milestones that the user may have met
-            MilestoneService milestoneService = new MilestoneService(db, emailService, profileIndexUrlRoot);
+            MilestoneService milestoneService = new MilestoneService(db, emailService);
             await milestoneService.AwardAchievedMilestonesAsync(fromUserId, milestoneTypeId);
             await db.SaveChangesAsync();
         }

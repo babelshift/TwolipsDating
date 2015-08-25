@@ -15,11 +15,11 @@ namespace TwolipsDating.Business
     {
         public UserService() : base() { }
         
-        public UserService(IIdentityMessageService emailService, string profileIndexUrlRoot)
-            : base(emailService, profileIndexUrlRoot) { }
+        public UserService(IIdentityMessageService emailService)
+            : base(emailService) { }
 
-        public UserService(ApplicationDbContext db, IIdentityMessageService emailService, string profileIndexUrlRoot)
-            : base(db, emailService, profileIndexUrlRoot) { }
+        public UserService(ApplicationDbContext db, IIdentityMessageService emailService)
+            : base(db, emailService) { }
 
         /// <summary>
         /// Returns a boolean indicating if a user has ignored another user.
@@ -109,7 +109,7 @@ namespace TwolipsDating.Business
             return (await GetProfileIdAsync(userId)).HasValue;
         }
 
-        internal async Task SendNewFollowerEmailNotificationAsync(string followerUserId, string followerProfileImagePath, string followerUserName, string followerProfileUrl,
+        internal async Task SendNewFollowerEmailNotificationAsync(string followerProfileImagePath, string followerUserName, string followerProfileUrl,
             string followingUserId, string followingUserName, string followingEmail)
         {
             var emailNotifications = await GetEmailNotificationsForUserAsync(followingUserId);
@@ -127,7 +127,7 @@ namespace TwolipsDating.Business
             }
         }
 
-        internal async Task SendMessageEmailNotificationAsync(string senderUserId, string senderProfileImagePath, string senderUserName, string messageText, string conversationUrl,
+        internal async Task SendMessageEmailNotificationAsync(string senderProfileImagePath, string senderUserName, string messageText, string conversationUrl,
             string receiverUserId, string receiverUserName, string receiverEmail)
         {
             var emailNotifications = await GetEmailNotificationsForUserAsync(receiverUserId);
@@ -140,6 +140,24 @@ namespace TwolipsDating.Business
                     Body = EmailTextHelper.MessageEmail.GetBody(receiverUserName, senderProfileImagePath, senderUserName, messageText, conversationUrl),
                     Destination = receiverEmail,
                     Subject = EmailTextHelper.MessageEmail.GetSubject(senderUserName)
+                };
+                await EmailService.SendAsync(message);
+            }
+        }
+
+        internal async Task SendGiftEmailNotificationAsync(string senderUserName, string senderProfileImagePath, string senderProfileUrl, string giftName, string giftImagePath, 
+            string receiverUserId, string receiverUserName, string receiverEmail)
+        {
+            var emailNotifications = await GetEmailNotificationsForUserAsync(receiverUserId);
+
+            // only send an email if the user wants to be notified of this event
+            if (emailNotifications.SendGiftNotifications)
+            {
+                IdentityMessage message = new IdentityMessage()
+                {
+                    Body = EmailTextHelper.GiftEmail.GetBody(receiverUserName, giftImagePath, giftName, senderProfileImagePath, senderUserName, senderProfileUrl),
+                    Destination = receiverEmail,
+                    Subject = EmailTextHelper.GiftEmail.GetSubject(senderUserName)
                 };
                 await EmailService.SendAsync(message);
             }

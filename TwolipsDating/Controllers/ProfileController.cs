@@ -51,7 +51,8 @@ namespace TwolipsDating.Controllers
                     return Json(new { success = false, error = ErrorMessages.CannotFavoriteOwnProfile });
                 }
 
-                bool isFavorite = await ProfileService.ToggleFavoriteProfileAsync(currentUserId, profileId);
+                string profileIndexUrlRoot = Url.ActionWithFullUrl(Request, "index", "profile", new { id = (int?)null });
+                bool isFavorite = await ProfileService.ToggleFavoriteProfileAsync(currentUserId, profileId, profileIndexUrlRoot);
 
                 return Json(new { success = true, isFavorite = isFavorite });
             }
@@ -175,7 +176,8 @@ namespace TwolipsDating.Controllers
 
                 if (isCurrentUserEmailConfirmed)
                 {
-                    int giftCount = await ProfileService.SendGiftAsync(currentUserId, profileUserId, giftId, inventoryItemId);
+                    string profileIndexUrlRoot = Url.ActionWithFullUrl(Request, "index", "profile", new { id = (int?)null });
+                    int giftCount = await ProfileService.SendGiftAsync(currentUserId, profileUserId, giftId, inventoryItemId, profileIndexUrlRoot);
                     return Json(new { success = true, giftCount = giftCount });
                 }
                 else

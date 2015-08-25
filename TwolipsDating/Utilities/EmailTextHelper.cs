@@ -4,6 +4,96 @@ namespace TwolipsDating.Utilities
 {
     public static class EmailTextHelper
     {
+        public static class GiftEmail
+        {
+            private const string Subject = "{0} sent you a gift on Twolips!";
+            public static string GetSubject(string followerUserName)
+            {
+                return String.Format(Subject, followerUserName);
+            }
+
+            private const string Body = @"<!DOCTYPE html PUBLIC ""-//W3C//DTD HTML 4.01//EN"" ""http://www.w3.org/TR/html4/strict.dtd"">
+<html>
+	<head>
+		<meta http-equiv=""Content-Type"" content=""text/html; charset=utf-8"" />
+		<meta name=""viewport"" content=""width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"" />
+	</head>
+	<body style=""margin: 0; padding: 0; background: #fff"">
+		<table cellpadding=""0"" cellspacing=""0"" border=""0"" width=""100%"" style=""background: #ddd"">
+		<tbody>
+			<tr>
+				<td>
+					<table align=""center"" cellpadding=""0"" cellspacing=""0"" border=""0"" width=""670"" style=""background: #fff; border-left: 1px solid #ccc; border-right: 1px solid #ccc;"">
+						<tbody>
+							<tr>
+								<td style=""background: #eee; padding: 15px"">
+									<table cellpadding=""0"" cellspacing=""0"" border=""0"">
+										<tr>
+											<td>
+												<img src=""https://www.twolipsdating.com/Content/twolipsicon-white-180x180.png"" width=""32"" height=""32"" />
+											</td>
+											<td style=""padding-left: 5px;"">
+												<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 20px;"">
+													twolips dating
+												</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td style=""border-top: 1px solid #ccc; padding: 15px;"">
+									<div style=""font-family: Helvetica,Arial,sans-serif; margin-bottom: 15px; text-align: center"">
+										<p>{0}, you have a new gift on Twolips.</p>
+										<table cellpadding=""0"" cellspacing=""0"" border=""0"" width=""500"" style=""margin: 0 auto"">
+											<tr>
+												<td style=""text-align:center;"" width=""225"">
+													<img src=""{1}"" />
+												</td>
+												<td>
+												</td>
+												<td style=""text-align:center;"" width=""225"">
+													<img src=""{2}"" />
+												</td>
+											</tr>
+											<tr>
+												<td style=""text-align:center;"">
+													<h2 style=""font-family: Helvetica,Arial,sans-serif; color: #4b4b4b;"">{3}</h2>
+												</td>
+												<td style=""text-align:center;"">
+													<p style=""font-family: Helvetica,Arial,sans-serif; color: #4b4b4b;"">from</p>
+												</td style=""text-align:center;"">
+												<td style=""text-align:center;"">
+													<h2 style=""font-family: Helvetica,Arial,sans-serif; color: #4b4b4b;"">{4}</h2>
+												</td>
+											</tr>
+										</table>
+										<a href=""{5}"" style=""font-size: 18px"">View Profile</a>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td style=""background: #eee; padding: 15px; border-top: 1px solid #ccc"">
+									<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 12px; margin-left: 25px; width: 500px; margin-top: 7px;"">
+										<a href=""https://www.twolipsdating.com/"">Home</a> | <a href=""https://www.twolipsdating.com/about/privacy"">Privacy Policy</a> | <a href=""mailto:info@twolipsdating.com"">Contact Us</a> | <a href=""http://twitter.com/twolipsdating/"">Follow Us on Twitter</a> | <a href=""http://facebook.com/twolipsdating"">Like Us on Facebook</a>
+										<p><small>Twolips Dating - PO Box 780835, Orlando, FL, 32878-0835</small></p>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>";
+
+            public static string GetBody(string receiverUserName, string giftImagePath, string giftName, string senderProfileImagePath, string senderUserName, string senderProfileUrl)
+            {
+                return String.Format(Body, receiverUserName, giftImagePath, senderProfileImagePath, giftName, senderUserName, senderProfileUrl);
+            }
+        }
+
         public static class MessageEmail
         {
             private const string Subject = "{0} sent you a message on Twolips!";

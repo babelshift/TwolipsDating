@@ -16,11 +16,11 @@ namespace TwolipsDating.Business
     {
         public ProfileService() : base() { }
 
-        public ProfileService(IIdentityMessageService emailService, string profileIndexUrlRoot)
-            : base(emailService, profileIndexUrlRoot) { }
+        public ProfileService(IIdentityMessageService emailService)
+            : base(emailService) { }
 
-        public ProfileService(ApplicationDbContext db, IIdentityMessageService emailService, string profileIndexUrlRoot)
-            : base(db, emailService, profileIndexUrlRoot) { }
+        public ProfileService(ApplicationDbContext db, IIdentityMessageService emailService)
+            : base(db, emailService) { }
 
         internal async Task<int> GetReviewsWrittenCountByUserAsync(string userId)
         {
@@ -501,7 +501,7 @@ namespace TwolipsDating.Business
 
             int changes = await db.SaveChangesAsync();
 
-            if(changes > 0)
+            if (changes > 0)
             {
                 var senderUser = db.Users.Find(senderUserId);
                 string senderProfileImagePath = senderUser.Profile.GetProfileImagePath();
@@ -511,8 +511,8 @@ namespace TwolipsDating.Business
                 string receiverUserName = receiverUser.UserName;
                 string receiverEmail = receiverUser.Email;
 
-                UserService userService = new UserService(EmailService, ProfileIndexUrlRoot);
-                await userService.SendMessageEmailNotificationAsync(senderUserId, senderProfileImagePath, senderUserName, body, 
+                UserService userService = new UserService(EmailService);
+                await userService.SendMessageEmailNotificationAsync(senderProfileImagePath, senderUserName, body,
                     conversationUrl, receiverUserId, receiverUserName, receiverEmail);
             }
 
@@ -880,7 +880,7 @@ namespace TwolipsDating.Business
         /// <param name="giftId"></param>
         /// <param name="inventoryItemId"></param>
         /// <returns></returns>
-        public async Task<int> SendGiftAsync(string fromUserId, string toUserId, int giftId, int inventoryItemId)
+        public async Task<int> SendGiftAsync(string fromUserId, string toUserId, int giftId, int inventoryItemId, string senderProfileUrlRoot)
         {
             Debug.Assert(!String.IsNullOrEmpty(fromUserId));
             Debug.Assert(!String.IsNullOrEmpty(toUserId));
@@ -895,9 +895,32 @@ namespace TwolipsDating.Business
             LogGiftTransaction(fromUserId, toUserId, giftId);
 
             // save any changes in our current transaction
-            await db.SaveChangesAsync();
+            int changes = await db.SaveChangesAsync();
 
-            await AwardAchievedMilestonesForUserAsync(fromUserId, (int)MilestoneTypeValues.GiftSent);
+            if (changes > 0)
+            {
+                // award achievements if necessary
+                await AwardAchievedMilestonesForUserAsync(fromUserId, (int)MilestoneTypeValues.GiftSent);
+
+                // send out email notification
+                var senderUser = db.Users.Find(fromUserId);
+                string senderProfileImagePath = senderUser.Profile.GetProfileImagePath();
+                string senderUserName = senderUser.UserName;
+                string senderProfileUrl = String.Format("{0}/{1}", senderProfileUrlRoot, senderUser.Profile.Id);
+
+                var receiverUser = db.Users.Find(toUserId);
+                string receiverUserName = receiverUser.UserName;
+                string receiverEmail = receiverUser.Email;
+                
+                var gift = await db.StoreItems.FindAsync(giftId);
+
+                UserService userService = new UserService(EmailService);
+                await userService.SendGiftEmailNotificationAsync(
+                    senderUserName, senderProfileImagePath, senderProfileUrl, 
+                    gift.Name, gift.GetIconPath(), 
+                    toUserId, receiverUserName, receiverEmail
+                );
+            }
 
             return giftCount;
         }
@@ -1037,7 +1060,7 @@ namespace TwolipsDating.Business
         /// <param name="followerUserId"></param>
         /// <param name="followingProfileId"></param>
         /// <returns></returns>
-        public async Task<bool> ToggleFavoriteProfileAsync(string followerUserId, int followingProfileId)
+        public async Task<bool> ToggleFavoriteProfileAsync(string followerUserId, int followingProfileId, string profileIndexUrlRoot)
         {
             Debug.Assert(!String.IsNullOrEmpty(followerUserId));
             Debug.Assert(followingProfileId > 0);
@@ -1069,13 +1092,13 @@ namespace TwolipsDating.Business
 
                 isFavorite = true;
 
-                await SendNewFollowerNotificationAsync(followerUserId, followingProfileId);
+                await SendNewFollowerNotificationAsync(followerUserId, followingProfileId, profileIndexUrlRoot);
             }
 
             return isFavorite;
         }
 
-        private async Task SendNewFollowerNotificationAsync(string followerUserId, int followingProfileId)
+        private async Task SendNewFollowerNotificationAsync(string followerUserId, int followingProfileId, string profileIndexUrlRoot)
         {
             // the "following" user is the person who is being followed
             var followingProfile = await db.Profiles.FindAsync(followingProfileId);
@@ -1086,11 +1109,11 @@ namespace TwolipsDating.Business
             // the follower is the person who did the follow action
             var followerProfile = await db.Profiles.FirstAsync(p => p.ApplicationUser.Id == followerUserId);
             string followerProfileImagePath = followerProfile.GetProfileImagePath();
-            string followerProfileUrl = String.Format("{0}/{1}", ProfileIndexUrlRoot, followerProfile.Id);
+            string followerProfileUrl = String.Format("{0}/{1}", profileIndexUrlRoot, followerProfile.Id);
             string followerUserName = followerProfile.ApplicationUser.UserName;
 
-            UserService userService = new UserService(EmailService, ProfileIndexUrlRoot);
-            await userService.SendNewFollowerEmailNotificationAsync(followerUserId, followerProfileImagePath, followerUserName, followerProfileUrl,
+            UserService userService = new UserService(EmailService);
+            await userService.SendNewFollowerEmailNotificationAsync(followerProfileImagePath, followerUserName, followerProfileUrl,
                 followingUserId, followingUserName, followingUserEmail);
         }
 
