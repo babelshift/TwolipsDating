@@ -163,6 +163,24 @@ namespace TwolipsDating.Business
             }
         }
 
+        internal async Task SendReviewEmailNotificationAsync(string senderProfileImagePath, string senderUserName, string reviewText, string senderProfileUrl,
+            string receiverUserId, string receiverUserName, string receiverEmail)
+        {
+            var emailNotifications = await GetEmailNotificationsForUserAsync(receiverUserId);
+
+            // only send an email if the user wants to be notified of this event
+            if (emailNotifications.SendReviewNotifications)
+            {
+                IdentityMessage message = new IdentityMessage()
+                {
+                    Body = EmailTextHelper.ReviewEmail.GetBody(receiverUserName, senderProfileImagePath, senderUserName, reviewText, senderProfileUrl),
+                    Destination = receiverEmail,
+                    Subject = EmailTextHelper.ReviewEmail.GetSubject(senderUserName)
+                };
+                await EmailService.SendAsync(message);
+            }
+        }
+
         internal async Task<EmailNotifications> GetEmailNotificationsForUserAsync(string userId)
         {
             var emailNotifications = from emailNotification in db.EmailNotifications
@@ -190,7 +208,8 @@ namespace TwolipsDating.Business
             bool sendGiftNotifications, 
             bool sendMessageNotifications, 
             bool sendNewFollowerNotifications, 
-            bool sendTagNotifications)
+            bool sendTagNotifications,
+            bool sendReviewNotifications)
         {
             Debug.Assert(!String.IsNullOrEmpty(currentUserId));
 
@@ -203,6 +222,7 @@ namespace TwolipsDating.Business
                 emailNotifications.SendMessageNotifications = sendMessageNotifications;
                 emailNotifications.SendNewFollowerNotifications = sendNewFollowerNotifications;
                 emailNotifications.SendTagNotifications = sendTagNotifications;
+                emailNotifications.SendReviewNotifications = sendReviewNotifications;
                 db.EmailNotifications.Add(emailNotifications);
             }
             else
@@ -211,6 +231,7 @@ namespace TwolipsDating.Business
                 emailNotifications.SendMessageNotifications = sendMessageNotifications;
                 emailNotifications.SendNewFollowerNotifications = sendNewFollowerNotifications;
                 emailNotifications.SendTagNotifications = sendTagNotifications;
+                emailNotifications.SendReviewNotifications = sendReviewNotifications;
             }
 
             await db.SaveChangesAsync();

@@ -442,7 +442,7 @@ namespace TwolipsDating.Business
         /// <param name="content"></param>
         /// <param name="ratingValue"></param>
         /// <returns></returns>
-        public async Task<int> WriteReviewAsync(string authorUserId, string targetUserId, string content, int ratingValue)
+        public async Task<int> WriteReviewAsync(string authorUserId, string targetUserId, string content, int ratingValue, string authorProfileUrlRoot)
         {
             Debug.Assert(!String.IsNullOrEmpty(authorUserId));
             Debug.Assert(!String.IsNullOrEmpty(targetUserId));
@@ -456,15 +456,8 @@ namespace TwolipsDating.Business
             }
 
             Review review = db.Reviews.Create();
-
-            ApplicationUser authorUser = new ApplicationUser() { Id = authorUserId };
-            db.Users.Attach(authorUser);
-            review.AuthorUser = authorUser;
-
-            ApplicationUser targetUser = new ApplicationUser() { Id = targetUserId };
-            db.Users.Attach(targetUser);
-            review.TargetUser = targetUser;
-
+            review.AuthorUserId = authorUserId;
+            review.TargetUserId = targetUserId;
             review.Content = content;
             review.DateCreated = DateTime.Now;
             review.RatingValue = ratingValue;
@@ -473,8 +466,24 @@ namespace TwolipsDating.Business
 
             int count = await db.SaveChangesAsync();
 
-            await AwardAchievedMilestonesForUserAsync(authorUserId, (int)MilestoneTypeValues.ProfileReviewsWritten);
+            if(count > 0)
+            {
+                await AwardAchievedMilestonesForUserAsync(authorUserId, (int)MilestoneTypeValues.ProfileReviewsWritten);
 
+                var authorUser = db.Users.Find(authorUserId);
+                string authorUserProfileImagePath = authorUser.Profile.GetProfileImagePath();
+                string authorUserName = authorUser.UserName;
+                string authorProfileUrl = String.Format("{0}/{1}", authorProfileUrlRoot, authorUser.Profile.Id);
+
+                var targetUser = db.Users.Find(targetUserId);
+                string targetUserName = targetUser.UserName;
+                string targetUserEmail = targetUser.Email;
+
+                UserService userService = new UserService(EmailService);
+                await userService.SendReviewEmailNotificationAsync(authorUserProfileImagePath, authorUserName, content, authorProfileUrl, 
+                    targetUserId, targetUserName, targetUserEmail);
+            }
+            
             return count;
         }
 

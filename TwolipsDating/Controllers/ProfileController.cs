@@ -347,7 +347,8 @@ namespace TwolipsDating.Controllers
 
                 if (isCurrentUserEmailConfirmed)
                 {
-                    int changes = await ProfileService.WriteReviewAsync(currentUserId, profileUserId, reviewContent, rating);
+                    string profileIndexUrlRoot = Url.ActionWithFullUrl(Request, "index", "profile", new { id = (int?)null });
+                    int changes = await ProfileService.WriteReviewAsync(currentUserId, profileUserId, reviewContent, rating, profileIndexUrlRoot);
 
                     if (changes > 0)
                     {

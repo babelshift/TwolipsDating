@@ -582,7 +582,8 @@ namespace TwolipsDating.Controllers
                 viewModel.SendGiftNotifications,
                 viewModel.SendMessageNotifications,
                 viewModel.SendNewFollowerNotifications,
-                viewModel.SendTagNotifications);
+                viewModel.SendTagNotifications,
+                viewModel.SendReviewNotifications);
 
             return View(viewModel);
         }
