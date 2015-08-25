@@ -127,6 +127,24 @@ namespace TwolipsDating.Business
             }
         }
 
+        internal async Task SendMessageEmailNotificationAsync(string senderUserId, string senderProfileImagePath, string senderUserName, string messageText, string conversationUrl,
+            string receiverUserId, string receiverUserName, string receiverEmail)
+        {
+            var emailNotifications = await GetEmailNotificationsForUserAsync(receiverUserId);
+
+            // only send an email if the user wants to be notified of this event
+            if (emailNotifications.SendMessageNotifications)
+            {
+                IdentityMessage message = new IdentityMessage()
+                {
+                    Body = EmailTextHelper.MessageEmail.GetBody(receiverUserName, senderProfileImagePath, senderUserName, messageText, conversationUrl),
+                    Destination = receiverEmail,
+                    Subject = EmailTextHelper.MessageEmail.GetSubject(senderUserName)
+                };
+                await EmailService.SendAsync(message);
+            }
+        }
+
         internal async Task<EmailNotifications> GetEmailNotificationsForUserAsync(string userId)
         {
             var emailNotifications = from emailNotification in db.EmailNotifications

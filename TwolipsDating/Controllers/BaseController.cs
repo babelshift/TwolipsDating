@@ -28,7 +28,7 @@ namespace TwolipsDating.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
-            string profileUrlRoot = Request.Url.Scheme + "://" + Request.Url.Authority + Url.Action("index", "profile", new { id = (int?)null });
+            string profileUrlRoot = Url.ActionWithFullUrl(Request, "index", "profile", new { id = (int?)null });
             profileService = new ProfileService(UserManager.EmailService, profileUrlRoot);
         }
 

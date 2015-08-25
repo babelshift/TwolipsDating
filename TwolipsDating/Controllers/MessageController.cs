@@ -269,7 +269,8 @@ namespace TwolipsDating.Controllers
 
                 if (isCurrentUserEmailConfirmed)
                 {
-                    int changes = await ProfileService.SendMessageAsync(currentUserId, viewModel.TargetApplicationUserId, viewModel.NewMessage);
+                    string conversationUrl = Url.ActionWithFullUrl(Request, "conversation", "message", new { id = currentUserId });
+                    int changes = await ProfileService.SendMessageAsync(currentUserId, viewModel.TargetApplicationUserId, viewModel.NewMessage, conversationUrl);
 
                     if (changes == 0)
                     {

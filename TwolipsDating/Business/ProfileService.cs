@@ -485,7 +485,7 @@ namespace TwolipsDating.Business
         /// <param name="receiverUserId"></param>
         /// <param name="body"></param>
         /// <returns></returns>
-        public async Task<int> SendMessageAsync(string senderUserId, string receiverUserId, string body)
+        public async Task<int> SendMessageAsync(string senderUserId, string receiverUserId, string body, string conversationUrl)
         {
             Debug.Assert(!String.IsNullOrEmpty(senderUserId));
             Debug.Assert(!String.IsNullOrEmpty(receiverUserId));
@@ -499,7 +499,24 @@ namespace TwolipsDating.Business
 
             CreateMessage(senderUserId, receiverUserId, body);
 
-            return await db.SaveChangesAsync();
+            int changes = await db.SaveChangesAsync();
+
+            if(changes > 0)
+            {
+                var senderUser = db.Users.Find(senderUserId);
+                string senderProfileImagePath = senderUser.Profile.GetProfileImagePath();
+                string senderUserName = senderUser.UserName;
+
+                var receiverUser = db.Users.Find(receiverUserId);
+                string receiverUserName = receiverUser.UserName;
+                string receiverEmail = receiverUser.Email;
+
+                UserService userService = new UserService(EmailService, ProfileIndexUrlRoot);
+                await userService.SendMessageEmailNotificationAsync(senderUserId, senderProfileImagePath, senderUserName, body, 
+                    conversationUrl, receiverUserId, receiverUserName, receiverEmail);
+            }
+
+            return changes;
         }
 
         /// <summary>
@@ -512,13 +529,8 @@ namespace TwolipsDating.Business
         {
             Message message = db.Messages.Create();
 
-            ApplicationUser senderUser = new ApplicationUser() { Id = senderUserId };
-            db.Users.Attach(senderUser);
-            message.SenderApplicationUser = senderUser;
-
-            ApplicationUser receiverUser = new ApplicationUser() { Id = receiverUserId };
-            db.Users.Attach(receiverUser);
-            message.ReceiverApplicationUser = receiverUser;
+            message.SenderApplicationUserId = senderUserId;
+            message.ReceiverApplicationUserId = receiverUserId;
 
             message.Body = body;
             message.DateSent = DateTime.Now;

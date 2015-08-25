@@ -364,6 +364,7 @@
     <Compile Include="Utilities\TagSuggestionFeedItemKey.cs" />
     <Compile Include="Utilities\QuizExtensions.cs" />
     <Compile Include="Utilities\StoreItemExtensions.cs" />
+    <Compile Include="Utilities\UrlHelperExtensions.cs" />
     <Compile Include="Utilities\UserImageExtensions.cs" />
     <Compile Include="ViewModels\AchievementFeedViewModel.cs" />
     <Compile Include="ViewModels\CompletedQuizFeedViewModel.cs" />
