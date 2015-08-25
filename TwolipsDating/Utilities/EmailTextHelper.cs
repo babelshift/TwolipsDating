@@ -47,7 +47,7 @@ namespace TwolipsDating.Utilities
 										<p>{0}, you have a new follower on Twolips.</p>
 										<img src=""{1}"" />
 										<h2 style=""color: #4b4b4b; margin-top: 5px; margin-bottom: 5px;"">{2}</h2>
-										<a href=""#"" style=""font-size: 18px"">View Profile</a>
+										<a href=""{3}"" style=""font-size: 18px"">View Profile</a>
 									</div>
 								</td>
 							</tr>
@@ -67,9 +67,9 @@ namespace TwolipsDating.Utilities
 	</body>
 </html>";
 
-            public static string GetBody(string followingUserName, string followingProfileImagePath, string followerUserName)
+            public static string GetBody(string followingUserName, string followerProfileImagePath, string followerUserName, string profileUrl)
             {
-                return String.Format(Body, followingUserName, followingProfileImagePath, followerUserName);
+                return String.Format(Body, followingUserName, followerProfileImagePath, followerUserName, profileUrl);
             }
         }
 

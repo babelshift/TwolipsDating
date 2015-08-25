@@ -551,5 +551,12 @@ namespace TwolipsDating.Controllers
         }
 
         #endregion Helpers
+
+        public async Task<ActionResult> Notifications()
+        {
+            await SetNotificationsAsync();
+            ManageNotificationsViewModel viewModel = new ManageNotificationsViewModel();
+            return View(viewModel);
+        }
     }
 }

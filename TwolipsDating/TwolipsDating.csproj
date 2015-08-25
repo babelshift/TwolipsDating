@@ -364,6 +364,7 @@
     <Compile Include="ViewModels\CompletedQuizFeedViewModel.cs" />
     <Compile Include="ViewModels\GiftReceivedFeedItemViewModel.cs" />
     <Compile Include="ViewModels\GiftReceivedFeedViewModel.cs" />
+    <Compile Include="ViewModels\ManageNotificationsViewModel.cs" />
     <Compile Include="ViewModels\QuizSearchResultViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
@@ -888,6 +889,7 @@
     <Content Include="Views\Shared\_StarRatingPartial.cshtml" />
     <Content Include="Views\Shared\_FeedItemCompletedQuizPartial.cshtml" />
     <Content Include="Views\Shared\_FeedItemTagSuggestionPartial.cshtml" />
+    <Content Include="Views\Manage\Notifications.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

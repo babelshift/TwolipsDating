@@ -51,8 +51,10 @@
                             </div>
                         </div>
                         <div class="checkbox">
-                            @Html.CheckBoxFor(m => m.RememberMe)
-                            @Html.LabelFor(m => m.RememberMe)
+                            <label>
+                                @Html.CheckBoxFor(m => m.RememberMe)
+                                Remember me
+                            </label>
                         </div>
                         <button type="submit" class="btn btn-success">Log in</button>
                         <br />

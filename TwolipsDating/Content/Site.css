@@ -76,13 +76,6 @@ input[type="checkbox"].input-validation-error {
     display: none;
 }
 
-/*.radio input[type="radio"],
-.radio-inline input[type="radio"],}*/
-.checkbox input[type="checkbox"],
-.checkbox-inline input[type="checkbox"] {
-    margin-left: 0;
-}
-
 .jumbotron {
     color: #fff;
     padding: 10px;

@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
@@ -15,9 +16,11 @@ namespace TwolipsDating.Business
     {
         public ProfileService() : base() { }
 
-        public ProfileService(IIdentityMessageService emailService) : base(emailService) { }
+        public ProfileService(IIdentityMessageService emailService, string profileIndexUrlRoot)
+            : base(emailService, profileIndexUrlRoot) { }
 
-        public ProfileService(ApplicationDbContext db, IIdentityMessageService emailService) : base(db, emailService) { }
+        public ProfileService(ApplicationDbContext db, IIdentityMessageService emailService, string profileIndexUrlRoot)
+            : base(db, emailService, profileIndexUrlRoot) { }
 
         internal async Task<int> GetReviewsWrittenCountByUserAsync(string userId)
         {
@@ -1057,20 +1060,31 @@ namespace TwolipsDating.Business
 
                 await db.SaveChangesAsync();
 
-                string followingUserName = favoriteProfile.Profile.ApplicationUser.UserName;
-                string followingProfileImagePath = favoriteProfile.Profile.GetProfileImagePath();
-                string followerUserName = currentUserName;
-
-                IdentityMessage message = new IdentityMessage()
-                {
-                    Body = EmailTextHelper.NewFollowerEmail.GetBody(followingUserName, followingProfileImagePath, followerUserName),
-                    Destination = favoriteProfile.Profile.ApplicationUser.Email,
-                    Subject = EmailTextHelper.NewFollowerEmail.GetSubject(followerUserName)
-                };
-                await EmailService.SendAsync(message);
+                await SendNewFollowerNotificationAsync(currentUserId, currentUserName, favoriteProfile);
             }
 
             return isFavorite;
+        }
+
+        private async Task SendNewFollowerNotificationAsync(string currentUserId, string currentUserName, FavoriteProfile favoriteProfile)
+        {
+            // the "following" user is the person who is being followed
+            string followingUserName = favoriteProfile.Profile.ApplicationUser.UserName;
+
+            // the follower is the person who did the follow action
+            string followerUserName = currentUserName;
+            var followerProfile = await db.Profiles.FirstAsync(p => p.ApplicationUser.Id == currentUserId);
+            string followerProfileImagePath = followerProfile.GetProfileImagePath();
+            string followerProfileUrl = String.Format("{0}/{1}", ProfileIndexUrlRoot, followerProfile.Id);
+
+            // compose and send the email
+            IdentityMessage message = new IdentityMessage()
+            {
+                Body = EmailTextHelper.NewFollowerEmail.GetBody(followingUserName, followerProfileImagePath, followerUserName, followerProfileUrl),
+                Destination = favoriteProfile.Profile.ApplicationUser.Email,
+                Subject = EmailTextHelper.NewFollowerEmail.GetSubject(followerUserName)
+            };
+            await EmailService.SendAsync(message);
         }
 
         /// <summary>

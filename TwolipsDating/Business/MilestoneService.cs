@@ -12,10 +12,8 @@ namespace TwolipsDating.Business
 {
     public class MilestoneService : BaseService
     {
-        public MilestoneService(ApplicationDbContext db, IIdentityMessageService emailService)
-            : base(db, emailService)
-        {
-        }
+        public MilestoneService(ApplicationDbContext db, IIdentityMessageService emailService, string profileIndexUrlRoot)
+            : base(db, emailService, profileIndexUrlRoot) { }
 
         /// <summary>
         /// Based on the milestone type, performs a lookup to see if the user has met the requirements of any milestones of that type. If the user
@@ -53,8 +51,8 @@ namespace TwolipsDating.Business
         {
             int amount = 0;
 
-            TriviaService triviaService = new TriviaService(db, EmailService);
-            ProfileService profileService = new ProfileService(db, EmailService);
+            TriviaService triviaService = new TriviaService(db, EmailService, ProfileIndexUrlRoot);
+            ProfileService profileService = new ProfileService(db, EmailService, ProfileIndexUrlRoot);
 
             // get the number of questions answered correctly
             if (milestoneTypeId == (int)MilestoneTypeValues.QuestionsAnsweredCorrectly)

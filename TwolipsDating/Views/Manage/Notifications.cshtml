@@ -1,0 +1,69 @@
+﻿@model TwolipsDating.ViewModels.ManageNotificationsViewModel
+@{
+    ViewBag.Title = "Manage notifications";
+    ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
+}
+
+<div class="col-sm-4 col-sm-offset-1 col-md-3 col-md-offset-2">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation">
+                    <a href="@Url.Action("index", "manage")"><i class="glyphicon glyphicon-user"></i> Profile</a>
+                </li>
+                <li role="presentation">
+                    <a href="@Url.Action("settings", "manage")"><i class="glyphicon glyphicon-cog"></i> Account</a>
+                </li>
+                <li role="presentation">
+                    <a href="@Url.Action("externals", "manage")"><i class="glyphicon glyphicon-log-in"></i> Social Logins</a>
+                </li>
+                <li role="presentation" class="active">
+                    <a href="@Url.Action("notifications", "manage")"><i class="glyphicon glyphicon-envelope"></i> Email Notifications</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="col-sm-6 col-md-5">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <p class="panel-title">Email Notifications</p>
+        </div>
+        <div class="panel-body">
+            <div class="alert alert-info">
+                <p>Some actions in our service will cause email notifications to be sent to you.</p>
+            </div>
+            <p>Send me an email when:</p>
+            @using (Html.BeginForm("notifications", "manage", FormMethod.Post, new { role = "form" }))
+            {
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            @Html.CheckBoxFor(c => c.SendNewFollowerNotifications)
+                            Someone follows me
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            @Html.CheckBox("dummy")
+                            Someone tags me
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            @Html.CheckBox("dummy")
+                            Someone sends me a gift
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            @Html.CheckBox("dummy")
+                            Someone messages me
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-ok"></i> Save changes</button>
+            }
+        </div>
+    </div>
+</div>
