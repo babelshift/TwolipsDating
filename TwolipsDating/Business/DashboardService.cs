@@ -145,5 +145,17 @@ where
             var results = await tagSuggestionForFavorite.Union(tagSuggestionByFavorite).ToListAsync();
             return results.AsReadOnly();
         }
+
+        internal async Task<IReadOnlyCollection<MilestoneAchievement>> GetRecentFollowerAchievementsAsync(string userId)
+        {
+            var achievements = from achievement in db.MilestoneAchievements
+                               join favoritedProfiles in db.FavoriteProfiles on achievement.User.Profile.Id equals favoritedProfiles.ProfileId
+                               where favoritedProfiles.UserId == userId
+                               where achievement.User.IsActive
+                               select achievement;
+
+            var results = await achievements.ToListAsync();
+            return results.AsReadOnly();
+        }
     }
 }

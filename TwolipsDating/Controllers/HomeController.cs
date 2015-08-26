@@ -47,6 +47,8 @@ namespace TwolipsDating.Controllers
 
                 await AddTagSuggestionsToFeedAsync(currentUserId, dashboardItems);
 
+                await AddAchievementsToFeedAsync(currentUserId, dashboardItems);
+
                 await SetNotificationsAsync();
 
                 DashboardViewModel viewModel = new DashboardViewModel();
@@ -237,6 +239,22 @@ namespace TwolipsDating.Controllers
                     ItemType = DashboardFeedItemType.TagSuggestion,
                     DateOccurred = tagsSuggestedViewModel.DateSuggested,
                     TagSuggestionReceivedFeedItem = tagsSuggestedViewModel
+                });
+            }
+        }
+
+        private async Task AddAchievementsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
+        {
+            var achievements = await dashboardService.GetRecentFollowerAchievementsAsync(currentUserId);
+            var achievementFeedViewModels = Mapper.Map<IReadOnlyCollection<MilestoneAchievement>, IReadOnlyCollection<AchievementFeedViewModel>>(achievements);
+
+            foreach (var achievementFeedViewModel in achievementFeedViewModels)
+            {
+                dashboardItems.Add(new DashboardItemViewModel()
+                {
+                    ItemType = DashboardFeedItemType.AchievementObtained,
+                    DateOccurred = achievementFeedViewModel.DateAchieved,
+                    AchievementFeedItem = achievementFeedViewModel
                 });
             }
         }

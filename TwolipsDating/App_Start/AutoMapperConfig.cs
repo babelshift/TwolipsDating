@@ -110,6 +110,13 @@ namespace TwolipsDating
                 .ForMember(dest => dest.Tags, opts => opts.UseValue(new List<string>()))
                 .AfterMap((source, dest) => dest.Tags.Add(source.Tag.Name));
 
+            Mapper.CreateMap<MilestoneAchievement, AchievementFeedViewModel>()
+                .ForMember(dest => dest.DateAchieved, opts => opts.MapFrom(source => source.DateAchieved))
+                .ForMember(dest => dest.AchievementName, opts => opts.MapFrom(source => String.Format("{0} ({1})", source.Milestone.MilestoneType.Name, source.Milestone.AmountRequired)))
+                .ForMember(dest => dest.ProfileId, opts => opts.MapFrom(source => source.User.Profile.Id))
+                .ForMember(dest => dest.UserName, opts => opts.MapFrom(source => source.User.UserName))
+                .ForMember(dest => dest.UserProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileImagePath()));
+
             Mapper.CreateMap<Tag, TagViewModel>();
 
             Mapper.CreateMap<Tag, ProfileTagSuggestionViewModel>()

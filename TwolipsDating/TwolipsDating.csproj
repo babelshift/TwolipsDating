@@ -900,6 +900,7 @@
     <Content Include="Views\Shared\_FeedItemCompletedQuizPartial.cshtml" />
     <Content Include="Views\Shared\_FeedItemTagSuggestionPartial.cshtml" />
     <Content Include="Views\Manage\Notifications.cshtml" />
+    <Content Include="Views\Shared\_FeedItemAchievementPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

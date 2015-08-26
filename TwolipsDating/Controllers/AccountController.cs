@@ -87,7 +87,7 @@ namespace TwolipsDating.Controllers
         {
             var user = await UserManager.FindByEmailAsync(email);
 
-            if(user != null)
+            if (user != null)
             {
                 string userName = user.UserName;
                 var result = await SignInManager.PasswordSignInAsync(user.UserName, password, rememberMe, shouldLockout: true);
@@ -193,10 +193,13 @@ namespace TwolipsDating.Controllers
                 DateLastLogin = DateTime.Now,
                 IsActive = true
             };
+
             var result = await UserManager.CreateAsync(user, password);
 
             if (result.Succeeded)
             {
+                
+
                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                 await SendRegistrationConfirmationEmail(user);
@@ -236,7 +239,7 @@ namespace TwolipsDating.Controllers
 
             ApplicationUser user = await UserManager.FindByIdAsync(userId);
 
-            if(user.EmailConfirmed)
+            if (user.EmailConfirmed)
             {
                 return RedirectToAction("index", "home");
             }
