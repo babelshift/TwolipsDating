@@ -21,7 +21,7 @@ insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 1, Id from dbo.Quest
 insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 12, Id from dbo.Questions where Content = 'In United States history, the 1870s to 1900 saw both a large economic and poverty increase. What was this period called?';	
 insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 26, Id from dbo.Questions where Content = 'What does CEO stand for?';		
 insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 15, Id from dbo.Questions where Content = 'In traditional color theory, what are the three primary colors?';		
-insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 15, Id from dbo.Questions where Content = 'A tutu is tradtionally worn during which type of dance performance?';		
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 15, Id from dbo.Questions where Content = 'A tutu is traditionally worn during which type of dance performance?';		
 insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 15, Id from dbo.Questions where Content = 'Michelangelo''s David belongs to which branch of visual arts?';		
 insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 12, Id from dbo.Questions where Content = 'In what country was Rembrandt van Rijn born?';
 insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 1, Id from dbo.Questions where Content = 'In what country was Rembrandt van Rijn born?';	
@@ -254,3 +254,27 @@ insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 16, Id from dbo.Ques
 insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 16, Id from dbo.Questions where Content = 'What chapter of the Spaceballs saga does this film show?';
 insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 16, Id from dbo.Questions where Content = 'Who was Princess Vespa originally supposed to marry?';
 insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 16, Id from dbo.Questions where Content = 'What is happening at the church the day after Vespa''s wedding?';
+
+-- 8/25/2015
+
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 12, Id from dbo.Questions where Content = 'What country shares the Caribbean island of Hispaniola with the Dominican Republic?';		
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 1, Id from dbo.Questions where Content = 'If you have one of each U.S. paper currency containing the image of a President located on Mt. Rushmore, how much money would you have?';		
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 3, Id from dbo.Questions where Content = 'What two teams played against each other at the first Super Bowl?';
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 29, Id from dbo.Questions where Content = 'What two teams played against each other at the first Super Bowl?';	
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 12, Id from dbo.Questions where Content = 'What U.S. state shares the longest border with a foreign country?';		
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 20, Id from dbo.Questions where Content = 'The fins of what fish are most commonly made into soup?';
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 14, Id from dbo.Questions where Content = 'The fins of what fish are most commonly made into soup?';	
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 22, Id from dbo.Questions where Content = 'The fastest growing plant can increase up to 35 inches (90 cm) in one day. What is it?';		
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 3, Id from dbo.Questions where Content = 'What is Magic Johnson''s real name?';
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 29, Id from dbo.Questions where Content = 'What is Magic Johnson''s real name?';	
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 14, Id from dbo.Questions where Content = 'What is the Hindi word for spicy jelly or relish?';
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 20, Id from dbo.Questions where Content = 'What is the Hindi word for spicy jelly or relish?';	
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 13, Id from dbo.Questions where Content = 'Dhalsim is a character in which game?';		
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 13, Id from dbo.Questions where Content = 'Which is not considered a 6th generation game console?';		
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 13, Id from dbo.Questions where Content = 'How many unlockable characters can be found in Super Smash Brothers?';		
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 13, Id from dbo.Questions where Content = 'The first Street Fighter game was released in what year?';		
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 13, Id from dbo.Questions where Content = 'Sony’s PlayStation was originally planned as a CD-ROM add-on for the Super Nintendo. True or False?';		
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 13, Id from dbo.Questions where Content = 'E.T. - The Extra Terrestrial for Atari 2600 sold how many units?';
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 2, Id from dbo.Questions where Content = 'E.T. - The Extra Terrestrial for Atari 2600 sold how many units?';	
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 1, Id from dbo.Questions where Content = 'What is the sine of an angle?';
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 22, Id from dbo.Questions where Content = 'What is the sine of an angle?';	

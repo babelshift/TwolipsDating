@@ -584,7 +584,7 @@ namespace TwolipsDating.Controllers
 
             var storeTransactions = Mapper.Map<IReadOnlyCollection<StoreTransactionLog>, List<StoreTransactionViewModel>>(transactions);
 
-            await AddTitlesToStoreTransactions(storeTransactions, currentUserId);
+            //await AddTitlesToStoreTransactions(storeTransactions, currentUserId);
 
             CalculateTotalPointsSpent(viewModel, storeTransactions);
 
@@ -608,23 +608,23 @@ namespace TwolipsDating.Controllers
             viewModel.TotalSpent = totalSpent;
         }
 
-        private async Task AddTitlesToStoreTransactions(List<StoreTransactionViewModel> storeTransactions, string currentUserId)
-        {
-            var titles = await userService.GetTitlesOwnedByUserAsync(currentUserId);
+        //private async Task AddTitlesToStoreTransactions(List<StoreTransactionViewModel> storeTransactions, string currentUserId)
+        //{
+        //    var titles = await userService.GetTitlesOwnedByUserAsync(currentUserId);
 
-            foreach (var title in titles)
-            {
-                storeTransactions.Add(new StoreTransactionViewModel()
-                {
-                    TransactionDate = title.Value.DateObtained,
-                    ItemName = title.Value.StoreItem.Name,
-                    ItemCost = title.Value.StoreItem.PointPrice,
-                    ItemCount = 1,
-                    ItemType = "Title",
-                    TotalCost = title.Value.StoreItem.PointPrice
-                });
-            }
-        }
+        //    foreach (var title in titles)
+        //    {
+        //        storeTransactions.Add(new StoreTransactionViewModel()
+        //        {
+        //            TransactionDate = title.Value.DateObtained,
+        //            ItemName = title.Value.StoreItem.Name,
+        //            ItemCost = title.Value.StoreItem.PointPrice,
+        //            ItemCount = 1,
+        //            ItemType = "Title",
+        //            TotalCost = title.Value.StoreItem.PointPrice
+        //        });
+        //    }
+        //}
 
         protected override void Dispose(bool disposing)
         {
