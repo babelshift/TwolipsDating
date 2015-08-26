@@ -522,3 +522,16 @@ input[readonly] {
 .feed-item-comment {
     margin-bottom: 0;
 }
+
+.pagination { 
+    margin: 0;
+}
+
+.pagination > li > a {
+    color: #333;
+    border: 1px solid #eee;
+}
+
+.pagination > li > a:hover {
+    background-color: #eee;
+}

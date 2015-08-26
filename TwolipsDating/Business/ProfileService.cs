@@ -762,15 +762,16 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<Message>> GetMessagesByUserAsync(string userId)
+        public async Task<IReadOnlyCollection<Message>> GetMessagesReceivedByUserAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
             var userMessages = from messages in db.Messages
+                               .Include(m => m.ReceiverApplicationUser)
+                               .Include(m => m.SenderApplicationUser)
                                where messages.ReceiverApplicationUserId == userId
-                                   //|| messages.SenderApplicationUserId == userId
-                                   //where messages.ReceiverApplicationUser.IsActive
-                               && messages.SenderApplicationUser.IsActive
+                               where messages.ReceiverApplicationUser.IsActive
+                               where messages.SenderApplicationUser.IsActive
                                select messages;
             var results = await userMessages.ToListAsync();
             return results.AsReadOnly();
@@ -788,24 +789,6 @@ namespace TwolipsDating.Business
             var userMessages = from messages in db.Messages
                                where messages.SenderApplicationUserId == userId
                                where messages.SenderApplicationUser.IsActive
-                               select messages;
-
-            var results = await userMessages.ToListAsync();
-            return results.AsReadOnly();
-        }
-
-        /// <summary>
-        /// Returns a collection of messages sent to a user. Returns only messages sent to active users.
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public async Task<IReadOnlyCollection<Message>> GetMessagesReceivedByUserAsync(string userId)
-        {
-            Debug.Assert(!String.IsNullOrEmpty(userId));
-
-            var userMessages = from messages in db.Messages
-                               where messages.ReceiverApplicationUserId == userId
-                               where messages.ReceiverApplicationUser.IsActive
                                select messages;
 
             var results = await userMessages.ToListAsync();

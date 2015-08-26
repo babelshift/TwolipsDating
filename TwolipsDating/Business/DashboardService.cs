@@ -129,6 +129,8 @@ where
         internal async Task<IReadOnlyCollection<TagSuggestion>> GetRecentFollowerTagSuggestionsAsync(string userId)
         {
             var tagSuggestionForFavorite = from tagSuggestion in db.TagSuggestions
+                                           .Include(t => t.Profile)
+                                           .Include(t => t.SuggestingUser)
                                            join favoritedProfiles in db.FavoriteProfiles on tagSuggestion.Profile.Id equals favoritedProfiles.ProfileId
                                            where favoritedProfiles.UserId == userId
                                            where tagSuggestion.SuggestingUser.IsActive
@@ -136,6 +138,8 @@ where
                                            select tagSuggestion;
 
             var tagSuggestionByFavorite = from tagSuggestion in db.TagSuggestions
+                                           .Include(t => t.Profile)
+                                           .Include(t => t.SuggestingUser)
                                           join favoritedProfiles in db.FavoriteProfiles on tagSuggestion.SuggestingUser.Profile.Id equals favoritedProfiles.ProfileId
                                           where favoritedProfiles.UserId == userId
                                           where tagSuggestion.SuggestingUser.IsActive
@@ -149,6 +153,8 @@ where
         internal async Task<IReadOnlyCollection<MilestoneAchievement>> GetRecentFollowerAchievementsAsync(string userId)
         {
             var achievements = from achievement in db.MilestoneAchievements
+                               .Include(a => a.Milestone)
+                               .Include(a => a.User)
                                join favoritedProfiles in db.FavoriteProfiles on achievement.User.Profile.Id equals favoritedProfiles.ProfileId
                                where favoritedProfiles.UserId == userId
                                where achievement.User.IsActive

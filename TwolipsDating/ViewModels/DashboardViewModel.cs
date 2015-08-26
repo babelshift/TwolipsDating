@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using PagedList;
+using System.Collections.Generic;
 
 namespace TwolipsDating.ViewModels
 {
@@ -12,7 +13,7 @@ namespace TwolipsDating.ViewModels
 
         public QuestionViewModel RandomQuestion { get; set; }
 
-        public IReadOnlyList<DashboardItemViewModel> Items { get; set; }
+        public IPagedList<DashboardItemViewModel> Items { get; set; }
 
         public IReadOnlyCollection<QuizOverviewViewModel> Quizzes { get; set; }
 

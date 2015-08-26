@@ -9,6 +9,7 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
+using PagedList;
 
 namespace TwolipsDating.Controllers
 {
@@ -23,15 +24,14 @@ namespace TwolipsDating.Controllers
 
         #endregion Services
 
+        [RequireProfile]
         [AllowAnonymous]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page)
         {
             // if the user is authenticated, allow them to view their dashboard
             if (User.Identity.IsAuthenticated)
             {
                 string currentUserId = User.Identity.GetUserId();
-
-                if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
 
                 List<DashboardItemViewModel> dashboardItems = new List<DashboardItemViewModel>();
 
@@ -54,10 +54,15 @@ namespace TwolipsDating.Controllers
                 DashboardViewModel viewModel = new DashboardViewModel();
                 viewModel.CurrentUserId = currentUserId;
                 viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+
+                int pageSize = 20;
+                int pageNumber = page ?? 1;
+
                 viewModel.Items = dashboardItems
                     .OrderByDescending(v => v.DateOccurred)
                     .ToList()
-                    .AsReadOnly();
+                    .AsReadOnly()
+                    .ToPagedList(pageNumber, pageSize);
 
                 await SetupReviewViolationsOnDashboardAsync(viewModel);
 
@@ -182,7 +187,7 @@ namespace TwolipsDating.Controllers
         /// <returns></returns>
         private async Task AddMessagesToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
-            var messages = await ProfileService.GetMessagesByUserAsync(currentUserId);
+            var messages = await ProfileService.GetMessagesReceivedByUserAsync(currentUserId);
             var messageFeedViewModel = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyCollection<MessageFeedViewModel>>(messages);
 
             foreach (var messageFeed in messageFeedViewModel)

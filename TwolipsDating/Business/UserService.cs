@@ -79,6 +79,29 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
+        internal int? GetProfileId(string userId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            var profile = (from profiles in db.Profiles
+                                 where profiles.ApplicationUser.Id == userId
+                                 select profiles).FirstOrDefault();
+
+            if (profile != null)
+            {
+                return profile.Id;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Returns the profile ID of the passed user ID. Returns null if the user has no profile.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         internal async Task<int?> GetProfileIdAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
@@ -107,6 +130,13 @@ namespace TwolipsDating.Business
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
             return (await GetProfileIdAsync(userId)).HasValue;
+        }
+
+        internal bool DoesUserHaveProfile(string userId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            return GetProfileId(userId).HasValue;
         }
 
         internal async Task SendNewFollowerEmailNotificationAsync(string followerProfileImagePath, string followerUserName, string followerProfileUrl,

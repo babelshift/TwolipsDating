@@ -222,7 +222,7 @@ namespace TwolipsDating.Controllers
 
             if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
 
-            var messages = await ProfileService.GetMessagesByUserAsync(currentUserId);
+            var messages = await ProfileService.GetMessagesReceivedByUserAsync(currentUserId);
 
             var sentMessages = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyCollection<SentMessageViewModel>>(messages);
 
