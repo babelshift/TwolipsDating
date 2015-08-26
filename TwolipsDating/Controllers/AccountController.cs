@@ -114,7 +114,7 @@ namespace TwolipsDating.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    await userService.SetUserLastLoginToNowAsync(model.Email);
+                    await userService.SetUserLastLoginByEmailAsync(model.Email);
                     return RedirectToLocal(returnUrl);
 
                 case SignInStatus.LockedOut:
@@ -475,7 +475,8 @@ namespace TwolipsDating.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    await userService.SetUserLastLoginToNowAsync(loginInfo.Email);
+                    var user = await UserManager.FindAsync(loginInfo.Login);
+                    await userService.SetUserLastLoginByIdAsync(user.Id);
                     return RedirectToLocal(returnUrl);
 
                 case SignInStatus.LockedOut:

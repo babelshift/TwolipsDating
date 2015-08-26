@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -467,9 +468,19 @@ namespace TwolipsDating.Controllers
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
             if (loginInfo == null)
             {
+                Log.Error("External login information is null when linking an account.", String.Empty);
+
                 return RedirectToAction("Externals", new { Message = ManageMessageId.Error });
             }
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
+
+            Log.Info(String.Format("UserId: {0}, Provider: {1}, Key: {2}", User.Identity.GetUserId(), loginInfo.Login.LoginProvider, loginInfo.Login.ProviderKey));
+
+            foreach(string error in result.Errors)
+            {
+                Log.Error(error, String.Empty);
+            }
+
             return result.Succeeded ? RedirectToAction("Externals") : RedirectToAction("Externals", new { Message = ManageMessageId.Error });
         }
 

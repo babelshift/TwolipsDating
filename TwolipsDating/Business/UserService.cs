@@ -242,11 +242,20 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        internal async Task SetUserLastLoginToNowAsync(string email)
+        internal async Task SetUserLastLoginByEmailAsync(string email)
         {
             Debug.Assert(!String.IsNullOrEmpty(email));
 
             var user = await db.Users.FirstAsync(u => u.Email == email);
+            user.DateLastLogin = DateTime.Now;
+            await db.SaveChangesAsync();
+        }
+
+        internal async Task SetUserLastLoginByIdAsync(string userId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            var user = db.Users.Find(userId);
             user.DateLastLogin = DateTime.Now;
             await db.SaveChangesAsync();
         }
