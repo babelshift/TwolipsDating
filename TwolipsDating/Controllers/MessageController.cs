@@ -29,6 +29,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [RequireProfile]
         public async Task<ActionResult> Conversation(string id)
         {
             // we want to look up conversations between a user and another user
@@ -38,9 +39,6 @@ namespace TwolipsDating.Controllers
                 // if the id is invalid, return 404
 
             var currentUserId = User.Identity.GetUserId();
-
-            // if the user doesn't have a profile, redirect them to the profile to create  it
-            if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
 
             ConversationViewModel viewModel = new ConversationViewModel();
 
@@ -85,6 +83,7 @@ namespace TwolipsDating.Controllers
             viewModel.TargetUserName = profileForOtherUser.ApplicationUser.UserName;
             viewModel.TargetUserAge = profileForOtherUser.Birthday.GetAge();
             viewModel.TargetUserLocation = profileForOtherUser.GeoCity.ToFullLocationString();
+            viewModel.TargetUserGender = profileForOtherUser.Gender.Name;
             viewModel.TargetProfileId = profileForOtherUser.Id;
             viewModel.TargetUserId = id;
             viewModel.TargetProfileImagePath = profileForOtherUser.GetProfileThumbnailImagePath();
@@ -190,11 +189,10 @@ namespace TwolipsDating.Controllers
         /// Sets up a view model displaying all received messages for the currently logged in user.
         /// </summary>
         /// <returns></returns>
+        [RequireProfile]
         public async Task<ActionResult> Received()
         {
             var currentUserId = User.Identity.GetUserId();
-
-            if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
 
             var messages = await ProfileService.GetMessagesReceivedByUserAsync(currentUserId);
 
@@ -216,11 +214,10 @@ namespace TwolipsDating.Controllers
         /// Sets up a view model displaying all sent messages for the currently logged in user.
         /// </summary>
         /// <returns></returns>
+        [RequireProfile]
         public async Task<ActionResult> Sent()
         {
             var currentUserId = User.Identity.GetUserId();
-
-            if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
 
             var messages = await ProfileService.GetMessagesReceivedByUserAsync(currentUserId);
 

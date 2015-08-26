@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using TwolipsDating.Business;
 using TwolipsDating.Models;
+using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Controllers
@@ -47,10 +48,10 @@ namespace TwolipsDating.Controllers
         /// Returns a view model used to display the store of items.
         /// </summary>
         /// <returns></returns>
+        [RequireProfile]
         public async Task<ActionResult> Index()
         {
             var currentUserId = User.Identity.GetUserId();
-            if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
 
             await SetNotificationsAsync();
 

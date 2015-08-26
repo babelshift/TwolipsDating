@@ -145,16 +145,10 @@ namespace TwolipsDating.Controllers
         /// Returns a view containing a random question. Redirects to the user's create profile if no profile exists for the user.
         /// </summary>
         /// <returns></returns>
+        [RequireProfile]
         [AllowAnonymous]
         public async Task<ActionResult> Random()
         {
-            var currentUserId = User.Identity.GetUserId();
-
-            // if the user is logged in but doesn't have a profile, redirect to profile
-            if (User.Identity.IsAuthenticated
-                && !(await userService.DoesUserHaveProfileAsync(currentUserId)))
-                return RedirectToProfileIndex();
-
             QuestionViewModel viewModel = new QuestionViewModel();
 
             viewModel = await GetRandomQuestionViewModelAsync((int)QuestionTypeValues.Random);
@@ -227,16 +221,10 @@ namespace TwolipsDating.Controllers
         /// Returns a view containing a timed random question. Redirects to the user's create profile if no profile exists for the user.
         /// </summary>
         /// <returns></returns>
+        [RequireProfile]
         [AllowAnonymous]
         public async Task<ActionResult> Timed()
         {
-            var currentUserId = User.Identity.GetUserId();
-
-            // if the user is logged in but doesn't have a profile, redirect to profile
-            if (User.Identity.IsAuthenticated
-                && !(await userService.DoesUserHaveProfileAsync(currentUserId)))
-                return RedirectToProfileIndex();
-
             QuestionViewModel viewModel = new QuestionViewModel();
 
             viewModel = await GetRandomQuestionViewModelAsync((int)QuestionTypeValues.Timed);
@@ -350,17 +338,13 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [RequireProfile]
         [AllowAnonymous]
         public async Task<ActionResult> Quiz(int id, string seoName)
         {
             await SetNotificationsAsync();
 
             var currentUserId = User.Identity.GetUserId();
-
-            // if the user is logged in but doesn't have a profile, redirect to profile
-            if (User.Identity.IsAuthenticated
-                && !(await userService.DoesUserHaveProfileAsync(currentUserId)))
-                return RedirectToProfileIndex();
 
             // if there is no quiz by this id, return not found
             var quiz = await triviaService.GetQuizAsync(id);

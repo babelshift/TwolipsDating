@@ -66,12 +66,20 @@
                     <div class="panel-body">
                         <div class="conversation-header">
                             <div class="circular-image-wrapper">
-                                <img class=" circular-image" src="@Model.TargetProfileImagePath" />
+                                <img class="circular-image" src="@Model.TargetProfileImagePath" />
                             </div>
-                            <h3 style="margin-left: 7px; display: inline-block; vertical-align: top; margin-top: 2px;">
+                            <h3 style="margin-left: 7px; display: inline-block; vertical-align: top; margin-top: 2px; line-height: 23px">
                                 @Html.ActionLink(Model.TargetUserName, "index", "profile", new { id = Model.TargetProfileId }, null)
                                 <br />
-                                <small>@Model.TargetUserAge&nbsp;&bull;&nbsp;@Model.TargetUserLocation</small>
+                                <small>
+                                    <i class="glyphicon glyphicon-user"></i>
+                                    @Model.TargetUserAge &bull; @Model.TargetUserGender
+                                </small>
+                                <br />
+                                <small>
+                                    <i class="glyphicon glyphicon-map-marker"></i>
+                                    @Model.TargetUserLocation
+                                </small>
                             </h3>
                         </div>
                         @using (Html.BeginForm("send", "message", FormMethod.Post, new { role = "form" }))
@@ -109,60 +117,6 @@
                     </div>
                 </div>
             </div>
-        }
-        else if (Model.Conversations != null && Model.Conversations.Count > 0)
-        {
-            @*<div class="col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            @foreach (var conversation in Model.Conversations)
-                            {
-                                <div class="conversation-item">
-                                    <a href="@Url.Action("conversation", "message", new { id = conversation.TargetUserId })">
-                                        @if (conversation.MostRecentMessageSenderUserId != Model.CurrentUserId
-                                            && conversation.MostRecentMessageStatusId == (int)TwolipsDating.Models.MessageStatusValue.Unread)
-                                        {
-                                            <div class="well well-sm wrap-long-lines" style="border-color: #008CBA; background-color: #efefef;">
-                                                @if (!String.IsNullOrEmpty(conversation.TargetProfileImagePath))
-                                                {
-                                                    <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
-                                                        <img class="circular-image" src="@conversation.TargetProfileImagePath" />
-                                                    </div>
-                                                }
-                                                <strong>@conversation.TargetName</strong>
-                                                <small>&bull;&nbsp;@conversation.TimeAgo&nbsp;</small><i class="pull-right glyphicon glyphicon-envelope"></i>
-                                                <br />
-                                                <small>@conversation.MostRecentMessageBody</small>
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="well well-sm wrap-long-lines">
-                                                @if (!String.IsNullOrEmpty(conversation.TargetProfileImagePath))
-                                                {
-                                                    <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
-                                                        <img class="circular-image" src="@conversation.TargetProfileImagePath" />
-                                                    </div>
-                                                }
-                                                <strong>@conversation.TargetName</strong>
-                                                <small>&bull;&nbsp;@conversation.TimeAgo</small>
-                                                <br />
-                                                <small>@conversation.MostRecentMessageBody</small>
-                                            </div>
-                                        }
-                                    </a>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="panel panel-defult">
-                        <div class="panel-body">
-                            <p>Messages go here</p>
-                        </div>
-                    </div>
-                </div>*@
         }
         else
         {

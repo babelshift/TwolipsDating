@@ -570,13 +570,12 @@ namespace TwolipsDating.Controllers
             return View();
         }
 
+        [RequireProfile]
         public async Task<ActionResult> Points()
         {
             await SetNotificationsAsync();
 
             string currentUserId = User.Identity.GetUserId();
-
-            if (!(await userService.DoesUserHaveProfileAsync(currentUserId))) return RedirectToProfileIndex();
 
             // get transactions (expenses)
             var transactions = await userService.GetStoreTransactionsAsync(currentUserId);

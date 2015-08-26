@@ -10,6 +10,10 @@ using System.Web.Routing;
 
 namespace TwolipsDating.Utilities
 {
+    /// <summary>
+    /// Some controllers actions require the user to have a profile in order to execute. If the user hasn't created a profile yet, redirect
+    /// them to the profile creation page.
+    /// </summary>
     public class RequireProfile : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
