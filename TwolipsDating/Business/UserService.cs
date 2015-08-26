@@ -236,5 +236,19 @@ namespace TwolipsDating.Business
 
             await db.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// Looks up a user based on the provided email address and sets the dat of their last login to now.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        internal async Task SetUserLastLoginToNowAsync(string email)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(email));
+
+            var user = await db.Users.FirstAsync(u => u.Email == email);
+            user.DateLastLogin = DateTime.Now;
+            await db.SaveChangesAsync();
+        }
     }
 }

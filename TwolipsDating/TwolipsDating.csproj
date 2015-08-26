@@ -355,6 +355,10 @@
     <Compile Include="Migrations\201508251910177_AddReviewNotificationToControlTable.Designer.cs">
       <DependentUpon>201508251910177_AddReviewNotificationToControlTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508261622160_ChangeTagAwardKeyToIdentity.cs" />
+    <Compile Include="Migrations\201508261622160_ChangeTagAwardKeyToIdentity.Designer.cs">
+      <DependentUpon>201508261622160_ChangeTagAwardKeyToIdentity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\EmailNotifications.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
@@ -1109,6 +1113,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508251910177_AddReviewNotificationToControlTable.resx">
       <DependentUpon>201508251910177_AddReviewNotificationToControlTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508261622160_ChangeTagAwardKeyToIdentity.resx">
+      <DependentUpon>201508261622160_ChangeTagAwardKeyToIdentity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

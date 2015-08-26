@@ -498,7 +498,7 @@ namespace TwolipsDating.Models
         private void SetupTagAwards(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TagAward>()
-                .HasKey(t => new { t.TagId, t.ProfileId, t.DateAwarded });
+                .HasKey(t => t.Id);
 
             modelBuilder.Entity<TagAward>()
                 .HasRequired(t => t.Profile)
