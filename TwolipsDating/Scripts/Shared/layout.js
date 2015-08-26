@@ -1,10 +1,4 @@
-﻿// prevents some bugs when interacting with lightbox plugin
-$(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) {
-    event.preventDefault();
-    $(this).ekkoLightbox();
-});
-
-function setupPopoverWithContent(elementName, contentFunction) {
+﻿function setupPopoverWithContent(elementName, contentFunction) {
     // loop through all share review links and turn them into valid popovers with share buttons
     $(elementName).each(function () {
         var popover = $(this).popover({

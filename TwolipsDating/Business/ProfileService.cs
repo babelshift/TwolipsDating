@@ -273,7 +273,7 @@ namespace TwolipsDating.Business
 
             foreach (var user in results)
             {
-                user.UserProfileImagePath = ProfileExtensions.GetProfileImagePath(user.UserProfileImagePath);
+                user.UserProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(user.UserProfileImagePath);
             }
 
             return results;
@@ -471,7 +471,7 @@ namespace TwolipsDating.Business
                 await AwardAchievedMilestonesForUserAsync(authorUserId, (int)MilestoneTypeValues.ProfileReviewsWritten);
 
                 var authorUser = db.Users.Find(authorUserId);
-                string authorUserProfileImagePath = authorUser.Profile.GetProfileImagePath();
+                string authorUserProfileImagePath = authorUser.Profile.GetProfileThumbnailImagePath();
                 string authorUserName = authorUser.UserName;
                 string authorProfileUrl = String.Format("{0}/{1}", authorProfileUrlRoot, authorUser.Profile.Id);
 
@@ -513,7 +513,7 @@ namespace TwolipsDating.Business
             if (changes > 0)
             {
                 var senderUser = db.Users.Find(senderUserId);
-                string senderProfileImagePath = senderUser.Profile.GetProfileImagePath();
+                string senderProfileImagePath = senderUser.Profile.GetProfileThumbnailImagePath();
                 string senderUserName = senderUser.UserName;
 
                 var receiverUser = db.Users.Find(receiverUserId);
@@ -896,7 +896,7 @@ namespace TwolipsDating.Business
 
                 // send out email notification
                 var senderUser = db.Users.Find(fromUserId);
-                string senderProfileImagePath = senderUser.Profile.GetProfileImagePath();
+                string senderProfileImagePath = senderUser.Profile.GetProfileThumbnailImagePath();
                 string senderUserName = senderUser.UserName;
                 string senderProfileUrl = String.Format("{0}/{1}", senderProfileUrlRoot, senderUser.Profile.Id);
 
@@ -1100,7 +1100,7 @@ namespace TwolipsDating.Business
 
             // the follower is the person who did the follow action
             var followerProfile = await db.Profiles.FirstAsync(p => p.ApplicationUser.Id == followerUserId);
-            string followerProfileImagePath = followerProfile.GetProfileImagePath();
+            string followerProfileImagePath = followerProfile.GetProfileThumbnailImagePath();
             string followerProfileUrl = String.Format("{0}/{1}", profileIndexUrlRoot, followerProfile.Id);
             string followerUserName = followerProfile.ApplicationUser.UserName;
 

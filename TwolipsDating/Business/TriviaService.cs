@@ -441,7 +441,7 @@ namespace TwolipsDating.Business
 
             foreach(var viewModel in results)
             {
-                viewModel.ProfileImagePath = ProfileExtensions.GetProfileImagePath(viewModel.ProfileImagePath);
+                viewModel.ProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(viewModel.ProfileImagePath);
             }
 
             return results.ToList().AsReadOnly();

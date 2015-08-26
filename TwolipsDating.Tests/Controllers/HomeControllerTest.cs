@@ -23,7 +23,7 @@ namespace TwolipsDating.Tests.Controllers
             mock.SetupGet(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(false);
             controller.ControllerContext = mock.Object;
 
-            var result = (ViewResult)((controller.Index() as Task<ActionResult>).Result);
+            var result = (ViewResult)((controller.Index((int?)null) as Task<ActionResult>).Result);
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.ViewData.Model);
         }
@@ -38,7 +38,7 @@ namespace TwolipsDating.Tests.Controllers
             mock.SetupGet(x => x.HttpContext.Session["CurrentUserId"]).Returns(String.Empty);
             controller.ControllerContext = mock.Object;
 
-            var result = (ViewResult)((controller.Index() as Task<ActionResult>).Result);
+            var result = (ViewResult)((controller.Index((int?)null) as Task<ActionResult>).Result);
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.ViewData.Model);
             Assert.AreEqual(result.ViewName, "dashboard");

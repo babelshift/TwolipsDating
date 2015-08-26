@@ -20,25 +20,23 @@
 }
 @if (Model.UserImages != null && Model.UserImages.Count > 0)
 {
-    <div class="wrapper">
-        @foreach (var userImage in Model.UserImages)
-        {
-            <div id="@String.Format("{0}-image-div", userImage.Id)" class="col-xs-6 col-sm-3 text-center">
-                @if (Model.CurrentUserId == Model.ProfileUserId)
-                {
-                    <button onclick="onDeleteImage(event, this, @userImage.Id, '@userImage.FileName', '@Model.ProfileUserId')"
-                            style="position: absolute; top: 0; right: 5px;"
-                            class="btn btn-default btn-xs custom-tooltip"
-                            title="Delete this picture">
-                        <i class="glyphicon glyphicon-remove"></i>
-                    </button>
-                }
-                <a class="thumbnail" data-parent=".wrapper" data-toggle="lightbox" data-gallery="multiimages" href="@userImage.Path" style="min-height: 128px; max-height: 128px;">
-                    <img src="@userImage.ThumbnailPath" style="max-height: 118px;">
-                </a>
-            </div>
-        }
-    </div>
+    foreach (var userImage in Model.UserImages)
+    {
+        <div id="@String.Format("{0}-image-div", userImage.Id)" class="col-xs-6 col-sm-3 text-center">
+            @if (Model.CurrentUserId == Model.ProfileUserId)
+            {
+                <button onclick="onDeleteImage(event, this, @userImage.Id, '@userImage.FileName', '@Model.ProfileUserId')"
+                        style="position: absolute; top: 0; right: 5px;"
+                        class="btn btn-default btn-xs custom-tooltip"
+                        title="Delete this picture">
+                    <i class="glyphicon glyphicon-remove"></i>
+                </button>
+            }
+            <a class="thumbnail" href="@userImage.Path" style="min-height: 128px; max-height: 128px;" data-gallery>
+                <img src="@userImage.ThumbnailPath" style="max-height: 118px;">
+            </a>
+        </div>
+    }
 }
 else
 {

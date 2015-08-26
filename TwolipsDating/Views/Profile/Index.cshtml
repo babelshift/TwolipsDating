@@ -19,7 +19,7 @@
     }
 
     ViewBag.Title = title;
-    ViewBag.ImageUrl = Model.ProfileImagePath;
+    ViewBag.ImageUrl = Model.ProfileThumbnailImagePath;
     ViewBag.Description = String.Format("Profile for {0}, {1}", Model.UserName, Model.SelectedTitle);
     ViewBag.TwitterCardType = "summary";
 }
@@ -32,6 +32,40 @@
 
 @if (Model != null && Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileViewMode.ShowProfile)
 {
+    <!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
+    <div id="blueimp-gallery" class="blueimp-gallery">
+        <!-- The container for the modal slides -->
+        <div class="slides"></div>
+        <!-- Controls for the borderless lightbox -->
+        <h3 class="title"></h3>
+        <a class="prev">‹</a>
+        <a class="next">›</a>
+        <a class="close">×</a>
+        <a class="play-pause"></a>
+        <ol class="indicator"></ol>
+        <!-- The modal dialog, which will be used to wrap the lightbox content -->
+        <div class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body next"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left prev">
+                            <i class="glyphicon glyphicon-chevron-left"></i>
+                            Previous
+                        </button>
+                        <button type="button" class="btn btn-primary next">
+                            Next
+                            <i class="glyphicon glyphicon-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="ad">
         <!-- Profile - Header - 1 -->
         <ins class="adsbygoogle"
@@ -324,12 +358,14 @@
                         @if (User.Identity.IsAuthenticated && Model.CurrentUserId == Model.ProfileUserId)
                         {
                             <a href="#" data-toggle="modal" data-target="#modalProfileImage" data-keyboard="true" title="Change your profile image">
-                                <img src="@Model.ProfileImagePath" style="max-height: 128px">
+                                <img src="@Model.ProfileThumbnailImagePath" style="max-height: 128px">
                             </a>
                         }
                         else
                         {
-                            <img src="@Model.ProfileImagePath" style="max-height: 128px">
+                            <a href="@Model.ProfileImagePath" style="min-height: 128px; max-height: 128px;" data-gallery>
+                                <img src="@Model.ProfileThumbnailImagePath" style="max-height: 128px">
+                            </a>
                         }
                     </div>
                     <div class="col-sm-7 col-md-8 profile-banner-info" style="">
@@ -778,6 +814,8 @@ else if (Model.ViewMode == TwolipsDating.ViewModels.ProfileViewModel.ProfileView
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+    @Scripts.Render("~/bundles/bootstrap-image-gallery")
     <script src="@Url.Content("~/Scripts/Profile/index.js")" type="text/javascript"></script>
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 }

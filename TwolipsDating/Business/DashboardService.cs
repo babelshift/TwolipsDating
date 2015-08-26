@@ -120,7 +120,7 @@ where
 
             foreach (var result in results)
             {
-                result.SourceProfileImagePath = ProfileExtensions.GetProfileImagePath(result.SourceProfileImagePath);
+                result.SourceProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.SourceProfileImagePath);
             }
 
             return results.ToList().AsReadOnly();

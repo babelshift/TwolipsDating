@@ -11,20 +11,32 @@ namespace TwolipsDating.Utilities
         private static readonly string cdn = ConfigurationManager.AppSettings["cdnUrl"];
         private const string placeholderFileName = "Placeholder.png";
 
-        public static string GetProfileImagePath(string fileName)
+        public static string GetProfileThumbnailImagePath(string fileName)
         {
-            return GetImagePath(fileName);
+            return GetThumbnailImagePath(fileName);
         }
 
         public static string GetProfileImagePath(this Profile profile)
         {
             if (profile != null && profile.UserImage != null)
             {
-                return GetImagePath(profile.UserImage.FileName);
+                return GetProfileImagePath(profile.UserImage.FileName);
             }
             else
             {
-                return GetImagePath(placeholderFileName);
+                return GetProfileImagePath(placeholderFileName);
+            }
+        }
+
+        public static string GetProfileThumbnailImagePath(this Profile profile)
+        {
+            if (profile != null && profile.UserImage != null)
+            {
+                return GetThumbnailImagePath(profile.UserImage.FileName);
+            }
+            else
+            {
+                return GetThumbnailImagePath(placeholderFileName);
             }
         }
 
@@ -32,11 +44,11 @@ namespace TwolipsDating.Utilities
         {
             if (messageConversation != null && !String.IsNullOrEmpty(messageConversation.SenderProfileImageFileName))
             {
-                return GetImagePath(messageConversation.SenderProfileImageFileName);
+                return GetThumbnailImagePath(messageConversation.SenderProfileImageFileName);
             }
             else
             {
-                return GetImagePath(placeholderFileName);
+                return GetThumbnailImagePath(placeholderFileName);
             }
         }
 
@@ -44,15 +56,25 @@ namespace TwolipsDating.Utilities
         {
             if (messageConversation != null && !String.IsNullOrEmpty(messageConversation.ReceiverProfileImageFileName))
             {
-                return GetImagePath(messageConversation.ReceiverProfileImageFileName);
+                return GetThumbnailImagePath(messageConversation.ReceiverProfileImageFileName);
             }
             else
             {
-                return GetImagePath(placeholderFileName);
+                return GetThumbnailImagePath(placeholderFileName);
             }
         }
 
-        private static string GetImagePath(string fileName)
+        private static string GetProfileImagePath(string fileName)
+        {
+            if (String.IsNullOrEmpty(fileName))
+            {
+                fileName = placeholderFileName;
+            }
+
+            return String.Format("{0}/{1}", cdn, fileName);
+        }
+
+        private static string GetThumbnailImagePath(string fileName)
         {
             if (String.IsNullOrEmpty(fileName))
             {

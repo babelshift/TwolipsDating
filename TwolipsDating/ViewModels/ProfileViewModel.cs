@@ -23,6 +23,7 @@ namespace TwolipsDating.ViewModels
         public string ProfileUserId { get; set; }
         public string ActiveTab { get; set; }
         public int AverageRatingValue { get; set; }
+        public string ProfileThumbnailImagePath { get; set; }
         public string ProfileImagePath { get; set; }
         public string CurrentUserId { get; set; }
         public ProfileViewMode ViewMode { get; set; }

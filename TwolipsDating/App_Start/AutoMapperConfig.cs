@@ -25,6 +25,7 @@ namespace TwolipsDating
                 .ForMember(dest => dest.ProfileId, opts => opts.MapFrom(source => source.Id))
                 .ForMember(dest => dest.ProfileUserId, opts => opts.MapFrom(source => source.ApplicationUser.Id))
                 .ForMember(dest => dest.ProfileImagePath, opts => opts.MapFrom(source => source.GetProfileImagePath()))
+                .ForMember(dest => dest.ProfileThumbnailImagePath, opts => opts.MapFrom(source => source.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.SelectedTitle, opts => opts.MapFrom(source => source.SelectedTitle != null ? source.SelectedTitle.Name : String.Empty))
                 .ForMember(dest => dest.SelfDescription, opts => opts.MapFrom(source => source.SelfDescription));
 
@@ -35,7 +36,7 @@ namespace TwolipsDating
                 .ForMember(dest => dest.Content, opts => opts.MapFrom(source => source.Content))
                 .ForMember(dest => dest.RatingValue, opts => opts.MapFrom(source => source.RatingValue))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateCreated.GetTimeAgo()))
-                .ForMember(dest => dest.ProfileImagePath, opts => opts.MapFrom(source => source.AuthorUser.Profile.GetProfileImagePath()));
+                .ForMember(dest => dest.ProfileImagePath, opts => opts.MapFrom(source => source.AuthorUser.Profile.GetProfileThumbnailImagePath()));
 
             Mapper.CreateMap<UserImage, UserImageViewModel>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(source => source.Id))
@@ -45,7 +46,7 @@ namespace TwolipsDating
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateUploaded.GetTimeAgo()));
 
             Mapper.CreateMap<UserImage, UploadedImageFeedViewModel>()
-                .ForMember(dest => dest.UploaderProfileImagePath, opts => opts.MapFrom(source => source.ApplicationUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.UploaderProfileImagePath, opts => opts.MapFrom(source => source.ApplicationUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.UploaderUserName, opts => opts.MapFrom(source => source.ApplicationUser.UserName))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateUploaded.GetTimeAgo()))
                 .ForMember(dest => dest.DateOccurred, opts => opts.MapFrom(source => source.DateUploaded))
@@ -56,9 +57,9 @@ namespace TwolipsDating
 
             Mapper.CreateMap<Message, MessageFeedViewModel>()
                 .ForMember(dest => dest.SenderUserName, opts => opts.MapFrom(source => source.SenderApplicationUser.UserName))
-                .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.ReceiverUserName, opts => opts.MapFrom(source => source.ReceiverApplicationUser.UserName))
-                .ForMember(dest => dest.ReceiverProfileImagePath, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.ReceiverProfileImagePath, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.MessageContent, opts => opts.MapFrom(source => source.Body))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()))
                 .ForMember(dest => dest.DateOccurred, opts => opts.MapFrom(source => source.DateSent))
@@ -70,12 +71,12 @@ namespace TwolipsDating
             Mapper.CreateMap<Review, ReviewWrittenFeedViewModel>()
                 .ForMember(dest => dest.ReviewId, opts => opts.MapFrom(source => source.Id))
                 .ForMember(dest => dest.TargetUserName, opts => opts.MapFrom(source => source.TargetUser.UserName))
-                .ForMember(dest => dest.TargetProfileImagePath, opts => opts.MapFrom(source => source.TargetUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.TargetProfileImagePath, opts => opts.MapFrom(source => source.TargetUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.AuthorUserName, opts => opts.MapFrom(source => source.AuthorUser.UserName))
                 .ForMember(dest => dest.ReviewContent, opts => opts.MapFrom(source => source.Content))
                 .ForMember(dest => dest.ReviewRatingValue, opts => opts.MapFrom(source => source.RatingValue))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateCreated.GetTimeAgo()))
-                .ForMember(dest => dest.AuthorProfileImagePath, opts => opts.MapFrom(source => source.AuthorUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.AuthorProfileImagePath, opts => opts.MapFrom(source => source.AuthorUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.DateOccurred, opts => opts.MapFrom(source => source.DateCreated))
                 .ForMember(dest => dest.AuthorProfileId, opts => opts.MapFrom(source => source.AuthorUser.Profile.Id))
                 .ForMember(dest => dest.TargetProfileId, opts => opts.MapFrom(source => source.TargetUser.Profile.Id));
@@ -84,19 +85,19 @@ namespace TwolipsDating
                 .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateTransactionOccurred))
                 .ForMember(dest => dest.Gifts, opts => opts.UseValue(new Dictionary<int, GiftReceivedFeedItemViewModel>()))
                 .ForMember(dest => dest.ReceiverUserName, opts => opts.MapFrom(source => source.ToUser.UserName))
-                .ForMember(dest => dest.ReceiverProfileImagePath, opts => opts.MapFrom(source => source.ToUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.ReceiverProfileImagePath, opts => opts.MapFrom(source => source.ToUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.ReceiverProfileId, opts => opts.MapFrom(source => source.ToUser.Profile.Id))
                 .ForMember(dest => dest.SenderUserName, opts => opts.MapFrom(source => source.FromUser.UserName))
                 .ForMember(dest => dest.SenderUserId, opts => opts.MapFrom(source => source.FromUser.Id))
                 .ForMember(dest => dest.SenderProfileId, opts => opts.MapFrom(source => source.FromUser.Profile.Id))
-                .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.FromUser.Profile.GetProfileImagePath()));
+                .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.FromUser.Profile.GetProfileThumbnailImagePath()));
 
             Mapper.CreateMap<CompletedQuiz, CompletedQuizFeedViewModel>()
                 .ForMember(dest => dest.DateCompleted, opts => opts.MapFrom(source => source.DateCompleted))
                 .ForMember(dest => dest.QuizId, opts => opts.MapFrom(source => source.QuizId))
                 .ForMember(dest => dest.QuizName, opts => opts.MapFrom(source => source.Quiz.Name))
                 .ForMember(dest => dest.SourceProfileId, opts => opts.MapFrom(source => source.User.Profile.Id))
-                .ForMember(dest => dest.SourceProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.SourceProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.SourceUserName, opts => opts.MapFrom(source => source.User.UserName));
 
             Mapper.CreateMap<TagSuggestion, TagSuggestionReceivedFeedViewModel>()
@@ -104,7 +105,7 @@ namespace TwolipsDating
                 .ForMember(dest => dest.ReceiverProfileId, opts => opts.MapFrom(source => source.ProfileId))
                 .ForMember(dest => dest.ReceiverUserName, opts => opts.MapFrom(source => source.Profile.ApplicationUser.UserName))
                 .ForMember(dest => dest.SuggestProfileId, opts => opts.MapFrom(source => source.SuggestingUser.Profile.Id))
-                .ForMember(dest => dest.SuggestProfileImagePath, opts => opts.MapFrom(source => source.SuggestingUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.SuggestProfileImagePath, opts => opts.MapFrom(source => source.SuggestingUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.SuggestUserId, opts => opts.MapFrom(source => source.SuggestingUserId))
                 .ForMember(dest => dest.SuggestUserName, opts => opts.MapFrom(source => source.SuggestingUser.UserName))
                 .ForMember(dest => dest.Tags, opts => opts.UseValue(new List<string>()))
@@ -115,7 +116,7 @@ namespace TwolipsDating
                 .ForMember(dest => dest.AchievementName, opts => opts.MapFrom(source => String.Format("{0} ({1})", source.Milestone.MilestoneType.Name, source.Milestone.AmountRequired)))
                 .ForMember(dest => dest.ProfileId, opts => opts.MapFrom(source => source.User.Profile.Id))
                 .ForMember(dest => dest.UserName, opts => opts.MapFrom(source => source.User.UserName))
-                .ForMember(dest => dest.UserProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileImagePath()));
+                .ForMember(dest => dest.UserProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileThumbnailImagePath()));
 
             Mapper.CreateMap<Tag, TagViewModel>();
 
@@ -125,7 +126,7 @@ namespace TwolipsDating
 
             Mapper.CreateMap<Message, ConversationItemViewModel>()
                 .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateSent))
-                .ForMember(dest => dest.TargetProfileImagePath, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.TargetProfileImagePath, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.MostRecentMessageBody, opts => opts.MapFrom(source => source.Body))
                 .ForMember(dest => dest.MostRecentMessageStatusId, opts => opts.MapFrom(source => source.MessageStatusId))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()));
@@ -143,7 +144,7 @@ namespace TwolipsDating
                 .ForMember(dest => dest.Body, opts => opts.MapFrom(source => source.Body))
                 .ForMember(dest => dest.SenderName, opts => opts.MapFrom(source => source.SenderApplicationUser.UserName))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()))
-                .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.SenderProfileId, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.Id));
 
             Mapper.CreateMap<Message, SentMessageViewModel>()
@@ -152,7 +153,7 @@ namespace TwolipsDating
                 .ForMember(dest => dest.Body, opts => opts.MapFrom(source => source.Body))
                 .ForMember(dest => dest.ReceiverName, opts => opts.MapFrom(source => source.ReceiverApplicationUser.UserName))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()))
-                .ForMember(dest => dest.ReceiverProfileImagePath, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.ReceiverProfileImagePath, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.ReceiverProfileId, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Profile.Id));
 
             Mapper.CreateMap<InventoryItem, InventoryItemViewModel>()
@@ -201,7 +202,7 @@ namespace TwolipsDating
             Mapper.CreateMap<GiftTransactionLog, GiftTransactionViewModel>()
                 .ForMember(dest => dest.GiftAmount, opts => opts.MapFrom(source => source.ItemCount))
                 .ForMember(dest => dest.GiftImagePath, opts => opts.MapFrom(source => source.StoreItem.GetIconPath()))
-                .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.FromUser.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.FromUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.SenderUserName, opts => opts.MapFrom(source => source.FromUser.UserName))
                 .ForMember(dest => dest.GiftTransactionId, opts => opts.MapFrom(source => source.GiftTransactionLogId))
                 .ForMember(dest => dest.SenderProfileId, opts => opts.MapFrom(source => source.FromUser.Profile.Id))
@@ -210,14 +211,14 @@ namespace TwolipsDating
             Mapper.CreateMap<AnsweredQuestion, UserAnsweredQuestionCorrectlyViewModel>()
                 .ForMember(dest => dest.UserName, opts => opts.MapFrom(source => source.User.UserName))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateAnswered.GetTimeAgo()))
-                .ForMember(dest => dest.ProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.ProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.ProfileId, opts => opts.MapFrom(source => source.User.Profile.Id));
 
             Mapper.CreateMap<CompletedQuiz, UserCompletedQuizViewModel>()
                 .ForMember(dest => dest.UserName, opts => opts.MapFrom(source => source.User.UserName))
                 .ForMember(dest => dest.QuizName, opts => opts.MapFrom(source => source.Quiz.Name))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateCompleted.GetTimeAgo()))
-                .ForMember(dest => dest.ProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileImagePath()))
+                .ForMember(dest => dest.ProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.ProfileId, opts => opts.MapFrom(source => source.User.Profile.Id));
 
             Mapper.CreateMap<ShoppingCart, ShoppingCartViewModel>()

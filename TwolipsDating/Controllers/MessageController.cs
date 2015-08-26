@@ -87,7 +87,7 @@ namespace TwolipsDating.Controllers
             viewModel.TargetUserLocation = profileForOtherUser.GeoCity.ToFullLocationString();
             viewModel.TargetProfileId = profileForOtherUser.Id;
             viewModel.TargetUserId = id;
-            viewModel.TargetProfileImagePath = profileForOtherUser.GetProfileImagePath();
+            viewModel.TargetProfileImagePath = profileForOtherUser.GetProfileThumbnailImagePath();
             viewModel.TargetApplicationUserId = id;
 
             return View(viewModel);
