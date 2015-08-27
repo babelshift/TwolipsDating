@@ -20,4 +20,6 @@
         }
     });
     $("#f_elem_city").autocomplete("option", "delay", 100);
+
+    $('#SelectedGenderId').chosen({ disable_search_threshold: 999 });
 });

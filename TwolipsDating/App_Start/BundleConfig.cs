@@ -28,7 +28,7 @@ namespace TwolipsDating
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                     "~/Content/site.css",
-                    "~/Content/chosen.css,",
+                    "~/Content/chosen.css",
                     "~/Content/bootstrap-image-gallery.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/chosen").Include(

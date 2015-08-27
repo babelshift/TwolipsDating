@@ -215,11 +215,15 @@
                         </div>
                     </div>
                 }
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        @Html.PagedListPager(Model.Items, page => Url.Action("Index", new { page }))
+
+                if (Model.Items.PageCount > 1)
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            @Html.PagedListPager(Model.Items, page => Url.Action("Index", new { page }))
+                        </div>
                     </div>
-                </div>
+                }
             }
             else
             {

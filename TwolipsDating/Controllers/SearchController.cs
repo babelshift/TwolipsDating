@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using TwolipsDating.Business;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
+using PagedList;
 
 namespace TwolipsDating.Controllers
 {
@@ -25,7 +26,7 @@ namespace TwolipsDating.Controllers
         /// <param name="tag"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        public async Task<ActionResult> Index(string[] tags)
+        public async Task<ActionResult> Index(string[] tags, int? page)
         {
             string currentUserId = User.Identity.GetUserId();
 
@@ -39,7 +40,7 @@ namespace TwolipsDating.Controllers
             {
                 var results = await searchService.SearchProfilesByTagNames(tags);
 
-                await SetupViewModel(tags, currentUserId, viewModel, results);
+                await SetupViewModel(tags, currentUserId, viewModel, results, page);
             }
 
             return View(viewModel);
@@ -58,12 +59,12 @@ namespace TwolipsDating.Controllers
             return d;
         }
 
-        private async Task SetupViewModel(string[] tags, string currentUserId, SearchResultViewModel viewModel, IReadOnlyCollection<Models.Profile> results)
+        private async Task SetupViewModel(string[] tags, string currentUserId, SearchResultViewModel viewModel, IReadOnlyCollection<Models.Profile> results, int? page)
         {
-            viewModel.SearchResults = Mapper.Map<IReadOnlyCollection<TwolipsDating.Models.Profile>, IReadOnlyCollection<ProfileViewModel>>(results);
+            var searchResults = Mapper.Map<IReadOnlyCollection<TwolipsDating.Models.Profile>, IReadOnlyCollection<ProfileViewModel>>(results);
 
             // TODO: optimize this by eager loading?
-            foreach (var profileViewModel in viewModel.SearchResults)
+            foreach (var profileViewModel in searchResults)
             {
                 var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profileViewModel.ProfileUserId);
                 profileViewModel.AverageRatingValue = reviews.AverageRating();
@@ -73,6 +74,8 @@ namespace TwolipsDating.Controllers
                 // this will break for anonymous users
                 profileViewModel.SuggestedTags = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profileViewModel.ProfileId);
             }
+
+            viewModel.SearchResults = searchResults.ToPagedList(page ?? 1, 20);
 
             viewModel.Tags = new List<string>();
             foreach(var tag in tags)
