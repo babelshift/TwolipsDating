@@ -700,7 +700,7 @@ namespace TwolipsDating.Controllers
                 }
                 else
                 {
-                    return await GetViewModelForProfileCreationAsync();
+                    return RedirectToAction("create");
                 }
             }
         }
@@ -722,7 +722,6 @@ namespace TwolipsDating.Controllers
             viewModel.CurrentUserId = currentUserId;
             viewModel.AverageRatingValue = reviews.AverageRating();
             viewModel.ReviewCount = reviews.Count;
-            viewModel.ViewMode = ProfileViewModel.ProfileViewMode.ShowProfile;
 
             // tag suggestions and awards
             await SetupProfileTagSuggestions(currentUserId, profile, viewModel);
@@ -923,13 +922,11 @@ namespace TwolipsDating.Controllers
         /// If the profile doesn't exist when the user wants to view their own profile, use a special view model which only allows for the creation of a profile.
         /// </summary>
         /// <returns></returns>
-        private async Task<ActionResult> GetViewModelForProfileCreationAsync()
+        private async Task<CreateProfileViewModel> GetViewModelForProfileCreationAsync()
         {
             var genders = await ProfileService.GetGendersAsync();
 
-            ProfileViewModel viewModel = new ProfileViewModel();
-            viewModel.ViewMode = ProfileViewModel.ProfileViewMode.CreateProfile;
-            viewModel.CreateProfile = new CreateProfileViewModel();
+            CreateProfileViewModel viewModel = new CreateProfileViewModel();
 
             Dictionary<int, string> genderCollection = new Dictionary<int, string>();
             foreach (var gender in genders)
@@ -937,30 +934,45 @@ namespace TwolipsDating.Controllers
                 genderCollection.Add(gender.Id, gender.Name);
             }
 
-            viewModel.CreateProfile.Genders = genderCollection;
+            viewModel.Genders = genderCollection;
 
             string currentUserId = User.Identity.GetUserId();
             viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
-            return View(viewModel);
+            return viewModel;
         }
 
         #endregion Index and Show Profile
 
         #region Create Profile
 
+        public async Task<ActionResult> Create()
+        {
+            CreateProfileViewModel viewModel = await GetViewModelForProfileCreationAsync();
+            return View(viewModel);
+        }
+
         [HttpPost]
-        public async Task<ActionResult> Create(ProfileViewModel viewModel)
+        public async Task<ActionResult> Create(CreateProfileViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToIndex();
+                int selectedGenderId = viewModel.SelectedGenderId ?? default(int);
+                int day = viewModel.BirthDayOfMonth ?? default(int);
+                int month = viewModel.BirthMonth ?? default(int);
+                int year = viewModel.BirthYear ?? default(int);
+                viewModel = await GetViewModelForProfileCreationAsync();
+                viewModel.SelectedGenderId = selectedGenderId;
+                viewModel.BirthDayOfMonth = day;
+                viewModel.BirthMonth = month;
+                viewModel.BirthYear = year;
+                return View(viewModel);
             }
 
             string currentUserId = User.Identity.GetUserId();
-            DateTime birthday = new DateTime(viewModel.CreateProfile.BirthYear.Value, viewModel.CreateProfile.BirthMonth.Value, viewModel.CreateProfile.BirthDayOfMonth.Value);
+            DateTime birthday = new DateTime(viewModel.BirthYear.Value, viewModel.BirthMonth.Value, viewModel.BirthDayOfMonth.Value);
 
-            string[] location = viewModel.CreateProfile.SelectedLocation.Split(',');
+            string[] location = viewModel.SelectedLocation.Split(',');
             string cityName = location[0].Trim();
             string stateAbbreviation = location[1].Trim();
             string countryName = location[2].Trim();
@@ -968,7 +980,7 @@ namespace TwolipsDating.Controllers
             try
             {
                 int changes = await ProfileService.CreateProfileAsync(
-                    viewModel.CreateProfile.SelectedGenderId.Value,
+                    viewModel.SelectedGenderId.Value,
                     cityName,
                     stateAbbreviation,
                     countryName,
@@ -981,7 +993,7 @@ namespace TwolipsDating.Controllers
                         {
                             currentUserId = currentUserId,
                             birthday = birthday.ToString(),
-                            genderId = viewModel.CreateProfile.SelectedGenderId.Value,
+                            genderId = viewModel.SelectedGenderId.Value,
                             cityName = cityName,
                             stateAbbreviation = stateAbbreviation,
                             countryName = countryName
@@ -998,7 +1010,7 @@ namespace TwolipsDating.Controllers
                     {
                         currentUserId = currentUserId,
                         birthday = birthday.ToString(),
-                        genderId = viewModel.CreateProfile.SelectedGenderId.Value,
+                        genderId = viewModel.SelectedGenderId.Value,
                         cityName = cityName,
                         stateAbbreviation = stateAbbreviation,
                         countryName = countryName

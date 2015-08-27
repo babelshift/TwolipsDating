@@ -5,6 +5,8 @@ namespace TwolipsDating.ViewModels
 {
     public class CreateProfileViewModel
     {
+        public bool IsCurrentUserEmailConfirmed { get; set; }
+
         [Required]
         [Range(1, 12, ErrorMessage = "Month must be between 1 and 12")]
         public int? BirthMonth { get; set; }
@@ -20,16 +22,9 @@ namespace TwolipsDating.ViewModels
         [Required]
         public int? SelectedGenderId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "You must select a location from the drop down menu")]
         public string SelectedLocation { get; set; }
 
-        //[Required]
-        //public int? SelectedCountryId { get; set; }
-
-        //public int? SelectedZipCodeId { get; set; }
-        //public int? SelectedCityId { get; set; }
-
         public IDictionary<int, string> Genders { get; set; }
-        //public IDictionary<int, string> Countries { get; set; }
     }
 }

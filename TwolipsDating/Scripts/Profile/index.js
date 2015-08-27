@@ -1,26 +1,6 @@
 ﻿$(document).ready(function () {
 
-    $("#f_elem_city").autocomplete({
-        source: function (request, response) {
-            $.getJSON(
-               "https://secure.geobytes.com/AutoCompleteCity?callback=?&q=" + request.term,
-               function (data) {
-                   response(data);
-               }
-            );
-        },
-        minLength: 3,
-        select: function (event, ui) {
-            $('#CreateProfile_SelectedLocation').val(ui.item.value);
-        },
-        open: function () {
-            $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
-        },
-        close: function () {
-            $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
-        }
-    });
-    $("#f_elem_city").autocomplete("option", "delay", 100);
+    
 
     var profileUserId = $('#ProfileUserId').val();
 
@@ -191,15 +171,6 @@ function toggleIgnoredIcon() {
     }
 }
 
-function selectUnitedStates() {
-    // when the page loads, select US country by default, fire change event
-    var countrySelect = $("#CreateProfile_SelectedCountryId");
-    if (countrySelect != null) {
-        countrySelect.val(215); // united states
-        countrySelect.change();
-    }
-}
-
 function initializeStarRating() {
     // initialize the star rating plugin
     $("#star").raty({
@@ -294,58 +265,6 @@ $(document).on('change', '.btn-file :file', function () {
         label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
     input.trigger('fileselect', [numFiles, label]);
 });
-
-function onCountrySelected(e, obj) {
-    var countryId = $(obj).val();
-
-    if (countryId == 215) { // united states
-        $("#textBoxCity").hide();
-        var zipCodeSelect = $("#textBoxZipCode");
-        zipCodeSelect.show();
-        zipCodeSelect.val('');
-    } else {
-        var citySelect = $("#textBoxCity");
-        citySelect.show();
-        citySelect.val('');
-        $("#textBoxZipCode").hide();
-    }
-
-    $("#zipCodeLocationText").html('');
-    $("#cityLocationText").html('');
-    $("#CreateProfile_SelectedCityId").val('');
-    $("#CreateProfile_SelectedZipCodeId").val('');
-}
-
-function onCityBlur(e, obj) {
-    var city = $(obj).val();
-
-    get('/location/city?id=' + city, function (data) {
-        if (data.CityName === '' || data.CityName === null) {
-            $("#cityLocationText").html("<small>Are you sure that's a real city?</small>");
-            $("#CreateProfile_SelectedCityId").val('');
-        } else {
-            $("#cityLocationText").html("<small>Cool, you're in " + data.CityName + "</small>");
-            $("#CreateProfile_SelectedCityId").val(data.CityId);
-        }
-    });
-}
-
-function onZipCodeBlur(e, obj) {
-    var zipCode = $(obj).val();
-
-    if (zipCode.length === 5) {
-        get('/location/zip?id=' + zipCode, function (data) {
-            if (data.CityName === '' || data.CityName === null) {
-                $("#zipCodeLocationText").html("<small>That's a bad zip code.</small>");
-                $("#CreateProfile_SelectedZipCodeId").val('');
-            } else {
-                $("#zipCodeLocationText").html("<small>Cool, you're in " + data.CityName + "</small>");
-                $("#CreateProfile_SelectedZipCodeId").val(zipCode);
-                $("#CreateProfile_SelectedCityId").val(data.CityId);
-            }
-        });
-    }
-}
 
 function clearSelectedGift() {
     var hiddenSelectedInventoryItemId = $("#SendGift_InventoryItemId");

@@ -4,13 +4,6 @@ namespace TwolipsDating.ViewModels
 {
     public class ProfileViewModel
     {
-        public enum ProfileViewMode
-        {
-            ShowProfile,
-            CreateProfile,
-            NoProfile
-        }
-
         #region Profile view stuff
 
         public bool IsCurrentUserEmailConfirmed { get; set; }
@@ -26,7 +19,6 @@ namespace TwolipsDating.ViewModels
         public string ProfileThumbnailImagePath { get; set; }
         public string ProfileImagePath { get; set; }
         public string CurrentUserId { get; set; }
-        public ProfileViewMode ViewMode { get; set; }
         public int ReviewCount { get; set; }
         public string SelfDescription { get; set; }
 
@@ -61,12 +53,6 @@ namespace TwolipsDating.ViewModels
         public SendMessageViewModel SendMessage { get; set; }
 
         #endregion Send message stuff
-
-        #region Profile creation stuff
-
-        public CreateProfileViewModel CreateProfile { get; set; }
-
-        #endregion Profile creation stuff
 
         #region Image upload stuff
 
