@@ -17,6 +17,7 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
+using PagedList;
 
 namespace TwolipsDating.Controllers
 {
@@ -653,7 +654,7 @@ namespace TwolipsDating.Controllers
         /// <param name="tab"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        public async Task<ActionResult> Index(int? id = null, string seoName = null, string tab = null)
+        public async Task<ActionResult> Index(int? id = null, string seoName = null, string tab = null, int? page = null)
         {
             string currentUserId = User.Identity.GetUserId();
 
@@ -673,7 +674,7 @@ namespace TwolipsDating.Controllers
 
                     await SetNotificationsAsync();
 
-                    return await ShowUserProfileAsync(tab, currentUserId, profileToBeViewed);
+                    return await ShowUserProfileAsync(tab, currentUserId, profileToBeViewed, page);
                 }
                 // the profile that the user is viewing doesn't exist
                 else
@@ -696,7 +697,7 @@ namespace TwolipsDating.Controllers
 
                 if (currentUserProfile != null)
                 {
-                    return await ShowUserProfileAsync(tab, currentUserId, currentUserProfile);
+                    return await ShowUserProfileAsync(tab, currentUserId, currentUserProfile, page);
                 }
                 else
                 {
@@ -712,7 +713,7 @@ namespace TwolipsDating.Controllers
         /// <param name="currentUserId"></param>
         /// <param name="profile"></param>
         /// <returns></returns>
-        private async Task<ActionResult> ShowUserProfileAsync(string tab, string currentUserId, Models.Profile profile)
+        private async Task<ActionResult> ShowUserProfileAsync(string tab, string currentUserId, Models.Profile profile, int? page)
         {
             var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profile.ApplicationUser.Id);
 
@@ -767,7 +768,7 @@ namespace TwolipsDating.Controllers
             }
 
             // setup viewmodel specific to the actively selected tab
-            await SetViewModelBasedOnActiveTabAsync(profile, viewModel, reviews, currentUserId);
+            await SetViewModelBasedOnActiveTabAsync(profile, viewModel, reviews, currentUserId, page);
 
             return View(viewModel);
         }
@@ -840,14 +841,15 @@ namespace TwolipsDating.Controllers
         private async Task SetViewModelBasedOnActiveTabAsync(Models.Profile profile,
             ProfileViewModel viewModel,
             IReadOnlyCollection<Review> reviews,
-            string currentUserId)
+            string currentUserId,
+            int? page)
         {
             if (viewModel.ActiveTab == "feed")
             {
                 var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);
                 viewModel.UploadImage = new UploadImageViewModel();
                 viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
-                viewModel.Feed = GetUserFeed(profile, reviews, userImages);
+                viewModel.Feed = GetUserFeed(profile, reviews, userImages, page);
                 viewModel.Feed.CurrentUserId = currentUserId;
                 viewModel.Feed.ProfileUserId = profile.ApplicationUser.Id;
                 viewModel.Feed.ProfileUserName = profile.ApplicationUser.UserName;
@@ -880,7 +882,7 @@ namespace TwolipsDating.Controllers
         /// <param name="reviews"></param>
         /// <param name="uploadedImages"></param>
         /// <returns></returns>
-        private ProfileFeedViewModel GetUserFeed(Models.Profile profile, IReadOnlyCollection<Review> reviews, IReadOnlyCollection<UserImage> uploadedImages)
+        private ProfileFeedViewModel GetUserFeed(Models.Profile profile, IReadOnlyCollection<Review> reviews, IReadOnlyCollection<UserImage> uploadedImages, int? page)
         {
             List<ProfileFeedItemViewModel> feedItems = new List<ProfileFeedItemViewModel>();
 
@@ -912,7 +914,7 @@ namespace TwolipsDating.Controllers
 
             ProfileFeedViewModel viewModel = new ProfileFeedViewModel()
             {
-                Items = orderedFeed
+                Items = orderedFeed.ToPagedList(page ?? 1, 20)
             };
 
             return viewModel;

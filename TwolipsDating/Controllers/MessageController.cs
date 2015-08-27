@@ -11,6 +11,7 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
+using PagedList;
 
 namespace TwolipsDating.Controllers
 {
@@ -30,7 +31,7 @@ namespace TwolipsDating.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [RequireProfile]
-        public async Task<ActionResult> Conversation(string id)
+        public async Task<ActionResult> Conversation(string id, int? page)
         {
             // we want to look up conversations between a user and another user
             // if no id is provided, we want to lookup the latest conversation set
@@ -77,7 +78,7 @@ namespace TwolipsDating.Controllers
             // look up conversations between the current user and the selected id
             var messagesBetweenUsers = await ProfileService.GetMessagesBetweenUsersAsync(currentUserId, id);
             var conversationMessagesBetweenUsers = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyList<ConversationItemViewModel>>(messagesBetweenUsers);
-            viewModel.ConversationMessages = conversationMessagesBetweenUsers;
+            viewModel.ConversationMessages = conversationMessagesBetweenUsers.ToPagedList(page ?? 1, 20);
 
             // setup targetted user for which conversations are being looked
             viewModel.TargetUserName = profileForOtherUser.ApplicationUser.UserName;

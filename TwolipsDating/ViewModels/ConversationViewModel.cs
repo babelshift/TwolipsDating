@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using PagedList;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace TwolipsDating.ViewModels
@@ -16,7 +17,7 @@ namespace TwolipsDating.ViewModels
         public string TargetUserLocation { get; set; }
         public string TargetUserGender { get; set; }
         public string TargetUserId { get; set; }
-        public IReadOnlyList<ConversationItemViewModel> ConversationMessages { get; set; }
+        public IPagedList<ConversationItemViewModel> ConversationMessages { get; set; }
 
         [Required]
         public string NewMessage { get; set; }

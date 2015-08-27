@@ -13,6 +13,7 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
+using PagedList;
 
 namespace TwolipsDating.Controllers
 {
@@ -571,7 +572,7 @@ namespace TwolipsDating.Controllers
         }
 
         [RequireProfile]
-        public async Task<ActionResult> Points()
+        public async Task<ActionResult> Points(int? page)
         {
             await SetNotificationsAsync();
 
@@ -592,8 +593,7 @@ namespace TwolipsDating.Controllers
 
             viewModel.StoreTransactions = storeTransactions
                 .OrderByDescending(t => t.TransactionDate)
-                .ToList()
-                .AsReadOnly();
+                .ToPagedList(page ?? 1, 1);
 
             return View(viewModel);
         }

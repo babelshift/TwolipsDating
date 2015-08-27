@@ -1,4 +1,5 @@
 ﻿@model TwolipsDating.ViewModels.ProfileViewModel
+@using PagedList.Mvc;
 
 @{
     string title = String.Empty;
@@ -710,6 +711,17 @@
                 }
             </div>
         </div>
+        @if (String.IsNullOrEmpty(Model.ActiveTab) || Model.ActiveTab == "feed")
+        {
+            if (Model.Feed.Items.PageCount > 1)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @Html.PagedListPager(Model.Feed.Items, page => Url.Action("index", new { tab = Model.ActiveTab, page = page }))
+                    </div>
+                </div>
+            }
+        }
     </div>
 </div>
 <div class="ad">

@@ -1,5 +1,6 @@
-﻿@using TwolipsDating.ViewModels
-@model UserPointsViewModel
+﻿@model UserPointsViewModel
+@using TwolipsDating.ViewModels
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "Your account and points";
@@ -46,33 +47,33 @@
         <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Your Transactions</h3>
+                    <h3 class="panel-title">Your Store Transactions</h3>
                 </div>
-                @if(Model.StoreTransactions.Count > 0)
+                @if (Model.StoreTransactions.Count > 0)
                 {
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Item</th>
-                            <th>Amount</th>
-                            <th>Spent</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var transaction in Model.StoreTransactions)
-                        {
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>@transaction.TransactionDate.ToShortDateString()</td>
-                                <td>@transaction.ItemType</td>
-                                <td>@transaction.ItemName</td>
-                                <td>@transaction.ItemCount</td>
-                                <td><i class="glyphicon glyphicon-piggy-bank"></i> @transaction.TotalCost total &bull; <i class="glyphicon glyphicon-piggy-bank"></i> @transaction.ItemCost each</td>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Item</th>
+                                <th>Amount</th>
+                                <th>Spent</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var transaction in Model.StoreTransactions)
+                            {
+                                <tr>
+                                    <td>@transaction.TransactionDate.ToShortDateString()</td>
+                                    <td>@transaction.ItemType</td>
+                                    <td>@transaction.ItemName</td>
+                                    <td>@transaction.ItemCount</td>
+                                    <td><i class="glyphicon glyphicon-piggy-bank"></i> @transaction.TotalCost total &bull; <i class="glyphicon glyphicon-piggy-bank"></i> @transaction.ItemCost each</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 }
                 else
                 {
@@ -81,16 +82,18 @@
                     </div>
                 }
             </div>
+            @if (Model.StoreTransactions.PageCount > 1)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @Html.PagedListPager(Model.StoreTransactions, page => Url.Action("points", new { page }))
+                    </div>
+                </div>
+            }
         </div>
     </div>
 }
 else
 {
     <h4>You need to confirm your email address before you can manage your points.</h4>
-}
-
-@section Scripts {
-    <script type="text/javascript">
-
-    </script>
 }

@@ -1,5 +1,6 @@
 ﻿@model TwolipsDating.ViewModels.ConversationViewModel
 @using TwolipsDating.ViewModels
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "Your conversations";
@@ -116,6 +117,14 @@
                         }
                     </div>
                 </div>
+                @if (Model.ConversationMessages.PageCount > 1)
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            @Html.PagedListPager(Model.ConversationMessages, page => Url.Action("conversation", new { id = Model.TargetApplicationUserId, page = page }))
+                        </div>
+                    </div>
+                }
             </div>
         }
         else
