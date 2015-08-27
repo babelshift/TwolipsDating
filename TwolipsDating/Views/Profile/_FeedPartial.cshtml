@@ -2,28 +2,41 @@
 
 @if (Model.Items.Count > 0)
 {
-    for (int i = 0; i < Model.Items.Count; i++)
+    foreach(var feedItem in Model.Items)
     {
-        var feedItem = Model.Items[i];
-
-        if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.UploadedPictures)
-        {
-            Html.RenderPartial("_FeedItemUploadedPicturesPartial", feedItem.UploadedImageFeedItem);
-        }
-        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.ReviewWritten)
-        {
-            Html.RenderPartial("_FeedItemReviewWrittenPartial", feedItem.ReviewWrittenFeedItem);
-        }
-
-        if (i < Model.Items.Count - 1)
-        {
-            <hr />
-        }
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.UploadedPictures)
+                {
+                    Html.RenderPartial("_FeedItemUploadedPicturesPartial", feedItem.UploadedImageFeedItem);
+                }
+                else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.ReviewWritten)
+                {
+                    Html.RenderPartial("_FeedItemReviewWrittenPartial", feedItem.ReviewWrittenFeedItem);
+                }
+                else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.GiftTransaction)
+                {
+                    Html.RenderPartial("_FeedItemGiftTransactionPartial", feedItem.GiftReceivedFeedItem);
+                }
+                else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.QuizCompletion)
+                {
+                    Html.RenderPartial("_FeedItemCompletedQuizPartial", feedItem.CompletedQuizFeedItem);
+                }
+                else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.TagSuggestion)
+                {
+                    Html.RenderPartial("_FeedItemTagSuggestionPartial", feedItem.TagSuggestionReceivedFeedItem);
+                }
+                else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.AchievementObtained)
+                {
+                    Html.RenderPartial("_FeedItemAchievementPartial", feedItem.AchievementFeedItem);
+                }
+            </div>
+        </div>
     }
 }
 else
 {
-    if(Model.CurrentUserId == Model.ProfileUserId)
+    if (Model.CurrentUserId == Model.ProfileUserId)
     {
         <h4>You haven't done anything yet. Here's some money. Go see a star war.</h4>
     }

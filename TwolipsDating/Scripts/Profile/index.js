@@ -46,7 +46,6 @@
 
     toggleFavoriteIcon();
     toggleIgnoredIcon();
-    selectUnitedStates();
     initializeStarRating();
     setupFileUploadText();
     setupReportViolation();

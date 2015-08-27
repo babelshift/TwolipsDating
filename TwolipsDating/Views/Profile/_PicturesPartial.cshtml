@@ -1,51 +1,56 @@
 ﻿@model TwolipsDating.ViewModels.UploadImageViewModel
 
-@if (Model.ProfileUserId == Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
-{
-    using (Html.BeginForm("uploadimage", "profile", FormMethod.Post, new { @id = "form-upload-images", enctype = "multipart/form-data" }))
-    {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary()
-        <div class="input-group">
-            <span class="input-group-btn">
-                <span class="btn btn-xs btn-default btn-file">
-                    <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;Add Pictures
-                    @Html.TextBoxFor(x => x.UploadedImages, new { type = "file", multiple = "multiple", accept = "image/jpeg,image/gif,image/bmp,image/png" })
-                </span>
-            </span>
-            @Html.HiddenFor(m => m.ProfileUserId)
-        </div>
-    }
-    <br />
-}
-@if (Model.UserImages != null && Model.UserImages.Count > 0)
-{
-    foreach (var userImage in Model.UserImages)
-    {
-        <div id="@String.Format("{0}-image-div", userImage.Id)" class="col-xs-6 col-sm-3 text-center">
-            @if (Model.CurrentUserId == Model.ProfileUserId)
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @if (Model.ProfileUserId == Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
+        {
+            using (Html.BeginForm("uploadimage", "profile", FormMethod.Post, new { @id = "form-upload-images", enctype = "multipart/form-data" }))
             {
-                <button onclick="onDeleteImage(event, this, @userImage.Id, '@userImage.FileName', '@Model.ProfileUserId')"
-                        style="position: absolute; top: 0; right: 5px;"
-                        class="btn btn-default btn-xs custom-tooltip"
-                        title="Delete this picture">
-                    <i class="glyphicon glyphicon-remove"></i>
-                </button>
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <span class="btn btn-xs btn-default btn-file">
+                            <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;Add Pictures
+                            @Html.TextBoxFor(x => x.UploadedImages, new { type = "file", multiple = "multiple", accept = "image/jpeg,image/gif,image/bmp,image/png" })
+                        </span>
+                    </span>
+                    @Html.HiddenFor(m => m.ProfileUserId)
+                </div>
             }
-            <a class="thumbnail" href="@userImage.Path" style="min-height: 128px; max-height: 128px;" data-gallery>
-                <img src="@userImage.ThumbnailPath" style="max-height: 118px;">
-            </a>
-        </div>
-    }
-}
-else
-{
-    if (Model.CurrentUserId == Model.ProfileUserId)
-    {
-        <h4>You haven't uploaded any images. Just upload something, anything!</h4>
-    }
-    else
-    {
-        <h4>This user hasn't uploaded any images yet. Send him or her a funny picture.</h4>
-    }
-}
+            <br />
+        }
+        @if (Model.UserImages != null && Model.UserImages.Count > 0)
+        {
+            foreach (var userImage in Model.UserImages)
+            {
+                <div id="@String.Format("{0}-image-div", userImage.Id)" class="col-xs-6 col-sm-3 text-center">
+                    @if (Model.CurrentUserId == Model.ProfileUserId)
+                    {
+                        <button onclick="onDeleteImage(event, this, @userImage.Id, '@userImage.FileName', '@Model.ProfileUserId')"
+                                style="position: absolute; top: 0; right: 5px;"
+                                class="btn btn-default btn-xs custom-tooltip"
+                                title="Delete this picture">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </button>
+                    }
+                    <a class="thumbnail" href="@userImage.Path" style="min-height: 128px; max-height: 128px;" data-gallery>
+                        <img src="@userImage.ThumbnailPath" style="max-height: 118px;">
+                    </a>
+                </div>
+            }
+        }
+        else
+        {
+            if (Model.CurrentUserId == Model.ProfileUserId)
+            {
+                <h4>You haven't uploaded any images. Just upload something, anything!</h4>
+            }
+            else
+            {
+                <h4>This user hasn't uploaded any images yet. Send him or her a funny picture.</h4>
+            }
+        }
+    </div>
+</div>

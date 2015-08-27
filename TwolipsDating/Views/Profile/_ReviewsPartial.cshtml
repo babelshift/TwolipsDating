@@ -4,67 +4,74 @@
 {
     foreach (var review in Model.Items)
     {
-        if (!String.IsNullOrEmpty(review.ProfileImagePath))
-        {
-            <div class="circular-image-wrapper">
-                <img class="circular-image" src="@review.ProfileImagePath" />
-            </div>
-        }
-        <p style="display: inline-block; vertical-align: top; margin-bottom: 0; margin-top: 4px;">
-            <a href="@Url.Action("index", "profile", new { id = review.AuthorProfileId })">@review.AuthorUserName</a>
-            <small>
-                &nbsp;&bull;&nbsp;
-                @for (int i = 1; i <= review.RatingValue; i++)
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @if (!String.IsNullOrEmpty(review.ProfileImagePath))
                 {
-                    <i class="glyphicon glyphicon-star review-rating-color"></i>
+                    <div class="circular-image-wrapper">
+                        <img class="circular-image" src="@review.ProfileImagePath" />
+                    </div>
                 }
-                @for (int j = 1; j <= 5 - review.RatingValue; j++)
-                {
-                    <i class="glyphicon glyphicon-star-empty review-rating-color"></i>
-                }
-                &nbsp;&bull;&nbsp;&nbsp;@review.TimeAgo
-            </small>
-        </p>
-        <p style="margin-top: 5px;" class="pull-right">
-            <a href="#" id="@String.Format("share-profile-link-{0}", review.ReviewId)" data-review-id="@review.ReviewId" class="btn btn-primary btn-xs"
-               data-html="true" data-toggle="popover" data-placement="bottom" data-title="Share" data-animation="false">
-                <i class="glyphicon glyphicon-share-alt"></i>
-            </a>
-            &nbsp;
-            <a href="#" class="btn btn-default btn-xs" data-toggle="modal" data-target="#modalReviewViolation" data-review-id="@review.ReviewId"
-               data-review-author="@review.AuthorUserName" title="Flag for review">
-                <i class="glyphicon glyphicon-flag"></i>
-            </a>
-        </p>
-        <div id="@String.Format("share-profile-buttons-popover-{0}", review.ReviewId)" class="hide">
-            <div class="share-buttons custom-popover-content text-center">
-                <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme))"
-                   onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-                    <img src="~/Content/fb-icon-32.png" alt="Share on Facebook" />
-                </a>
-                <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("{0} just reviewed {1}", review.AuthorUserName, Model.ProfileUserName)) + "&url=" + Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme))">
-                    <img src="~/Content/tw-icon-32.png" alt="Tweet" />
-                </a>
-                <a href="@("https://plus.google.com/share?url=" + Url.Action("index", "profile", new { id =  Model.ProfileId }, Request.Url.Scheme))"
-                   onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-                    <img src="~/Content/gp-icon-32.png" alt="Share on Google+" />
-                </a>
+                <div class="feed-item-headline">
+                    <a href="@Url.Action("index", "profile", new { id = review.AuthorProfileId })">@review.AuthorUserName</a>
+                    <br />
+                    <small>
+                        @review.TimeAgo
+                    </small>
+                </div>
+                <span class="pull-right feed-item-buttons">
+                    <a href="#" id="@String.Format("share-profile-link-{0}", review.ReviewId)" data-review-id="@review.ReviewId" class="btn btn-primary btn-xs"
+                       data-html="true" data-toggle="popover" data-placement="bottom" data-title="Share" data-animation="false">
+                        <i class="glyphicon glyphicon-share-alt"></i> Share
+                    </a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @:&nbsp;
+                        <a href="#" class="btn btn-default btn-xs" data-toggle="modal" data-target="#modalReviewViolation" data-review-id="@review.ReviewId"
+                           data-review-author="@review.AuthorUserName" title="Flag for review">
+                            <i class="glyphicon glyphicon-flag"></i> Report
+                        </a>
+                    }
+                </span>
+                <div id="@String.Format("share-profile-buttons-popover-{0}", review.ReviewId)" class="hide">
+                    <div class="share-buttons custom-popover-content text-center">
+                        <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme))"
+                           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                            <img src="~/Content/fb-icon-32.png" alt="Share on Facebook" />
+                        </a>
+                        <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("{0} just reviewed {1}", review.AuthorUserName, Model.ProfileUserName)) + "&url=" + Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme))">
+                            <img src="~/Content/tw-icon-32.png" alt="Tweet" />
+                        </a>
+                        <a href="@("https://plus.google.com/share?url=" + Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme))"
+                           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+                            <img src="~/Content/gp-icon-32.png" alt="Share on Google+" />
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="well well-sm wrap-long-lines feed-item-comment">
+                    <small>
+                        @Html.Partial("_StarRatingPartial", review.RatingValue)
+                        <br />
+                        @review.Content
+                    </small>
+                </div>
             </div>
-        </div>
-        <div class="clearfix"></div>
-        <div class="well well-sm wrap-long-lines">
-            <small>@review.Content</small>
         </div>
     }
 }
 else
 {
-    if (Model.CurrentUserId == Model.ProfileUserId)
-    {
-        <h4>No one has reviewed you yet. If you build it, they will come.</h4>
-    }
-    else
-    {
-        <h4>No one has reviewed this user yet. Why don't you be the first?</h4>
-    }
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @if (Model.CurrentUserId == Model.ProfileUserId)
+            {
+                <h4>No one has reviewed you yet. If you build it, they will come.</h4>
+            }
+            else
+            {
+                <h4>No one has reviewed this user yet. Why don't you be the first?</h4>
+            }
+        </div>
+    </div>
 }

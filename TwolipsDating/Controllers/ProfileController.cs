@@ -25,6 +25,7 @@ namespace TwolipsDating.Controllers
     {
         #region Members
 
+        private DashboardService dashboardService = new DashboardService();
         private UserService userService = new UserService();
         private ViolationService violationService = new ViolationService();
 
@@ -849,7 +850,7 @@ namespace TwolipsDating.Controllers
                 var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);
                 viewModel.UploadImage = new UploadImageViewModel();
                 viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
-                viewModel.Feed = GetUserFeed(profile, reviews, userImages, page);
+                viewModel.Feed = await GetUserFeedAsync(currentUserId, profile, reviews, userImages, page);
                 viewModel.Feed.CurrentUserId = currentUserId;
                 viewModel.Feed.ProfileUserId = profile.ApplicationUser.Id;
                 viewModel.Feed.ProfileUserName = profile.ApplicationUser.UserName;
@@ -882,22 +883,37 @@ namespace TwolipsDating.Controllers
         /// <param name="reviews"></param>
         /// <param name="uploadedImages"></param>
         /// <returns></returns>
-        private ProfileFeedViewModel GetUserFeed(Models.Profile profile, IReadOnlyCollection<Review> reviews, IReadOnlyCollection<UserImage> uploadedImages, int? page)
+        private async Task<ProfileFeedViewModel> GetUserFeedAsync(string currentUserId, Models.Profile profile, 
+            IReadOnlyCollection<Review> reviews, 
+            IReadOnlyCollection<UserImage> uploadedImages, 
+            int? page)
         {
             List<ProfileFeedItemViewModel> feedItems = new List<ProfileFeedItemViewModel>();
 
-            var reviewFeedViewModel = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewWrittenFeedViewModel>>(reviews);
+            AddReviewsToFeed(reviews, feedItems);
 
-            foreach (var reviewFeed in reviewFeedViewModel)
+            AddUploadedImagesToFeed(uploadedImages, feedItems);
+
+            await AddGiftTransactionsToFeedAsync(currentUserId, feedItems);
+
+            await AddCompletedQuizzesToFeedAsync(currentUserId, feedItems);
+
+            await AddTagSuggestionsToFeedAsync(currentUserId, feedItems);
+
+            await AddAchievementsToFeedAsync(currentUserId, feedItems);
+
+            var orderedFeed = feedItems.OrderByDescending(v => v.DateOccurred).ToList().AsReadOnly();
+
+            ProfileFeedViewModel viewModel = new ProfileFeedViewModel()
             {
-                feedItems.Add(new ProfileFeedItemViewModel()
-                {
-                    ItemType = DashboardFeedItemType.ReviewWritten,
-                    DateOccurred = reviewFeed.DateOccurred,
-                    ReviewWrittenFeedItem = reviewFeed
-                });
-            }
+                Items = orderedFeed.ToPagedList(page ?? 1, 20)
+            };
 
+            return viewModel;
+        }
+
+        private static void AddUploadedImagesToFeed(IReadOnlyCollection<UserImage> uploadedImages, List<ProfileFeedItemViewModel> feedItems)
+        {
             var uploadedImagesConsolidated = uploadedImages.GetConsolidatedImages();
 
             foreach (var uploadedImage in uploadedImagesConsolidated)
@@ -909,16 +925,86 @@ namespace TwolipsDating.Controllers
                     UploadedImageFeedItem = uploadedImage
                 });
             }
-
-            var orderedFeed = feedItems.OrderByDescending(v => v.DateOccurred).ToList().AsReadOnly();
-
-            ProfileFeedViewModel viewModel = new ProfileFeedViewModel()
-            {
-                Items = orderedFeed.ToPagedList(page ?? 1, 20)
-            };
-
-            return viewModel;
         }
+
+        private static void AddReviewsToFeed(IReadOnlyCollection<Review> reviews, List<ProfileFeedItemViewModel> feedItems)
+        {
+            var reviewFeedViewModel = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewWrittenFeedViewModel>>(reviews);
+
+            foreach (var reviewFeed in reviewFeedViewModel)
+            {
+                feedItems.Add(new ProfileFeedItemViewModel()
+                {
+                    ItemType = DashboardFeedItemType.ReviewWritten,
+                    DateOccurred = reviewFeed.DateOccurred,
+                    ReviewWrittenFeedItem = reviewFeed
+                });
+            }
+        }
+
+        private async Task AddGiftTransactionsToFeedAsync(string currentUserId, IList<ProfileFeedItemViewModel> profileFeedItems)
+        {
+            var giftTransactions = await dashboardService.GetGiftTransactionsForUserAsync(currentUserId);
+            var giftTransactionsConsolidated = giftTransactions.GetConsolidatedGiftTransactions();
+
+            foreach (var giftTransactionViewModel in giftTransactionsConsolidated)
+            {
+                profileFeedItems.Add(new ProfileFeedItemViewModel()
+                {
+                    ItemType = DashboardFeedItemType.GiftTransaction,
+                    DateOccurred = giftTransactionViewModel.DateSent,
+                    GiftReceivedFeedItem = giftTransactionViewModel
+                });
+            }
+        }
+
+        private async Task AddCompletedQuizzesToFeedAsync(string currentUserId, IList<ProfileFeedItemViewModel> profileFeedItems)
+        {
+            var completedQuizzes = await dashboardService.GetQuizCompletionsForUserAsync(currentUserId);
+
+            foreach (var quizCompletionViewModel in completedQuizzes)
+            {
+                profileFeedItems.Add(new ProfileFeedItemViewModel()
+                {
+                    ItemType = DashboardFeedItemType.QuizCompletion,
+                    DateOccurred = quizCompletionViewModel.DateCompleted,
+                    CompletedQuizFeedItem = quizCompletionViewModel
+                });
+            }
+        }
+
+        private async Task AddTagSuggestionsToFeedAsync(string currentUserId, IList<ProfileFeedItemViewModel> profileFeedItems)
+        {
+            var tagsSuggested = await dashboardService.GetFollowerTagSuggestionsForUserAsync(currentUserId);
+            var tagsSuggestedConsolidated = tagsSuggested.GetConsolidatedTagsSuggested();
+
+            foreach (var tagsSuggestedViewModel in tagsSuggestedConsolidated)
+            {
+                profileFeedItems.Add(new ProfileFeedItemViewModel()
+                {
+                    ItemType = DashboardFeedItemType.TagSuggestion,
+                    DateOccurred = tagsSuggestedViewModel.DateSuggested,
+                    TagSuggestionReceivedFeedItem = tagsSuggestedViewModel
+                });
+            }
+        }
+
+        private async Task AddAchievementsToFeedAsync(string currentUserId, IList<ProfileFeedItemViewModel> profileFeedItems)
+        {
+            var achievements = await dashboardService.GetFollowerAchievementsForUserAsync(currentUserId);
+            var achievementFeedViewModels = Mapper.Map<IReadOnlyCollection<MilestoneAchievement>, IReadOnlyCollection<AchievementFeedViewModel>>(achievements);
+
+            foreach (var achievementFeedViewModel in achievementFeedViewModels)
+            {
+                profileFeedItems.Add(new ProfileFeedItemViewModel()
+                {
+                    ItemType = DashboardFeedItemType.AchievementObtained,
+                    DateOccurred = achievementFeedViewModel.DateAchieved,
+                    AchievementFeedItem = achievementFeedViewModel
+                });
+            }
+        }
+
 
         /// <summary>
         /// If the profile doesn't exist when the user wants to view their own profile, use a special view model which only allows for the creation of a profile.
@@ -1100,6 +1186,12 @@ namespace TwolipsDating.Controllers
                 {
                     violationService.Dispose();
                     violationService = null;
+                }
+
+                if(dashboardService != null)
+                {
+                    dashboardService.Dispose();
+                    dashboardService = null;
                 }
             }
 

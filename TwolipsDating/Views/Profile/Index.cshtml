@@ -692,25 +692,24 @@
                         <li role="presentation"><a href="#">Trophy Room</a></li>
                     *@
                 </ul>
-                <hr />
-                @if (Model.ActiveTab == "feed")
-                {
-                    Html.RenderPartial("_FeedPartial", Model.Feed);
-                }
-                else if (Model.ActiveTab == "pictures")
-                {
-                    Html.RenderPartial("_PicturesPartial", Model.UploadImage);
-                }
-                else if (Model.ActiveTab == "reviews")
-                {
-                    Html.RenderPartial("_ReviewsPartial", Model.Reviews);
-                }
-                else if (Model.ActiveTab == "inventory")
-                {
-                    Html.RenderPartial("_InventoryPartial", Model.Inventory);
-                }
             </div>
         </div>
+        @if (Model.ActiveTab == "feed")
+        {
+            Html.RenderPartial("_FeedPartial", Model.Feed);
+        }
+        else if (Model.ActiveTab == "pictures")
+        {
+            Html.RenderPartial("_PicturesPartial", Model.UploadImage);
+        }
+        else if (Model.ActiveTab == "reviews")
+        {
+            Html.RenderPartial("_ReviewsPartial", Model.Reviews);
+        }
+        else if (Model.ActiveTab == "inventory")
+        {
+            Html.RenderPartial("_InventoryPartial", Model.Inventory);
+        }
         @if (String.IsNullOrEmpty(Model.ActiveTab) || Model.ActiveTab == "feed")
         {
             if (Model.Feed.Items.PageCount > 1)

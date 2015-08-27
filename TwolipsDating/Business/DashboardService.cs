@@ -163,5 +163,88 @@ where
             var results = await achievements.ToListAsync();
             return results.AsReadOnly();
         }
+
+        internal async Task<IReadOnlyCollection<GiftTransactionLog>> GetGiftTransactionsForUserAsync(string userId)
+        {
+            var giftTransactions = from gifts in db.GiftTransactions
+                                .Include(g => g.StoreItem)
+                                .Include(g => g.FromUser)
+                                where (gifts.FromUserId == userId || gifts.ToUserId == userId)
+                                where gifts.FromUser.IsActive
+                                where gifts.ToUser.IsActive
+                                select gifts;
+
+            var results = await giftTransactions.ToListAsync();
+            return results.AsReadOnly();
+        }
+
+        internal async Task<IReadOnlyCollection<CompletedQuizFeedViewModel>> GetQuizCompletionsForUserAsync(string userId)
+        {
+            string sql = @"
+select 
+	p.Id SourceProfileId,
+	u.UserName SourceUserName,
+	ui.FileName SourceProfileImagePath,
+	q.Name QuizName,
+	q.Id QuizId,
+	cq.DateCompleted DateCompleted,
+	(
+		select count(*)
+		from dbo.QuizQuestions qq2
+		inner join dbo.AnsweredQuestions aq on aq.UserId = cq.UserId and aq.QuestionId = qq2.Question_Id
+		inner join dbo.Questions qu on qu.Id = aq.QuestionId
+		where qq2.Quiz_Id = q.Id
+		and aq.AnswerId = qu.CorrectAnswerId
+	) CorrectAnswerCount,
+	(
+		select count(*) 
+		from dbo.QuizQuestions qq2
+		where qq2.Quiz_Id = q.Id
+	) TotalAnswerCount
+from dbo.CompletedQuizs cq
+inner join dbo.Quizs q on cq.QuizId = q.Id
+inner join dbo.AspNetUsers u on cq.UserId = u.Id
+inner join dbo.Profiles p on p.ApplicationUser_Id = u.Id
+left join dbo.UserImages ui on p.UserImageId = ui.Id
+where
+	cq.UserId = @userId
+	and u.IsActive = 1";
+
+            var results = await QueryAsync<CompletedQuizFeedViewModel>(sql, new { userId = userId });
+
+            foreach (var result in results)
+            {
+                result.SourceProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.SourceProfileImagePath);
+            }
+
+            return results.ToList().AsReadOnly();
+        }
+
+        internal async Task<IReadOnlyCollection<TagSuggestion>> GetFollowerTagSuggestionsForUserAsync(string userId)
+        {
+            var tagSuggestionsForUser = from tagSuggestion in db.TagSuggestions
+                                           .Include(t => t.Profile)
+                                           .Include(t => t.SuggestingUser)
+                                           where (tagSuggestion.SuggestingUserId == userId || tagSuggestion.Profile.ApplicationUser.Id == userId)
+                                          where tagSuggestion.SuggestingUser.IsActive
+                                          where tagSuggestion.Profile.ApplicationUser.IsActive
+                                          select tagSuggestion;
+
+            var results = await tagSuggestionsForUser.ToListAsync();
+            return results.AsReadOnly();
+        }
+
+        internal async Task<IReadOnlyCollection<MilestoneAchievement>> GetFollowerAchievementsForUserAsync(string userId)
+        {
+            var achievements = from achievement in db.MilestoneAchievements
+                               .Include(a => a.Milestone)
+                               .Include(a => a.User)
+                               where achievement.UserId == userId
+                               where achievement.User.IsActive
+                               select achievement;
+
+            var results = await achievements.ToListAsync();
+            return results.AsReadOnly();
+        }
     }
 }
