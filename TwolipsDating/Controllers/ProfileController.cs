@@ -850,7 +850,7 @@ namespace TwolipsDating.Controllers
                 var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);
                 viewModel.UploadImage = new UploadImageViewModel();
                 viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
-                viewModel.Feed = await GetUserFeedAsync(currentUserId, profile, reviews, userImages, page);
+                viewModel.Feed = await GetUserFeedAsync(profile, reviews, userImages, page);
                 viewModel.Feed.CurrentUserId = currentUserId;
                 viewModel.Feed.ProfileUserId = profile.ApplicationUser.Id;
                 viewModel.Feed.ProfileUserName = profile.ApplicationUser.UserName;
@@ -883,7 +883,7 @@ namespace TwolipsDating.Controllers
         /// <param name="reviews"></param>
         /// <param name="uploadedImages"></param>
         /// <returns></returns>
-        private async Task<ProfileFeedViewModel> GetUserFeedAsync(string currentUserId, Models.Profile profile, 
+        private async Task<ProfileFeedViewModel> GetUserFeedAsync(Models.Profile profile, 
             IReadOnlyCollection<Review> reviews, 
             IReadOnlyCollection<UserImage> uploadedImages, 
             int? page)
@@ -894,13 +894,13 @@ namespace TwolipsDating.Controllers
 
             AddUploadedImagesToFeed(uploadedImages, feedItems);
 
-            await AddGiftTransactionsToFeedAsync(currentUserId, feedItems);
+            await AddGiftTransactionsToFeedAsync(profile.ApplicationUser.Id, feedItems);
 
-            await AddCompletedQuizzesToFeedAsync(currentUserId, feedItems);
+            await AddCompletedQuizzesToFeedAsync(profile.ApplicationUser.Id, feedItems);
 
-            await AddTagSuggestionsToFeedAsync(currentUserId, feedItems);
+            await AddTagSuggestionsToFeedAsync(profile.ApplicationUser.Id, feedItems);
 
-            await AddAchievementsToFeedAsync(currentUserId, feedItems);
+            await AddAchievementsToFeedAsync(profile.ApplicationUser.Id, feedItems);
 
             var orderedFeed = feedItems.OrderByDescending(v => v.DateOccurred).ToList().AsReadOnly();
 

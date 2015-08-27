@@ -9,7 +9,14 @@
 <div class="feed-item-headline">
     <a href="@Url.Action("index", "profile", new { id = Model.AuthorProfileId })">@Model.AuthorUserName</a>
     writes about
-    <a href="@Url.Action("index", "profile", new { id = Model.TargetProfileId })">@Model.TargetUserName</a>
+    @if (Model.TargetUserName == User.Identity.Name)
+    {
+        @:you
+    }
+    else
+    {
+        <a href="@Url.Action("index", "profile", new { id = Model.TargetProfileId })">@Model.TargetUserName</a>
+    }
     <br />
     <small>
         @Model.TimeAgo
