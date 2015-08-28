@@ -877,7 +877,7 @@ namespace TwolipsDating.Controllers
             if(viewModel.ActiveTab == "achievements")
             {
                 MilestoneService milestoneService = new MilestoneService(UserManager.EmailService);
-                var achievements = await milestoneService.GetAchievementsAndStatusForUserAsync(currentUserId);
+                var achievements = await milestoneService.GetAchievementsAndStatusForUserAsync(profile.ApplicationUser.Id);
                 viewModel.Achievements = achievements;
             }
         }
