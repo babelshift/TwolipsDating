@@ -1,0 +1,75 @@
+﻿@model TwolipsDating.ViewModels.AchievementManagerViewModel
+
+@{
+    ViewBag.Title = "Your achievements";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">
+            <i class="glyphicon glyphicon-stats"></i> Achievements
+        </div>
+    </div>
+    <div class="panel-body">
+        @foreach (var achievement in Model.Achievements)
+        {
+            <h4>@achievement.AchievementTypeName</h4>
+            <p class="achievement-group-description">@achievement.AchievementDescription</p>
+            <div class="achievement-container text-center">
+                @foreach (var achievementStatus in achievement.AchievementStatuses)
+                {
+                    <div class="col-xs-4 col-sm-2 col-md-1">
+                        @if (achievementStatus.AchievementStatus == TwolipsDating.ViewModels.AchievementStatusType.Complete)
+                        {
+                            <div class="achievement-box-complete">
+                                <h2 class="status-marker status-marker-complete"><i class="glyphicon glyphicon-ok"></i></h2>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+                                     aria-valuenow="@achievementStatus.AchievedCount"
+                                     aria-valuemin="0"
+                                     aria-valuemax="@achievementStatus.RequiredCount"
+                                     style="width: @String.Format("{0}%", achievementStatus.PercentComplete)">
+                                </div>
+                            </div>
+                            <span class="progress-text progress-text-complete">@achievementStatus.AchievedCount of @achievementStatus.RequiredCount</span>
+                        }
+                        else if (achievementStatus.AchievementStatus == TwolipsDating.ViewModels.AchievementStatusType.Incomplete)
+                        {
+                            if (achievementStatus.PercentComplete > 0)
+                            {
+                                <div class="achievement-box-in-progress">
+                                    <h2 class="status-marker status-marker-in-progress"><i class="glyphicon glyphicon-minus"></i></h2>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="achievement-box-not-in-progress">
+                                    <h2 class="status-marker status-marker-not-in-progress"><i class="glyphicon glyphicon-remove"></i></h2>
+                                </div>
+                            }
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar"
+                                     aria-valuenow="@achievementStatus.AchievedCount"
+                                     aria-valuemin="0"
+                                     aria-valuemax="@achievementStatus.RequiredCount"
+                                     style="width: @String.Format("{0}%", achievementStatus.PercentComplete)">
+                                </div>
+                            </div>
+                            if (achievementStatus.PercentComplete > 0)
+                            {
+                                <span class="progress-text progress-text-in-progress">@achievementStatus.AchievedCount of @achievementStatus.RequiredCount</span>
+                            }
+                            else
+                            {
+                                <span class="progress-text progress-text-not-in-progress">@achievementStatus.AchievedCount of @achievementStatus.RequiredCount</span>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+            <div class="clearfix"></div>
+            <hr />
+        }
+    </div>
+</div>

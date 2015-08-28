@@ -41,8 +41,8 @@ exec dbo.InsertQuizQuestion 'What is a tariff?', 4, 4, @answers;
 delete from @answers;
 
 insert into @answers(Content, IsCorrect) values('Throwing three strikes in a row in baseball', 0);
-insert into @answers(Content, IsCorrect) values('Ending a strike by paying workers higher wages', 1);
-insert into @answers(Content, IsCorrect) values('Forceful replacement of striking workers', 0);
+insert into @answers(Content, IsCorrect) values('Ending a strike by paying workers higher wages', 0);
+insert into @answers(Content, IsCorrect) values('Forceful replacement of striking workers', 1);
 insert into @answers(Content, IsCorrect) values('Locking out workers from a business', 0);
 exec dbo.InsertQuizQuestion 'The controversial act of strikebreaking involves what?', 4, 4, @answers;
 
@@ -74,6 +74,6 @@ delete from @answers;
 
 insert into @answers(Content, IsCorrect) values('Chief Executive Officer', 1);
 insert into @answers(Content, IsCorrect) values('Chief Efficiency Officer', 0);
-insert into @answers(Content, IsCorrect) values('Counter Effects Online', 1);
+insert into @answers(Content, IsCorrect) values('Counter Effects Online', 0);
 insert into @answers(Content, IsCorrect) values('Cross Element Order', 0);
 exec dbo.InsertQuizQuestion 'What does CEO stand for?', 1, 4, @answers;

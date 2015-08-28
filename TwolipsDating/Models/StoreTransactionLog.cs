@@ -8,6 +8,7 @@ namespace TwolipsDating.Models
         public string UserId { get; set; }
         public int StoreItemId { get; set; }
         public int ItemCount { get; set; }
+        public int PointPrice { get; set; }
         public DateTime DateTransactionOccurred { get; set; }
 
         public virtual ApplicationUser BuyerUser { get; set; }

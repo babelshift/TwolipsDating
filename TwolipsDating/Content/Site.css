@@ -511,9 +511,9 @@ input[readonly] {
     margin-top: 0;
 }
 
-.feed-item-headline small {
-    color: #999;
-}
+    .feed-item-headline small {
+        color: #999;
+    }
 
 .feed-item-buttons {
     margin-top: 0;
@@ -523,15 +523,78 @@ input[readonly] {
     margin-bottom: 0;
 }
 
-.pagination { 
+.pagination {
     margin: 0;
 }
 
-.pagination > li > a {
-    color: #333;
-    border: 1px solid #eee;
+    .pagination > li > a {
+        color: #333;
+        border: 1px solid #eee;
+    }
+
+        .pagination > li > a:hover {
+            background-color: #eee;
+        }
+
+.achievement-group-description {
+    color: #999;
 }
 
-.pagination > li > a:hover {
-    background-color: #eee;
+.achievement-container .achievement-box-complete {
+    border-top: 2px solid #43AC6A;
+    border-left: 2px solid #43AC6A;
+    border-right: 2px solid #43AC6A;
+}
+
+.achievement-container .achievement-box-not-in-progress {
+    border-top: 2px dashed #ccc;
+    border-left: 2px dashed #ccc;
+    border-right: 2px dashed #ccc;
+}
+
+.achievement-container .achievement-box-in-progress {
+    border-top: 2px dashed #e99002;
+    border-left: 2px dashed #e99002;
+    border-right: 2px dashed #e99002;
+}
+
+.achievement-container .status-marker {
+    margin: 0;
+    padding: 20px 0;
+}
+
+.achievement-container .status-marker-complete {
+    color: #43AC6A;
+}
+
+.achievement-container .status-marker-not-in-progress {
+    color: #ccc;
+}
+
+.achievement-container .status-marker-in-progress {
+    color: #e99002;
+}
+
+.achievement-container .progress-text {
+    font-size: 13px;
+}
+
+.achievement-container .progress-text-complete {
+    color: #43AC6A;
+}
+
+.achievement-container .progress-text-in-progress {
+    color: #e99002;
+}
+
+.achievement-container .progress-text-not-in-progress {
+    color: #ccc;
+}
+
+.achievement-container .progress {
+    margin-bottom: 0;
+}
+
+.achievement-container .progress-bar {
+    line-height: inherit;
 }

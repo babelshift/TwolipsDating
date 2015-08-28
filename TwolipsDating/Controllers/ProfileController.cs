@@ -883,9 +883,9 @@ namespace TwolipsDating.Controllers
         /// <param name="reviews"></param>
         /// <param name="uploadedImages"></param>
         /// <returns></returns>
-        private async Task<ProfileFeedViewModel> GetUserFeedAsync(Models.Profile profile, 
-            IReadOnlyCollection<Review> reviews, 
-            IReadOnlyCollection<UserImage> uploadedImages, 
+        private async Task<ProfileFeedViewModel> GetUserFeedAsync(Models.Profile profile,
+            IReadOnlyCollection<Review> reviews,
+            IReadOnlyCollection<UserImage> uploadedImages,
             int? page)
         {
             List<ProfileFeedItemViewModel> feedItems = new List<ProfileFeedItemViewModel>();
@@ -1168,6 +1168,27 @@ namespace TwolipsDating.Controllers
 
         #endregion Select Title
 
+        #region Achievements
+
+        [RequireProfile]
+        public async Task<ActionResult> Achievements()
+        {
+            await SetNotificationsAsync();
+
+            string currentUserId = User.Identity.GetUserId();
+
+            MilestoneService milestoneService = new MilestoneService(UserManager.EmailService);
+
+            var achievements = await milestoneService.GetAchievementsAndStatusForUserAsync(currentUserId);
+            AchievementManagerViewModel viewModel = new AchievementManagerViewModel();
+            viewModel.Achievements = achievements;
+            
+            return View(viewModel);
+            
+        }
+
+        #endregion
+
         /// <summary>
         /// Disposes of all services.
         /// </summary>
@@ -1188,7 +1209,7 @@ namespace TwolipsDating.Controllers
                     violationService = null;
                 }
 
-                if(dashboardService != null)
+                if (dashboardService != null)
                 {
                     dashboardService.Dispose();
                     dashboardService = null;

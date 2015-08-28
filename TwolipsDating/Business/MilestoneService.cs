@@ -7,11 +7,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TwolipsDating.Models;
+using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
 {
     public class MilestoneService : BaseService
     {
+        public MilestoneService(IIdentityMessageService emailService)
+            : base(emailService) { }
+
         public MilestoneService(ApplicationDbContext db, IIdentityMessageService emailService)
             : base(db, emailService) { }
 
@@ -184,6 +188,135 @@ namespace TwolipsDating.Business
             };
 
             db.MilestoneAchievements.Add(achievement);
+        }
+
+        private async Task<int> GetUserProgressTowardsAchievement(string userId, int milestoneTypeId)
+        {
+            int count = 0;
+
+            if (milestoneTypeId == (int)MilestoneTypeValues.GiftsPurchased)
+            {
+                count = await (from storeTransaction in db.StoreTransactions
+                               where storeTransaction.UserId == userId
+                               where storeTransaction.StoreItem.ItemTypeId == (int)StoreItemTypeValues.Gift
+                               select storeTransaction).CountAsync();
+            }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.GiftSent)
+            {
+                count = await (from giftTransaction in db.GiftTransactions
+                               where giftTransaction.FromUserId == userId
+                               select giftTransaction).CountAsync();
+            }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.PointsObtained)
+            {
+                int pointsSpent = await (from storeTransaction in db.StoreTransactions
+                                         where storeTransaction.UserId == userId
+                                         select storeTransaction.PointPrice).SumAsync();
+
+                int currentPoints = await (from user in db.Users
+                                           where user.Id == userId
+                                           select user.Points).FirstOrDefaultAsync();
+
+                count = pointsSpent + currentPoints;
+            }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.ProfileImagesUploaded)
+            {
+                count = await (from userImage in db.UserImages
+                               where userImage.ApplicationUserId == userId
+                               select userImage).CountAsync();
+            }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.ProfileReviewsWritten)
+            {
+                count = await (from review in db.Reviews
+                               where review.AuthorUserId == userId
+                               select review).CountAsync();
+            }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.QuestionsAnsweredCorrectly)
+            {
+                count = await (from answeredQuestion in db.AnsweredQuestions
+                               join question in db.Questions on answeredQuestion.AnswerId equals question.CorrectAnswerId
+                               where answeredQuestion.UserId == userId
+                               select answeredQuestion).CountAsync();
+            }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.QuizzesCompletedSuccessfully)
+            {
+                // need to calculate if the quiz was successful, come up with a % threshold
+                count = await (from quizCompletions in db.CompletedQuizzes
+                               where quizCompletions.UserId == userId
+                               select quizCompletions).CountAsync();
+
+                // need to get correct answer count for quiz and total answer count
+
+                // there's probably a query somewhere which calculates this for us already
+            }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.TagsAwarded)
+            {
+                count = await (from tagAward in db.TagAwards
+                               where tagAward.Profile.ApplicationUser.Id == userId
+                               select tagAward).CountAsync();
+            }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.TitlesPurchased)
+            {
+                count = await (from storeTransaction in db.StoreTransactions
+                               where storeTransaction.UserId == userId
+                               where storeTransaction.StoreItem.ItemTypeId == (int)StoreItemTypeValues.Title
+                               select storeTransaction).CountAsync();
+            }
+
+            return count;
+        }
+
+        internal async Task<IReadOnlyCollection<AchievementOverviewViewModel>> GetAchievementsAndStatusForUserAsync(string userId)
+        {
+            var milestones = from milestone in db.Milestones
+                             orderby new { milestone.MilestoneTypeId, milestone.AmountRequired }
+                             select milestone;
+
+            var results = await milestones.ToListAsync();
+
+            List<AchievementOverviewViewModel> achievementOverviews = new List<AchievementOverviewViewModel>();
+            List<AchievementStatusViewModel> currentAchievementStatuses = new List<AchievementStatusViewModel>();
+            AchievementOverviewViewModel currentAchievementOverView = new AchievementOverviewViewModel();
+
+            int currentMilestoneTypeId = 0;
+            int previousMilestoneTypeId = 0;
+            Milestone previousMilestone = null;
+            foreach (var milestone in results)
+            {
+                previousMilestoneTypeId = currentMilestoneTypeId;
+                currentMilestoneTypeId = milestone.MilestoneTypeId;
+
+                // we hit a new milestone type, create a new collection
+                if (currentMilestoneTypeId != previousMilestoneTypeId)
+                {
+                    // save off the current group before starting over but not if this is the first item
+                    if (previousMilestoneTypeId > 0)
+                    {
+                        currentAchievementOverView.AchievementStatuses = currentAchievementStatuses;
+                        currentAchievementOverView.AchievementTypeName = previousMilestone.MilestoneType.Name;
+                        currentAchievementOverView.AchievementDescription = previousMilestone.MilestoneType.Description;
+                        achievementOverviews.Add(currentAchievementOverView);
+                    }
+
+                    // start over for the next group
+                    currentAchievementOverView = new AchievementOverviewViewModel();
+                    currentAchievementStatuses = new List<AchievementStatusViewModel>();
+                }
+
+                // look up the user's status on this milestone
+                int amountAchieved = await GetUserProgressTowardsAchievement(userId, milestone.MilestoneTypeId);
+
+                currentAchievementStatuses.Add(new AchievementStatusViewModel()
+                    {
+                        RequiredCount = milestone.AmountRequired,
+                        AchievedCount = amountAchieved,
+                        AchievementStatus = (amountAchieved >= milestone.AmountRequired) ? AchievementStatusType.Complete : AchievementStatusType.Incomplete
+                    });
+
+                previousMilestone = milestone;
+            }
+
+            return achievementOverviews.AsReadOnly(); ;
         }
     }
 }

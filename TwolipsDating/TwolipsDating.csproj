@@ -367,6 +367,10 @@
     <Compile Include="Migrations\201508261622160_ChangeTagAwardKeyToIdentity.Designer.cs">
       <DependentUpon>201508261622160_ChangeTagAwardKeyToIdentity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508281358306_AddPurchasedPointPriceToStoreTransaction.cs" />
+    <Compile Include="Migrations\201508281358306_AddPurchasedPointPriceToStoreTransaction.Designer.cs">
+      <DependentUpon>201508281358306_AddPurchasedPointPriceToStoreTransaction.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\EmailNotifications.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
@@ -384,6 +388,9 @@
     <Compile Include="Utilities\UrlHelperExtensions.cs" />
     <Compile Include="Utilities\UserImageExtensions.cs" />
     <Compile Include="ViewModels\AchievementFeedViewModel.cs" />
+    <Compile Include="ViewModels\AchievementManagerViewModel.cs" />
+    <Compile Include="ViewModels\AchievementOverviewViewModel.cs" />
+    <Compile Include="ViewModels\AchievementStatusViewModel.cs" />
     <Compile Include="ViewModels\CompletedQuizFeedViewModel.cs" />
     <Compile Include="ViewModels\GiftReceivedFeedItemViewModel.cs" />
     <Compile Include="ViewModels\GiftReceivedFeedViewModel.cs" />
@@ -919,6 +926,7 @@
     <Content Include="Views\Manage\Notifications.cshtml" />
     <Content Include="Views\Shared\_FeedItemAchievementPartial.cshtml" />
     <Content Include="Views\Profile\Create.cshtml" />
+    <Content Include="Views\Profile\Achievements.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1130,6 +1138,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508261622160_ChangeTagAwardKeyToIdentity.resx">
       <DependentUpon>201508261622160_ChangeTagAwardKeyToIdentity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508281358306_AddPurchasedPointPriceToStoreTransaction.resx">
+      <DependentUpon>201508281358306_AddPurchasedPointPriceToStoreTransaction.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -157,15 +157,15 @@ namespace TwolipsDating.Migrations
                 new QuestionType() { Id = (int)QuestionTypeValues.Quiz, Name = "Quiz" });
 
             context.MilestoneTypes.AddOrUpdate(m => m.Id,
-                new MilestoneType() { Id = (int)MilestoneTypeValues.QuestionsAnsweredCorrectly, Name = "Questions answered correctly" },
-                new MilestoneType() { Id = (int)MilestoneTypeValues.QuizzesCompletedSuccessfully, Name = "Quizzes completed successfully" },
-                new MilestoneType() { Id = (int)MilestoneTypeValues.GiftSent, Name = "Gifts sent to a user" },
-                new MilestoneType() { Id = (int)MilestoneTypeValues.GiftsPurchased, Name = "Gifts purchased" },
-                new MilestoneType() { Id = (int)MilestoneTypeValues.PointsObtained, Name = "Points obtained" },
-                new MilestoneType() { Id = (int)MilestoneTypeValues.ProfileImagesUploaded, Name = "Profile images uploaded" },
-                new MilestoneType() { Id = (int)MilestoneTypeValues.ProfileReviewsWritten, Name = "Profile reviews written" },
-                new MilestoneType() { Id = (int)MilestoneTypeValues.TagsAwarded, Name = "Tags awarded" },
-                new MilestoneType() { Id = (int)MilestoneTypeValues.TitlesPurchased, Name = "Titles purchased" });
+                new MilestoneType() { Id = (int)MilestoneTypeValues.QuestionsAnsweredCorrectly, Name = "Questions answered correctly", Description = "Answering questions correctly will award you tags, points, and build up your profile with your knowledge." },
+                new MilestoneType() { Id = (int)MilestoneTypeValues.QuizzesCompletedSuccessfully, Name = "Quizzes completed successfully", Description = "Completing quizzes shows others that you know a bundle of knowledge about a specific topic." },
+                new MilestoneType() { Id = (int)MilestoneTypeValues.GiftSent, Name = "Gifts sent to a user", Description = "Sending gifts to others can begin a conversation about the gift or any messages sent with that gift." },
+                new MilestoneType() { Id = (int)MilestoneTypeValues.GiftsPurchased, Name = "Gifts purchased", Description = "Purchasing gifts and items from the store can be used to show off your profile treasures." },
+                new MilestoneType() { Id = (int)MilestoneTypeValues.PointsObtained, Name = "Points obtained", Description = "Points are obtained through trivia, quizzes, achievements, and more in order to obtain items, gifts, and titles." },
+                new MilestoneType() { Id = (int)MilestoneTypeValues.ProfileImagesUploaded, Name = "Profile images uploaded", Description = "Upload pictures of yourself and things that you enjoy to customize your profile appearance." },
+                new MilestoneType() { Id = (int)MilestoneTypeValues.ProfileReviewsWritten, Name = "Profile reviews written", Description = "Reviewing your friends and people that you meet can help others know what they're getting into." },
+                new MilestoneType() { Id = (int)MilestoneTypeValues.TagsAwarded, Name = "Tags awarded", Description = "Tags are awarded from questions, quizzes, and achievements to tailor your profile around your knowledge and actions." },
+                new MilestoneType() { Id = (int)MilestoneTypeValues.TitlesPurchased, Name = "Titles purchased", Description = "Purchasing unique titles from the store allows you to select and display a title before your user name around the community." });
 
             context.Milestones.AddOrUpdate(m => m.Id,
                 new Milestone() { Id = (int)MilestoneValues.QuestionsAnsweredCorrectly1, MilestoneTypeId = (int)MilestoneTypeValues.QuestionsAnsweredCorrectly, AmountRequired = 25 },
