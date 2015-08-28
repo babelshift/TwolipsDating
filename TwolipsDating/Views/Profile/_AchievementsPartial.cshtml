@@ -1,0 +1,17 @@
+﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.AchievementOverviewViewModel>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var achievement in Model)
+            {
+                @Html.Partial("_AchievementOverviewPartial", achievement)
+            }
+        }
+        else
+        {
+            <h4>This person hasn't accomplished anything yet. Send them some much needed encouragement!</h4>
+        }
+    </div>
+</div>

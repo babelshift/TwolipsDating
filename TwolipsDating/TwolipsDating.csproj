@@ -759,6 +759,7 @@
     <Content Include="Content\green-star-icon-72.png" />
     <Content Include="Content\green-tag-icon-72.png" />
     <Content Include="Content\green-talk-icon-72.png" />
+    <Content Include="Content\ig-icon-32.png" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\loading.gif" />
@@ -927,6 +928,8 @@
     <Content Include="Views\Shared\_FeedItemAchievementPartial.cshtml" />
     <Content Include="Views\Profile\Create.cshtml" />
     <Content Include="Views\Profile\Achievements.cshtml" />
+    <Content Include="Views\Profile\_AchievementOverviewPartial.cshtml" />
+    <Content Include="Views\Profile\_AchievementsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

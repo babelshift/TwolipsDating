@@ -874,6 +874,12 @@ namespace TwolipsDating.Controllers
                 viewModel.Reviews.ProfileUserName = profile.ApplicationUser.UserName;
                 viewModel.Reviews.ProfileId = profile.Id;
             }
+            if(viewModel.ActiveTab == "achievements")
+            {
+                MilestoneService milestoneService = new MilestoneService(UserManager.EmailService);
+                var achievements = await milestoneService.GetAchievementsAndStatusForUserAsync(currentUserId);
+                viewModel.Achievements = achievements;
+            }
         }
 
         /// <summary>
@@ -1178,8 +1184,8 @@ namespace TwolipsDating.Controllers
             string currentUserId = User.Identity.GetUserId();
 
             MilestoneService milestoneService = new MilestoneService(UserManager.EmailService);
-
             var achievements = await milestoneService.GetAchievementsAndStatusForUserAsync(currentUserId);
+
             AchievementManagerViewModel viewModel = new AchievementManagerViewModel();
             viewModel.Achievements = achievements;
             

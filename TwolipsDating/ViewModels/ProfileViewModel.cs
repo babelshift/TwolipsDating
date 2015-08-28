@@ -30,6 +30,7 @@ namespace TwolipsDating.ViewModels
         public IReadOnlyCollection<ProfileTagSuggestionViewModel> AllTags { get; set; }
         public IReadOnlyCollection<ProfileTagAwardViewModel> AwardedTags { get; set; }
         public IReadOnlyCollection<TitleViewModel> UserTitles { get; set; }
+        public IReadOnlyCollection<AchievementOverviewViewModel> Achievements { get; set; }
 
         public bool IsIgnoredByCurrentUser { get; set; }
         public bool IsFavoritedByCurrentUser { get; set; }

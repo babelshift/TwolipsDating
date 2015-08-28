@@ -95,7 +95,7 @@ namespace TwolipsDating.Business
 
                 db.UserTitles.Add(userTitle);
 
-                LogStoreTransaction(userId, storeItemId, 1);
+                LogStoreTransaction(userId, storeItemId, 1, pointsCost);
 
                 user.Points -= pointsCost;
             }
@@ -153,7 +153,7 @@ namespace TwolipsDating.Business
                     db.InventoryItems.Add(item);
                 }
 
-                LogStoreTransaction(userId, storeItemId, buyCount);
+                LogStoreTransaction(userId, storeItemId, buyCount, pointsCost);
 
                 user.Points -= pointsCost * buyCount;
             }
@@ -165,13 +165,14 @@ namespace TwolipsDating.Business
             return count;
         }
 
-        private void LogStoreTransaction(string userId, int storeItemId, int buyCount)
+        private void LogStoreTransaction(string userId, int storeItemId, int buyCount, int pointPrice)
         {
             StoreTransactionLog log = new StoreTransactionLog()
             {
                 UserId = userId,
                 StoreItemId = storeItemId,
                 ItemCount = buyCount,
+                PointPrice = pointPrice,
                 DateTransactionOccurred = DateTime.Now
             };
 

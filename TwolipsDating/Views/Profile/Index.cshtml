@@ -641,53 +641,64 @@
                     @if (Model.ActiveTab == "feed")
                     {
                         <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
+                            <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i><span class="hidden-xs">&nbsp; Feed</span></a>
                         </li>
                     }
                     else
                     {
                         <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i>&nbsp; Feed</a>
+                            <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i><span class="hidden-xs">&nbsp; Feed</span></a>
                         </li>
                     }
                     @if (Model.ActiveTab == "pictures")
                     {
                         <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
+                            <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i><span class="hidden-xs">&nbsp; Pictures</span></a>
                         </li>
                     }
                     else
                     {
                         <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i>&nbsp; Pictures</a>
+                            <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i><span class="hidden-xs">&nbsp; Pictures</span></a>
                         </li>
                     }
                     @if (Model.ActiveTab == "reviews")
                     {
                         <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
+                            <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i><span class="hidden-xs">&nbsp; Reviews</span></a>
                         </li>
                     }
                     else
                     {
                         <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i>&nbsp; Reviews</a>
+                            <a href="@Url.Action("index", new { tab = "reviews" })"><i class="glyphicon glyphicon-duplicate"></i><span class="hidden-xs">&nbsp; Reviews</span></a>
                         </li>
                     }
                     @if (Model.ActiveTab == "inventory")
                     {
                         <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "inventory" })"><i class="glyphicon glyphicon-gift"></i>&nbsp; Inventory</a>
+                            <a href="@Url.Action("index", new { tab = "inventory" })"><i class="glyphicon glyphicon-gift"></i><span class="hidden-xs">&nbsp; Inventory</span></a>
                         </li>
                     }
                     else
                     {
                         <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "inventory" })"><i class="glyphicon glyphicon-gift"></i>&nbsp; Inventory</a>
+                            <a href="@Url.Action("index", new { tab = "inventory" })"><i class="glyphicon glyphicon-gift"></i><span class="hidden-xs">&nbsp; Inventory</span></a>
+                        </li>
+                    }
+                    @if (Model.ActiveTab == "achievements")
+                    {
+                        <li role="presentation" class="active">
+                            <a href="@Url.Action("index", new { tab = "achievements" })"><i class="glyphicon glyphicon-stats"></i><span class="hidden-xs">&nbsp; Achievements</span></a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li role="presentation">
+                            <a href="@Url.Action("index", new { tab = "achievements" })"><i class="glyphicon glyphicon-stats"></i><span class="hidden-xs">&nbsp; Achievements</span></a>
                         </li>
                     }
                     @*
-                        <li role="presentation"><a href="#">Achievements</a></li>
                         <li role="presentation"><a href="#">Stats</a></li>
                         <li role="presentation"><a href="#">Trophy Room</a></li>
                     *@
@@ -709,6 +720,10 @@
         else if (Model.ActiveTab == "inventory")
         {
             Html.RenderPartial("_InventoryPartial", Model.Inventory);
+        }
+        else if (Model.ActiveTab == "achievements")
+        {
+            Html.RenderPartial("_AchievementsPartial", Model.Achievements);
         }
         @if (String.IsNullOrEmpty(Model.ActiveTab) || Model.ActiveTab == "feed")
         {

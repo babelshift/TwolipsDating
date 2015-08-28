@@ -309,7 +309,7 @@ namespace TwolipsDating.Business
                 currentAchievementStatuses.Add(new AchievementStatusViewModel()
                     {
                         RequiredCount = milestone.AmountRequired,
-                        AchievedCount = amountAchieved,
+                        AchievedCount = amountAchieved <= milestone.AmountRequired ? amountAchieved : milestone.AmountRequired,
                         AchievementStatus = (amountAchieved >= milestone.AmountRequired) ? AchievementStatusType.Complete : AchievementStatusType.Incomplete
                     });
 
