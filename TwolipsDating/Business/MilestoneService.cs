@@ -209,13 +209,13 @@ namespace TwolipsDating.Business
             }
             else if (milestoneTypeId == (int)MilestoneTypeValues.PointsObtained)
             {
-                int pointsSpent = await (from storeTransaction in db.StoreTransactions
+                int pointsSpent = (await (from storeTransaction in db.StoreTransactions
                                          where storeTransaction.UserId == userId
-                                         select storeTransaction.PointPrice).SumAsync();
+                                         select (int?)storeTransaction.PointPrice).SumAsync()) ?? 0;
 
-                int currentPoints = await (from user in db.Users
+                int currentPoints = (await (from user in db.Users
                                            where user.Id == userId
-                                           select user.Points).FirstOrDefaultAsync();
+                                           select (int?)user.Points).FirstOrDefaultAsync()) ?? 0;
 
                 count = pointsSpent + currentPoints;
             }

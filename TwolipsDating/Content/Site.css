@@ -598,3 +598,10 @@ input[readonly] {
 .achievement-container .progress-bar {
     line-height: inherit;
 }
+
+@media (max-width: 768px) {
+
+    [class*="col-"]:not(:last-child) {
+        margin-bottom: 5px;
+    }
+}
