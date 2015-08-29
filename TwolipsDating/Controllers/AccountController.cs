@@ -443,6 +443,18 @@ namespace TwolipsDating.Controllers
 
             var result = await AuthenticationManager.AuthenticateAsync(DefaultAuthenticationTypes.ExternalCookie);
 
+            if(result == null)
+            {
+                Log.Error("AuthenticationManager.AuthenticateAsync returned null.", String.Empty);
+            }
+            else
+            {
+                if (result.Identity == null)
+                {
+                    Log.Error("result.Identity is null.", String.Empty);
+                }
+            }
+
             if (result != null && result.Identity != null)
             {
                 var idClaim = result.Identity.FindFirst(ClaimTypes.NameIdentifier);
@@ -453,6 +465,10 @@ namespace TwolipsDating.Controllers
                         DefaultUserName = result.Identity.Name == null ? "" : result.Identity.Name.Replace(" ", ""),
                         Login = new UserLoginInfo(idClaim.Issuer, idClaim.Value)
                     };
+                }
+                else
+                {
+                    Log.Error("result.Identity.FindFirst(ClaimTypes.NameIdentifier) returned null", String.Empty);
                 }
             }
             return loginInfo;
