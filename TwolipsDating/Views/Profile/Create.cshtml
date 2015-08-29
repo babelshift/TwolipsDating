@@ -4,11 +4,11 @@
     ViewBag.Description = "twolips allows you to create and maintain your personal dating profile with automatic build up based on your community actions";
 }
 <div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                @if (Model.IsCurrentUserEmailConfirmed)
-                {
+    @if (Model.IsCurrentUserEmailConfirmed)
+    {
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
                     <div class="text-center">
                         <h2>Your profile will be here soon!</h2>
                         <h4>Fill out some info below to finalize it.</h4>
@@ -76,14 +76,14 @@
                             }
                         </div>
                     </div>
-                }
-                else
-                {
-                    <h4>You need to confirm your email address before you can create your profile.</h4>
-                }
+                </div>
             </div>
         </div>
-    </div>
+    }
+    else
+    {
+        @Html.Partial("_ConfirmEmailPartial")
+    }
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

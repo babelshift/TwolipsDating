@@ -56,6 +56,7 @@ namespace TwolipsDating.Controllers
         /// Returns a view to display the trivia dashboard
         /// </summary>
         /// <returns></returns>
+        [RequireProfile]
         public async Task<ActionResult> Index()
         {
             await SetNotificationsAsync();
@@ -71,7 +72,6 @@ namespace TwolipsDating.Controllers
             await SetQuizzesCompletedByCurrentUser(currentUserId, viewModel);
 
             viewModel.UserStats = await ProfileService.GetUserStatsAsync(currentUserId);
-            viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
             viewModel.RecentlyCompletedQuizzes = await GetUsersCompletedQuizzesAsync();
 
             return View(viewModel);

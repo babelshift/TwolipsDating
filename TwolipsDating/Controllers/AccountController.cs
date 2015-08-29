@@ -460,10 +460,13 @@ namespace TwolipsDating.Controllers
                 var idClaim = result.Identity.FindFirst(ClaimTypes.NameIdentifier);
                 if (idClaim != null)
                 {
+                    var emailClaim = result.Identity.FindFirst(ClaimTypes.Email);
+
                     loginInfo = new ExternalLoginInfo()
                     {
                         DefaultUserName = result.Identity.Name == null ? "" : result.Identity.Name.Replace(" ", ""),
-                        Login = new UserLoginInfo(idClaim.Issuer, idClaim.Value)
+                        Login = new UserLoginInfo(idClaim.Issuer, idClaim.Value),
+                        Email = emailClaim != null ? emailClaim.Value : String.Empty
                     };
                 }
                 else
