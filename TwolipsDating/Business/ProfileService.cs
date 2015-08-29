@@ -55,6 +55,7 @@ namespace TwolipsDating.Business
             // total points
             // question points + quiz points
             viewModel.TotalPoints = await (from users in db.Users
+                                           where users.Id == userId
                                            select users.Points).FirstAsync();
 
             viewModel.QuestionsAnswered =
