@@ -7,6 +7,8 @@ namespace TwolipsDating.Models
 {
     public class IndexViewModel
     {
+        public bool DoesUserHaveProfile { get; set; }
+
         public bool HasPassword { get; set; }
         public IList<UserLoginInfo> Logins { get; set; }
 
@@ -16,12 +18,28 @@ namespace TwolipsDating.Models
         [Required]
         public string UserName { get; set; }
 
-        // not required because users may not have a profile setup yet
+        [Required]
         public int? SelectedGenderId { get; set; }
 
         public bool BrowserRemembered { get; set; }
 
         public IDictionary<int, string> Genders { get; set; }
+        
+        [Required]
+        [Range(1, 12, ErrorMessage = "Month must be between 1 and 12")]
+        public int? BirthMonth { get; set; }
+
+        [Required]
+        [Range(1, 31, ErrorMessage = "Day must be between 1 and 31")]
+        public int? BirthDayOfMonth { get; set; }
+
+        [Required]
+        [Range(1900, 2100, ErrorMessage = "Year must be between 1900 and 18 years ago")]
+        public int? BirthYear { get; set; }
+
+        public string SelectedLocation { get; set; }
+
+        public string CurrentLocation { get; set; }
     }
 
     public class ManageLoginsViewModel

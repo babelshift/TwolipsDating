@@ -200,14 +200,22 @@ namespace TwolipsDating.Controllers
 
             if (result.Succeeded)
             {
-                
+                // subscribe new users to all email notifications
+                await SetupDefaultEmailNotifications(user);
 
+                // sign the new user in
                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
+                // send a confirmation email to the new user
                 await SendRegistrationConfirmationEmail(user);
             }
 
             return result;
+        }
+
+        private async Task SetupDefaultEmailNotifications(ApplicationUser user)
+        {
+            await userService.SaveEmailNotificationChangesAsync(user.Id, true, true, true, true, true);
         }
 
         //

@@ -119,7 +119,7 @@ namespace TwolipsDating.Business
         }
 
         /// <summary>
-        /// Deletes a user image from the database.
+        /// Deletes a user image from the database. Will also detach the image from any profiles that have this selected as their profile image.
         /// </summary>
         /// <param name="userImageId"></param>
         /// <returns></returns>
@@ -127,9 +127,18 @@ namespace TwolipsDating.Business
         {
             Debug.Assert(userImageId > 0);
 
+            // clear out any profiles that are using this image
+            var profilesUsingThisImage = db.Profiles.Where(p => p.UserImageId == userImageId);
+            foreach(var profile in profilesUsingThisImage)
+            {
+                profile.UserImageId = null;
+            }
+
+            // now we can remove the image safely
             UserImage userImage = new UserImage() { Id = userImageId };
             db.UserImages.Attach(userImage);
             db.UserImages.Remove(userImage);
+
             return await db.SaveChangesAsync();
         }
 
@@ -357,21 +366,18 @@ namespace TwolipsDating.Business
         /// Changes a profile's displayed image.
         /// </summary>
         /// <param name="profileId"></param>
-        /// <param name="imageId"></param>
+        /// <param name="userImageId"></param>
         /// <returns></returns>
-        public async Task<int> ChangeProfileUserImageAsync(int profileId, int imageId)
+        public async Task<int> ChangeProfileUserImageAsync(int profileId, int userImageId)
         {
             Debug.Assert(profileId > 0);
-            Debug.Assert(imageId > 0);
+            Debug.Assert(userImageId > 0);
 
             var profile = await (from profiles in db.Profiles
                                  where profiles.Id == profileId
                                  select profiles).FirstOrDefaultAsync();
 
-            UserImage userImage = new UserImage() { Id = imageId };
-            db.UserImages.Attach(userImage);
-
-            profile.UserImage = userImage;
+            profile.UserImageId = userImageId;
 
             return await db.SaveChangesAsync();
         }
@@ -394,7 +400,7 @@ namespace TwolipsDating.Business
         }
 
         /// <summary>
-        /// Adds an uploaded image reference for a user. The Filename references a physical file stored in Azure Storage.
+        /// Adds an uploaded image reference for a user. The Filename references a physical file stored in Azure Storage. Returns the UserImageId of the new image.
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="fileName"></param>
@@ -414,7 +420,7 @@ namespace TwolipsDating.Business
 
             await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.ProfileImagesUploaded);
 
-            return count;
+            return userImage.Id;
         }
 
         /// <summary>
@@ -570,7 +576,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<Profile> GetUserProfileAsync(string userId)
+        public async Task<Profile> GetProfileAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -613,9 +619,7 @@ namespace TwolipsDating.Business
             Debug.Assert(genderId > 0);
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
-            int countryId = await GetGeoCountryIdAsync(countryName);
-            int stateId = await GetGeoStateIdAsync(stateAbbreviation, countryId);
-            int cityId = await GetGeoCityIdAsync(cityName, stateId);
+            int cityId = await GetGeoCityIdAsync(cityName, stateAbbreviation, countryName);
 
             ApplicationUser user = new ApplicationUser() { Id = userId };
 
@@ -629,6 +633,15 @@ namespace TwolipsDating.Business
 
             db.Profiles.Add(newProfile);
             return await db.SaveChangesAsync();
+        }
+
+        public async Task<int> GetGeoCityIdAsync(string cityName, string stateAbbreviation, string countryName)
+        {
+            int countryId = await GetGeoCountryIdAsync(countryName);
+            int stateId = await GetGeoStateIdAsync(stateAbbreviation, countryId);
+            int cityId = await GetGeoCityIdAsync(cityName, stateId);
+
+            return cityId;
         }
 
         /// <summary>
@@ -1258,25 +1271,6 @@ namespace TwolipsDating.Business
                            select profiles.GenderId;
 
             return await genderId.FirstAsync();
-        }
-
-        /// <summary>
-        /// Updates a profile selected gender.
-        /// </summary>
-        /// <param name="profile"></param>
-        /// <param name="genderId"></param>
-        /// <returns></returns>
-        internal async Task<int> UpdateGenderAsync(int profileId, int genderId)
-        {
-            Profile profileUpdated = new Profile()
-            {
-                Id = profileId
-            };
-
-            profileUpdated = db.Profiles.Attach(profileUpdated);
-            profileUpdated.GenderId = genderId;
-
-            return await db.SaveChangesAsync();
         }
 
         /// <summary>

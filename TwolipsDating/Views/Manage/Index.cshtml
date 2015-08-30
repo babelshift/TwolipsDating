@@ -34,42 +34,65 @@
                 </p>
             </div>
             <div class="panel-body">
-                <div class="alert alert-info">
-                    <p>Your user name must be unique.</p>
-                    <p>Your e-mail address must be unique.</p>
-                    <p>Changing your e-mail address will require you to confirm the new address.</p>
-                </div>
-                @if (!String.IsNullOrEmpty(ViewBag.StatusMessage))
+                @if (Model.DoesUserHaveProfile)
                 {
-                    <div class="alert alert-success alert-dismissable" role="alert">
-                        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <p>@ViewBag.StatusMessage</p>
+                    <div class="alert alert-info">
+                        <p>Your user name must be unique.</p>
+                        <p>Your e-mail address must be unique.</p>
+                        <p>Changing your e-mail address will require you to confirm the new address.</p>
                     </div>
-                }
-                @using (Html.BeginForm("index", "manage", FormMethod.Post, new { role = "form" }))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary("", new { @class = "alert alert-danger" })
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.UserName, new { @class = "control-label" })
-                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
-                        <p><small>This user name will be displayed throughout the community and used for login purposes.</small></p>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Email, new { @class = "control-label" })
-                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                        <p><small>You will sometimes receive communication related to your account. According to our privacy policy, we will not share your information with anyone.</small></p>
-                    </div>
-                    if (Model.Genders != null && Model.Genders.Count > 0)
+                    if (!String.IsNullOrEmpty(ViewBag.StatusMessage))
                     {
+                        <div class="alert alert-success alert-dismissable" role="alert">
+                            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <p>@ViewBag.StatusMessage</p>
+                        </div>
+                    }
+                    using (Html.BeginForm("index", "manage", FormMethod.Post, new { role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary("", new { @class = "alert alert-danger" })
+                        @Html.HiddenFor(m => m.DoesUserHaveProfile)
+                        @Html.HiddenFor(m => m.CurrentLocation)
                         <div class="form-group">
-                            <p class="control-label">What are you?</p>
+                            @Html.LabelFor(m => m.UserName, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                            <p><small>This name will be displayed on your profile.</small></p>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            <p><small>You will sometimes receive communication related to your account. According to our privacy policy, we will not share your information with anyone.</small></p>
+                        </div>
+                        <p class="control-label">What are you?</p>
+                        <div class="form-group">
                             @Html.DropDownListFor(m => m.SelectedGenderId,
                             new SelectList(Model.Genders, "Key", "Value"),
                             new { @class = "form-control", data_placeholder = "What are you?" })
                         </div>
+                        <p class="control-label">You said you live in @Model.CurrentLocation. You can change it below.</p>
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="ff_nm_from[]" value="" id="f_elem_city" />
+                            @Html.HiddenFor(m => m.SelectedLocation)
+                        </div>
+                        <p class="control-label">When were you born?</p>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.BirthMonth, new { @class = "form-control", @placeholder = "MM", maxlength = "2" })
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.BirthDayOfMonth, new { @class = "form-control", @placeholder = "DD", maxlength = "2" })
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.BirthYear, new { @class = "form-control", @placeholder = "YYYY", maxlength = "4" })
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-ok"></i> Save changes</button>
                     }
-                    <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-ok"></i> Save changes</button>
                 }
             </div>
         </div>

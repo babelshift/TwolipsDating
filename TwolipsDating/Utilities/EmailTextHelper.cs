@@ -30,7 +30,7 @@ namespace TwolipsDating.Utilities
 									<table cellpadding=""0"" cellspacing=""0"" border=""0"">
 										<tr>
 											<td>
-												<img src=""https://www.twolipsdating.com/Content/twolipsicon-white-180x180.png"" width=""32"" height=""32"" />
+												<img src=""https://az732589.vo.msecnd.net/twolipsdatingcdn/twolipsicon-white-32x32.png"" width=""32"" height=""32"" />
 											</td>
 											<td style=""padding-left: 5px;"">
 												<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 20px;"">
@@ -100,7 +100,7 @@ namespace TwolipsDating.Utilities
 									<table cellpadding=""0"" cellspacing=""0"" border=""0"">
 										<tr>
 											<td>
-												<img src=""https://www.twolipsdating.com/Content/twolipsicon-white-180x180.png"" width=""32"" height=""32"" />
+												<img src=""https://az732589.vo.msecnd.net/twolipsdatingcdn/twolipsicon-white-32x32.png"" width=""32"" height=""32"" />
 											</td>
 											<td style=""padding-left: 5px;"">
 												<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 20px;"">
@@ -190,7 +190,7 @@ namespace TwolipsDating.Utilities
 									<table cellpadding=""0"" cellspacing=""0"" border=""0"">
 										<tr>
 											<td>
-												<img src=""https://www.twolipsdating.com/Content/twolipsicon-white-180x180.png"" width=""32"" height=""32"" />
+												<img src=""https://az732589.vo.msecnd.net/twolipsdatingcdn/twolipsicon-white-32x32.png"" width=""32"" height=""32"" />
 											</td>
 											<td style=""padding-left: 5px;"">
 												<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 20px;"">
@@ -260,7 +260,7 @@ namespace TwolipsDating.Utilities
 									<table cellpadding=""0"" cellspacing=""0"" border=""0"">
 										<tr>
 											<td>
-												<img src=""https://www.twolipsdating.com/Content/twolipsicon-white-180x180.png"" width=""32"" height=""32"" />
+												<img src=""https://az732589.vo.msecnd.net/twolipsdatingcdn/twolipsicon-white-32x32.png"" width=""32"" height=""32"" />
 											</td>
 											<td style=""padding-left: 5px;"">
 												<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 20px;"">
@@ -325,7 +325,7 @@ namespace TwolipsDating.Utilities
 									<table cellpadding=""0"" cellspacing=""0"" border=""0"">
 										<tr>
 											<td>
-												<img src=""https://www.twolipsdating.com/Content/twolipsicon-white-180x180.png"" width=""32"" height=""32"" />
+												<img src=""https://az732589.vo.msecnd.net/twolipsdatingcdn/twolipsicon-white-32x32.png"" width=""32"" height=""32"" />
 											</td>
 											<td style=""padding-left: 5px;"">
 												<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 20px;"">
@@ -396,7 +396,7 @@ namespace TwolipsDating.Utilities
 									<table cellpadding=""0"" cellspacing=""0"" border=""0"">
 										<tr>
 											<td>
-												<img src=""https://www.twolipsdating.com/Content/twolipsicon-white-180x180.png"" width=""32"" height=""32"" />
+												<img src=""https://az732589.vo.msecnd.net/twolipsdatingcdn/twolipsicon-white-32x32.png"" width=""32"" height=""32"" />
 											</td>
 											<td style=""padding-left: 5px;"">
 												<div style=""font-family: Helvetica,Arial,sans-serif; font-size: 20px;"">
@@ -412,11 +412,11 @@ namespace TwolipsDating.Utilities
 									<div style=""font-family: Helvetica,Arial,sans-serif;"">
 										<h2>Welcome!</h2>
 										<p>Thank you for confirming your email address. Please connect with us on Twitter, Facebook, and Google+ to stay updated.</p>
-										<a href=""http://twitter.com/twolipsdating""><img src=""https://www.twolipsdating.com/Content/tw-icon-32.png"" alt=""Twitter""/></a>
+										<a href=""http://twitter.com/twolipsdating""><img src=""https://az732589.vo.msecnd.net/twolipsdatingcdn/tw-icon-32.png"" alt=""Twitter""/></a>
 										&nbsp;
-										<a href=""http://facebook.com/twolipsdating""><img src=""https://www.twolipsdating.com/Content/fb-icon-32.png"" alt=""Facebook""/></a>
+										<a href=""http://facebook.com/twolipsdating""><img src=""https://az732589.vo.msecnd.net/twolipsdatingcdn/fb-icon-32.png"" alt=""Facebook""/></a>
 										&nbsp;
-										<a href=""http://plus.google.com/+twolipsdating""><img src=""https://www.twolipsdating.com/Content/gp-icon-32.png"" alt=""Google+""/></a>
+										<a href=""http://plus.google.com/+twolipsdating""><img src=""https://az732589.vo.msecnd.net/twolipsdatingcdn/gp-icon-32.png"" alt=""Google+""/></a>
 										<div style=""color: #4b4b4b;"">
 											<h3>Get Started</h3>
 											<div style=""font-size: 12px"">

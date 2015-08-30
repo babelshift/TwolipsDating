@@ -400,12 +400,9 @@ namespace TwolipsDating.Controllers
         public async Task<ActionResult> DeleteImage(int id, string fileName, string profileUserId)
         {
             string currentUserId = User.Identity.GetUserId();
-            bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
-            // look up user that uploaded the image by file name
-            // if the user that uploaded the image isn't the current user, reject
-
-            if (profileUserId != currentUserId || !isCurrentUserEmailConfirmed)
+            // only allow people to delete images for their own profile
+            if (profileUserId != currentUserId)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
@@ -413,18 +410,13 @@ namespace TwolipsDating.Controllers
             try
             {
                 // TODO: how to make this atomic?
-
                 int changes = await ProfileService.DeleteUserImage(id);
 
                 if (changes > 0)
                 {
-                    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
-                    CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-                    CloudBlobContainer container = blobClient.GetContainerReference("twolipsdatingcdn");
-
-                    await DeleteFullSizeImageAsync(fileName, container);
-
-                    await DeleteThumbnailImageAsync(fileName, container);
+                    var container = GetAzureStorageContainer();
+                    await DeleteFullSizeImageFromAzureStorageAsync(fileName, container);
+                    await DeleteThumbnailImageFromAzureStorageAsync(fileName, container);
 
                     return Json(new { success = true });
                 }
@@ -451,7 +443,7 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private static async Task DeleteThumbnailImageAsync(string fileName, CloudBlobContainer container)
+        private static async Task DeleteThumbnailImageFromAzureStorageAsync(string fileName, CloudBlobContainer container)
         {
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
             string fileExtension = Path.GetExtension(fileName);
@@ -460,7 +452,7 @@ namespace TwolipsDating.Controllers
             await blockBlobThumbnail.DeleteAsync();
         }
 
-        private static async Task DeleteFullSizeImageAsync(string fileName, CloudBlobContainer container)
+        private static async Task DeleteFullSizeImageFromAzureStorageAsync(string fileName, CloudBlobContainer container)
         {
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
             await blockBlob.DeleteAsync();
@@ -493,6 +485,7 @@ namespace TwolipsDating.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
 
+            int i = 0;
             foreach (var uploadedImage in viewModel.UploadedImages)
             {
                 // skip over non-images
@@ -510,25 +503,34 @@ namespace TwolipsDating.Controllers
                     Guid guid = Guid.NewGuid();
                     string fileName = String.Format("{0}{1}", guid, fileType);
                     string fileNameThumb = String.Format("{0}_{2}{1}", guid, fileType, "thumb");
+                    string contentType = uploadedImage.ContentType;
 
                     // add the image id to our database
-                    int changes = await ProfileService.AddUploadedImageForUserAsync(currentUserId, fileName);
+                    int newUserImageId = await ProfileService.AddUploadedImageForUserAsync(currentUserId, fileName);
 
                     // if we saved to our database successfully, save to Azure Storage Blob
-                    if (changes > 0)
+                    if (newUserImageId > 0)
                     {
-                        CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
-                        CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-                        CloudBlobContainer container = blobClient.GetContainerReference("twolipsdatingcdn");
+                        var container = GetAzureStorageContainer();
 
                         CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
-                        blockBlob.Properties.ContentType = uploadedImage.ContentType;
+                        blockBlob.Properties.ContentType = contentType;
 
                         // upload the full image and return it in case it had to be resized
-                        WebImage image = await UploadFullImageAsync(uploadedImage, blockBlob);
+                        WebImage image = await UploadFullImageToAzureStorageAsync(uploadedImage, blockBlob);
 
                         // upload the thumbnail of the now possibly resized image
-                        await UploadThumbnailAsync(uploadedImage, fileNameThumb, container, image);
+                        await UploadThumbnailToAzureStorageAsync(fileNameThumb, contentType, container, image);
+
+                        // if this is the first image being uploaded and the user doesn't have a profile image set, set the user's profile image to the file being uploaded
+                        if (i == 0)
+                        {
+                            var profile = await ProfileService.GetProfileAsync(currentUserId);
+                            if(profile != null && profile.UserImage == null)
+                            {
+                                await ProfileService.ChangeProfileUserImageAsync(profile.Id, newUserImageId);
+                            }
+                        }
                     }
                     else
                     {
@@ -550,16 +552,39 @@ namespace TwolipsDating.Controllers
             return RedirectToIndex(new { tab = "pictures" });
         }
 
-        private static async Task UploadThumbnailAsync(System.Web.HttpPostedFileBase uploadedImage, string fileNameThumb, CloudBlobContainer container, WebImage image)
+        private static CloudBlobContainer GetAzureStorageContainer()
+        {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = blobClient.GetContainerReference("twolipsdatingcdn");
+            return container;
+        }
+
+        /// <summary>
+        /// Uploads a thumbnail sized image to Azure storage.
+        /// </summary>
+        /// <param name="uploadedImage"></param>
+        /// <param name="fileNameThumb"></param>
+        /// <param name="container"></param>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        private static async Task UploadThumbnailToAzureStorageAsync(string fileNameThumb, string contentType, CloudBlobContainer container, WebImage image)
         {
             CreateThumbnail(image);
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileNameThumb);
-            blockBlob.Properties.ContentType = uploadedImage.ContentType;
+            blockBlob.Properties.ContentType = contentType;
             byte[] rawImageThumb = image.GetBytes();
             await blockBlob.UploadFromByteArrayAsync(rawImageThumb, 0, rawImageThumb.Length);
         }
 
-        private static async Task<WebImage> UploadFullImageAsync(HttpPostedFileBase uploadedImage, CloudBlockBlob blockBlob)
+        /// <summary>
+        /// Uploads an image to Azure storage. Will resize the image if width or height is > 1000. This is to prevent people from uploading massively huge images and having
+        /// them take up space in the database. There really isn't a reason to have huge images.
+        /// </summary>
+        /// <param name="uploadedImage"></param>
+        /// <param name="blockBlob"></param>
+        /// <returns></returns>
+        private static async Task<WebImage> UploadFullImageToAzureStorageAsync(HttpPostedFileBase uploadedImage, CloudBlockBlob blockBlob)
         {
             WebImage image = new WebImage(uploadedImage.InputStream);
             byte[] rawImage = image.GetBytes();
@@ -576,6 +601,10 @@ namespace TwolipsDating.Controllers
             return image;
         }
 
+        /// <summary>
+        /// Creates a thumbnail of the size 200x200 from the passed image parameter. Will crop the image into a square prior to resizing if not already a square.
+        /// </summary>
+        /// <param name="image"></param>
         private static void CreateThumbnail(WebImage image)
         {
             if (image.Width > image.Height)
@@ -692,7 +721,7 @@ namespace TwolipsDating.Controllers
                     return RedirectToAction("login", "account");
                 }
 
-                var currentUserProfile = await ProfileService.GetUserProfileAsync(currentUserId);
+                var currentUserProfile = await ProfileService.GetProfileAsync(currentUserId);
 
                 await SetNotificationsAsync();
 

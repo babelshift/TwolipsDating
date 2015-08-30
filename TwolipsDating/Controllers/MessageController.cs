@@ -67,7 +67,7 @@ namespace TwolipsDating.Controllers
             }
 
             // lookup the profile we are accessing and the messages between the current user and that profile
-            var profileForOtherUser = await ProfileService.GetUserProfileAsync(id);
+            var profileForOtherUser = await ProfileService.GetProfileAsync(id);
 
             // there is no profile for the user that we are looking up
             if (profileForOtherUser == null)

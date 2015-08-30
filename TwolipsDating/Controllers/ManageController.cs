@@ -59,17 +59,26 @@ namespace TwolipsDating.Controllers
             IndexViewModel model = new IndexViewModel()
             {
                 Email = email,
-                UserName = User.Identity.Name
+                UserName = User.Identity.Name,
+                DoesUserHaveProfile = false
             };
 
-            int? profileId = await userService.GetProfileIdAsync(currentUserId);
+            var profile = await ProfileService.GetProfileAsync(currentUserId);
 
-            if (profileId.HasValue)
+            if (profile != null)
             {
                 var genders = await GetGendersAsync();
-                int? selectedGenderId = await ProfileService.GetGenderIdForProfileAsync(profileId.Value);
                 model.Genders = genders;
-                model.SelectedGenderId = selectedGenderId;
+                model.SelectedGenderId = profile.GenderId;
+
+                DateTime birthDate = profile.Birthday;
+                model.BirthDayOfMonth = birthDate.Day;
+                model.BirthMonth = birthDate.Month;
+                model.BirthYear = birthDate.Year;
+
+                model.CurrentLocation = profile.GeoCity.ToFullLocationString();
+
+                model.DoesUserHaveProfile = true;
             }
 
             await SetNotificationsAsync();
@@ -94,24 +103,35 @@ namespace TwolipsDating.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(IndexViewModel model)
         {
+            await SetNotificationsAsync();
+
+            var genders = await GetGendersAsync();
+            model.Genders = genders;
+
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
 
                 bool isNewUserName = SetupUpdateUserName(model, user);
-
                 bool isNewEmail = SetupUpdateUserEmail(model, user);
+                bool isNewGender = false;
+                bool isNewLocation = false;
+                bool isNewBirthdate = false;
 
                 // user has a profile, update it and setup the viewmodel to display on the view
                 if (user.Profile != null)
                 {
-                    await UpdateProfileGender(model.SelectedGenderId, user.Profile);
-                    var genders = await GetGendersAsync();
-                    model.Genders = genders;
+                    isNewBirthdate = SetupUpdateBirthdate(model, user);
+                    isNewGender = SetupUpdateGender(model, user);
+
+                    if (!String.IsNullOrEmpty(model.SelectedLocation))
+                    {
+                        isNewLocation = await SetupUpdateLocationAsync(model, user);
+                    }
                 }
 
                 // if the user has chagned user name or email address, update the user entity
-                if (isNewUserName || isNewEmail)
+                if (isNewUserName || isNewEmail || isNewGender || isNewLocation || isNewBirthdate)
                 {
                     var result = await UserManager.UpdateAsync(user);
                     if (result.Succeeded)
@@ -127,6 +147,8 @@ namespace TwolipsDating.Controllers
                             ViewBag.StatusMessage += " Remember to confirm your new email address.";
                         }
 
+                        model.CurrentLocation = user.Profile.GeoCity.ToFullLocationString();
+
                         return View(model);
                     }
 
@@ -137,14 +159,49 @@ namespace TwolipsDating.Controllers
             return View(model);
         }
 
-        private async Task UpdateProfileGender(int? selectedGenderId, TwolipsDating.Models.Profile profile)
+        private bool SetupUpdateBirthdate(IndexViewModel model, ApplicationUser user)
         {
-            if (selectedGenderId.HasValue
-                && profile != null
-                && profile.GenderId != selectedGenderId.Value)
+            // if the user is changing his email, we need to re-confirm
+            bool isNewBirthdate = false;
+            DateTime birthDate = new DateTime(model.BirthYear.Value, model.BirthMonth.Value, model.BirthDayOfMonth.Value);
+            if (user.Profile.Birthday != birthDate)
             {
-                await ProfileService.UpdateGenderAsync(profile.Id, selectedGenderId.Value);
+                isNewBirthdate = true;
+                user.Profile.Birthday = birthDate;
             }
+            return isNewBirthdate;
+        }
+
+        private async Task<bool> SetupUpdateLocationAsync(IndexViewModel model, ApplicationUser user)
+        {
+            string[] location = model.SelectedLocation.Split(',');
+            string cityName = location[0].Trim();
+            string stateAbbreviation = location[1].Trim();
+            string countryName = location[2].Trim();
+
+            int cityId = await ProfileService.GetGeoCityIdAsync(cityName, stateAbbreviation, countryName);
+
+            bool isNewLocation = false;
+
+            if(model.CurrentLocation != model.SelectedLocation)
+            {
+                isNewLocation = true;
+                user.Profile.GeoCityId = cityId;
+            }
+
+            return isNewLocation;
+        }
+
+        private bool SetupUpdateGender(IndexViewModel model, ApplicationUser user)
+        {
+            // if the user is changing his email, we need to re-confirm
+            bool isNewGender = false;
+            if (user.Profile.GenderId != model.SelectedGenderId)
+            {
+                isNewGender = true;
+                user.Profile.GenderId = model.SelectedGenderId.Value;
+            }
+            return isNewGender;
         }
 
         private static bool SetupUpdateUserEmail(IndexViewModel model, ApplicationUser user)
@@ -311,6 +368,8 @@ namespace TwolipsDating.Controllers
         // GET: /Manage/ChangePassword
         public async Task<ActionResult> Settings(ManageMessageId? message)
         {
+            await SetNotificationsAsync();
+
             var currentUser = User.Identity.GetUserId();
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
@@ -326,7 +385,7 @@ namespace TwolipsDating.Controllers
                     Logins = await UserManager.GetLoginsAsync(User.Identity.GetUserId())
                 }
             };
-            await SetNotificationsAsync();
+
             return View(model);
         }
 
@@ -430,6 +489,8 @@ namespace TwolipsDating.Controllers
         // GET: /Manage/ManageLogins
         public async Task<ActionResult> Externals(ManageMessageId? message)
         {
+            await SetNotificationsAsync();
+
             var currentUser = User.Identity.GetUserId();
             ViewBag.StatusMessage =
                 message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
@@ -440,10 +501,11 @@ namespace TwolipsDating.Controllers
             {
                 return View("Error");
             }
+
             var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId());
             var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
             ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
-            await SetNotificationsAsync();
+
             return View(new ManageLoginsViewModel
             {
                 CurrentLogins = userLogins,
@@ -476,7 +538,7 @@ namespace TwolipsDating.Controllers
 
             Log.Info(String.Format("UserId: {0}, Provider: {1}, Key: {2}", User.Identity.GetUserId(), loginInfo.Login.LoginProvider, loginInfo.Login.ProviderKey));
 
-            foreach(string error in result.Errors)
+            foreach (string error in result.Errors)
             {
                 Log.Error(error, String.Empty);
             }
@@ -582,7 +644,7 @@ namespace TwolipsDating.Controllers
         {
             await SetNotificationsAsync();
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(viewModel);
             }

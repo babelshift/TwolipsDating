@@ -445,7 +445,7 @@ namespace TwolipsDating.Controllers
 
             string currentUserId = User.Identity.GetUserId();
 
-            var profile = await ProfileService.GetUserProfileAsync(currentUserId);
+            var profile = await ProfileService.GetProfileAsync(currentUserId);
 
             // loop through questions and record answers
             int numberOfCorrectAnswers = 0;
