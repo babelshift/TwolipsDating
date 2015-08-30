@@ -7,7 +7,7 @@
     {
         if (Model.IsCurrentUserEmailConfirmed && !String.IsNullOrEmpty(Model.UserName))
         {
-            title = String.Format("{0}, {1}", Model.UserName, !String.IsNullOrEmpty(Model.SelectedTitle) ? Model.SelectedTitle : "Newbie");
+            title = String.Format("Profile for {0} ({1})", Model.UserName, !String.IsNullOrEmpty(Model.SelectedTitle) ? Model.SelectedTitle : "Newbie");
         }
         else
         {
@@ -16,12 +16,12 @@
     }
     else
     {
-        title = String.Format("{0}, {1}", Model.UserName, !String.IsNullOrEmpty(Model.SelectedTitle) ? Model.SelectedTitle : "Newbie");
+        title = String.Format("Profile for {0} ({1})", Model.UserName, !String.IsNullOrEmpty(Model.SelectedTitle) ? Model.SelectedTitle : "Newbie");
     }
 
     ViewBag.Title = title;
     ViewBag.ImageUrl = Model.ProfileThumbnailImagePath;
-    ViewBag.Description = String.Format("Profile for {0}, {1}", Model.UserName, Model.SelectedTitle);
+    ViewBag.Description = String.Format("A {0} year old {1} from {2}. Sign up for free and message them to learn more.", Model.Age, Model.Gender, Model.Location);
     ViewBag.TwitterCardType = "summary";
 }
 
@@ -351,20 +351,20 @@
 </div>
 <div class="row" style="margin-bottom: 10px">
     <div class="col-sm-4">
-        <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("Here's the twolips #dating profile for {0} ({1})", Model.UserName, !String.IsNullOrEmpty(Model.SelectedTitle) ? Model.SelectedTitle : "Newbie")) + "&url=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
+        <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("Here's a {0} year old {1} from {2} @twolipsdating", Model.Age, Model.Gender, Model.Location)) + "&url=" + Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme))"
            style="width: 100%;" class="btn btn-info" title="Share on Twitter">
             <img src="~/Content/tw-icon-16.png" /> Share on Twitter
         </a>
     </div>
     <div class="col-sm-4">
-        <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("index", "trivia", null, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
+        <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme))"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
            style="width: 100%;" class="btn btn-primary" title="Share on Facebook">
             <img src="~/Content/fb-icon-16.png" /> Share on Facebook
         </a>
     </div>
     <div class="col-sm-4">
-        <a href="@("https://plus.google.com/share?url=" + Url.Action("index", "trivia", null, Request.Url.Scheme))"
+        <a href="@("https://plus.google.com/share?url=" + Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme))"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
            style="width: 100%;" class="btn btn-danger" title="Share on Google+">
             <img src="~/Content/gp-icon-16.png" /> Share on Google+

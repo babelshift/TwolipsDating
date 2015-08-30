@@ -589,7 +589,7 @@ namespace TwolipsDating.Controllers
                 image = image.Crop(cropAmount, 0, cropAmount, 0);
             }
 
-            image.Resize(128, 128, true);
+            image.Resize(200, 200, true);
         }
 
         /// <summary>
