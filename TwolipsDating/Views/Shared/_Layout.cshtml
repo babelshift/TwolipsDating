@@ -9,11 +9,21 @@
     <link rel="canonical" href="@Request.Url.AbsoluteUri" />
     <link rel="shortcut icon" href="~/Content/twolipsico.ico" type="image/x-icon">
     <meta name="description" content="@ViewBag.Description" />
+    <meta property="og:image" content="@(!String.IsNullOrEmpty(ViewBag.ImageUrl) ? Url.Content(ViewBag.ImageUrl) : Request.Url.Scheme + "://" + Request.Url.Authority + Url.Content("~/Content/twolipsicon-white-200x200.png"))" />
+    @{
+        if(ViewBag.ImageWidth != null)
+        {
+            <meta property="og:image:width" content="@ViewBag.ImageWidth" />
+        }
+        if (ViewBag.ImageHeight != null)
+        {
+            <meta property="og:image:height" content="@ViewBag.ImageWidth" />
+        }
+    }
     <meta property="og:locale" content="en_US" />
     <meta property="og:url" content="@Request.Url.AbsoluteUri" />
     <meta property="og:title" content="@String.Format("{0} | twolips", @ViewBag.Title)" />
     <meta property="og:description" content="@ViewBag.Description" />
-    <meta property="og:image" content="@(!String.IsNullOrEmpty(ViewBag.ImageUrl) ? Url.Content(ViewBag.ImageUrl) : Request.Url.Scheme + "://" + Request.Url.Authority + Url.Content("~/Content/twolipsicon-white-200x200.png"))" />
     <meta property="og:site_name" content="twolips dating community" />
     <meta name="google-site-verification" content="4eyILTchd7WANbxkEX7K1ZVlHy6WgoXrerg26xS8XHM" />
     <meta name="twitter:card" content="@(ViewBag.TwitterCardType != null ? ViewBag.TwitterCardType : (!String.IsNullOrEmpty(ViewBag.ImageUrl) ? "summary_large_image" : "summary"))">

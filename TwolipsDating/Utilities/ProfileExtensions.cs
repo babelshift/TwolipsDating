@@ -84,7 +84,7 @@ namespace TwolipsDating.Utilities
             string realFileName = Path.GetFileNameWithoutExtension(fileName);
             string fileType = Path.GetExtension(fileName);
 
-            return String.Format("{0}/{1}_{2}{3}?1", cdn, realFileName, "thumb", fileType);
+            return String.Format("{0}/{1}_{2}{3}?2", cdn, realFileName, "thumb", fileType);
         }
 
         public static string GetSEOProfileName(string userName)
