@@ -2,7 +2,7 @@
 
 @if (Model.Items.Count > 0)
 {
-    foreach(var feedItem in Model.Items)
+    foreach (var feedItem in Model.Items)
     {
         <div class="panel panel-default">
             <div class="panel-body">
@@ -38,10 +38,18 @@ else
 {
     if (Model.CurrentUserId == Model.ProfileUserId)
     {
-        <h4>You haven't done anything yet. Here's some money. Go see a star war.</h4>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h4>You haven't done anything yet. Go answer some @Html.ActionLink("trivia questions", "index", "trivia").</h4>
+            </div>
+        </div>
     }
     else
     {
-        <h4>This user hasn't done anything yet. Message him and get things rolling.</h4>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h4>This user hasn't done anything yet. Send them a message to get things rolling.</h4>
+            </div>
+        </div>
     }
 }
