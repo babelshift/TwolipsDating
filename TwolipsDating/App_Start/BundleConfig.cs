@@ -27,9 +27,20 @@ namespace TwolipsDating
                     "~/Scripts/jquery.raty.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                    "~/Content/site.css",
-                    "~/Content/chosen.css",
+                    "~/Content/site.css"));
+            
+            bundles.Add(new StyleBundle("~/Content/chosen").Include(
+                    "~/Content/chosen.css"));
+            
+            bundles.Add(new StyleBundle("~/Content/bootstrap-image-gallery").Include(
                     "~/Content/bootstrap-image-gallery.css"));
+
+            bundles.Add(new StyleBundle("~/Content/font-awesome").Include(
+                    "~/Content/font-awesome.css"));
+
+            bundles.Add(new StyleBundle("~/Content/awesome-bootstrap-checkbox").Include(
+                    "~/Content/font-awesome.css",
+                    "~/Content/awesome-bootstrap-checkbox.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/chosen").Include(
                     "~/Scripts/chosen.jquery.js"));

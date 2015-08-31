@@ -605,3 +605,7 @@ input[readonly] {
         margin-bottom: 5px;
     }
 }
+
+.radio {
+    margin: 0;
+}
