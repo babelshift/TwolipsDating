@@ -15,25 +15,37 @@
                         <h4>Consider sharing your profile with us at the networks below.</h4>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2 col-sm-offset-3">
-                            <a href="http://twitter.com/twolipsdating" style="width: 100%;" class="btn btn-info" title="Follow us on Twitter">
-                                Follow us on <i class="fa fa-twitter"></i> Twitter
+                        <div class="col-sm-4 col-lg-2 col-lg-offset-3">
+                            <a href="http://twitter.com/twolipsdating" style="width: 100%;" class="btn btn-twitter" title="Follow us on Twitter">
+                                <span class="fa-stack">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-twitter fa-stack-1x fa-inverse-twitter"></i>
+                                </span>
+                                Follow on Twitter
                             </a>
                         </div>
-                        <div class="col-sm-2 col-md-2">
-                            <a href="http://facebook.com/twolipsdating" style="width: 100%;" type="submit" class="btn btn-primary" title="Like us on Facebook">
-                                Like us on <i class="fa fa-facebook"></i> Facebook
+                        <div class="col-sm-4 col-lg-2">
+                            <a href="http://facebook.com/twolipsdating" style="width: 100%;" type="submit" class="btn btn-facebook" title="Like us on Facebook">
+                                <span class="fa-stack">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-facebook fa-stack-1x fa-inverse-facebook"></i>
+                                </span>
+                                Like on Facebook
                             </a>
                         </div>
-                        <div class="col-sm-2 col-md-2">
-                            <a href="http://plus.google.com/+twolipsdating" style="width: 100%;" class="btn btn-danger" title="Follow us on Google+">
-                                Follow us on <i class="fa fa-google-plus"></i> Google+
+                        <div class="col-sm-4 col-lg-2">
+                            <a href="http://plus.google.com/+twolipsdating" style="width: 100%;" class="btn btn-google-plus" title="Follow us on Google+">
+                                <span class="fa-stack">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-google-plus fa-stack-1x fa-inverse-google-plus"></i>
+                                </span>
+                                Follow on Google+
                             </a>
                         </div>
                     </div>
                     <br />
                     <div class="row">
-                        <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
+                        <div class="col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4">
                             @using (Html.BeginForm("create", "profile", FormMethod.Post, new { role = "form" }))
                             {
                                 @Html.AntiForgeryToken()
@@ -88,8 +100,11 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/chosen")
+    @Scripts.Render("~/bundles/jquery-ui")
     <script src="@Url.Content("~/Scripts/Profile/create.js")" type="text/javascript"></script>
 }
 @section Styles {
     @Styles.Render("~/Content/chosen")
+    @Styles.Render("~/Content/jquery-ui")
+    @Styles.Render("~/Content/font-awesome")
 }

@@ -11,10 +11,10 @@
         <div class="list-group">
             @foreach (var user in Model)
             {
-                <a href="@Url.Action("index", "profile", new { id = user.ProfileId })" class="list-group-item">
-                    <span class="badge" style="margin-top: 7px">@user.TimeAgo</span>
+                <a href="@Url.Action("index", "profile", new { id = user.ProfileId })" class="list-group-item" style="padding: 5px 10px;">
+                    <span class="badge" style="margin-top: 15px">@user.TimeAgo</span>
                     @Html.Partial("_ProfileImagePartial", user.ProfileImagePath)
-                    <p style="display: inline-block; vertical-align: top; margin-top: 4px; font-size: 14px">
+                    <p style="display: inline-block; vertical-align: top; margin-top: 11px; font-size: 16px">
                         @user.UserName
                     </p>
                 </a>

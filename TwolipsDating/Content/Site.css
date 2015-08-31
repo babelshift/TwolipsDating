@@ -648,7 +648,9 @@ input[readonly] {
     border-color: #469cdd;
 }
 
-    .btn-twitter:hover {
+    .btn-twitter:hover,
+    .btn-twitter:focus,
+    .btn-twitter:active {
         color: #fff;
         background-color: #469cdd;
         border-color: #3a8fd0;
@@ -660,7 +662,9 @@ input[readonly] {
     border-color: #29488a;
 }
 
-    .btn-facebook:hover {
+    .btn-facebook:hover,
+    .btn-facebook:focus,
+    .btn-facebook:active {
         color: #fff;
         background-color: #29488a;
         border-color: #1f3e7e;
@@ -672,7 +676,9 @@ input[readonly] {
     border-color: #c13725;
 }
 
-    .btn-google-plus:hover {
+    .btn-google-plus:hover,
+    .btn-google-plus:focus,
+    .btn-google-plus:active {
         color: #fff;
         background-color: #c13725;
         border-color: #b52b1a;
