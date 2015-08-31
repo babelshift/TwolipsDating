@@ -111,11 +111,15 @@ input[type="checkbox"].input-validation-error {
     box-shadow: 0 -1px 2px 2px rgba(0, 0, 0, 0.05);
 }
 
+    .footer-bottom-social a:hover {
+        text-decoration: none !important;
+    }
+
 .footer p a {
     color: #c44d40;
 }
 
-.footer a {
+.footer-bottom a {
     display: inline-block;
     color: #fff;
     font-size: 12px;
@@ -123,9 +127,9 @@ input[type="checkbox"].input-validation-error {
     margin-right: 3px;
 }
 
-    .footer a:hover {
-        text-decoration: underline;
-    }
+.footer a:hover {
+    text-decoration: underline;
+}
 
 .footer-top li:last-child {
     border-bottom: none;
@@ -609,3 +613,67 @@ input[readonly] {
 .radio {
     margin: 0;
 }
+
+.fa-inverse-info {
+    color: #31B0D5;
+}
+
+.fa-inverse-primary {
+    color: #006687;
+}
+
+.fa-inverse-danger {
+    color: #F04124;
+}
+
+.text-instagram {
+    color: #2A5B83;
+}
+
+.text-twitter {
+    color: #55acee;
+}
+
+.text-facebook {
+    color: #3b5998;
+}
+
+.text-google-plus {
+    color: #d34836;
+}
+
+.btn-twitter {
+    color: #fff;
+    background-color: #55acee;
+    border-color: #469cdd;
+}
+
+    .btn-twitter:hover {
+        color: #fff;
+        background-color: #469cdd;
+        border-color: #3a8fd0;
+    }
+
+.btn-facebook {
+    color: #fff;
+    background-color: #3A5795;
+    border-color: #29488a;
+}
+
+    .btn-facebook:hover {
+        color: #fff;
+        background-color: #29488a;
+        border-color: #1f3e7e;
+    }
+
+.btn-google-plus {
+    color: #fff;
+    background-color: #d34836;
+    border-color: #c13725;
+}
+
+    .btn-google-plus:hover {
+        color: #fff;
+        background-color: #c13725;
+        border-color: #b52b1a;
+    }
