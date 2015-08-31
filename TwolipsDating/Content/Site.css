@@ -614,16 +614,16 @@ input[readonly] {
     margin: 0;
 }
 
-.fa-inverse-info {
-    color: #31B0D5;
+.fa-inverse-twitter {
+    color: #55acee;
 }
 
-.fa-inverse-primary {
-    color: #006687;
+.fa-inverse-facebook {
+    color: #3b5998;
 }
 
-.fa-inverse-danger {
-    color: #F04124;
+.fa-inverse-google-plus {
+    color: #d34836;
 }
 
 .text-instagram {

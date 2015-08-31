@@ -354,22 +354,34 @@
 <div class="row" style="margin-bottom: 5px">
     <div class="col-sm-4">
         <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("Here's a {0} year old {1} from {2} @twolipsdating", Model.Age, Model.Gender, Model.Location)) + "&url=" + Url.Encode(Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme)))"
-           style="width: 100%;" class="btn btn-info" title="Share on Twitter">
-            <i class="fa fa-twitter"></i>&nbsp;&nbsp;Share on Twitter
+           style="width: 100%;" class="btn btn-twitter" title="Share on Twitter">
+            <span class="fa-stack">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse-twitter"></i>
+            </span>
+            Share on Twitter
         </a>
     </div>
     <div class="col-sm-4">
         <a href="@("https://www.facebook.com/sharer/sharer.php?u=" + Url.Encode(Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme)))"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
-           style="width: 100%;" class="btn btn-primary" title="Share on Facebook">
-            <i class="fa fa-facebook"></i>&nbsp;&nbsp;Share on Facebook
+           style="width: 100%;" class="btn btn-facebook" title="Share on Facebook">
+            <span class="fa-stack">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse-facebook"></i>
+            </span>
+            Share on Facebook
         </a>
     </div>
     <div class="col-sm-4">
         <a href="@("https://plus.google.com/share?url=" + Url.Encode(Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme)))"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
-           style="width: 100%;" class="btn btn-danger" title="Share on Google+">
-            <i class="fa fa-google-plus"></i>&nbsp;&nbsp;Share on Google+
+           style="width: 100%;" class="btn btn-google-plus" title="Share on Google+">
+            <span class="fa-stack">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse-google-plus"></i>
+            </span>
+            Share on Google+
         </a>
     </div>
 </div>
