@@ -278,3 +278,19 @@ insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 13, Id from dbo.Ques
 insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 2, Id from dbo.Questions where Content = 'E.T. - The Extra Terrestrial for Atari 2600 sold how many units?';	
 insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 1, Id from dbo.Questions where Content = 'What is the sine of an angle?';
 insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 22, Id from dbo.Questions where Content = 'What is the sine of an angle?';	
+
+-- 8/30/2015
+
+	
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 2, Id from dbo.Questions where Content = 'Amy Anderson is which Sailor Scout in Sailor Moon?';	
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 26, Id from dbo.Questions where Content = 'Which day is the busiest day for food trucks?';
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 14, Id from dbo.Questions where Content = 'Which day is the busiest day for food trucks?';
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 14, Id from dbo.Questions where Content = 'In the 1960s, construction sites commonly referred to food trucks as what?';	
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 14, Id from dbo.Questions where Content = 'The USA''s first taco truck opened in what year?';	
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 14, Id from dbo.Questions where Content = 'What is the most popular food truck food?';	
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 14, Id from dbo.Questions where Content = 'The Oscar Mayer''s Weiner Mobile first rolled out in what year?';	
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 14, Id from dbo.Questions where Content = 'In Quebec, what are food trucks more commonly known as?';	
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 14, Id from dbo.Questions where Content = 'Which city has the most food truck per capita?';	
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 14, Id from dbo.Questions where Content = 'The Great Food Truck Race originally aired on what date?';	
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 14, Id from dbo.Questions where Content = 'What year did Los Angeles start ranking food trucks with letter grades like restaurants?';	
+insert into dbo.TagQuestions(Tag_TagId, Question_Id) select 14, Id from dbo.Questions where Content = 'What movie focuses on a chef who loses his restaurant job and starts up a food truck?';	

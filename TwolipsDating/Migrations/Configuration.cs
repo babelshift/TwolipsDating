@@ -218,7 +218,9 @@ namespace TwolipsDating.Migrations
                 new Quiz() { Id = 10, Name = "Legend of Zelda", Description = "The triforce can be yours with the completion of this one. OK, so the triforce isn't real, but this quiz is.", DateCreated = new DateTime(2015, 8, 17), Points = 20, IsActive = true, ImageFileName = "Zelda.jpg" },
                 new Quiz() { Id = 11, Name = "Movie Quotes", Description = "\"The force will be with you Harry.\" -Gandalf", DateCreated = new DateTime(2015, 8, 18), Points = 20, IsActive = true, ImageFileName = "MovieQuotes.gif" },
                 new Quiz() { Id = 12, Name = "Harry Potter", Description = "Get out your wands and head to Hogwarts. There's a foul smell in the air. Only you can solve this problem.", DateCreated = new DateTime(2015, 8, 18), Points = 20, IsActive = true, ImageFileName = "HarryPotter.jpg" },
-                new Quiz() { Id = 13, Name = "Spaceballs: The Quiz", Description = "Brought to you by the makers of Spaceballs: The Blanket and Spaceballs: The Toilet Paper.", DateCreated = new DateTime(2015, 8, 19), Points = 25, IsActive = true, ImageFileName = "Spaceballs.jpg" });
+                new Quiz() { Id = 13, Name = "Spaceballs: The Quiz", Description = "Brought to you by the makers of Spaceballs: The Blanket and Spaceballs: The Toilet Paper.", DateCreated = new DateTime(2015, 8, 19), Points = 25, IsActive = true, ImageFileName = "Spaceballs.jpg" },
+                new Quiz() { Id = 14, Name = "The Great Food Truck Quiz", Description = "All you could ever want to answer about food trucks.", DateCreated = new DateTime(2015, 8, 30), Points = 20, IsActive = true, ImageFileName = "Foodtruck.jpg" },
+                new Quiz() { Id = 15, Name = "The Walking Dead", Description = "If you can pass this quiz, you would probably survive a zombie apocolypse.", DateCreated = new DateTime(2015, 8, 30), Points = 20, IsActive = true, ImageFileName = "WalkingDead.jpg" });
 
             SaveChanges(context);
         }

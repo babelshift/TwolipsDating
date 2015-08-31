@@ -52,29 +52,28 @@
         </script>
     </div>
     <div class="col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="col-sm-4">
-                    <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(Model.QuizDescription + " #trivia") + "&url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
-                       style="width: 100%;" class="btn btn-info" title="Share on Twitter">
-                        <img src="~/Content/tw-icon-16.png" /> Share on Twitter
-                    </a>
-                </div>
-                <div class="col-sm-4">
-                    <a href="@("https://www.facebook.com/sharer/sharer.php?u=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
-                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
-                       style="width: 100%;" class="btn btn-primary" title="Share on Facebook">
-                        <img src="~/Content/fb-icon-16.png" /> Share on Facebook
-                    </a>
-                </div>
-                <div class="col-sm-4">
-                    <a href="@("https://plus.google.com/share?url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
-                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
-                       style="width: 100%;" class="btn btn-danger" title="Share on Google+">
-                        <img src="~/Content/gp-icon-16.png" /> Share on Google+
-                    </a>
-                </div>
+        <div style="margin-bottom: 5px">
+            <div class="col-sm-4">
+                <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(Model.QuizDescription + " #trivia") + "&url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
+                   style="width: 100%;" class="btn btn-info" title="Share on Twitter">
+                    <img src="~/Content/tw-icon-16.png" /> Share on Twitter
+                </a>
             </div>
+            <div class="col-sm-4">
+                <a href="@("https://www.facebook.com/sharer/sharer.php?u=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
+                   onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
+                   style="width: 100%;" class="btn btn-primary" title="Share on Facebook">
+                    <img src="~/Content/fb-icon-16.png" /> Share on Facebook
+                </a>
+            </div>
+            <div class="col-sm-4">
+                <a href="@("https://plus.google.com/share?url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
+                   onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
+                   style="width: 100%;" class="btn btn-danger" title="Share on Google+">
+                    <img src="~/Content/gp-icon-16.png" /> Share on Google+
+                </a>
+            </div>
+            <div class="clearfix"></div>
         </div>
         <div class="panel panel-default">
             <div class="panel-body quiz-body">
