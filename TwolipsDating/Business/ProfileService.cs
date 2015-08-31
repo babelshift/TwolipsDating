@@ -129,7 +129,7 @@ namespace TwolipsDating.Business
 
             // clear out any profiles that are using this image
             var profilesUsingThisImage = db.Profiles.Where(p => p.UserImageId == userImageId);
-            foreach(var profile in profilesUsingThisImage)
+            foreach (var profile in profilesUsingThisImage)
             {
                 profile.UserImageId = null;
             }
@@ -473,7 +473,7 @@ namespace TwolipsDating.Business
 
             int count = await db.SaveChangesAsync();
 
-            if(count > 0)
+            if (count > 0)
             {
                 await AwardAchievedMilestonesForUserAsync(authorUserId, (int)MilestoneTypeValues.ProfileReviewsWritten);
 
@@ -487,10 +487,10 @@ namespace TwolipsDating.Business
                 string targetUserEmail = targetUser.Email;
 
                 UserService userService = new UserService(EmailService);
-                await userService.SendReviewEmailNotificationAsync(authorUserProfileImagePath, authorUserName, content, authorProfileUrl, 
+                await userService.SendReviewEmailNotificationAsync(authorUserProfileImagePath, authorUserName, content, authorProfileUrl,
                     targetUserId, targetUserName, targetUserEmail);
             }
-            
+
             return count;
         }
 
@@ -917,13 +917,13 @@ namespace TwolipsDating.Business
                 var receiverUser = db.Users.Find(toUserId);
                 string receiverUserName = receiverUser.UserName;
                 string receiverEmail = receiverUser.Email;
-                
+
                 var gift = await db.StoreItems.FindAsync(giftId);
 
                 UserService userService = new UserService(EmailService);
                 await userService.SendGiftEmailNotificationAsync(
-                    senderUserName, senderProfileImagePath, senderProfileUrl, 
-                    gift.Name, gift.GetIconPath(), 
+                    senderUserName, senderProfileImagePath, senderProfileUrl,
+                    gift.Name, gift.GetIconPath(),
                     toUserId, receiverUserName, receiverEmail
                 );
             }
@@ -1276,9 +1276,9 @@ namespace TwolipsDating.Business
         /// <summary>
         /// Returns a random set of unique profiles. The set size is determined by the parameter.
         /// </summary>
-        /// <param name="profilesToRetrieve"></param>
+        /// <param name="numberOfProfilesToRetrieve"></param>
         /// <returns></returns>
-        internal async Task<IReadOnlyCollection<Profile>> GetRandomProfilesForDashboardAsync(string currentUserId, int profilesToRetrieve)
+        internal async Task<IReadOnlyCollection<Profile>> GetRandomProfilesForDashboardAsync(string currentUserId, int numberOfProfilesToRetrieve)
         {
             var allProfiles = await (from profiles in db.Profiles
                                      where profiles.ApplicationUser.IsActive
@@ -1287,32 +1287,42 @@ namespace TwolipsDating.Business
                                              where favorite.UserId == currentUserId
                                              select favorite.ProfileId)
                                              .Contains(profiles.Id)
-                                     select profiles).ToListAsync();
+                                     select profiles).ToDictionaryAsync(d => d.Id, d => d);
 
             List<Profile> randomProfiles = new List<Profile>();
 
+            // if there are no profiles, don't do anything
             if (allProfiles == null || allProfiles.Count == 0)
             {
                 return randomProfiles.AsReadOnly();
             }
 
-            Random random = new Random();
-            for (int i = 0; i < profilesToRetrieve; i++)
+            // if there are less profiles than we want to collect, only collect that amount
+            if (allProfiles.Count < numberOfProfilesToRetrieve)
             {
-                // get a random profile and add to our result set
-                int indexOfProfileToAdd = random.Next(0, allProfiles.Count);
+                numberOfProfilesToRetrieve = allProfiles.Count;
+            }
 
-                var profileToAdd = allProfiles[indexOfProfileToAdd];
-
-                // only add a profile to our results if it's not already in there
-                bool isProfileAlreadyAdded = randomProfiles.Any(r => r.Id == profileToAdd.Id);
-                if (!isProfileAlreadyAdded)
-                {
-                    randomProfiles.Add(allProfiles[indexOfProfileToAdd]);
-                }
+            Random random = new Random();
+            foreach(var profile in UniqueRandomValues(allProfiles).Take(numberOfProfilesToRetrieve))
+            {
+                randomProfiles.Add(profile);
             }
 
             return randomProfiles.AsReadOnly();
+        }
+
+        private IEnumerable<TValue> UniqueRandomValues<TKey, TValue>(IDictionary<TKey, TValue> dict)
+        {
+            Random rand = new Random();
+            Dictionary<TKey, TValue> values = new Dictionary<TKey, TValue>(dict);
+            while (values.Count > 0)
+            {
+                TKey randomKey = values.Keys.ElementAt(rand.Next(0, values.Count));  // hat tip @yshuditelu 
+                TValue randomValue = values[randomKey];
+                values.Remove(randomKey);
+                yield return randomValue;
+            }
         }
 
         internal async Task<int> GetImagesUploadedCountByUserAsync(string userId)
