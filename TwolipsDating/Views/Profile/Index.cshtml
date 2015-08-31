@@ -355,21 +355,21 @@
     <div class="col-sm-4">
         <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("Here's a {0} year old {1} from {2} @twolipsdating", Model.Age, Model.Gender, Model.Location)) + "&url=" + Url.Encode(Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme)))"
            style="width: 100%;" class="btn btn-info" title="Share on Twitter">
-            <img src="~/Content/tw-icon-16.png" /> Share on Twitter
+            <i class="fa fa-twitter"></i>&nbsp;&nbsp;Share on Twitter
         </a>
     </div>
     <div class="col-sm-4">
         <a href="@("https://www.facebook.com/sharer/sharer.php?u=" + Url.Encode(Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme)))"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
            style="width: 100%;" class="btn btn-primary" title="Share on Facebook">
-            <img src="~/Content/fb-icon-16.png" /> Share on Facebook
+            <i class="fa fa-facebook"></i>&nbsp;&nbsp;Share on Facebook
         </a>
     </div>
     <div class="col-sm-4">
         <a href="@("https://plus.google.com/share?url=" + Url.Encode(Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme)))"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
            style="width: 100%;" class="btn btn-danger" title="Share on Google+">
-            <img src="~/Content/gp-icon-16.png" /> Share on Google+
+            <i class="fa fa-google-plus"></i>&nbsp;&nbsp;Share on Google+
         </a>
     </div>
 </div>
@@ -779,4 +779,8 @@
     @Scripts.Render("~/bundles/bootstrap-image-gallery")
     <script src="@Url.Content("~/Scripts/Profile/index.js")" type="text/javascript"></script>
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+}
+@section Styles {
+    @Styles.Render("~/Content/bootstrap-image-gallery")
+    @Styles.Render("~/Content/font-awesome")
 }

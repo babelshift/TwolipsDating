@@ -17,17 +17,17 @@
                     <div class="row">
                         <div class="col-sm-2 col-sm-offset-3">
                             <a href="http://twitter.com/twolipsdating" style="width: 100%;" class="btn btn-info" title="Follow us on Twitter">
-                                <img src="~/Content/tw-icon-16.png" />&nbsp;&nbsp;Twitter
+                                Follow us on <i class="fa fa-twitter"></i> Twitter
                             </a>
                         </div>
                         <div class="col-sm-2 col-md-2">
                             <a href="http://facebook.com/twolipsdating" style="width: 100%;" type="submit" class="btn btn-primary" title="Like us on Facebook">
-                                <img src="~/Content/fb-icon-16.png" />&nbsp;&nbsp;Facebook
+                                Like us on <i class="fa fa-facebook"></i> Facebook
                             </a>
                         </div>
                         <div class="col-sm-2 col-md-2">
                             <a href="http://plus.google.com/+twolipsdating" style="width: 100%;" class="btn btn-danger" title="Follow us on Google+">
-                                <img src="~/Content/gp-icon-16.png" />&nbsp;&nbsp;Google
+                                Follow us on <i class="fa fa-google-plus"></i> Google+
                             </a>
                         </div>
                     </div>
@@ -90,5 +90,7 @@
     @Scripts.Render("~/bundles/chosen")
     <script src="@Url.Content("~/Scripts/Profile/create.js")" type="text/javascript"></script>
 }
-
-
+@section Styles {
+    @Styles.Render("~/Content/chosen")
+    @Styles.Render("~/Content/font-awesome")
+}
