@@ -14,7 +14,15 @@
         {
             text = "uploaded an image";
         }
-        <a href="@Url.Action("index", "profile", new { id = Model.UploaderProfileId })">@Model.UploaderUserName</a> @text
+        if (User.Identity.Name == Model.UploaderUserName)
+        {
+            @:You
+        }
+        else
+        {
+            <a href="@Url.Action("index", "profile", new { id = Model.UploaderProfileId })">@Model.UploaderUserName</a>
+        }
+        @text
         <br />
         <small>@Model.TimeAgo</small>
     }

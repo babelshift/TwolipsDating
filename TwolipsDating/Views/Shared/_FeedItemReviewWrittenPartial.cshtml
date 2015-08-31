@@ -7,8 +7,15 @@
     </div>
 }
 <div class="feed-item-headline">
-    <a href="@Url.Action("index", "profile", new { id = Model.AuthorProfileId })">@Model.AuthorUserName</a>
-    writes about
+    @if (Model.AuthorUserName == User.Identity.Name)
+    {
+        @:You
+    }
+    else
+    {
+        <a href="@Url.Action("index", "profile", new { id = Model.AuthorProfileId })">@Model.AuthorUserName</a>
+    }
+    wrote a review about
     @if (Model.TargetUserName == User.Identity.Name)
     {
         @:you

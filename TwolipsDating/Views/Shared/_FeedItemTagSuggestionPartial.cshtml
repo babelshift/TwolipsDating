@@ -4,7 +4,14 @@
     <img class="circular-image" src="@Model.SuggestProfileImagePath" />
 </div>
 <div class="feed-item-headline">
-    <a href="@Url.Action("index", "profile", new { id = Model.SuggestProfileId })">@Model.SuggestUserName</a>
+    @if (Model.SuggestUserName == User.Identity.Name)
+    {
+        @:You
+    }
+    else
+    {
+        <a href="@Url.Action("index", "profile", new { id = Model.SuggestProfileId })">@Model.SuggestUserName</a>
+    }
     tagged
     @if (Model.ReceiverUserName == User.Identity.Name)
     {
@@ -20,5 +27,5 @@
 <div class="clearfix"></div>
 @foreach (var tag in Model.Tags)
 {
-    <a href="#" class="btn btn-default btn-xs">@tag</a>
+    <a href="@Url.Action("index", "search", new { tags = tag })" class="btn btn-default btn-xs">@tag</a>
 }

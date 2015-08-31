@@ -4,7 +4,14 @@
     <img class="circular-image" src="@Model.UserProfileImagePath" />
 </div>
 <div class="feed-item-headline">
-    <a href="@Url.Action("index", "profile", new { id = Model.ProfileId })">@Model.UserName</a>
+    @if (User.Identity.Name == Model.UserName)
+    {
+        @:You
+    }
+    else
+    {
+        <a href="@Url.Action("index", "profile", new { id = Model.ProfileId })">@Model.UserName</a>
+    }
     achieved
     <strong>@Model.AchievementName</strong>
     <br />

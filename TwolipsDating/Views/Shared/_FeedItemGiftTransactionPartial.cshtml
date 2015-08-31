@@ -4,8 +4,14 @@
     <img class="circular-image" src="@Model.SenderProfileImagePath" />
 </div>
 <div class="feed-item-headline">
-    <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId })">@Model.SenderUserName</a>
-
+    @if (Model.SenderUserName == User.Identity.Name)
+    {
+        @:You
+    }
+    else
+    {
+        <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId })">@Model.SenderUserName</a>
+    }
     @if (@Model.Gifts.Count > 1)
     {
         @:sent gifts to
@@ -14,7 +20,6 @@
     {
         @:sent a gift to
     }
-
     @if (Model.ReceiverUserName == User.Identity.Name)
     {
         @:you
