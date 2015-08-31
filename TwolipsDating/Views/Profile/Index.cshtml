@@ -162,8 +162,12 @@
                         </div>
                     </div>
                     <div class="pull-right">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button id="button-gift-send" type="button" class="btn btn-primary" onclick="onSendGift(event, this)">Send</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <i class="fa fa-close"></i> Close
+                        </button>
+                        <button id="button-gift-send" type="button" class="btn btn-primary" onclick="onSendGift(event, this)">
+                            <i class="fa fa-send"></i> Send
+                        </button>
                     </div>
                     <div class="clearfix"></div>
                     <br />
@@ -204,11 +208,12 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    @Html.LabelFor(m => m.WriteReview.RatingValue, new { @class = "control-label" })
-                    <div id="star"></div> <small>(hover and select star)</small>
+                    <small>Click to select a rating:</small>
+                    <div id="star" style="display: inline-block"></div>
                 </div>
                 <div class="form-group">
-                    @Html.TextAreaFor(m => m.WriteReview.ReviewContent, new { @class = "form-control" })
+                    <small>Your review:</small>
+                    @Html.TextAreaFor(m => m.WriteReview.ReviewContent, new { @class = "form-control", rows = 5 })
                 </div>
                 <div id="review-error" class="alert alert-danger" role="alert">
                     <p id="review-error-text">Something happened which prevented your review from being submitted.</p>
@@ -218,8 +223,12 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button id="button-review-write" type="button" class="btn btn-primary" onclick="onWriteReview(event, this)">Submit review</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-close"></i> Close
+                </button>
+                <button id="button-review-write" type="button" class="btn btn-primary" onclick="onWriteReview(event, this)">
+                    <i class="fa fa-edit"></i> Send
+                </button>
             </div>
             @Html.HiddenFor(m => m.WriteReview.RatingValue)
         </div>
@@ -234,14 +243,18 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    @Html.TextAreaFor(m => m.SendMessage.MessageBody, new { @class = "form-control" })
+                    @Html.TextAreaFor(m => m.SendMessage.MessageBody, new { @class = "form-control", rows = 5 })
                 </div>
                 <div id="message-error" class="alert alert-danger" role="alert">
                     <p id="message-error-text">Something happened which prevented your message from being sent.</p>
                 </div>
                 <div class="pull-right">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button id="button-message-send" type="button" onclick="onSendMessage(event, this)" class="btn btn-primary">Send</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-close"></i> Close
+                    </button>
+                    <button id="button-message-send" type="button" onclick="onSendMessage(event, this)" class="btn btn-primary">
+                        <i class="fa fa-send"></i> Send
+                    </button>
                 </div>
                 <div class="clearfix"></div>
                 <br />
@@ -291,8 +304,12 @@
                         @Html.HiddenFor(m => m.ProfileUserId)
                         @Html.HiddenFor(m => m.ProfileId)
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">OK</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                <i class="fa fa-close"></i> Close
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-check"></i> OK
+                            </button>
                         </div>
                     }
                 }
@@ -403,29 +420,29 @@
                         </a>
                     }
                 </div>
-                <div class="col-sm-7 col-md-8 profile-banner-info" style="">
+                <div class="col-sm-7 col-md-8 profile-banner-info">
                     <p class="user-name">
                         @Model.UserName
                     </p>
                     <p class="rating">
                         @for (int i = 1; i <= Model.AverageRatingValue; i++)
                         {
-                            <i class="glyphicon glyphicon-star review-rating-color"></i>
+                            <i class="fa fa-star review-rating-color"></i>
                         }
                         @for (int j = 1; j <= 5 - Model.AverageRatingValue; j++)
                         {
-                            <i class="glyphicon glyphicon-star-empty review-rating-color"></i>
+                            <i class="fa fa-star-o review-rating-color"></i>
                         }
                         <small>@Model.ReviewCount @(Model.ReviewCount == 1 ? "review" : "reviews")</small>
                     </p>
                     <p class="user-info">
-                        <i class="glyphicon glyphicon-user"></i>
+                        <i class="fa fa-user fa-fw"></i>
                         @Model.Age &bull; @Model.Gender
                     </p>
                     <p class="user-location">
                         @if (!String.IsNullOrEmpty(Model.Location))
                         {
-                            <i class="glyphicon glyphicon-map-marker"></i>
+                            <i class="fa fa-map-marker fa-fw"></i>
                             @Model.Location
                         }
                     </p>
@@ -443,12 +460,59 @@
                             }
                         </a>
                     </p>
+                    <div class="clearfix"></div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
+                        {
+                            <div class="visible-xs" style="margin-top: 10px; margin-left: auto; margin-right: auto; width: 260px">
+                                <div class="btn-group">
+                                    <button type="button" class="custom-tooltip button-toggle-favorite btn btn-default" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
+                                        <i class="button-toggle-favorite-icon glyphicon glyphicon-heart"></i> <span class="button-toggle-favorite-text">Following</span>
+                                    </button>
+                                    <button type="button" class="custom-tooltip btn btn-default" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
+                                        <i class="glyphicon glyphicon-comment"></i> Message
+                                    </button>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="glyphicon glyphicon-option-vertical"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li>
+                                                <button type="button" class="btn btn-default  btn-block" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
+                                                    <i class="glyphicon glyphicon-gift"></i> Gift
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button type="button" class="btn btn-default  btn-block" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review">
+                                                    <i class="fa fa-edit"></i> Review
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button type="button" class="button-toggle-ignored btn btn-default  btn-block" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.ProfileUserId')">
+                                                    <i class="button-toggle-ignored-icon glyphicon glyphicon-volume-up"></i> <span class="button-toggle-ignored-text">Ignoring</span>
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button type="button" class="btn btn-default  btn-block">
+                                                    <i class="glyphicon glyphicon-flag"></i> Report
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    @*
+                                        <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
+                                    *@
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
 
                 @if (Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
                 {
-                    <div class="col-sm-2">
-                        <div class="hidden-xs text-right" style="margin-top: 10px">
+                    <div class="col-sm-2 hidden-xs">
+                        <div class="text-right" style="margin-top: 10px">
                             <div class="btn-group-vertical" role="group">
                                 <button type="button" class="button-toggle-favorite btn btn-default " title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
                                     <i class="button-toggle-favorite-icon glyphicon glyphicon-ok"></i> <span class="button-toggle-favorite-text">Following</span>
@@ -468,7 +532,7 @@
                                         </li>
                                         <li>
                                             <button type="button" class="btn btn-default  btn-block" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review">
-                                                <i class="glyphicon glyphicon-edit"></i> Review
+                                                <i class="fa fa-edit"></i> Review
                                             </button>
                                         </li>
                                         <li>
@@ -503,52 +567,6 @@
                     <a class="btn btn-warning" href="@Url.Action("login", "account")">Login to contact this user</a>
                 </div>
             </div>
-        }
-        @if (User.Identity.IsAuthenticated)
-        {
-            if (Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
-            {
-                <div class="visible-xs" style="display: inline-block; margin-bottom: 10px; margin-left: auto; margin-right: auto; width: 260px">
-                    <div class="btn-group">
-                        <button type="button" class="custom-tooltip button-toggle-favorite btn btn-primary" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
-                            <i class="button-toggle-favorite-icon glyphicon glyphicon-heart"></i> <span class="button-toggle-favorite-text">Following</span>
-                        </button>
-                        <button type="button" class="custom-tooltip btn btn-default" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
-                            <i class="glyphicon glyphicon-comment"></i> Message
-                        </button>
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="glyphicon glyphicon-option-vertical"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li>
-                                    <button type="button" class="btn btn-default  btn-block" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
-                                        <i class="glyphicon glyphicon-gift"></i> Gift
-                                    </button>
-                                </li>
-                                <li>
-                                    <button type="button" class="btn btn-default  btn-block" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review">
-                                        <i class="glyphicon glyphicon-edit"></i> Review
-                                    </button>
-                                </li>
-                                <li>
-                                    <button type="button" class="button-toggle-ignored btn btn-default  btn-block" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.ProfileUserId')">
-                                        <i class="button-toggle-ignored-icon glyphicon glyphicon-volume-up"></i> <span class="button-toggle-ignored-text">Ignoring</span>
-                                    </button>
-                                </li>
-                                <li>
-                                    <button type="button" class="btn btn-default  btn-block">
-                                        <i class="glyphicon glyphicon-flag"></i> Report
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                        @*
-                            <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
-                        *@
-                    </div>
-                </div>
-            }
         }
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -677,25 +695,25 @@
                     @if (Model.ActiveTab == "feed")
                     {
                         <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i><span class="hidden-xs">&nbsp; Feed</span></a>
+                            <a href="@Url.Action("index", new { tab = "feed" })"><i class="fa fa-feed"></i><span class="hidden-xs">&nbsp; Feed</span></a>
                         </li>
                     }
                     else
                     {
                         <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "feed" })"><i class="glyphicon glyphicon-list-alt"></i><span class="hidden-xs">&nbsp; Feed</span></a>
+                            <a href="@Url.Action("index", new { tab = "feed" })"><i class="fa fa-feed"></i><span class="hidden-xs">&nbsp; Feed</span></a>
                         </li>
                     }
                     @if (Model.ActiveTab == "pictures")
                     {
                         <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i><span class="hidden-xs">&nbsp; Pictures</span></a>
+                            <a href="@Url.Action("index", new { tab = "pictures" })"><i class="fa fa-camera"></i><span class="hidden-xs">&nbsp; Pictures</span></a>
                         </li>
                     }
                     else
                     {
                         <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "pictures" })"><i class="glyphicon glyphicon-picture"></i><span class="hidden-xs">&nbsp; Pictures</span></a>
+                            <a href="@Url.Action("index", new { tab = "pictures" })"><i class="fa fa-camera"></i><span class="hidden-xs">&nbsp; Pictures</span></a>
                         </li>
                     }
                     @if (Model.ActiveTab == "reviews")
@@ -725,13 +743,13 @@
                     @if (Model.ActiveTab == "achievements")
                     {
                         <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "achievements" })"><i class="glyphicon glyphicon-stats"></i><span class="hidden-xs">&nbsp; Achievements</span></a>
+                            <a href="@Url.Action("index", new { tab = "achievements" })"><i class="fa fa-trophy"></i><span class="hidden-xs">&nbsp; Achievements</span></a>
                         </li>
                     }
                     else
                     {
                         <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "achievements" })"><i class="glyphicon glyphicon-stats"></i><span class="hidden-xs">&nbsp; Achievements</span></a>
+                            <a href="@Url.Action("index", new { tab = "achievements" })"><i class="fa fa-trophy"></i><span class="hidden-xs">&nbsp; Achievements</span></a>
                         </li>
                     }
                     @*
@@ -795,5 +813,4 @@
 }
 @section Styles {
     @Styles.Render("~/Content/bootstrap-image-gallery")
-    @Styles.Render("~/Content/font-awesome")
 }

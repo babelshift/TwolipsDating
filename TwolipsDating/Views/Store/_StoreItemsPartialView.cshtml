@@ -26,19 +26,19 @@
                 {
                     <span style="color: #999">
                         <s>
-                            <i class="glyphicon glyphicon-piggy-bank"></i>
+                            <i class="fa fa-money"></i>
                             @storeItem.PointsCost
                         </s>
                     </span>
                     @:&nbsp;
-                    <i class="glyphicon glyphicon-piggy-bank"></i>
+                    <i class="fa fa-money"></i>
                     @storeItem.DiscountedPointsCost
                     <br />
                     @:Sales ends in @storeItem.TimeUntilSaleEnds
                 }
                 else
                 {
-                    <i class="glyphicon glyphicon-piggy-bank"></i>
+                    <i class="fa fa-money"></i>
                     @storeItem.DiscountedPointsCost
                 }
             </div>
@@ -46,7 +46,7 @@
                 <h4>@storeItem.ItemName</h4>
                 <button type="button" href="#" class="store-item-buy-button btn btn-success btn-block"
                         data-item-id="@storeItem.ItemId" data-item-type-id="@storeItem.ItemTypeId">
-                    <i class="glyphicon glyphicon-piggy-bank"></i>
+                    <i class="fa fa-money"></i>
                     @storeItem.DiscountedPointsCost
                 </button>
             </div>

@@ -8,15 +8,15 @@
     <div class="col-md-8">
         <div class="panel panel-default">
             <div class="panel-heading text-center">
-                <h4 class="panel-title"><i class="glyphicon glyphicon-education"></i> Trivia</h4>
+                <h4 class="panel-title"><i class="fa fa-mortar-board"></i> Trivia</h4>
             </div>
             <div class="panel-body text-center">
                 <div class="col-sm-6">
-                    <h3><i class="glyphicon glyphicon-random"></i> <a href="@Url.Action("random")">Random</a></h3>
+                    <h3><i class="fa fa-random"></i> <a href="@Url.Action("random")">Random</a></h3>
                     <p>Each question is randomly selected from a pool of questions without any time limit.</p>
                 </div>
                 <div class="col-sm-6">
-                    <h3><i class="glyphicon glyphicon-time"></i> <a href="@Url.Action("timed")">Timed</a></h3>
+                    <h3><i class="fa fa-clock-o"></i> <a href="@Url.Action("timed")">Timed</a></h3>
                     <p>Each question is randomly selected from a pool of questions with a 10 second time limit.</p>
                 </div>
             </div>
@@ -35,7 +35,7 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-heading text-center">
-                <h4 class="panel-title"><i class="glyphicon glyphicon-king"></i> Quizzes</h4>
+                <h4 class="panel-title"><i class="fa fa-book"></i> Quizzes</h4>
             </div>
             <div class="panel-body text-center">
                 @foreach (var quiz in Model.NewQuizzes)
@@ -67,7 +67,7 @@
     <div class="col-md-4 col-sm-6">
         <div class="panel panel-default">
             <div class="panel-heading text-center">
-                <h4 class="panel-title"><i class="glyphicon glyphicon-stats"></i> Your Stats</h4>
+                <h4 class="panel-title"><i class="fa fa-line-chart"></i> Your Stats</h4>
             </div>
             <ul class="list-group">
                 <li class="list-group-item">Total Points<span class="badge">@Model.UserStats.TotalPoints</span></li>
@@ -88,7 +88,7 @@
         {
             <div class="panel panel-default recently-completed-quizzes">
                 <div class="panel-heading text-center">
-                    <h4 class="panel-title"><i class="glyphicon glyphicon-user"></i> Recently Completed</h4>
+                    <h4 class="panel-title"><i class="fa fa-users"></i> Recently Completed</h4>
                 </div>
                 <div class="list-group">
                     @foreach (var quiz in Model.RecentlyCompletedQuizzes)

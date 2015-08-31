@@ -56,7 +56,7 @@
                                             @Html.HiddenFor(m => Model.Items[i].IsRemoved)
                                         </td>
                                         <td>
-                                            <i class="glyphicon glyphicon-piggy-bank"></i>
+                                            <i class="fa fa-money"></i>
                                             <span id="@String.Format("total-cost-{0}", i)" class="total-cost">
                                                 @Model.Items[i].TotalPrice
                                             </span>
@@ -67,7 +67,7 @@
                                     <td></td>
                                     <td>Subtotal:</td>
                                     <td>
-                                        <i class="glyphicon glyphicon-piggy-bank"></i>
+                                        <i class="fa fa-money"></i>
                                         <span id="subtotal">@Model.TotalCost</span>
                                     </td>
                                 </tr>

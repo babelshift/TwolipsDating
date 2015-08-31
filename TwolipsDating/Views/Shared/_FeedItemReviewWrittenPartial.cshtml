@@ -25,7 +25,7 @@
 <span class="pull-right feed-item-buttons">
     <a href="#" id="@String.Format("share-profile-link-{0}", Model.ReviewId)" data-review-id="@Model.ReviewId" class="btn btn-primary btn-xs
        data-html=" true" data-toggle="popover" data-placement="bottom" data-title="Share" data-animation="false">
-        <i class="glyphicon glyphicon-share-alt"></i> Share
+        <i class="fa fa-share-alt"></i> Share
     </a>
     @if (User.Identity.IsAuthenticated)
     {
@@ -40,14 +40,23 @@
     <div class="share-buttons custom-popover-content text-center">
         <a href="@("https://www.facebook.com/dialog/share?app_id=742385919135029&display=popup&href=" + Url.Action("index", "profile", new { id = Model.TargetProfileId }, Request.Url.Scheme) + "&redirect_uri=" + Url.Action("index", "profile", new { id = Model.TargetProfileId }, Request.Url.Scheme))"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-            <img src="~/Content/fb-icon-32.png" alt="Share on Facebook" />
+            <span class="fa-stack fa-lg text-facebook">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+            </span>
         </a>
         <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("{0} just reviewed {1}", Model.AuthorUserName, Model.TargetUserName)) + "&url=" + Url.Action("index", "profile", new { id = Model.TargetProfileId }, Request.Url.Scheme))">
-            <img src="~/Content/tw-icon-32.png" alt="Tweet" />
+            <span class="fa-stack fa-lg text-twitter">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+            </span>
         </a>
         <a href="@("https://plus.google.com/share?url=" + Url.Action("index", "profile", new { id =  Model.TargetProfileId }, Request.Url.Scheme))"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
-            <img src="~/Content/gp-icon-32.png" alt="Share on Google+" />
+            <span class="fa-stack fa-lg text-google-plus">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+            </span>
         </a>
     </div>
 </div>

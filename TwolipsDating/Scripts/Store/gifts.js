@@ -40,7 +40,7 @@ function onBuyGift(e, obj) {
             $("#purchase-result").removeClass("alert-danger");
             $("#purchase-result").addClass("alert-success");
             $("#purchase-result").show();
-            $("#purchase-result-message").html("You successfully purchased <strong>" + data.count + "x " + giftName + "</strong> for a total of&nbsp;&nbsp;<strong><i class=\"glyphicon glyphicon-piggy-bank\"/></i> " + purchasePointCost + "</strong>.");
+            $("#purchase-result-message").html("You successfully purchased <strong>" + data.count + "x " + giftName + "</strong> for a total of&nbsp;&nbsp;<strong><i class=\"fa fa-money\"/></i> " + purchasePointCost + "</strong>.");
             var userPointsCount = $("#span-points-count").html();
             var userPointsCountAfterPurchase = userPointsCount - purchasePointCost;
             $("#span-points-count").html(userPointsCountAfterPurchase);

@@ -8,28 +8,28 @@
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;@User.Identity.GetUserName()<span class="caret"></span>
+                    <i class="fa fa-user fa-lg"></i>&nbsp;&nbsp;@User.Identity.GetUserName()<span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li>
                         <a href="@Url.Action("index", "profile", new { id = (int?)null })">
-                            <i class="glyphicon glyphicon-user"></i>&nbsp;My Profile
+                            <i class="fa fa-user fa-lg fa-fw"></i>&nbsp;My Profile
                         </a>
                     </li>
                     <li>
                         <a href="@Url.Action("achievements", "profile", new { id = (int?)null })">
-                            <i class="glyphicon glyphicon-stats"></i>&nbsp;My Achievements
+                            <i class="fa fa-trophy fa-lg fa-fw"></i>&nbsp;My Achievements
                         </a>
                     </li>
                     <li>
                         <a href="@Url.Action("index", "manage", new { id = (int?)null })">
-                            <i class="glyphicon glyphicon-cog"></i>&nbsp;My Settings
+                            <i class="fa fa-cogs fag-lg fa-fw"></i>&nbsp;My Settings
                         </a>
                     </li>
                     <li class="divider"></li>
                     <li>
                         <a href="#" title="Log out" onclick="document.getElementById('logoutForm').submit()">
-                            <i class="glyphicon glyphicon-log-out"></i>&nbsp;Log out
+                            <i class="fa fa-sign-out fa-lg fa-fw"></i>&nbsp;Log out
                         </a>
                     </li>
                 </ul>
@@ -42,12 +42,12 @@ else
     <ul class="nav navbar-nav navbar-right">
         <li>
             <a href="@Url.Action("register", "account")" id="registerLink" title="You know you want to">
-                <i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;Sign up
+                <i class="fa fa-home fa-lg"></i>&nbsp;&nbsp;Sign up
             </a>
         </li>
         <li>
             <a href="@Url.Action("login", "account")" id="loginLink" title="Your friends are waiting for you">
-                <i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;Log in
+                <i class="fa fa-sign-in fa-lg"></i>&nbsp;&nbsp;Log in
             </a>
         </li>
     </ul>

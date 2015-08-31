@@ -33,6 +33,7 @@
     <meta name="twitter:image" content="@(!String.IsNullOrEmpty(ViewBag.ImageUrl) ? Url.Content(ViewBag.ImageUrl) : Request.Url.Scheme + "://" + Request.Url.Authority + Url.Content("~/Content/twolipsicon-white-200x200.png"))">
     @Styles.Render("~/Content/bootstrap-yeti.min.css")
     @RenderSection("styles", required: false)
+    @Styles.Render("~/Content/font-awesome")
     @Styles.Render("~/Content/css")
 </head>
 <body>
