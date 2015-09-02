@@ -1,7 +1,8 @@
-﻿$(document).ready(function () {
+﻿var defaultSelfSummaryText = "This user hasn't entered a self summary yet.";
+var defaultSummaryOfDoingText = "This user hasn't entered what they're doing yet.";
+var defaultSummaryOfGoingText = "This user hasn't entered where they're going yet.";
 
-    
-
+$(document).ready(function () {
     var profileUserId = $('#ProfileUserId').val();
 
     // only bother setting up the select title popover if the content is visible
@@ -61,7 +62,64 @@
         var cloneUnhide = clone.removeClass('hide');
         return cloneUnhide.html();
     });
+
+    setupTextAreaForEdit('#edit-self-summary', '#self-summary', '#text-edit-self-summary', '#button-edit-self-summary', '#button-save-self-summary', '#button-cancel-self-summary', defaultSelfSummaryText);
+    setupTextAreaForEdit('#edit-summary-of-doing', '#summary-of-doing', '#text-edit-summary-of-doing', '#button-edit-summary-of-doing', '#button-save-summary-of-doing', '#button-cancel-summary-of-doing', defaultSummaryOfDoingText);
+    setupTextAreaForEdit('#edit-summary-of-going', '#summary-of-going', '#text-edit-summary-of-going', '#button-edit-summary-of-going', '#button-save-summary-of-going', '#button-cancel-summary-of-going', defaultSummaryOfGoingText);
+
+    setupTextAreaForPost('#button-save-self-summary', '#text-edit-self-summary', 'selfSummary', '/profile/saveSelfSummary', '#button-edit-self-summary', '#edit-self-summary', '#self-summary', defaultSelfSummaryText);
+    setupTextAreaForPost('#button-save-summary-of-doing', '#text-edit-summary-of-doing', 'summaryOfDoing', '/profile/saveSummaryOfDoing', '#button-edit-summary-of-doing', '#edit-summary-of-doing', '#summary-of-doing', defaultSummaryOfDoingText);
+    setupTextAreaForPost('#button-save-summary-of-going', '#text-edit-summary-of-going', 'summaryOfGoing', '/profile/saveSummaryOfGoing', '#button-edit-summary-of-going', '#edit-summary-of-going', '#summary-of-going', defaultSummaryOfGoingText);
 });
+
+function setupTextAreaForPost(buttonSave, textArea, param, postPath, buttonEdit, container, textDisplay, defaultText) {
+    $(buttonSave).on('click', function (e) {
+        var text = $(textArea).val();
+
+        var json = '{"' + param + '":"' + text + '"}';
+
+        postJson(postPath, json, function (data) {
+            if (data.success) {
+                $(buttonEdit).removeClass('hidden');
+                $(container).addClass('hidden');
+                $(textDisplay).removeClass('hidden');
+
+                if (text == null || text.length == 0) {
+                    $(textDisplay).text(defaultText);
+                } else {
+                    $(textDisplay).text(text);
+                }
+                $(textArea).val(text);
+            }
+        });
+    });
+}
+
+function setupTextAreaForEdit(editContainer, textDisplay, textArea, buttonEdit, buttonSave, buttonCancel, defaultText) {
+    $(buttonEdit).on('click', function (e) {
+        e.preventDefault();
+
+        $(buttonEdit).addClass('hidden');
+        $(editContainer).removeClass('hidden');
+        $(textDisplay).addClass('hidden');
+    });
+
+    $(buttonCancel).on('click', function (e) {
+        e.preventDefault();
+
+        $(buttonEdit).removeClass('hidden');
+        $(editContainer).addClass('hidden');
+        $(textDisplay).removeClass('hidden');
+
+        var currentSelfSummary = $(textDisplay).text();
+
+        if (currentSelfSummary == defaultText) {
+            $(textArea).val('');
+        } else {
+            $(textArea).val(currentSelfSummary);
+        }
+    });
+}
 
 function onWriteReview(e, obj) {
     var profileUserId = $('#ProfileUserId').val();

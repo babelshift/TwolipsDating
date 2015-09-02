@@ -1,73 +1,124 @@
 ﻿@model TwolipsDating.ViewModels.ProfileViewModel
+@using Microsoft.AspNet.Identity;
 
 <div class="panel panel-default">
     <div class="panel-body">
-        <div class="col-md-8 col-lg-8">
-            <h3>Who I am</h3>
-            <p>@(!String.IsNullOrEmpty(Model.SummaryOfSelf) ? Model.SummaryOfSelf : "This user hasn't entered a self summary yet.")</p>
-            <h3>What I'm doing</h3>
-            <p>@(!String.IsNullOrEmpty(Model.SummaryOfDoing) ? Model.SummaryOfDoing : "This user hasn't entered what they're doing yet.")</p>
-            <h3>Where I'm going</h3>
-            <p>@(!String.IsNullOrEmpty(Model.SummaryOfGoing) ? Model.SummaryOfGoing : "This user hasn't entered where they're going yet.")</p>
+        <a class="btn btn-default btn-block hidden-sm hidden-md hidden-lg" href="#"><i class="fa fa-pencil"></i> Edit</a>
+        <div class="col-md-8">
+            <h3>
+                Who I am
+                @if (User.Identity.GetUserId() == Model.ProfileUserId)
+                {
+                    <a id="button-edit-self-summary" class="hidden-xs" href="#"><small><i class="fa fa-pencil"></i></small></a>
+                }
+            </h3>
+            <div id="edit-self-summary" class="hidden">
+                <textarea id="text-edit-self-summary" class="form-control" rows="5" style="margin-bottom: 10px" placeholder="Enter a brief summary of who are you. Don't overthink it!">@Model.SummaryOfSelf</textarea>
+                <button id="button-save-self-summary" class="btn btn-primary">Save</button>
+                <button id="button-cancel-self-summary" class="btn btn-default">Cancel</button>
+            </div>
+            <p id="self-summary">@(!String.IsNullOrEmpty(Model.SummaryOfSelf) ? Model.SummaryOfSelf : "This user hasn't entered a self summary yet.")</p>
+            <h3 style="margin-top: 30px">
+                What I'm doing
+                @if (User.Identity.GetUserId() == Model.ProfileUserId)
+                {
+                    <a id="button-edit-summary-of-doing" class="hidden-xs" href="#"><small><i class="fa fa-pencil"></i></small></a>
+                }
+            </h3>
+            <div id="edit-summary-of-doing" class="hidden">
+                <textarea id="text-edit-summary-of-doing" class="form-control" style="margin-bottom: 10px" placeholder="Enter a brief summary of what you're recently doing.">@Model.SummaryOfDoing</textarea>
+                <button id="button-save-summary-of-doing" button-cancel-summary-of-going class="btn btn-primary">Save</button>
+                <button id="button-cancel-summary-of-doing" class="btn btn-default">Cancel</button>
+            </div>
+            <p id="summary-of-doing">@(!String.IsNullOrEmpty(Model.SummaryOfDoing) ? Model.SummaryOfDoing : "This user hasn't entered what they're doing yet.")</p>
+            <h3 style="margin-top: 30px">
+                Where I'm going
+                @if (User.Identity.GetUserId() == Model.ProfileUserId)
+                {
+                    <a id="button-edit-summary-of-going" class="hidden-xs" href="#"><small><i class="fa fa-pencil"></i></small></a>
+                }
+            </h3>
+            <div id="edit-summary-of-going" class="hidden">
+                <textarea id="text-edit-summary-of-going" class="form-control" style="margin-bottom: 10px" placeholder="Enter a brief summary of where you want to be in a few years.">@Model.SummaryOfGoing</textarea>
+                <button id="button-save-summary-of-going" class="btn btn-primary">Save</button>
+                <button id="button-cancel-summary-of-going" class="btn btn-default">Cancel</button>
+            </div>
+            <p id="summary-of-going">@(!String.IsNullOrEmpty(Model.SummaryOfGoing) ? Model.SummaryOfGoing : "This user hasn't entered where they're going yet.")</p>
         </div>
-        <div class="col-md-4 col-lg-4">
-            <h4>What I'm looking for</h4>
-            <table class="table">
-                <tr>
-                    <td style="color: #777">Type</td>
-                    <td>@(!String.IsNullOrEmpty(Model.LookingForType) ? Model.LookingForType : "Unknown")</td>
-                </tr>
-                <tr>
-                    <td style="color: #777">Ages</td>
-                    <td>
-                        @if (Model.LookingForAgeMin.HasValue && Model.LookingForAgeMax.HasValue)
-                        {
-                            String.Format("{0}-{1}", Model.LookingForAgeMin.Value, Model.LookingForAgeMax.Value);
+        <div class="col-md-4">
+            <div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
+                <h4>
+                    What I'm looking for
+                    @if (User.Identity.GetUserId() == Model.ProfileUserId)
+                    {
+                        <a class="hidden-xs" href="#"><small><i class="fa fa-pencil"></i></small></a>
+                    }
+                </h4>
+                <table class="table">
+                    <tr>
+                        <td class="col-md-6" style="color: #777">Type</td>
+                        <td class="col-md-6">@(!String.IsNullOrEmpty(Model.LookingForType) ? Model.LookingForType : "Unknown")</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-6" style="color: #777">Ages</td>
+                        <td class="col-md-6">
+                            @if (Model.LookingForAgeMin.HasValue && Model.LookingForAgeMax.HasValue)
+                            {
+                                String.Format("{0}-{1}", Model.LookingForAgeMin.Value, Model.LookingForAgeMax.Value);
+                            }
+                            else if (Model.LookingForAgeMin.HasValue && !Model.LookingForAgeMax.HasValue)
+                            {
+                                String.Format("{0}-Any", Model.LookingForAgeMin.Value);
+                            }
+                            else if (!Model.LookingForAgeMin.HasValue && Model.LookingForAgeMax.HasValue)
+                            {
+                                String.Format("Any-{0}", Model.LookingForAgeMin.Value);
+                            }
+                            else if (!Model.LookingForAgeMin.HasValue && !Model.LookingForAgeMax.HasValue)
+                            {
+                                @:Any
                         }
-                        else if(Model.LookingForAgeMin.HasValue && !Model.LookingForAgeMax.HasValue)
-                        {
-                            String.Format("{0}-Any", Model.LookingForAgeMin.Value);
-                        }
-                        else if(!Model.LookingForAgeMin.HasValue && Model.LookingForAgeMax.HasValue)
-                        {
-                            String.Format("Any-{0}", Model.LookingForAgeMin.Value);
-                        }
-                        else if (!Model.LookingForAgeMin.HasValue && !Model.LookingForAgeMax.HasValue)
-                        {
-                            @:Any
-                        }
-                    </td>
+                        </td>
 
-                </tr>
-                <tr>
-                    <td style="color: #777">Location</td>
-                    <td>@(!String.IsNullOrEmpty(Model.LookingForLocation) ? Model.LookingForLocation : "Unknown")</td>
-                </tr>
-            </table>
-            <h4 style="margin-top: 25px;">My details</h4>
-            <table class="table">
-                <tr>
-                    <td style="color: #777">Last online</td>
-                    <td>@Model.LastLoginTimeAgo</td>
-                </tr>
-                <tr>
-                    <td style="color: #777">Status</td>
-                    <td>@(!String.IsNullOrEmpty(Model.RelationshipStatus) ? Model.LookingForType : "Unknown")</td>
-                </tr>
-                <tr>
-                    <td style="color: #777">Languages</td>
-                    <td>
-                        @if (Model.Languages != null && Model.Languages.Count > 0)
-                        {
-                            @String.Join(",", Model.Languages)
+                    </tr>
+                    <tr>
+                        <td class="col-md-6" style="color: #777">Location</td>
+                        <td class="col-md-6">@(!String.IsNullOrEmpty(Model.LookingForLocation) ? Model.LookingForLocation : "Unknown")</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
+                <h4>
+                    My details
+                    @if (User.Identity.GetUserId() == Model.ProfileUserId)
+                    {
+                        <a class="hidden-xs" href="#"><small><i class="fa fa-pencil"></i></small></a>
+                    }
+                </h4>
+                <table class="table">
+                    <tr>
+                        <td class="col-md-6" style="color: #777">Last online</td>
+                        <td class="col-md-6">@Model.LastLoginTimeAgo</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-6" style="color: #777">Status</td>
+                        <td class="col-md-6">@(!String.IsNullOrEmpty(Model.RelationshipStatus) ? Model.LookingForType : "Unknown")</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-6" style="color: #777">Languages</td>
+                        <td class="col-md-6">
+                            @if (Model.Languages != null && Model.Languages.Count > 0)
+                            {
+                                @String.Join(",", Model.Languages)
+                            }
+                            else
+                            {
+                                @:Unknown
                         }
-                        else
-                        {
-                            @:Unknown
-                        }
-                    </td>
-                </tr>
-            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>

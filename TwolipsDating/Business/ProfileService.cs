@@ -1355,5 +1355,26 @@ namespace TwolipsDating.Business
 
             return inventoryCount;
         }
+
+        internal async Task<int> SetSelfSummary(string userId, string selfSummary)
+        {
+            var profile = db.Users.Find(userId).Profile;
+            profile.SummaryOfSelf = selfSummary;
+            return await db.SaveChangesAsync();
+        }
+
+        internal async Task<int> SetSummaryOfDoing(string userId, string summaryOfDoing)
+        {
+            var profile = db.Users.Find(userId).Profile;
+            profile.SummaryOfDoing = summaryOfDoing;
+            return await db.SaveChangesAsync();
+        }
+
+        internal async Task<int> SetSummaryOfGoing(string userId, string summaryOfGoing)
+        {
+            var profile = db.Users.Find(userId).Profile;
+            profile.SummaryOfGoing = summaryOfGoing;
+            return await db.SaveChangesAsync();
+        }
     }
 }

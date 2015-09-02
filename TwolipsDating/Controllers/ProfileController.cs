@@ -1168,11 +1168,6 @@ namespace TwolipsDating.Controllers
                 LogSelectTitleException(currentUserId, e);
                 return Json(new { success = false, error = ErrorMessages.TitleNotSelected });
             }
-            catch (InvalidOperationException e)
-            {
-                LogSelectTitleException(currentUserId, e);
-                return Json(new { success = false, error = e.Message });
-            }
         }
 
         /// <summary>
@@ -1208,6 +1203,91 @@ namespace TwolipsDating.Controllers
             
             return View(viewModel);
             
+        }
+
+        #endregion
+
+        #region Self Summary Stuff
+
+        [HttpPost]
+        public async Task<JsonResult> SaveSelfSummary(string selfSummary)
+        {
+            string currentUserId = User.Identity.GetUserId();
+
+            try
+            {
+                bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+
+                if (isCurrentUserEmailConfirmed)
+                {
+                    int result = await ProfileService.SetSelfSummary(currentUserId, selfSummary);
+
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    return Json(new { success = false, error = ErrorMessages.EmailAddressNotConfirmed });
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                LogSelectTitleException(currentUserId, e);
+                return Json(new { success = false, error = ErrorMessages.SelfSummaryNotSaved });
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SaveSummaryOfDoing(string summaryOfDoing)
+        {
+            string currentUserId = User.Identity.GetUserId();
+
+            try
+            {
+                bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+
+                if (isCurrentUserEmailConfirmed)
+                {
+                    int result = await ProfileService.SetSummaryOfDoing(currentUserId, summaryOfDoing);
+
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    return Json(new { success = false, error = ErrorMessages.EmailAddressNotConfirmed });
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                LogSelectTitleException(currentUserId, e);
+                return Json(new { success = false, error = ErrorMessages.SummaryOfDoingNotSaved });
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SaveSummaryOfGoing(string summaryOfGoing)
+        {
+            string currentUserId = User.Identity.GetUserId();
+
+            try
+            {
+                bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+
+                if (isCurrentUserEmailConfirmed)
+                {
+                    int result = await ProfileService.SetSummaryOfGoing(currentUserId, summaryOfGoing);
+
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    return Json(new { success = false, error = ErrorMessages.EmailAddressNotConfirmed });
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                LogSelectTitleException(currentUserId, e);
+                return Json(new { success = false, error = ErrorMessages.SummaryOfGoingNotSaved });
+            }
         }
 
         #endregion

@@ -214,6 +214,33 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something prevented your self summary from being saved. If this continues, contact support..
+        /// </summary>
+        internal static string SelfSummaryNotSaved {
+            get {
+                return ResourceManager.GetString("SelfSummaryNotSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something prevented your summary of what you are doing from being saved. If this continues, contact support..
+        /// </summary>
+        internal static string SummaryOfDoingNotSaved {
+            get {
+                return ResourceManager.GetString("SummaryOfDoingNotSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something prevented your summary of where you are going from being saved. If this continues, contact support..
+        /// </summary>
+        internal static string SummaryOfGoingNotSaved {
+            get {
+                return ResourceManager.GetString("SummaryOfGoingNotSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Something prevented your tag suggestion from being saved. If this continues, contact support..
         /// </summary>
         internal static string TagSuggestionNotSaved {

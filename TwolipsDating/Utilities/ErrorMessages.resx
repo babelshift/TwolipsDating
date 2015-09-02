@@ -195,4 +195,13 @@
   <data name="Forbidden" xml:space="preserve">
     <value>Forbidden</value>
   </data>
+  <data name="SelfSummaryNotSaved" xml:space="preserve">
+    <value>Something prevented your self summary from being saved. If this continues, contact support.</value>
+  </data>
+  <data name="SummaryOfDoingNotSaved" xml:space="preserve">
+    <value>Something prevented your summary of what you are doing from being saved. If this continues, contact support.</value>
+  </data>
+  <data name="SummaryOfGoingNotSaved" xml:space="preserve">
+    <value>Something prevented your summary of where you are going from being saved. If this continues, contact support.</value>
+  </data>
 </root>

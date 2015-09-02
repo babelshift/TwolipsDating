@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using TwolipsDating.Models;
 
 namespace TwolipsDating.ViewModels
@@ -41,8 +42,13 @@ namespace TwolipsDating.ViewModels
         public int CompletedAchievementCount { get; set; }
         public int PossibleAchievementCount { get; set; }
 
+        [StringLength(500)]
         public string SummaryOfSelf { get; set; }
+
+        [StringLength(500)]
         public string SummaryOfDoing { get; set; }
+
+        [StringLength(500)]
         public string SummaryOfGoing { get; set; }
 
         public string LookingForType { get; set; }
