@@ -1,5 +1,6 @@
 ﻿@model TwolipsDating.ViewModels.ProfileViewModel
 @using PagedList.Mvc;
+@using Microsoft.AspNet.Identity;
 
 @{
     string title = String.Empty;
@@ -78,7 +79,7 @@
         (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
 </div>
-@if (Model.CurrentUserId == Model.ProfileUserId)
+@if (User.Identity.GetUserId() == Model.ProfileUserId)
 {
     <div id="popover-titles-content" class="hide">
         <div class="custom-popover-content">
@@ -273,7 +274,7 @@
         </div>
     </div>
 </div>
-@if (Model.ActiveTab == "pictures" || Model.CurrentUserId == Model.ProfileUserId)
+@if (Model.ActiveTab == "pictures" || User.Identity.GetUserId() == Model.ProfileUserId)
 {
     <div class="modal fade" id="modalProfileImage" tabindex="-1" role="dialog" aria-labelledby="modalProfileImageLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -327,16 +328,15 @@
         </div>
     </div>
 }
-<div class="modal fade" id="modalSuggestTags" tabindex="-1" role="dialog" aria-labelledby="modalSuggestTagsLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modalSuggestTagsLabel"><i class="fa fa-tags"></i> Add &amp; Remove Tags</h4>
-            </div>
-            @using (Html.BeginForm("sendmessage", "profile", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
+@if (Model.ActiveTab == "tags")
+{
+    <div class="modal fade" id="modalSuggestTags" tabindex="-1" role="dialog" aria-labelledby="modalSuggestTagsLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modalSuggestTagsLabel"><i class="fa fa-tags"></i> Add &amp; Remove Tags</h4>
+                </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="tags">
@@ -372,10 +372,10 @@
                         Close
                     </button>
                 </div>
-            }
+            </div>
         </div>
     </div>
-</div>
+}
 <div class="row" style="margin-bottom: 5px">
     <div class="col-xs-4">
         <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("Here's a {0} year old {1} from {2} @twolipsdating", Model.Age, Model.Gender, Model.Location)) + "&url=" + Url.Encode(Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme)))"
@@ -415,17 +415,17 @@
         <div class="panel panel-default">
             <div class="panel-body text-center-xs">
                 <div class="col-sm-3 col-md-2">
-                    @if (User.Identity.IsAuthenticated && Model.CurrentUserId == Model.ProfileUserId)
+                    @if (User.Identity.IsAuthenticated && User.Identity.GetUserId() == Model.ProfileUserId)
                     {
-                    <a href="#" data-toggle="modal" data-target="#modalProfileImage" data-keyboard="true" title="Change your profile image">
-                        <img src="@Model.ProfileThumbnailImagePath" style="max-height: 128px">
-                    </a>
+                        <a href="#" data-toggle="modal" data-target="#modalProfileImage" data-keyboard="true" title="Change your profile image">
+                            <img src="@Model.ProfileThumbnailImagePath" style="max-height: 150px">
+                        </a>
                     }
                     else
                     {
-                    <a href="@Model.ProfileImagePath" style="min-height: 128px; max-height: 128px;" data-gallery>
-                        <img src="@Model.ProfileThumbnailImagePath" style="max-height: 128px">
-                    </a>
+                        <a href="@Model.ProfileImagePath" style="min-height: 150px; max-height: 150px;" data-gallery>
+                            <img src="@Model.ProfileThumbnailImagePath" style="max-height: 150px">
+                        </a>
                     }
                 </div>
                 <div class="col-sm-7 col-md-8 profile-banner-info">
@@ -435,11 +435,11 @@
                     <p class="rating">
                         @for (int i = 1; i <= Model.AverageRatingValue; i++)
                         {
-                        <i class="fa fa-star review-rating-color"></i>
+                            <i class="fa fa-star review-rating-color"></i>
                         }
                         @for (int j = 1; j <= 5 - Model.AverageRatingValue; j++)
                         {
-                        <i class="fa fa-star-o review-rating-color"></i>
+                            <i class="fa fa-star-o review-rating-color"></i>
                         }
                         <small>@Model.ReviewCount @(Model.ReviewCount == 1 ? "review" : "reviews")</small>
                     </p>
@@ -450,8 +450,8 @@
                     <p class="user-location">
                         @if (!String.IsNullOrEmpty(Model.Location))
                         {
-                        <i class="fa fa-map-marker fa-fw"></i>
-                        @Model.Location
+                            <i class="fa fa-map-marker fa-fw"></i>
+                            @Model.Location
                         }
                     </p>
                     <p class="user-title">
@@ -460,64 +460,64 @@
                            data-animation="false">
                             @if (!String.IsNullOrEmpty(Model.SelectedTitle))
                             {
-                            @Model.SelectedTitle
+                                @Model.SelectedTitle
                             }
                             else
                             {
-                            @:Newbie
+                                @:Newbie
                             }
                         </a>
                     </p>
                     <div class="clearfix"></div>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        if (Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
+                        if (Model.ProfileUserId != User.Identity.GetUserId() && Model.IsCurrentUserEmailConfirmed)
                         {
-                    <div class="visible-xs" style="margin-top: 10px; margin-left: auto; margin-right: auto; width: 260px">
-                        <div class="btn-group">
-                            <button type="button" class="custom-tooltip button-toggle-favorite btn btn-default" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
-                                <i class="button-toggle-favorite-icon glyphicon glyphicon-heart"></i> <span class="button-toggle-favorite-text">Following</span>
-                            </button>
-                            <button type="button" class="custom-tooltip btn btn-default" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
-                                <i class="glyphicon glyphicon-comment"></i> Message
-                            </button>
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="glyphicon glyphicon-option-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li>
-                                        <button type="button" class="btn btn-default  btn-block" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
-                                            <i class="glyphicon glyphicon-gift"></i> Gift
+                            <div class="visible-xs" style="margin-top: 10px; margin-left: auto; margin-right: auto; width: 260px">
+                                <div class="btn-group">
+                                    <button type="button" class="custom-tooltip button-toggle-favorite btn btn-default" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
+                                        <i class="button-toggle-favorite-icon glyphicon glyphicon-heart"></i> <span class="button-toggle-favorite-text">Following</span>
+                                    </button>
+                                    <button type="button" class="custom-tooltip btn btn-default" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
+                                        <i class="glyphicon glyphicon-comment"></i> Message
+                                    </button>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="glyphicon glyphicon-option-vertical"></i>
                                         </button>
-                                    </li>
-                                    <li>
-                                        <button type="button" class="btn btn-default  btn-block" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review">
-                                            <i class="fa fa-edit"></i> Review
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button type="button" class="button-toggle-ignored btn btn-default  btn-block" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.ProfileUserId')">
-                                            <i class="button-toggle-ignored-icon glyphicon glyphicon-volume-up"></i> <span class="button-toggle-ignored-text">Ignoring</span>
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button type="button" class="btn btn-default  btn-block">
-                                            <i class="glyphicon glyphicon-flag"></i> Report
-                                        </button>
-                                    </li>
-                                </ul>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li>
+                                                <button type="button" class="btn btn-default  btn-block" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
+                                                    <i class="glyphicon glyphicon-gift"></i> Gift
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button type="button" class="btn btn-default  btn-block" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review">
+                                                    <i class="fa fa-edit"></i> Review
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button type="button" class="button-toggle-ignored btn btn-default  btn-block" title="Receiving updates and messages from this user" onclick="onToggleIgnoredUser(event, this, '@Model.ProfileUserId')">
+                                                    <i class="button-toggle-ignored-icon glyphicon glyphicon-volume-up"></i> <span class="button-toggle-ignored-text">Ignoring</span>
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button type="button" class="btn btn-default  btn-block">
+                                                    <i class="glyphicon glyphicon-flag"></i> Report
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    @*
+                                        <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
+                                    *@
+                                </div>
                             </div>
-                            @*
-                                <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
-                            *@
-                        </div>
-                    </div>
                         }
                     }
                 </div>
 
-                @if (Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
+                @if (Model.ProfileUserId != User.Identity.GetUserId() && Model.IsCurrentUserEmailConfirmed)
                 {
                     <div class="col-sm-2 hidden-xs">
                         <div class="text-right" style="margin-top: 10px">
@@ -566,8 +566,62 @@
         </div>
     </div>
 </div>
+<div class="row hidden-md hidden-lg profile-mobile-menu">
+    <div class="col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div>
+                    <ul class="nav nav-pills">
+                        <li @(Model.ActiveTab == "about" ? "class=active" : String.Empty)>
+                            <a id="m-about" href="@String.Format("{0}#{1}", Url.Action("index", new { tab = "about" }), "m-about")" title="About this person">
+                                <i class="fa fa-user fa-lg"></i>
+                                <span class="hidden-xs hidden-md hidden-lg"> About</span>
+                            </a>
+                        </li>
+                        <li @(Model.ActiveTab == "feed" ? "class=active" : String.Empty)>
+                            <a id="m-feed" href="@String.Format("{0}#{1}", Url.Action("index", new { tab = "feed" }), "m-feed")" title="Recent activity">
+                                <i class="fa fa-feed fa-lg"></i>
+                                <span class="hidden-xs hidden-md hidden-lg"> Feed</span>
+                            </a>
+                        </li>
+                        <li @(Model.ActiveTab == "pictures" ? "class=active" : String.Empty)>
+                            <a id="m-pictures" href="@String.Format("{0}#{1}", Url.Action("index", new { tab = "pictures" }), "m-pictures")" title="Uploaded pictures">
+                                <i class="fa fa-camera fa-lg"></i>
+                                <span class="hidden-xs hidden-md hidden-lg"> Pictures</span>
+                            </a>
+                        </li>
+                        <li @(Model.ActiveTab == "reviews" ? "class=active" : String.Empty)>
+                            <a id="m-reviews" href="@String.Format("{0}#{1}", Url.Action("index", new { tab = "reviews" }), "m-reviews")" title="Reviews from other people">
+                                <i class="fa fa-files-o fa-lg"></i>
+                                <span class="hidden-xs hidden-md hidden-lg"> Reviews</span>
+                            </a>
+                        </li>
+                        <li @(Model.ActiveTab == "inventory" ? "class=active" : String.Empty)>
+                            <a id="m-inventory" href="@String.Format("{0}#{1}", Url.Action("index", new { tab = "inventory" }), "m-inventory")" title="Inventory">
+                                <i class="fa fa-gift fa-lg"></i>
+                                <span class="hidden-xs hidden-md hidden-lg"> Inventory</span>
+                            </a>
+                        </li>
+                        <li @(Model.ActiveTab == "achievements" ? "class=active" : String.Empty)>
+                            <a id="m-achievements" href="@String.Format("{0}#{1}", Url.Action("index", new { tab = "achievements" }), "m-achievements")" title="Achievements">
+                                <i class="fa fa-trophy fa-lg"></i>
+                                <span class="hidden-xs hidden-md hidden-lg"> Achievements</span>
+                            </a>
+                        </li>
+                        <li @(Model.ActiveTab == "tags" ? "class=active" : String.Empty)>
+                            <a id="m-tags" href="@String.Format("{0}#{1}", Url.Action("index", new { tab = "tags" }), "m-tags")" title="Awarded and suggested tags">
+                                <i class="fa fa-tags fa-lg"></i>
+                                <span class="hidden-xs hidden-md hidden-lg"> Tags</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3 col-lg-3">
         @if (!User.Identity.IsAuthenticated)
         {
             <div class="panel panel-warning hidden-md hidden-lg">
@@ -576,115 +630,100 @@
                 </div>
             </div>
         }
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <i class="fa fa-tags fa-lg"></i> Awarded tags
-                    <small><i class="custom-tooltip fa fa-lg fa-question-circle" title="Tags that have been awarded to the user based on community activities"></i></small>
-                </h4>
-            </div>
-            <div class="panel-body">
-                @if (Model.AwardedTags != null && Model.AwardedTags.Count > 0)
-                {
-                    if (Model.AwardedTags != null && Model.AwardedTags.Count > 0)
+        <div class="panel panel-default hidden-xs hidden-sm">
+            <div class="list-group" style="font-size: 16px">
+                <a href="@Url.Action("index", new { tab = "about" })" title="About this person" class="list-group-item @(Model.ActiveTab == "about" ? "active" : "overflow-ellipsis")">
+                    <i class="fa fa-user fa-lg fa-fw"></i> About
+                    @if (Model.ActiveTab == "about")
                     {
-                        <div class="tags">
-                            @foreach (var tag in Model.AwardedTags)
-                            {
-                                <a href="@Url.Action("index", "search", new { tags = tag.TagName })" class="custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
-                                    <span class="badge">@tag.TagCount</span> @tag.TagName
-                                </a>
-                            }
-                        </div>
-                    }
-                }
-                else
-                {
-                    if (Model.CurrentUserId == Model.ProfileUserId)
-                    {
-                        <p>You don't have any awarded tags yet. Go to the trivia section!</p>
+                        <span class="pull-right">
+                            <i class="fa fa-chevron-right"></i>
+                        </span>
                     }
                     else
                     {
-                        <p>This user doesn't have any awarded tags yet. Encourage them to answer some trivia!</p>
-                    }
-                }
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <i class="fa fa-tags fa-lg"></i> Suggested tags
-                    <small><i class="custom-tooltip fa fa-lg fa-question-circle" title="Tags that have been suggested by other users based on their perception"></i></small>
-                </h4>
-            </div>
-            <div class="panel-body">
-                @if (User.Identity.IsAuthenticated && Model.ProfileUserId != Model.CurrentUserId && Model.IsCurrentUserEmailConfirmed)
-                {
-                    <a href="#" style="margin-bottom: 5px" class="btn btn-xs btn-default custom-tooltip" title="Suggest tags to be displayed on this profile"
-                       data-toggle="modal" data-target="#modalSuggestTags" data-keyboard="true">
-                        <i class="fa fa-tag fa-lg"></i> Add &amp; Remove
-                    </a>
-                }
-                @if (Model.SuggestedTags != null && Model.SuggestedTags.Count > 0)
-                {
-                    <ul class="list-unstyled">
-                        @foreach (var tag in Model.SuggestedTags)
+                        if (!String.IsNullOrEmpty(Model.SummaryOfSelf))
                         {
-                            <li class="profile-tag-suggestion-list-item">
-                                @if (tag.DidUserSuggest)
-                                {
-                                    <a href="@Url.Action("index", "search", new { tags = tag.TagName })" class="profile-tag pull-left custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
-                                        <span class="badge">@tag.TagCount</span> @tag.TagName
-                                    </a>
-                                }
-                                else
-                                {
-                                    <a href="@Url.Action("index", "search", new { tags = tag.TagName })" class="profile-tag pull-left custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
-                                        <span class="badge">@tag.TagCount</span> @tag.TagName
-                                    </a>
-                                }
-                                <div class="suggesting-users">
-                                    <span class="pull-right user-images">
-                                        @foreach (var user in tag.SuggestionUsers)
-                                        {
-                                            <a class="pull-left user-image custom-tooltip" title="@user.UserName" href="@Url.Action("index", "profile", new { id = user.UserProfileId })">
-                                                <img src="@user.UserProfileImagePath" width="24" height="24" />
-                                            </a>
-                                        }
-                                        <small><a href="#"><i class="glyphicon glyphicon-triangle-right"></i></a></small>
-                                    </span>
-                                    <div class="separator"></div>
-                                </div>
-                                <div class="clearfix"></div>
-                            </li>
+                            <small style="margin-left: 10px">@Model.SummaryOfSelf</small>
                         }
-                    </ul>
-                }
-                else
-                {
-                    if (Model.CurrentUserId == Model.ProfileUserId)
-                    {
-                        <p>You don't have any tags yet. Ask people to suggest some!</p>
                     }
-                    else
-                    {
-                        <p>This user doesn't have any tags yet. Suggest some!</p>
-                    }
-                }
-                @*
-                    <h4><i class="glyphicon glyphicon-book"></i>&nbsp;&nbsp;Badges earned</h4>
-                    <span class="label label-danger"><i class="glyphicon glyphicon-apple"></i></span>
-                    <span class="label label-success"><i class="glyphicon glyphicon-music"></i></span>
-                    <span class="label label-info"><i class="glyphicon glyphicon-knight"></i></span>
-                    <span class="label label-info"><i class="glyphicon glyphicon-king"></i></span>
-                    <span class="label label-warning"><i class="glyphicon glyphicon-baby-formula"></i></span>
-                *@
+                </a>
+                <a href="@Url.Action("index", new { tab = "feed" })" title="Recent activity feed" class="list-group-item @(Model.ActiveTab == "feed" ? "active" : String.Empty)">
+                    <i class="fa fa-feed fa-lg fa-fw"></i> Feed
+                    <span class="pull-right">
+                        @if (Model.ActiveTab == "feed")
+                        {
+                            <i class="fa fa-chevron-right"></i>
+                        }
+                    </span>
+                </a>
+                <a href="@Url.Action("index", new { tab = "pictures" })" title="Uploaded pictures" class="list-group-item @(Model.ActiveTab == "pictures" ? "active" : String.Empty)">
+                    <i class="fa fa-camera fa-lg fa-fw"></i> Pictures
+                    <span class="pull-right">
+                        @if (Model.ActiveTab == "pictures")
+                        { <i class="fa fa-chevron-right"></i> }
+                        else
+                        { <small>@Model.PictureCount <span class="hidden-md">pictures</span></small> }
+                    </span>
+                </a>
+                <a href="@Url.Action("index", new { tab = "tags" })" title="Tags" class="list-group-item @(Model.ActiveTab == "tags" ? "active" : String.Empty)">
+                    <i class="fa fa-tags fa-lg fa-fw"></i> Tags
+                    <span class="pull-right">
+                        @if (Model.ActiveTab == "tags")
+                        { <i class="fa fa-chevron-right"></i> }
+                        else
+                        { <small>@Model.TagCount <span class="hidden-md">tags</span></small> }
+                    </span>
+                </a>
+                <a href="@Url.Action("index", new { tab = "reviews" })" title="Reviews" class="list-group-item @(Model.ActiveTab == "reviews" ? "active" : String.Empty)">
+                    <i class="fa fa-files-o fa-lg fa-fw"></i> Reviews
+                    <span class="pull-right">
+                        @if (Model.ActiveTab == "reviews")
+                        { <i class="fa fa-chevron-right"></i> }
+                        else
+                        { <small>@Model.ReviewCount <span class="hidden-md">reviews</span></small> }
+                    </span>
+                </a>
+                <a href="@Url.Action("index", new { tab = "inventory" })" title="Inventory" class="list-group-item @(Model.ActiveTab == "inventory" ? "active" : String.Empty)">
+                    <i class="fa fa-gift fa-lg fa-fw"></i> Inventory
+                    <span class="pull-right">
+                        @if (Model.ActiveTab == "inventory")
+                        { <i class="fa fa-chevron-right"></i> }
+                        else
+                        { <small>@Model.InventoryCount <span class="hidden-md">items</span></small> }
+                    </span>
+                </a>
+                <a href="@Url.Action("index", new { tab = "achievements" })" title="Achievements" class="list-group-item @(Model.ActiveTab == "achievements" ? "active" : String.Empty)">
+                    <i class="fa fa-trophy fa-lg fa-fw"></i> Achievements
+                    <span class="pull-right">
+                        @if (Model.ActiveTab == "achievements")
+                        { <i class="fa fa-chevron-right"></i> }
+                        else
+                        { <small>@Model.CompletedAchievementCount / @Model.PossibleAchievementCount <span class="hidden-md">complete</span></small> }
+                    </span>
+                </a>
             </div>
-
         </div>
+        @*<div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="fa fa-users fa-lg"></i> Similar people
+                    </h4>
+                </div>
+                <div class="panel-body similar-people">
+                    @Html.Partial("_ProfileImagePartial", Model.ProfileThumbnailImagePath)
+                    @Html.Partial("_ProfileImagePartial", Model.ProfileThumbnailImagePath)
+                    @Html.Partial("_ProfileImagePartial", Model.ProfileThumbnailImagePath)
+                    @Html.Partial("_ProfileImagePartial", Model.ProfileThumbnailImagePath)
+                    @Html.Partial("_ProfileImagePartial", Model.ProfileThumbnailImagePath)
+                    @Html.Partial("_ProfileImagePartial", Model.ProfileThumbnailImagePath)
+                    @Html.Partial("_ProfileImagePartial", Model.ProfileThumbnailImagePath)
+                    @Html.Partial("_ProfileImagePartial", Model.ProfileThumbnailImagePath)
+                    @Html.Partial("_ProfileImagePartial", Model.ProfileThumbnailImagePath)
+                </div>
+            </div>*@
     </div>
-    <div class="col-md-8">
+    <div class="col-md-9 col-lg-9">
         @if (User.Identity.IsAuthenticated)
         {
 
@@ -697,77 +736,11 @@
                 </div>
             </div>
         }
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <ul class="nav nav-pills">
-                    @if (Model.ActiveTab == "feed")
-                    {
-                        <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "feed" })" title="Recent activity feed"><i class="fa fa-feed fa-lg"></i><span class="hidden-xs"> Feed</span></a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "feed" })" title="Recent activity feed"><i class="fa fa-feed fa-lg"></i><span class="hidden-xs"> Feed</span></a>
-                        </li>
-                    }
-                    @if (Model.ActiveTab == "pictures")
-                    {
-                        <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "pictures" })" title="Uploaded pictures"><i class="fa fa-camera fa-lg"></i><span class="hidden-xs"> Pictures</span></a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "pictures" })" title="Uploaded pictures"><i class="fa fa-camera fa-lg"></i><span class="hidden-xs"> Pictures</span></a>
-                        </li>
-                    }
-                    @if (Model.ActiveTab == "reviews")
-                    {
-                        <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "reviews" })" title="Reviews"><i class="fa fa-files-o fa-lg"></i><span class="hidden-xs"> Reviews</span></a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "reviews" })" title="Reviews"><i class="fa fa-files-o fa-lg"></i><span class="hidden-xs"> Reviews</span></a>
-                        </li>
-                    }
-                    @if (Model.ActiveTab == "inventory")
-                    {
-                        <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "inventory" })" title="Inventory"><i class="fa fa-gift fa-lg"></i><span class="hidden-xs"> Inventory</span></a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "inventory" })" title="Inventory"><i class="fa fa-gift fa-lg"></i><span class="hidden-xs"> Inventory</span></a>
-                        </li>
-                    }
-                    @if (Model.ActiveTab == "achievements")
-                    {
-                        <li role="presentation" class="active">
-                            <a href="@Url.Action("index", new { tab = "achievements" })" title="Achievements"><i class="fa fa-trophy fa-lg"></i><span class="hidden-xs"> Achievements</span></a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li role="presentation">
-                            <a href="@Url.Action("index", new { tab = "achievements" })" title="Achievements"><i class="fa fa-trophy fa-lg"></i><span class="hidden-xs"> Achievements</span></a>
-                        </li>
-                    }
-                    @*
-                        <li role="presentation"><a href="#">Stats</a></li>
-                        <li role="presentation"><a href="#">Trophy Room</a></li>
-                    *@
-                </ul>
-            </div>
-        </div>
-        @if (Model.ActiveTab == "feed")
+        @if (Model.ActiveTab == "about")
+        {
+            Html.RenderPartial("_AboutPartial");
+        }
+        else if (Model.ActiveTab == "feed")
         {
             Html.RenderPartial("_FeedPartial", Model.Feed);
         }
@@ -786,6 +759,10 @@
         else if (Model.ActiveTab == "achievements")
         {
             Html.RenderPartial("_AchievementsPartial", Model.Achievements);
+        }
+        else if (Model.ActiveTab == "tags")
+        {
+            Html.RenderPartial("_TagsPartial", Model);
         }
         @if (String.IsNullOrEmpty(Model.ActiveTab) || Model.ActiveTab == "feed")
         {

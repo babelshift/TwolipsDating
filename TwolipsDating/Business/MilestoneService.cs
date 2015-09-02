@@ -210,12 +210,12 @@ namespace TwolipsDating.Business
             else if (milestoneTypeId == (int)MilestoneTypeValues.PointsObtained)
             {
                 int pointsSpent = (await (from storeTransaction in db.StoreTransactions
-                                         where storeTransaction.UserId == userId
-                                         select (int?)storeTransaction.PointPrice).SumAsync()) ?? 0;
+                                          where storeTransaction.UserId == userId
+                                          select (int?)storeTransaction.PointPrice).SumAsync()) ?? 0;
 
                 int currentPoints = (await (from user in db.Users
-                                           where user.Id == userId
-                                           select (int?)user.Points).FirstOrDefaultAsync()) ?? 0;
+                                            where user.Id == userId
+                                            select (int?)user.Points).FirstOrDefaultAsync()) ?? 0;
 
                 count = pointsSpent + currentPoints;
             }
@@ -317,6 +317,23 @@ namespace TwolipsDating.Business
             }
 
             return achievementOverviews.AsReadOnly(); ;
+        }
+
+        internal async Task<int> GetCompletedAchievementCount(string userId)
+        {
+            int completedCount = await (from achievements in db.MilestoneAchievements
+                                        where achievements.UserId == userId
+                                        select achievements).CountAsync();
+
+            return completedCount;
+        }
+
+        internal async Task<int> GetPossibleAchievementCount()
+        {
+            int possibleCount = await (from achievements in db.Milestones
+                                        select achievements).CountAsync();
+
+            return possibleCount;
         }
     }
 }

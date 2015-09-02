@@ -27,7 +27,16 @@ namespace TwolipsDating
                 .ForMember(dest => dest.ProfileImagePath, opts => opts.MapFrom(source => source.GetProfileImagePath()))
                 .ForMember(dest => dest.ProfileThumbnailImagePath, opts => opts.MapFrom(source => source.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.SelectedTitle, opts => opts.MapFrom(source => source.SelectedTitle != null ? source.SelectedTitle.Name : String.Empty))
-                .ForMember(dest => dest.SelfDescription, opts => opts.MapFrom(source => source.SelfDescription));
+                .ForMember(dest => dest.SummaryOfSelf, opts => opts.MapFrom(source => source.SummaryOfSelf))
+                .ForMember(dest => dest.SummaryOfDoing, opts => opts.MapFrom(source => source.SummaryOfDoing))
+                .ForMember(dest => dest.SummaryOfGoing, opts => opts.MapFrom(source => source.SummaryOfGoing))
+                .ForMember(dest => dest.LookingForType, opts => opts.MapFrom(source => source.LookingForType.Name))
+                .ForMember(dest => dest.LookingForLocation, opts => opts.MapFrom(source => source.LookingForLocation.Range))
+                .ForMember(dest => dest.RelationshipStatus, opts => opts.MapFrom(source => source.RelationshipStatus.Name))
+                .ForMember(dest => dest.LookingForAgeMin, opts => opts.MapFrom(source => source.LookingForAgeMin))
+                .ForMember(dest => dest.LookingForAgeMax, opts => opts.MapFrom(source => source.LookingForAgeMax))
+                .ForMember(dest => dest.LastLoginTimeAgo, opts => opts.MapFrom(source => source.ApplicationUser.DateLastLogin.GetTimeAgo()))
+                .ForMember(dest => dest.Languages, opts => opts.MapFrom(source => source.Languages.Select(a => a.Name).ToList()));
 
             Mapper.CreateMap<Review, ReviewViewModel>()
                 .ForMember(dest => dest.ReviewId, opts => opts.MapFrom(source => source.Id))

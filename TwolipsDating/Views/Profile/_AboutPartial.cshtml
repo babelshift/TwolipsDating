@@ -1,0 +1,73 @@
+﻿@model TwolipsDating.ViewModels.ProfileViewModel
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="col-md-8 col-lg-8">
+            <h3>Who I am</h3>
+            <p>@(!String.IsNullOrEmpty(Model.SummaryOfSelf) ? Model.SummaryOfSelf : "This user hasn't entered a self summary yet.")</p>
+            <h3>What I'm doing</h3>
+            <p>@(!String.IsNullOrEmpty(Model.SummaryOfDoing) ? Model.SummaryOfDoing : "This user hasn't entered what they're doing yet.")</p>
+            <h3>Where I'm going</h3>
+            <p>@(!String.IsNullOrEmpty(Model.SummaryOfGoing) ? Model.SummaryOfGoing : "This user hasn't entered where they're going yet.")</p>
+        </div>
+        <div class="col-md-4 col-lg-4">
+            <h4>What I'm looking for</h4>
+            <table class="table">
+                <tr>
+                    <td style="color: #777">Type</td>
+                    <td>@(!String.IsNullOrEmpty(Model.LookingForType) ? Model.LookingForType : "Unknown")</td>
+                </tr>
+                <tr>
+                    <td style="color: #777">Ages</td>
+                    <td>
+                        @if (Model.LookingForAgeMin.HasValue && Model.LookingForAgeMax.HasValue)
+                        {
+                            String.Format("{0}-{1}", Model.LookingForAgeMin.Value, Model.LookingForAgeMax.Value);
+                        }
+                        else if(Model.LookingForAgeMin.HasValue && !Model.LookingForAgeMax.HasValue)
+                        {
+                            String.Format("{0}-Any", Model.LookingForAgeMin.Value);
+                        }
+                        else if(!Model.LookingForAgeMin.HasValue && Model.LookingForAgeMax.HasValue)
+                        {
+                            String.Format("Any-{0}", Model.LookingForAgeMin.Value);
+                        }
+                        else if (!Model.LookingForAgeMin.HasValue && !Model.LookingForAgeMax.HasValue)
+                        {
+                            @:Any
+                        }
+                    </td>
+
+                </tr>
+                <tr>
+                    <td style="color: #777">Location</td>
+                    <td>@(!String.IsNullOrEmpty(Model.LookingForLocation) ? Model.LookingForLocation : "Unknown")</td>
+                </tr>
+            </table>
+            <h4 style="margin-top: 25px;">My details</h4>
+            <table class="table">
+                <tr>
+                    <td style="color: #777">Last online</td>
+                    <td>@Model.LastLoginTimeAgo</td>
+                </tr>
+                <tr>
+                    <td style="color: #777">Status</td>
+                    <td>@(!String.IsNullOrEmpty(Model.RelationshipStatus) ? Model.LookingForType : "Unknown")</td>
+                </tr>
+                <tr>
+                    <td style="color: #777">Languages</td>
+                    <td>
+                        @if (Model.Languages != null && Model.Languages.Count > 0)
+                        {
+                            @String.Join(",", Model.Languages)
+                        }
+                        else
+                        {
+                            @:Unknown
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

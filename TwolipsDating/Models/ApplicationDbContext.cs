@@ -54,6 +54,10 @@ namespace TwolipsDating.Models
         public DbSet<StoreGiftSpotlight> StoreGiftSpotlights { get; set; }
         public DbSet<TagAndSuggestedCount> TagsAndSuggestedCounts { get; set; }
         public DbSet<EmailNotifications> EmailNotifications { get; set; }
+        public DbSet<LookingForType> LookingForTypes { get; set; }
+        public DbSet<LookingForLocation> LookingForLocations { get; set; }
+        public DbSet<RelationshipStatus> RelationshipStatuses { get; set; }
+        public DbSet<Language> Languages { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -109,6 +113,86 @@ namespace TwolipsDating.Models
             SetupStoreGiftSpotlights(modelBuilder);
             SetupTagsAndSuggestedCountsView(modelBuilder);
             SetupEmailNotifications(modelBuilder);
+            SetupLookingForTypes(modelBuilder);
+            SetupLookingForLocations(modelBuilder);
+            SetupRelationshipStatuses(modelBuilder);
+            SetupLanguages(modelBuilder);
+        }
+
+        private void SetupLanguages(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Language>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<Language>()
+                .Property(c => c.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<Language>()
+                .Property(c => c.Name)
+                .HasMaxLength(50);
+        }
+
+        private void SetupRelationshipStatuses(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<RelationshipStatus>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<RelationshipStatus>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+            modelBuilder.Entity<RelationshipStatus>()
+                .Property(c => c.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<RelationshipStatus>()
+                .Property(c => c.Description)
+                .IsRequired();
+
+            modelBuilder.Entity<RelationshipStatus>()
+                .Property(c => c.Name)
+                .HasMaxLength(50);
+
+            modelBuilder.Entity<RelationshipStatus>()
+                .Property(c => c.Description)
+                .HasMaxLength(255);
+        }
+
+        private void SetupLookingForLocations(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<LookingForLocation>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<LookingForLocation>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+            modelBuilder.Entity<LookingForLocation>()
+                .Property(c => c.Range)
+                .IsRequired();
+
+            modelBuilder.Entity<LookingForLocation>()
+                .Property(c => c.Range)
+                .HasMaxLength(50);
+        }
+
+        private void SetupLookingForTypes(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<LookingForType>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<LookingForType>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+            modelBuilder.Entity<LookingForType>()
+                .Property(c => c.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<LookingForType>()
+                .Property(c => c.Name)
+                .HasMaxLength(50);
         }
 
         private void SetupEmailNotifications(DbModelBuilder modelBuilder)
@@ -1136,8 +1220,31 @@ namespace TwolipsDating.Models
                 .IsRequired();
 
             modelBuilder.Entity<Profile>()
-                .Property(p => p.SelfDescription)
-                .HasMaxLength(200);
+                .Property(p => p.SummaryOfSelf)
+                .HasMaxLength(500);
+
+            modelBuilder.Entity<Profile>()
+                .Property(p => p.SummaryOfDoing)
+                .HasMaxLength(500);
+
+            modelBuilder.Entity<Profile>()
+                .Property(p => p.SummaryOfGoing)
+                .HasMaxLength(500);
+
+            modelBuilder.Entity<Profile>()
+                .HasOptional(p => p.LookingForLocation)
+                .WithMany(p => p.Profiles)
+                .HasForeignKey(p => p.LookingForLocationId);
+
+            modelBuilder.Entity<Profile>()
+                .HasOptional(p => p.LookingForType)
+                .WithMany(p => p.Profiles)
+                .HasForeignKey(p => p.LookingForTypeId);
+
+            modelBuilder.Entity<Profile>()
+                .HasOptional(p => p.RelationshipStatus)
+                .WithMany(p => p.Profiles)
+                .HasForeignKey(p => p.RelationshipStatusId);
         }
     }
 }

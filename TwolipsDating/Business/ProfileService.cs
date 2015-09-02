@@ -1333,5 +1333,27 @@ namespace TwolipsDating.Business
 
             return imagesUploadedCount;
         }
+
+        internal async Task<int> GetTagCountAsync(string userId)
+        {
+            int tagAwardCount = await (from tagAwards in db.TagAwards
+                                       where tagAwards.Profile.ApplicationUser.Id == userId
+                                       select tagAwards).CountAsync();
+
+            int tagSuggestedCount = await (from tagSuggestions in db.TagSuggestions
+                                           where tagSuggestions.Profile.ApplicationUser.Id == userId
+                                           select tagSuggestions).CountAsync();
+
+            return tagAwardCount + tagSuggestedCount;
+        }
+
+        internal async Task<int> GetInventoryCountAsync(string userId)
+        {
+            int inventoryCount = await (from inventory in db.InventoryItems
+                                        where inventory.ApplicationUserId == userId
+                                        select (int?)inventory.ItemCount).SumAsync() ?? 0;
+
+            return inventoryCount;
+        }
     }
 }

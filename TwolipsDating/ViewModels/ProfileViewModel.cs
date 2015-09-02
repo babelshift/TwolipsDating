@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TwolipsDating.Models;
 
 namespace TwolipsDating.ViewModels
 {
@@ -18,9 +19,7 @@ namespace TwolipsDating.ViewModels
         public int AverageRatingValue { get; set; }
         public string ProfileThumbnailImagePath { get; set; }
         public string ProfileImagePath { get; set; }
-        public string CurrentUserId { get; set; }
         public int ReviewCount { get; set; }
-        public string SelfDescription { get; set; }
 
         public ProfileFeedViewModel Feed { get; set; }
         public ProfileReviewsViewModel Reviews { get; set; }
@@ -34,6 +33,26 @@ namespace TwolipsDating.ViewModels
 
         public bool IsIgnoredByCurrentUser { get; set; }
         public bool IsFavoritedByCurrentUser { get; set; }
+
+        public int FeedCount { get; set; }
+        public int PictureCount { get; set; }
+        public int TagCount { get; set; }
+        public int InventoryCount { get; set; }
+        public int CompletedAchievementCount { get; set; }
+        public int PossibleAchievementCount { get; set; }
+
+        public string SummaryOfSelf { get; set; }
+        public string SummaryOfDoing { get; set; }
+        public string SummaryOfGoing { get; set; }
+
+        public string LookingForType { get; set; }
+        public string RelationshipStatus { get; set; }
+        public string LookingForLocation { get; set; }
+        public IList<string> Languages { get; set; }
+        public int? LookingForAgeMin { get; set; }
+        public int? LookingForAgeMax { get; set; }
+
+        public string LastLoginTimeAgo { get; set; }
 
         #endregion Profile view stuff
 

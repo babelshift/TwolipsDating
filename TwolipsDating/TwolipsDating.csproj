@@ -375,7 +375,19 @@
     <Compile Include="Migrations\201508281358306_AddPurchasedPointPriceToStoreTransaction.Designer.cs">
       <DependentUpon>201508281358306_AddPurchasedPointPriceToStoreTransaction.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509012012439_AddProfileSummaries.cs" />
+    <Compile Include="Migrations\201509012012439_AddProfileSummaries.Designer.cs">
+      <DependentUpon>201509012012439_AddProfileSummaries.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509012154097_AddProfileDetails.cs" />
+    <Compile Include="Migrations\201509012154097_AddProfileDetails.Designer.cs">
+      <DependentUpon>201509012154097_AddProfileDetails.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\EmailNotifications.cs" />
+    <Compile Include="Models\Language.cs" />
+    <Compile Include="Models\LookingForLocation.cs" />
+    <Compile Include="Models\LookingForType.cs" />
+    <Compile Include="Models\RelationshipStatus.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
     <Compile Include="Models\StoreSale.cs" />
@@ -398,6 +410,7 @@
     <Compile Include="ViewModels\CompletedQuizFeedViewModel.cs" />
     <Compile Include="ViewModels\GiftReceivedFeedItemViewModel.cs" />
     <Compile Include="ViewModels\GiftReceivedFeedViewModel.cs" />
+    <Compile Include="ViewModels\LanguageViewModel.cs" />
     <Compile Include="ViewModels\ManageNotificationsViewModel.cs" />
     <Compile Include="ViewModels\QuizSearchResultViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
@@ -943,6 +956,8 @@
     <Content Include="Views\Profile\_AchievementOverviewPartial.cshtml" />
     <Content Include="Views\Profile\_AchievementsPartial.cshtml" />
     <Content Include="Views\Shared\_ConfirmEmailPartial.cshtml" />
+    <Content Include="Views\Profile\_TagsPartial.cshtml" />
+    <Content Include="Views\Profile\_AboutPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1157,6 +1172,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508281358306_AddPurchasedPointPriceToStoreTransaction.resx">
       <DependentUpon>201508281358306_AddPurchasedPointPriceToStoreTransaction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509012012439_AddProfileSummaries.resx">
+      <DependentUpon>201509012012439_AddProfileSummaries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509012154097_AddProfileDetails.resx">
+      <DependentUpon>201509012154097_AddProfileDetails.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

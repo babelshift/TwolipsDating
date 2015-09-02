@@ -745,17 +745,19 @@ namespace TwolipsDating.Controllers
         /// <returns></returns>
         private async Task<ActionResult> ShowUserProfileAsync(string tab, string currentUserId, Models.Profile profile, int? page)
         {
-            var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profile.ApplicationUser.Id);
-
+            // first transform what we can to the view model
             var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
+
+            // check if user's email address is confirmed
             viewModel.IsCurrentUserEmailConfirmed = !User.Identity.IsAuthenticated ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
-            viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "feed";
-            viewModel.CurrentUserId = currentUserId;
+
+            // set the active tab or its default
+            viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "about";
+
+            // handle review stuff
+            var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profile.ApplicationUser.Id);
             viewModel.AverageRatingValue = reviews.AverageRating();
             viewModel.ReviewCount = reviews.Count;
-
-            // tag suggestions and awards
-            await SetupProfileTagSuggestions(currentUserId, profile, viewModel);
 
             // only do certain things if the viewer of the profile is logged in
             if (User.Identity.IsAuthenticated)
@@ -773,65 +775,36 @@ namespace TwolipsDating.Controllers
                 viewModel.WriteReviewViolation = new WriteReviewViolationViewModel();
                 viewModel.WriteReviewViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
 
+                // setup user titles to select (only if the user is viewing their own profile)
+                // TODO: optimize this
+                if (currentUserId == profile.ApplicationUser.Id)
+                {
+                    var titles = await userService.GetTitlesOwnedByUserAsync(currentUserId);
+                    var titlesViewModel = titles.Select(t => new TitleViewModel()
+                    {
+                        TitleId = t.Key,
+                        TitleName = t.Value.StoreItem.Name
+                    });
+                    viewModel.UserTitles = titlesViewModel.ToList().AsReadOnly();
+                }
+
                 // log a visit to the profile
                 await ProfileService.LogProfileViewAsync(currentUserId, viewModel.ProfileId);
-            }
-
-            // setup the profile's inventory
-            await SetupProfileInventory(currentUserId, profile, viewModel);
-
-            // setup user titles to select (only if the user is viewing their own profile)
-            // TODO: optimize this
-            if (currentUserId == profile.ApplicationUser.Id)
-            {
-                var titles = await userService.GetTitlesOwnedByUserAsync(currentUserId);
-                List<TitleViewModel> titleViewModel = new List<TitleViewModel>();
-                foreach (var title in titles)
-                {
-                    titleViewModel.Add(new TitleViewModel()
-                    {
-                        TitleId = title.Key,
-                        TitleName = title.Value.StoreItem.Name
-                    });
-                }
-                viewModel.UserTitles = titleViewModel;
             }
 
             // setup viewmodel specific to the actively selected tab
             await SetViewModelBasedOnActiveTabAsync(profile, viewModel, reviews, currentUserId, page);
 
+            //viewModel.FeedCount = ProfileService.GetFeedCountAsync(profile.Id);
+            viewModel.PictureCount = await ProfileService.GetImagesUploadedCountByUserAsync(profile.ApplicationUser.Id);
+            viewModel.TagCount = await ProfileService.GetTagCountAsync(profile.ApplicationUser.Id);
+            viewModel.InventoryCount = await ProfileService.GetInventoryCountAsync(profile.ApplicationUser.Id);
+
+            MilestoneService milestoneService = new MilestoneService(UserManager.EmailService);
+            viewModel.CompletedAchievementCount = await milestoneService.GetCompletedAchievementCount(profile.ApplicationUser.Id);
+            viewModel.PossibleAchievementCount = await milestoneService.GetPossibleAchievementCount();
+
             return View(viewModel);
-        }
-
-        /// <summary>
-        /// Sets up the view model to include tag suggestions to be displayed and manaaged on a profile.
-        /// </summary>
-        /// <param name="currentUserId"></param>
-        /// <param name="profile"></param>
-        /// <param name="viewModel"></param>
-        /// <returns></returns>
-        private async Task SetupProfileTagSuggestions(string currentUserId, Models.Profile profile, ProfileViewModel viewModel)
-        {
-            var tagsSuggestedForProfile = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profile.Id);
-            viewModel.SuggestedTags = tagsSuggestedForProfile; // these are the tag suggestions that will be displayed at the profile screen
-            viewModel.AllTags = await GetAllTagsAndCountsInSystemAsync(tagsSuggestedForProfile); // these are all tags to be displayed in the "suggest" popup
-            viewModel.AwardedTags = await ProfileService.GetTagsAwardedToProfileAsync(profile.Id);
-        }
-
-        /// <summary>
-        /// Sets up the view model to include the profile's inventory items
-        /// </summary>
-        /// <param name="currentUserId"></param>
-        /// <param name="profile"></param>
-        /// <param name="viewModel"></param>
-        /// <returns></returns>
-        private async Task SetupProfileInventory(string currentUserId, Models.Profile profile, ProfileViewModel viewModel)
-        {
-            var profileInventoryItems = await ProfileService.GetInventoryAsync(profile.ApplicationUser.Id);
-            viewModel.Inventory = new ProfileInventoryViewModel();
-            viewModel.Inventory.Items = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(profileInventoryItems);
-            viewModel.Inventory.CurrentUserId = currentUserId;
-            viewModel.Inventory.ProfileUserId = profile.ApplicationUser.Id;
         }
 
         /// <summary>
@@ -908,6 +881,21 @@ namespace TwolipsDating.Controllers
                 MilestoneService milestoneService = new MilestoneService(UserManager.EmailService);
                 var achievements = await milestoneService.GetAchievementsAndStatusForUserAsync(profile.ApplicationUser.Id);
                 viewModel.Achievements = achievements;
+            }
+            if(viewModel.ActiveTab == "tags")
+            {
+                var tagsSuggestedForProfile = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profile.Id);
+                viewModel.SuggestedTags = tagsSuggestedForProfile; // these are the tag suggestions that will be displayed at the profile screen
+                viewModel.AllTags = await GetAllTagsAndCountsInSystemAsync(tagsSuggestedForProfile); // these are all tags to be displayed in the "suggest" popup
+                viewModel.AwardedTags = await ProfileService.GetTagsAwardedToProfileAsync(profile.Id);
+            }
+            if(viewModel.ActiveTab == "inventory")
+            {
+                var profileInventoryItems = await ProfileService.GetInventoryAsync(profile.ApplicationUser.Id);
+                viewModel.Inventory = new ProfileInventoryViewModel();
+                viewModel.Inventory.Items = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(profileInventoryItems);
+                viewModel.Inventory.CurrentUserId = currentUserId;
+                viewModel.Inventory.ProfileUserId = profile.ApplicationUser.Id;
             }
         }
 

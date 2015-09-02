@@ -1,0 +1,101 @@
+﻿@model TwolipsDating.ViewModels.ProfileViewModel
+@using Microsoft.AspNet.Identity;
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <i class="fa fa-tags fa-lg"></i> Awarded tags
+            <small><i class="custom-tooltip fa fa-lg fa-question-circle" title="Tags that have been awarded to the user based on community activities"></i></small>
+        </h4>
+    </div>
+    <div class="panel-body">
+        @if (Model.AwardedTags != null && Model.AwardedTags.Count > 0)
+        {
+            if (Model.AwardedTags != null && Model.AwardedTags.Count > 0)
+            {
+                <div class="tags">
+                    @foreach (var tag in Model.AwardedTags)
+                    {
+                        <a href="@Url.Action("index", "search", new { tags = tag.TagName })" class="custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
+                            <span class="badge">@tag.TagCount</span> @tag.TagName
+                        </a>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            if (User.Identity.GetUserId() == Model.ProfileUserId)
+            {
+                <p>You don't have any awarded tags yet. Go to the trivia section!</p>
+            }
+            else
+            {
+                <p>This user doesn't have any awarded tags yet. Encourage them to answer some trivia!</p>
+            }
+        }
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <i class="fa fa-tags fa-lg"></i> Suggested tags
+            <small><i class="custom-tooltip fa fa-lg fa-question-circle" title="Tags that have been suggested by other users based on their perception"></i></small>
+        </h4>
+    </div>
+    <div class="panel-body">
+        @if (User.Identity.IsAuthenticated && Model.ProfileUserId != User.Identity.GetUserId() && Model.IsCurrentUserEmailConfirmed)
+        {
+            <a href="#" style="margin-bottom: 5px" class="btn btn-xs btn-default custom-tooltip" title="Suggest tags to be displayed on this profile"
+               data-toggle="modal" data-target="#modalSuggestTags" data-keyboard="true">
+                <i class="fa fa-tag fa-lg"></i> Add &amp; Remove
+            </a>
+        }
+        @if (Model.SuggestedTags != null && Model.SuggestedTags.Count > 0)
+        {
+            <ul class="list-unstyled">
+                @foreach (var tag in Model.SuggestedTags)
+                {
+                    <li class="profile-tag-suggestion-list-item">
+                        @if (tag.DidUserSuggest)
+                        {
+                            <a href="@Url.Action("index", "search", new { tags = tag.TagName })" class="profile-tag pull-left custom-tooltip btn btn-primary btn-xs" title="@tag.TagDescription">
+                                <span class="badge">@tag.TagCount</span> @tag.TagName
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("index", "search", new { tags = tag.TagName })" class="profile-tag pull-left custom-tooltip btn btn-default btn-xs" title="@tag.TagDescription">
+                                <span class="badge">@tag.TagCount</span> @tag.TagName
+                            </a>
+                        }
+                        <div class="suggesting-users">
+                            <span class="pull-right user-images">
+                                @foreach (var user in tag.SuggestionUsers)
+                                {
+                                    <a class="pull-left user-image custom-tooltip" title="@user.UserName" href="@Url.Action("index", "profile", new { id = user.UserProfileId })">
+                                        <img src="@user.UserProfileImagePath" width="24" height="24" />
+                                    </a>
+                                }
+                                <small><a href="#"><i class="glyphicon glyphicon-triangle-right"></i></a></small>
+                            </span>
+                            <div class="separator"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            if (User.Identity.GetUserId() == Model.ProfileUserId)
+            {
+                <p>You don't have any tags yet. Ask people to suggest some!</p>
+            }
+            else
+            {
+                <p>This user doesn't have any tags yet. Suggest some!</p>
+            }
+        }
+    </div>
+</div>
