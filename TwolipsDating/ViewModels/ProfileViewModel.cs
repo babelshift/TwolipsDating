@@ -52,9 +52,25 @@ namespace TwolipsDating.ViewModels
         public string SummaryOfGoing { get; set; }
 
         public string LookingForType { get; set; }
+        [Display(Name="What type of relationship are you looking for, if any?")]
+        public int? LookingForTypeId { get; set; }
+        public IDictionary<int, string> LookingForTypes { get; set; }
+
         public string RelationshipStatus { get; set; }
+        [Display(Name = "What is your current relationship status, if any?")]
+        public int? RelationshipStatusId { get; set; }
+        public IDictionary<int, string> RelationshipStatuses { get; set; }
+
         public string LookingForLocation { get; set; }
+        [Display(Name = "How far away are you willing to look?")]
+        public int? LookingForLocationId { get; set; }
+        public IDictionary<int, string> LookingForLocations { get; set; }
+
         public IList<string> Languages { get; set; }
+        [Display(Name = "What languages do you use?")]
+        public IList<int> SelectedLanguages { get; set; }
+        public IDictionary<int, string> AllLanguages { get; set; }
+
         public int? LookingForAgeMin { get; set; }
         public int? LookingForAgeMax { get; set; }
 

@@ -222,6 +222,26 @@ namespace TwolipsDating.Migrations
                 new Quiz() { Id = 14, Name = "The Great Food Truck Quiz", Description = "All you could ever want to answer about food trucks.", DateCreated = new DateTime(2015, 8, 30), Points = 20, IsActive = true, ImageFileName = "Foodtruck.jpg" },
                 new Quiz() { Id = 15, Name = "The Walking Dead", Description = "If you can pass this quiz, you would probably survive a zombie apocolypse.", DateCreated = new DateTime(2015, 8, 30), Points = 20, IsActive = true, ImageFileName = "WalkingDead.jpg" });
 
+            context.LookingForLocations.AddOrUpdate(m => m.Id,
+                new LookingForLocation() { Id = 1, Range = "Anywhere" },
+                new LookingForLocation() { Id = 2, Range = "In my city" },
+                new LookingForLocation() { Id = 3, Range = "In my state" },
+                new LookingForLocation() { Id = 4, Range = "In my country" });
+
+            context.LookingForTypes.AddOrUpdate(m => m.Id,
+                new LookingForType() { Id = 1, Name = "Nothing particular" },
+                new LookingForType() { Id = 2, Name = "New friends (in person)" },
+                new LookingForType() { Id = 3, Name = "New friends (online)" },
+                new LookingForType() { Id = 4, Name = "Short-term dating" },
+                new LookingForType() { Id = 5, Name = "Long-term dating" },
+                new LookingForType() { Id = 6, Name = "Long distance relationship" });
+
+            context.RelationshipStatuses.AddOrUpdate(m => m.Id,
+                new RelationshipStatus() { Id = 1, Name = "Single", Description = "Actively looking." },
+                new RelationshipStatus() { Id = 2, Name = "Dating", Description = "Happily dating." },
+                new RelationshipStatus() { Id = 3, Name = "Married", Description = "Happily married." },
+                new RelationshipStatus() { Id = 4, Name = "It's complicated", Description="Unknown." });
+
             SaveChanges(context);
         }
     }

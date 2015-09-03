@@ -18,6 +18,7 @@ using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
 using PagedList;
+using System.Collections.ObjectModel;
 
 namespace TwolipsDating.Controllers
 {
@@ -847,6 +848,21 @@ namespace TwolipsDating.Controllers
             string currentUserId,
             int? page)
         {
+            if(viewModel.ActiveTab == "about")
+            {
+                var lookingForTypes = await ProfileService.GetLookingForTypesAsync();
+                var lookingForLocations = await ProfileService.GetLookingForLocationsAsync();
+                var languages = await ProfileService.GetLanguagesAsync();
+                var relationshipStatuses = await ProfileService.GetRelationshipStatusesAsync();
+                viewModel.SelectedLanguages = (await ProfileService.GetSelectedLanguagesAsync(currentUserId))
+                    .Select(s => s.Id)
+                    .ToList();
+
+                viewModel.LookingForTypes = lookingForTypes.ToDictionary(t => t.Id, t => t.Name);
+                viewModel.LookingForLocations = lookingForLocations.ToDictionary(t => t.Id, t => t.Range);
+                viewModel.AllLanguages = languages.ToDictionary(t => t.Id, t => t.Name);
+                viewModel.RelationshipStatuses = relationshipStatuses.ToDictionary(t => t.Id, t => t.Name);
+            }
             if (viewModel.ActiveTab == "feed")
             {
                 var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);
@@ -1220,7 +1236,7 @@ namespace TwolipsDating.Controllers
 
                 if (isCurrentUserEmailConfirmed)
                 {
-                    int result = await ProfileService.SetSelfSummary(currentUserId, selfSummary);
+                    int result = await ProfileService.SetSelfSummaryAsync(currentUserId, selfSummary);
 
                     return Json(new { success = true });
                 }
@@ -1247,7 +1263,7 @@ namespace TwolipsDating.Controllers
 
                 if (isCurrentUserEmailConfirmed)
                 {
-                    int result = await ProfileService.SetSummaryOfDoing(currentUserId, summaryOfDoing);
+                    int result = await ProfileService.SetSummaryOfDoingAsync(currentUserId, summaryOfDoing);
 
                     return Json(new { success = true });
                 }
@@ -1274,7 +1290,7 @@ namespace TwolipsDating.Controllers
 
                 if (isCurrentUserEmailConfirmed)
                 {
-                    int result = await ProfileService.SetSummaryOfGoing(currentUserId, summaryOfGoing);
+                    int result = await ProfileService.SetSummaryOfGoingAsync(currentUserId, summaryOfGoing);
 
                     return Json(new { success = true });
                 }
@@ -1288,6 +1304,37 @@ namespace TwolipsDating.Controllers
                 LogSelectTitleException(currentUserId, e);
                 return Json(new { success = false, error = ErrorMessages.SummaryOfGoingNotSaved });
             }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SaveLookingFor(ProfileViewModel viewModel)
+        {
+            string currentUserId = User.Identity.GetUserId();
+
+            if(!ModelState.IsValid)
+            {
+                return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
+            }
+
+            int changes = await ProfileService.SetLookingForAsync(currentUserId, viewModel.LookingForTypeId, viewModel.LookingForLocationId, viewModel.LookingForAgeMin, viewModel.LookingForAgeMax);
+
+            return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SaveMyDetails(ProfileViewModel viewModel)
+        {
+            string currentUserId = User.Identity.GetUserId();
+
+            if (!ModelState.IsValid)
+            {
+                return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
+            }
+
+            IReadOnlyCollection<int> languageIds = new ReadOnlyCollection<int>(viewModel.SelectedLanguages);
+            int changes = await ProfileService.SetDetailsAsync(currentUserId, languageIds, viewModel.RelationshipStatusId);
+
+            return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
         }
 
         #endregion

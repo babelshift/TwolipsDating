@@ -699,3 +699,7 @@ input[readonly] {
     color: #555;
     padding: 10px !important;
 }
+
+.modal-backdrop {
+  z-index: 3;
+}

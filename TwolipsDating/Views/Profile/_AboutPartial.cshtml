@@ -3,13 +3,13 @@
 
 <div class="panel panel-default">
     <div class="panel-body">
-        <a class="btn btn-default btn-block hidden-sm hidden-md hidden-lg" href="#"><i class="fa fa-pencil"></i> Edit</a>
+        @*<a class="btn btn-default btn-block hidden-sm hidden-md hidden-lg" href="#"><i class="fa fa-pencil"></i> Edit</a>*@
         <div class="col-md-8">
             <h3>
                 Who I am
                 @if (User.Identity.GetUserId() == Model.ProfileUserId)
                 {
-                    <a id="button-edit-self-summary" class="hidden-xs" href="#"><small><i class="fa fa-pencil"></i></small></a>
+                    <a id="button-edit-self-summary" href="#"><small><i class="fa fa-pencil"></i></small></a>
                 }
             </h3>
             <div id="edit-self-summary" class="hidden">
@@ -22,11 +22,11 @@
                 What I'm doing
                 @if (User.Identity.GetUserId() == Model.ProfileUserId)
                 {
-                    <a id="button-edit-summary-of-doing" class="hidden-xs" href="#"><small><i class="fa fa-pencil"></i></small></a>
+                    <a id="button-edit-summary-of-doing" href="#"><small><i class="fa fa-pencil"></i></small></a>
                 }
             </h3>
             <div id="edit-summary-of-doing" class="hidden">
-                <textarea id="text-edit-summary-of-doing" class="form-control" style="margin-bottom: 10px" placeholder="Enter a brief summary of what you're recently doing.">@Model.SummaryOfDoing</textarea>
+                <textarea id="text-edit-summary-of-doing" class="form-control" rows="5" style="margin-bottom: 10px" placeholder="Enter a brief summary of what you're recently doing.">@Model.SummaryOfDoing</textarea>
                 <button id="button-save-summary-of-doing" button-cancel-summary-of-going class="btn btn-primary">Save</button>
                 <button id="button-cancel-summary-of-doing" class="btn btn-default">Cancel</button>
             </div>
@@ -35,11 +35,11 @@
                 Where I'm going
                 @if (User.Identity.GetUserId() == Model.ProfileUserId)
                 {
-                    <a id="button-edit-summary-of-going" class="hidden-xs" href="#"><small><i class="fa fa-pencil"></i></small></a>
+                    <a id="button-edit-summary-of-going" href="#"><small><i class="fa fa-pencil"></i></small></a>
                 }
             </h3>
             <div id="edit-summary-of-going" class="hidden">
-                <textarea id="text-edit-summary-of-going" class="form-control" style="margin-bottom: 10px" placeholder="Enter a brief summary of where you want to be in a few years.">@Model.SummaryOfGoing</textarea>
+                <textarea id="text-edit-summary-of-going" class="form-control" rows="5" style="margin-bottom: 10px" placeholder="Enter a brief summary of where you want to be in a few years.">@Model.SummaryOfGoing</textarea>
                 <button id="button-save-summary-of-going" class="btn btn-primary">Save</button>
                 <button id="button-cancel-summary-of-going" class="btn btn-default">Cancel</button>
             </div>
@@ -51,7 +51,7 @@
                     What I'm looking for
                     @if (User.Identity.GetUserId() == Model.ProfileUserId)
                     {
-                        <a class="hidden-xs" href="#"><small><i class="fa fa-pencil"></i></small></a>
+                        <a data-toggle="modal" data-target="#modalWhatImLookingFor" data-keyboard="true" href="#"><small><i class="fa fa-pencil"></i></small></a>
                     }
                 </h4>
                 <table class="table">
@@ -64,15 +64,15 @@
                         <td class="col-md-6">
                             @if (Model.LookingForAgeMin.HasValue && Model.LookingForAgeMax.HasValue)
                             {
-                                String.Format("{0}-{1}", Model.LookingForAgeMin.Value, Model.LookingForAgeMax.Value);
+                                <span>@String.Format("{0}-{1}", Model.LookingForAgeMin.Value, Model.LookingForAgeMax.Value)</span>
                             }
                             else if (Model.LookingForAgeMin.HasValue && !Model.LookingForAgeMax.HasValue)
                             {
-                                String.Format("{0}-Any", Model.LookingForAgeMin.Value);
+                                <span>@String.Format("{0}-Any", Model.LookingForAgeMin.Value)</span>
                             }
                             else if (!Model.LookingForAgeMin.HasValue && Model.LookingForAgeMax.HasValue)
                             {
-                                String.Format("Any-{0}", Model.LookingForAgeMin.Value);
+                                <span>@String.Format("Any-{0}", Model.LookingForAgeMin.Value)</span>
                             }
                             else if (!Model.LookingForAgeMin.HasValue && !Model.LookingForAgeMax.HasValue)
                             {
@@ -92,7 +92,7 @@
                     My details
                     @if (User.Identity.GetUserId() == Model.ProfileUserId)
                     {
-                        <a class="hidden-xs" href="#"><small><i class="fa fa-pencil"></i></small></a>
+                        <a data-toggle="modal" data-target="#modalMyDetails" data-keyboard="true" href="#"><small><i class="fa fa-pencil"></i></small></a>
                     }
                 </h4>
                 <table class="table">
@@ -102,14 +102,14 @@
                     </tr>
                     <tr>
                         <td class="col-md-6" style="color: #777">Status</td>
-                        <td class="col-md-6">@(!String.IsNullOrEmpty(Model.RelationshipStatus) ? Model.LookingForType : "Unknown")</td>
+                        <td class="col-md-6">@(!String.IsNullOrEmpty(Model.RelationshipStatus) ? Model.RelationshipStatus : "Unknown")</td>
                     </tr>
                     <tr>
                         <td class="col-md-6" style="color: #777">Languages</td>
                         <td class="col-md-6">
                             @if (Model.Languages != null && Model.Languages.Count > 0)
                             {
-                                @String.Join(",", Model.Languages)
+                                @String.Join(", ", Model.Languages)
                             }
                             else
                             {

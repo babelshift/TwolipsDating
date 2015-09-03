@@ -70,6 +70,43 @@ $(document).ready(function () {
     setupTextAreaForPost('#button-save-self-summary', '#text-edit-self-summary', 'selfSummary', '/profile/saveSelfSummary', '#button-edit-self-summary', '#edit-self-summary', '#self-summary', defaultSelfSummaryText);
     setupTextAreaForPost('#button-save-summary-of-doing', '#text-edit-summary-of-doing', 'summaryOfDoing', '/profile/saveSummaryOfDoing', '#button-edit-summary-of-doing', '#edit-summary-of-doing', '#summary-of-doing', defaultSummaryOfDoingText);
     setupTextAreaForPost('#button-save-summary-of-going', '#text-edit-summary-of-going', 'summaryOfGoing', '/profile/saveSummaryOfGoing', '#button-edit-summary-of-going', '#edit-summary-of-going', '#summary-of-going', defaultSummaryOfGoingText);
+
+    $('#modalWhatImLookingFor').on('shown.bs.modal', function (e) {
+        $('#LookingForTypeId').chosen({ allow_single_deselect: true, disable_search_threshold: 10 });
+        $('#LookingForLocationId').chosen({ allow_single_deselect: true, disable_search_threshold: 10 });
+    });
+
+    $('#modalMyDetails').on('shown.bs.modal', function (e) {
+        $('#RelationshipStatusId').chosen({ allow_single_deselect: true, disable_search_threshold: 10 });
+        $('#SelectedLanguages').chosen();
+    });
+
+    var minAgeTextBox = $('#looking-for-age-min');
+    var maxAgeTextBox = $('#looking-for-age-max');
+    minAgeTextBox.on('change', function (e) {
+        var value = parseInt(minAgeTextBox.val());
+        if (isNaN(value)) {
+            minAgeTextBox.val(18);
+        } else {
+            if (value < 18) {
+                minAgeTextBox.val(18);
+            } else if (value > 99) {
+                minAgeTextBox.val(99);
+            }
+        }
+    });
+    maxAgeTextBox.on('change', function (e) {
+        var value = parseInt(maxAgeTextBox.val());
+        if (isNaN(value)) {
+            maxAgeTextBox.val(18);
+        } else {
+            if (value < 18) {
+                maxAgeTextBox.val(18);
+            } else if (value > 99) {
+                maxAgeTextBox.val(99);
+            }
+        }
+    });
 });
 
 function setupTextAreaForPost(buttonSave, textArea, param, postPath, buttonEdit, container, textDisplay, defaultText) {

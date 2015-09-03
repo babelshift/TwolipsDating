@@ -1356,25 +1356,96 @@ namespace TwolipsDating.Business
             return inventoryCount;
         }
 
-        internal async Task<int> SetSelfSummary(string userId, string selfSummary)
+        internal async Task<int> SetSelfSummaryAsync(string userId, string selfSummary)
         {
             var profile = db.Users.Find(userId).Profile;
             profile.SummaryOfSelf = selfSummary;
             return await db.SaveChangesAsync();
         }
 
-        internal async Task<int> SetSummaryOfDoing(string userId, string summaryOfDoing)
+        internal async Task<int> SetSummaryOfDoingAsync(string userId, string summaryOfDoing)
         {
             var profile = db.Users.Find(userId).Profile;
             profile.SummaryOfDoing = summaryOfDoing;
             return await db.SaveChangesAsync();
         }
 
-        internal async Task<int> SetSummaryOfGoing(string userId, string summaryOfGoing)
+        internal async Task<int> SetSummaryOfGoingAsync(string userId, string summaryOfGoing)
         {
             var profile = db.Users.Find(userId).Profile;
             profile.SummaryOfGoing = summaryOfGoing;
             return await db.SaveChangesAsync();
+        }
+
+        internal async Task<IReadOnlyCollection<LookingForType>> GetLookingForTypesAsync()
+        {
+            var lookingForTypes = from lookingFor in db.LookingForTypes
+                                  select lookingFor;
+
+            return (await lookingForTypes.ToListAsync()).AsReadOnly();
+        }
+
+        internal async Task<IReadOnlyCollection<LookingForLocation>> GetLookingForLocationsAsync()
+        {
+            var lookingForLocations = from lookingFor in db.LookingForLocations
+                                  select lookingFor;
+
+            return (await lookingForLocations.ToListAsync()).AsReadOnly();
+        }
+
+        internal async Task<int> SetLookingForAsync(string userId, int? lookingForTypeId, int? lookingForLocationId, int? lookingForAgeMin, int? lookingForAgeMax)
+        {
+            var profile = db.Users.Find(userId).Profile;
+            profile.LookingForTypeId = lookingForTypeId;
+            profile.LookingForLocationId = lookingForLocationId;
+            profile.LookingForAgeMin = lookingForAgeMin;
+            profile.LookingForAgeMax = lookingForAgeMax;
+            return await db.SaveChangesAsync();
+        }
+
+        internal async Task<int> SetDetailsAsync(string userId, IReadOnlyCollection<int> languageIds, int? relationshipStatusId)
+        {
+            var profile = db.Users.Find(userId).Profile;
+
+            profile.RelationshipStatusId = relationshipStatusId;
+            await db.Entry<Profile>(profile).Collection(e => e.Languages).LoadAsync();
+
+            profile.Languages.Clear();
+
+            foreach(var languageId in languageIds)
+            {
+                var language = await db.Languages.FindAsync(languageId);
+                profile.Languages.Add(language);
+            }
+
+            return await db.SaveChangesAsync();
+        }
+
+        internal async Task<IReadOnlyCollection<Language>> GetLanguagesAsync()
+        {
+            var languages = from language in db.Languages
+                            select language;
+
+            return (await languages.ToListAsync()).AsReadOnly();
+        }
+
+        internal async Task<IReadOnlyCollection<RelationshipStatus>> GetRelationshipStatusesAsync()
+        {
+            var relationshipStatuses = from relationshipStatus in db.RelationshipStatuses
+                                       select relationshipStatus;
+
+            return (await relationshipStatuses.ToListAsync()).AsReadOnly();
+        }
+
+        internal async Task<IReadOnlyCollection<Language>> GetSelectedLanguagesAsync(string currentUserId)
+        {
+            var languages = from profile in db.Profiles
+                            where profile.ApplicationUser.Id == currentUserId
+                            from language in profile.Languages
+                            select language;
+
+            var results = await languages.ToListAsync();
+            return results.AsReadOnly();
         }
     }
 }
