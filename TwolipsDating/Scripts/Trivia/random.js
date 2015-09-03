@@ -21,7 +21,12 @@ function onAddQuestionViolation(e, obj) {
     var questionId = $('#QuestionId').val();
     var violationTypeId = $('#QuestionViolation_ViolationTypeId').val();
 
-    var json = '{"questionId":' + questionId + ', "violationTypeId":' + violationTypeId + '}';
+    var jsonObject = {
+        "questionId": questionId,
+        "violationTypeId": violationTypeId
+    };
+
+    var json = JSON.stringify(jsonObject);
 
     postJson('/violation/addQuestionViolation', json, function (data) {
         if (data.success) {
@@ -47,7 +52,12 @@ function onSubmitAnswer(e, obj) {
     //    answerId = selected.val();
     //}
 
-    var json = '{"questionId":' + questionId + ', "answerId":' + selectedAnswerId + '}';
+    var jsonObject = {
+        "questionId": questionId,
+        "answerId": selectedAnswerId
+    };
+
+    var json = JSON.stringify(jsonObject);
 
     postJson('/trivia/submitAnswer', json, function (data) {
         if (data.success) {

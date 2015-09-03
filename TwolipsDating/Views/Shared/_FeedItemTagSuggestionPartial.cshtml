@@ -1,31 +1,36 @@
 ﻿@model TwolipsDating.ViewModels.TagSuggestionReceivedFeedViewModel
 
-<div class="circular-image-wrapper">
-    <img class="circular-image" src="@Model.SuggestProfileImagePath" />
+<div class="feed-item-icon pull-left">
+    <i class="fa fa-tags fa-fw fa-lg"></i>
 </div>
-<div class="feed-item-headline">
-    @if (Model.SuggestUserName == User.Identity.Name)
+<div style="margin-left: 35px">
+    <div class="circular-image-wrapper">
+        <img class="circular-image" src="@Model.SuggestProfileImagePath" />
+    </div>
+    <div class="feed-item-headline">
+        @if (Model.SuggestUserName == User.Identity.Name)
+        {
+            @:You
+        }
+        else
+        {
+            <a href="@Url.Action("index", "profile", new { id = Model.SuggestProfileId })">@Model.SuggestUserName</a>
+        }
+        tagged
+        @if (Model.ReceiverUserName == User.Identity.Name)
+        {
+            @:you
+        }
+        else
+        {
+            <a href="@Url.Action("index", "profile", new { id = Model.ReceiverProfileId })">@Model.ReceiverUserName</a>
+        }
+        <br />
+        <small>@Model.TimeAgo</small>
+    </div>
+    <div class="clearfix"></div>
+    @foreach (var tag in Model.Tags)
     {
-        @:You
+        <a href="@Url.Action("index", "search", new { tags = tag })" class="btn btn-default btn-xs">@tag</a>
     }
-    else
-    {
-        <a href="@Url.Action("index", "profile", new { id = Model.SuggestProfileId })">@Model.SuggestUserName</a>
-    }
-    tagged
-    @if (Model.ReceiverUserName == User.Identity.Name)
-    {
-        @:you
-    }
-    else
-    {
-        <a href="@Url.Action("index", "profile", new { id = Model.ReceiverProfileId })">@Model.ReceiverUserName</a>
-    }
-    <br />
-    <small>@Model.TimeAgo</small>
 </div>
-<div class="clearfix"></div>
-@foreach (var tag in Model.Tags)
-{
-    <a href="@Url.Action("index", "search", new { tags = tag })" class="btn btn-default btn-xs">@tag</a>
-}

@@ -5,7 +5,11 @@
 function onBuyTitle(e, obj, titleId) {
     e.preventDefault();
 
-    var json = "{\"titleId\":" + titleId + "}";
+    var jsonObject = {
+        "titleId": titleId
+    };
+
+    var json = JSON.stringify(jsonObject);
 
     postJson('/store/buyTitle', json, function (data) {
         if (data.success) {

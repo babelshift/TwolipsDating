@@ -1,20 +1,26 @@
 ﻿@model TwolipsDating.ViewModels.MessageFeedViewModel
-@if (!String.IsNullOrEmpty(Model.SenderProfileImagePath))
-{
-    <div class="circular-image-wrapper">
-        <img class="circular-image" src="@Model.SenderProfileImagePath" />
-    </div>
-}
-<div class="feed-item-headline">
-    <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId })">@Model.SenderUserName</a> sent you a message
-    <br />
-    <small>@Model.TimeAgo</small>
+
+<div class="feed-item-icon pull-left">
+    <i class="fa fa-envelope fa-fw fa-lg"></i>
 </div>
-<span class="pull-right feed-item-buttons">
-    <a href="@Url.Action("conversation", "message", new{ id = Model.SenderUserId })" class="btn btn-default btn-xs" title="View conversation">
-        <i class="glyphicon glyphicon-envelope"></i>
-    </a>
-</span>
-<div class="well well-sm wrap-long-lines feed-item-comment">
-    <small>@Model.MessageContent</small>
+<div style="margin-left: 35px">
+    @if (!String.IsNullOrEmpty(Model.SenderProfileImagePath))
+    {
+        <div class="circular-image-wrapper">
+            <img class="circular-image" src="@Model.SenderProfileImagePath" />
+        </div>
+    }
+    <div class="feed-item-headline">
+        <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId })">@Model.SenderUserName</a> sent you a message
+        <br />
+        <small>@Model.TimeAgo</small>
+    </div>
+    <span class="pull-right feed-item-buttons">
+        <a href="@Url.Action("conversation", "message", new{ id = Model.SenderUserId })" class="btn btn-default btn-xs" title="View conversation">
+            <i class="glyphicon glyphicon-envelope"></i>
+        </a>
+    </span>
+    <div class="well well-sm wrap-long-lines feed-item-comment">
+        <small>@Model.MessageContent</small>
+    </div>
 </div>

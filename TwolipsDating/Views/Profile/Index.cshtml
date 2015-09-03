@@ -34,17 +34,26 @@
 @Html.HiddenFor(m => m.ProfileId)
 @Html.HiddenFor(m => m.ProfileUserId)
 
-<div class="ad">
-    <!-- Profile - Header - 1 -->
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-1823005717277864"
-         data-ad-slot="8265412231"
-         data-ad-format="auto"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
+@if (!HttpContext.Current.IsDebuggingEnabled)
+{
+    <div class="ad">
+        <!-- Profile - Header - 1 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1823005717277864"
+             data-ad-slot="8265412231"
+             data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+}
+else
+{
+    <div style="width: 610px; margin: 5px auto;">
+        <img src="http://placehold.it/600x90" />
+    </div>
+}
 @if (User.Identity.GetUserId() == Model.ProfileUserId)
 {
     <div id="popover-titles-content" class="hide">
@@ -164,8 +173,8 @@
                         {
                             <div class="visible-xs" style="margin-top: 10px; margin-left: auto; margin-right: auto; width: 260px">
                                 <div class="btn-group">
-                                    <button type="button" class="custom-tooltip button-toggle-favorite btn btn-default" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
-                                        <i class="button-toggle-favorite-icon glyphicon glyphicon-heart"></i> <span class="button-toggle-favorite-text">Following</span>
+                                    <button type="button" class="custom-tooltip button-toggle-favorite btn btn-primary" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
+                                        <i class="button-toggle-favorite-icon fa fa-user-plus"></i> <span class="button-toggle-favorite-text">Following</span>
                                     </button>
                                     <button type="button" class="custom-tooltip btn btn-default" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
                                         <i class="glyphicon glyphicon-comment"></i> Message
@@ -211,8 +220,8 @@
                     <div class="col-sm-2 hidden-xs">
                         <div class="text-right" style="margin-top: 10px">
                             <div class="btn-group-vertical" role="group">
-                                <button type="button" class="button-toggle-favorite btn btn-default " title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
-                                    <i class="button-toggle-favorite-icon glyphicon glyphicon-ok"></i> <span class="button-toggle-favorite-text">Following</span>
+                                <button type="button" class="button-toggle-favorite btn btn-primary" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
+                                    <i class="button-toggle-favorite-icon fa fa-user-plus"></i> <span class="button-toggle-favorite-text">Following</span>
                                 </button>
                                 <button type="button" class="btn btn-default " data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
                                     <i class="glyphicon glyphicon-comment"></i> Message
@@ -466,17 +475,26 @@
         }
     </div>
 </div>
-<div class="ad">
-    <!-- Profile - Footer - 1 -->
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-1823005717277864"
-         data-ad-slot="7642643435"
-         data-ad-format="auto"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
+@if (!HttpContext.Current.IsDebuggingEnabled)
+{
+    <div class="ad">
+        <!-- Profile - Footer - 1 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1823005717277864"
+             data-ad-slot="7642643435"
+             data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+}
+else
+{
+    <div style="width: 610px; margin: 5px auto;">
+        <img src="http://placehold.it/600x90" />
+    </div>
+}
 @section Modals {
     @if (Model.ActiveTab == "about")
     {
@@ -592,20 +610,22 @@
                         <h4 class="modal-title" id="modalReviewLabel">Submit violation for review</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="review-author-name" class="control-label">Review Author:</label>
-                            <p id="review-author-name"></p>
-                            <input type="hidden" id="review-id" />
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.WriteReviewViolation.ViolationTypeId, new { @class = "control-label" })
-                            @Html.DropDownListFor(m => m.WriteReviewViolation.ViolationTypeId,
+                        <div id="violation-review-body">
+                            <div class="form-group">
+                                <label for="review-author-name" class="control-label">Review Author:</label>
+                                <p id="review-author-name"></p>
+                                <input type="hidden" id="review-id" />
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.WriteReviewViolation.ViolationTypeId, new { @class = "control-label" })
+                                @Html.DropDownListFor(m => m.WriteReviewViolation.ViolationTypeId,
                         new SelectList(Model.WriteReviewViolation.ViolationTypes, "Key", "Value"),
                         new { @class = "form-control", data_placeholder = "What's the problem?" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "control-label" })
-                            @Html.TextAreaFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "control-label" })
+                                @Html.TextAreaFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "form-control" })
+                            </div>
                         </div>
                         <div id="violation-error" class="alert alert-danger" role="alert">
                             <p id="violation-error-text">Something happened which prevented your violation from being submitted.</p>
@@ -703,7 +723,7 @@
                         <p id="review-error-text">Something happened which prevented your review from being submitted.</p>
                     </div>
                     <div id="review-success" class="alert alert-success" role="alert">
-                        <p>Review submitted successfully. @Html.ActionLink("View reviews", "index", "profile", new { id = Model.ProfileId, tab = Model.ActiveTab }, new { @class = "alert-link" }) for <strong>@Model.UserName</strong>.</p>
+                        <p>Review submitted successfully. @Html.ActionLink("View reviews", "index", "profile", new { id = Model.ProfileId, tab = "reviews" }, new { @class = "alert-link" }) for <strong>@Model.UserName</strong>.</p>
                     </div>
                 </div>
                 <div class="modal-footer">

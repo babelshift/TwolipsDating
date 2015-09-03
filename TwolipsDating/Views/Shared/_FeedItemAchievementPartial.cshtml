@@ -1,19 +1,24 @@
 ﻿@model TwolipsDating.ViewModels.AchievementFeedViewModel
 
-<div class="circular-image-wrapper">
-    <img class="circular-image" src="@Model.UserProfileImagePath" />
+<div class="feed-item-icon pull-left">
+    <i class="fa fa-trophy fa-fw fa-lg"></i>
 </div>
-<div class="feed-item-headline">
-    @if (User.Identity.Name == Model.UserName)
-    {
-        @:You
+<div style="margin-left: 35px">
+    <div class="circular-image-wrapper">
+        <img class="circular-image" src="@Model.UserProfileImagePath" />
+    </div>
+    <div class="feed-item-headline">
+        @if (User.Identity.Name == Model.UserName)
+        {
+            @:You
     }
-    else
-    {
-        <a href="@Url.Action("index", "profile", new { id = Model.ProfileId })">@Model.UserName</a>
-    }
-    achieved
-    <strong>@Model.AchievementName</strong>
-    <br />
-    <small>@Model.TimeAgo</small>
+        else
+        {
+            <a href="@Url.Action("index", "profile", new { id = Model.ProfileId })">@Model.UserName</a>
+        }
+        achieved
+        <strong>@Model.AchievementName</strong>
+        <br />
+        <small>@Model.TimeAgo</small>
+    </div>
 </div>

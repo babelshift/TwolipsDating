@@ -404,6 +404,7 @@ input[readonly] {
 .user-to-follow {
     position: relative;
     margin-bottom: 15px;
+    line-height: 16px;
 }
 
     .user-to-follow img {
@@ -421,10 +422,11 @@ input[readonly] {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        color: #555;
     }
 
     .user-to-follow .user-to-follow-location {
-        color: #999;
+        color: #777;
     }
 
 .share-buttons a:hover {
@@ -491,8 +493,8 @@ input[readonly] {
         font-size: 18px;
     }
 
-    .profile-banner-info .user-info, 
-    .profile-banner-info .user-location, 
+    .profile-banner-info .user-info,
+    .profile-banner-info .user-location,
     .profile-banner-info .user-title {
         font-size: 18px;
     }
@@ -685,7 +687,7 @@ input[readonly] {
         background-color: #c13725;
         border-color: #b52b1a;
     }
-   
+
 .similar-people .circular-image-wrapper {
     width: 64px;
     height: 64px;
@@ -701,5 +703,10 @@ input[readonly] {
 }
 
 .modal-backdrop {
-  z-index: 3;
+    z-index: 3;
+}
+
+.feed-item-icon {
+    color: #ccc;
+    margin-top: 4px;
 }

@@ -48,22 +48,24 @@
                 <h4 class="modal-title" id="modalReviewLabel">Submit violation for review</h4>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="review-author-name" class="control-label">Review Author:</label>
-                    <p id="review-author-name"></p>
-                    <input type="hidden" id="review-id" />
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.WriteReviewViolation.ViolationTypeId, new { @class = "control-label" })
-                    @Html.DropDownListFor(m => m.WriteReviewViolation.ViolationTypeId,
+                <div id="violation-review-body">
+                    <div class="form-group">
+                        <label for="review-author-name" class="control-label">Review Author:</label>
+                        <p id="review-author-name"></p>
+                        <input type="hidden" id="review-id" />
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WriteReviewViolation.ViolationTypeId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.WriteReviewViolation.ViolationTypeId,
                         new SelectList(Model.WriteReviewViolation.ViolationTypes, "Key", "Value"),
                         new { @class = "form-control", data_placeholder = "What's the problem?" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "form-control" })
+                    </div>
+                    @Html.HiddenFor(m => m.CurrentUserId)
                 </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "control-label" })
-                    @Html.TextAreaFor(m => m.WriteReviewViolation.ViolationContent, new { @class = "form-control" })
-                </div>
-                @Html.HiddenFor(m => m.CurrentUserId)
                 <div id="violation-error" class="alert alert-danger" role="alert">
                     <p id="violation-error-text">Something happened which prevented your violation from being submitted.</p>
                 </div>
@@ -152,30 +154,28 @@
                                 <div style="margin-left: 55px;">
                                     <a href="@Url.Action("index", "profile", new{ id = userProfile.ProfileId })">
                                         <img src="@userProfile.ProfileImagePath">
-                                        <span class="user-to-follow-name">
-                                            @userProfile.UserName
-                                        </span>
                                     </a>
+                                    <span class="user-to-follow-name">
+                                        <strong>@userProfile.UserName</strong>
+                                    </span>
                                     <small class="user-to-follow-location">
-                                        @userProfile.Age
+                                        <i class="fa fa-user fa-fw"></i> @userProfile.Age years old
+                                        <br />
                                         @if (!String.IsNullOrEmpty(userProfile.Location))
                                         {
-                                            @:&bull;
-                                            @userProfile.Location
+                                            <i class="fa fa-map-marker fa-fw"></i> @userProfile.Location
                                         }
                                     </small>
                                 </div>
                                 <button id="@String.Format("button-toggle-favorite-{0}", userProfile.ProfileId)" style="position: absolute; right: 0; top: 6px;" class="btn btn-default btn-sm custom-tooltip follow-user"
                                         data-profile-id="@userProfile.ProfileId" data-user-id="@userProfile.ProfileUserId">
-                                    <i id="@String.Format("icon-toggle-favorite-{0}", userProfile.ProfileId)" class="fa fa-heart"></i> Follow
+                                    <i id="@String.Format("icon-toggle-favorite-{0}", userProfile.ProfileId)" class="fa fa-user-plus"></i> Follow
                                 </button>
                             </div>
                         }
                     </div>
-                    <div class="panel-footer">
-                        <div class="text-center">
-                            <a href="@Url.Action("index", "search")"><small>Find more people</small></a>
-                        </div>
+                    <div class="panel-footer text-center">
+                        <a href="@Url.Action("index", "search")"><small>Find more people</small></a>
                     </div>
                 </div>
             }

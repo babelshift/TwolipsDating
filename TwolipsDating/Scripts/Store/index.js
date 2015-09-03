@@ -16,7 +16,12 @@
         var itemId = $(this).attr('data-item-id');
         var itemTypeId = $(this).attr('data-item-type-id');
 
-        var json = '{"storeItemId":' + itemId + ', "storeItemTypeId":' + itemTypeId + '}';
+        var jsonObject = {
+            "storeItemId": itemId,
+            "storeItemTypeId": itemTypeId
+        };
+
+        var json = JSON.stringify(jsonObject);
 
         postJson('/store/addToCart', json, function (data) {
             if (data.success) {

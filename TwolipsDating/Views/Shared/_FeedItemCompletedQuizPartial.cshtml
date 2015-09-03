@@ -1,21 +1,26 @@
 ﻿@model TwolipsDating.ViewModels.CompletedQuizFeedViewModel
 
-<div class="circular-image-wrapper">
-    <img class="circular-image" src="@Model.SourceProfileImagePath" />
+<div class="feed-item-icon pull-left">
+    <i class="fa fa-book fa-fw fa-lg"></i>
 </div>
-<div class="feed-item-headline">
-    @if(User.Identity.Name == Model.SourceUserName)
-    {
-        @:You
+<div style="margin-left: 35px">
+    <div class="circular-image-wrapper">
+        <img class="circular-image" src="@Model.SourceProfileImagePath" />
+    </div>
+    <div class="feed-item-headline">
+        @if (User.Identity.Name == Model.SourceUserName)
+        {
+            @:You
     }
-    else
-    {
-        <a href="@Url.Action("index", "profile", new { id = Model.SourceProfileId })">@Model.SourceUserName</a>
-    }
-    completed
-    <a href="@Url.Action("quiz", "trivia", new {id = Model.QuizId})">@Model.QuizName</a>
-    with a score of
-    <strong>@String.Format("{0}%", Model.UserScorePercent)</strong>.
-    <br />
-    <small>@Model.TimeAgo</small>
+        else
+        {
+            <a href="@Url.Action("index", "profile", new { id = Model.SourceProfileId })">@Model.SourceUserName</a>
+        }
+        completed
+        <a href="@Url.Action("quiz", "trivia", new {id = Model.QuizId})">@Model.QuizName</a>
+        with a score of
+        <strong>@String.Format("{0}%", Model.UserScorePercent)</strong>.
+        <br />
+        <small>@Model.TimeAgo</small>
+    </div>
 </div>

@@ -1,39 +1,44 @@
 ﻿@model TwolipsDating.ViewModels.UploadedImageFeedViewModel
 
-<div class="circular-image-wrapper">
-    <img class="circular-image" src="@Model.UploaderProfileImagePath" />
+<div class="feed-item-icon pull-left">
+    <i class="fa fa-camera fa-fw fa-lg"></i>
 </div>
-<div class="feed-item-headline">
-    @{
-        string text = String.Empty;
-        if (Model.UploadedImagesPaths.Count > 1)
-        {
-            text = "uploaded some images";
+<div style="margin-left: 35px">
+    <div class="circular-image-wrapper">
+        <img class="circular-image" src="@Model.UploaderProfileImagePath" />
+    </div>
+    <div class="feed-item-headline">
+        @{
+            string text = String.Empty;
+            if (Model.UploadedImagesPaths.Count > 1)
+            {
+                text = "uploaded some pictures";
+            }
+            else
+            {
+                text = "uploaded a picture";
+            }
+            if (User.Identity.Name == Model.UploaderUserName)
+            {
+                @:You
         }
-        else
-        {
-            text = "uploaded an image";
+            else
+            {
+                <a href="@Url.Action("index", "profile", new { id = Model.UploaderProfileId })">@Model.UploaderUserName</a>
+            }
+            @text
+            <br />
+            <small>@Model.TimeAgo</small>
         }
-        if (User.Identity.Name == Model.UploaderUserName)
+    </div>
+    <div class="row">
+        @foreach (var uploadedImage in Model.UploadedImagesPaths)
         {
-            @:You
+            <div class="col-xs-4 col-sm-2">
+                <a class="thumbnail" href="@uploadedImage.Path" style="min-height: 90px; max-height: 90px; border: 1px; margin-bottom: 0" data-gallery>
+                    <img src="@uploadedImage.ThumbnailPath" style="max-height: 90px;">
+                </a>
+            </div>
         }
-        else
-        {
-            <a href="@Url.Action("index", "profile", new { id = Model.UploaderProfileId })">@Model.UploaderUserName</a>
-        }
-        @text
-        <br />
-        <small>@Model.TimeAgo</small>
-    }
-</div>
-<div class="row">
-    @foreach (var uploadedImage in Model.UploadedImagesPaths)
-    {
-        <div class="col-xs-4 col-sm-2">
-            <a class="thumbnail" href="@uploadedImage.Path" style="min-height: 90px; max-height: 90px; border: 1px; margin-bottom: 0" data-gallery>
-                <img src="@uploadedImage.ThumbnailPath" style="max-height: 90px;">
-            </a>
-        </div>
-    }
+    </div>
 </div>

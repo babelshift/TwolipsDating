@@ -133,7 +133,11 @@ $(document).ready(function () {
         var transactionId = $(this).attr("data-transaction-id");
         var owner = $(this);
 
-        json = '{"giftTransactionId":' + transactionId + '}';
+        var jsonObject = {
+            "giftTransactionId": transactionId
+        };
+
+        json = JSON.stringify(jsonObject);
 
         postJson('/profile/removeGiftNotification', json,
             function (data) {

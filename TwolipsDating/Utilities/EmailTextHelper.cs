@@ -129,7 +129,7 @@ namespace TwolipsDating.Utilities
 												<td>
 												</td>
 												<td style=""text-align:center;"" width=""225"">
-													<img src=""{2}"" />
+													<img src=""{2}"" width=""128"" height=""128"" />
 												</td>
 											</tr>
 											<tr>

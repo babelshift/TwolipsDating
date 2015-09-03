@@ -24,7 +24,11 @@ $(document).ready(function () {
             var titleId = $(this).attr("data-title-id");
             var titleName = $(this).attr("data-title-name");
 
-            var json = "{\"titleId\":" + titleId + "}";
+            var jsonObject = {
+                "titleId": titleId
+            };
+
+            var json = JSON.stringify(jsonObject);
 
             postJson('/profile/setSelectedTitle', json,
                 function (data) {
@@ -120,8 +124,6 @@ function setupTextAreaForPost(buttonSave, textArea, paramName, postPath, buttonE
 
         var json = JSON.stringify(jsonObject);
 
-        //var json = '{"' + param + '":"' + text + '"}';
-
         postJson(postPath, json, function (data) {
             if (data.success) {
 
@@ -175,7 +177,13 @@ function onWriteReview(e, obj) {
 
     if (reviewContent != null && reviewContent.length > 0) {
 
-        var json = '{"profileUserId":"' + profileUserId + '", "rating":' + rating + ', "reviewContent":"' + reviewContent + '"}';
+        var jsonObject = {
+            "profileUserId": profileUserId,
+            "rating": rating,
+            "reviewContent": reviewContent
+        };
+
+        var json = JSON.stringify(jsonObject);
 
         postJson('/profile/writeReview', json, function (data) {
             if (data.success) {
@@ -196,7 +204,13 @@ function onSendGift(e, obj) {
     var inventoryItemId = $('#SendGift_InventoryItemId').val();
     var giftName = $("#selected-gift-name").val();
 
-    var json = '{"profileUserId":"' + profileUserId + '", "giftId":' + giftId + ', "inventoryItemId":' + inventoryItemId + '}';
+    var jsonObject = {
+        "profileUserId": profileUserId,
+        "giftId": giftId,
+        "inventoryItemId": inventoryItemId
+    };
+
+    var json = JSON.stringify(jsonObject);
 
     postJson('/profile/sendGift', json, function (data) {
         if (data.success) {
@@ -224,8 +238,8 @@ function onSendMessage(e, obj) {
     if (messageBody != null && messageBody.length > 0) {
 
         var jsonObject = {
-            "profileUserId" : profileUserId,
-            "messageBody" : messageBody
+            "profileUserId": profileUserId,
+            "messageBody": messageBody
         };
 
         var json = JSON.stringify(jsonObject);
@@ -249,12 +263,19 @@ function onAddReviewViolation(e, obj) {
     var violationTypeId = $('#WriteReviewViolation_ViolationTypeId').val();
     var content = $('#WriteReviewViolation_ViolationContent').val();
 
-    var json = '{"reviewId":' + reviewId + ', "violationTypeId":' + violationTypeId + ', "content":"' + content + '"}';
+    var jsonObject = {
+        "reviewId": reviewId,
+        "violationTypeId": violationTypeId,
+        "content": content
+    }
+
+    var json = JSON.stringify(jsonObject);
 
     postJson('/violation/addReviewViolation', json, function (data) {
         if (data.success) {
             $('#violation-success').show();
             $('#button-violation-submit').hide();
+            $('#violation-review-body').hide();
         } else {
             $('#violation-error').show();
             $('#violation-error-text').text(data.error);
@@ -414,7 +435,14 @@ function onSelectProfileImageClick(e, obj) {
 }
 
 function onDeleteImage(e, obj, userImageId, fileName, profileUserId) {
-    json = '{"id":' + userImageId + ', "fileName":"' + fileName + '", "profileUserId":"' + profileUserId + '"}';
+
+    var jsonObject = {
+        "id": userImageId,
+        "fileName": fileName,
+        "profileUserId": profileUserId
+    };
+
+    json = JSON.stringify(jsonObject);
 
     postJson('/profile/deleteImage', json, function (data) {
         if (data.success) {
@@ -431,7 +459,12 @@ function onDeleteImage(e, obj, userImageId, fileName, profileUserId) {
 function onToggleFavoriteProfile(e, obj, profileUserId, profileId) {
     e.preventDefault();
 
-    var json = '{"profileUserId":"' + profileUserId + '", "profileId":' + profileId + '}';
+    var jsonObject = {
+        "profileUserId": profileUserId,
+        "profileId": profileId
+    };
+
+    var json = JSON.stringify(jsonObject);
 
     postJson('/profile/toggleFavoriteProfile', json, function (data) {
         if (data.success) {
@@ -444,17 +477,17 @@ function onToggleFavoriteProfile(e, obj, profileUserId, profileId) {
 
 function toggleFavoriteProfileIcon(isFavorite) {
     if (isFavorite) {
-        $(".button-toggle-favorite-icon").removeClass("glyphicon-heart");
-        $(".button-toggle-favorite-icon").addClass("glyphicon-ok");
-        $(".button-toggle-favorite").removeClass("btn-default");
+        $(".button-toggle-favorite-icon").removeClass("fa-user-plus");
+        $(".button-toggle-favorite-icon").addClass("fa-check");
+        $(".button-toggle-favorite").removeClass("btn-primary");
         $(".button-toggle-favorite").addClass("btn-success");
         $(".button-toggle-favorite").attr("title", "Stop following updates");
         $(".button-toggle-favorite-text").text("Following");
     } else {
-        $(".button-toggle-favorite-icon").removeClass("glyphicon-ok");
-        $(".button-toggle-favorite-icon").addClass("glyphicon-heart");
+        $(".button-toggle-favorite-icon").removeClass("fa-check");
+        $(".button-toggle-favorite-icon").addClass("fa-user-plus");
         $(".button-toggle-favorite").removeClass("btn-success");
-        $(".button-toggle-favorite").addClass("btn-default");
+        $(".button-toggle-favorite").addClass("btn-primary");
         $(".button-toggle-favorite").attr("title", "Start following updates");
         $(".button-toggle-favorite-text").text("Follow");
     }
@@ -481,7 +514,11 @@ function toggleIgnoredUserIcon(isIgnored) {
 function onToggleIgnoredUser(e, obj, profileUserId) {
     e.preventDefault();
 
-    var json = '{"profileUserId":"' + profileUserId + '"}';
+    var jsonObject = {
+        "profileUserId": profileUserId
+    };
+
+    var json = JSON.stringify(jsonObject);
 
     postJson('/profile/toggleIgnoredUser', json, function (data) {
         if (data.success) {
@@ -506,7 +543,13 @@ function onSuggestTag(e, obj, tagId) {
         suggestAction = 'add';
     }
 
-    var json = '{"id":' + tagId + ', "profileId":' + profileId + ', "suggestAction":"' + suggestAction + '"}';
+    var jsonObject = {
+        "id": tagId,
+        "profileId": profileId,
+        "suggestAction": suggestAction
+    };
+
+    var json = JSON.stringify(jsonObject);
 
     postJson('/profile/suggestTag', json, function (data) {
         if (data.success) {

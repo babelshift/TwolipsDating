@@ -3,7 +3,13 @@
         e.preventDefault();
         var itemId = $(this).attr('data-item-id');
         var itemNumber = $(this).attr('data-item-number');
-        var json = '{storeItemId:' + itemId + '}';
+
+        var jsonObject = {
+            "storeItemId": itemId
+        };
+
+        var json = JSON.stringify(jsonObject);
+
         postJson('/store/removeCartItem', json, function (data) {
             if (data.success) {
 

@@ -620,7 +620,7 @@ namespace TwolipsDating.Controllers
 
             viewModel.StoreTransactions = storeTransactions
                 .OrderByDescending(t => t.TransactionDate)
-                .ToPagedList(page ?? 1, 1);
+                .ToPagedList(page ?? 1, 20);
 
             return View(viewModel);
         }

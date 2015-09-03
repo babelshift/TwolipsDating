@@ -1,44 +1,49 @@
 ﻿@model TwolipsDating.ViewModels.GiftReceivedFeedViewModel
 
-<div class="circular-image-wrapper">
-    <img class="circular-image" src="@Model.SenderProfileImagePath" />
+<div class="feed-item-icon pull-left">
+    <i class="fa fa-gift fa-fw fa-lg"></i>
 </div>
-<div class="feed-item-headline">
-    @if (Model.SenderUserName == User.Identity.Name)
-    {
-        @:You
-    }
-    else
-    {
-        <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId })">@Model.SenderUserName</a>
-    }
-    @if (@Model.Gifts.Count > 1)
-    {
-        @:sent gifts to
-    }
-    else
-    {
-        @:sent a gift to
-    }
-    @if (Model.ReceiverUserName == User.Identity.Name)
-    {
-        @:you
-    }
-    else
-    {
-        <a href="@Url.Action("index", "profile", new { id = Model.ReceiverProfileId })">@Model.ReceiverUserName</a>
-    }
-    <br />
-    <small>@Model.TimeAgo</small>
-</div>
-<div class="clearfix"></div>
-@foreach (var gift in Model.Gifts)
-{
-    <div class="col-xs-4 col-sm-2">
-        <img src="@gift.Value.GiftImagePath" width="46" height="46">
-        @if (gift.Value.GiftSentCount > 1)
-        {
-            <span class="label label-default">@gift.Value.GiftSentCount</span>
-        }
+<div style="margin-left: 35px">
+    <div class="circular-image-wrapper">
+        <img class="circular-image" src="@Model.SenderProfileImagePath" />
     </div>
-}
+    <div class="feed-item-headline">
+        @if (Model.SenderUserName == User.Identity.Name)
+        {
+            @:You
+    }
+        else
+        {
+            <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId })">@Model.SenderUserName</a>
+        }
+        @if (@Model.Gifts.Count > 1)
+        {
+            @:sent gifts to
+    }
+        else
+        {
+            @:sent a gift to
+    }
+        @if (Model.ReceiverUserName == User.Identity.Name)
+        {
+            @:you
+    }
+        else
+        {
+            <a href="@Url.Action("index", "profile", new { id = Model.ReceiverProfileId })">@Model.ReceiverUserName</a>
+        }
+        <br />
+        <small>@Model.TimeAgo</small>
+    </div>
+    <div class="clearfix"></div>
+    @foreach (var gift in Model.Gifts)
+    {
+        <div class="col-xs-4 col-sm-2">
+            <img src="@gift.Value.GiftImagePath" width="46" height="46">
+            @if (gift.Value.GiftSentCount > 1)
+            {
+                <span class="label label-default">@gift.Value.GiftSentCount</span>
+            }
+        </div>
+    }
+</div>

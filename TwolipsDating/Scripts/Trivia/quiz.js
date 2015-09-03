@@ -19,8 +19,13 @@
 function onAddQuestionViolation(e, obj) {
     var questionId = $('#selected-question-id').val();
     var violationTypeId = $('#QuestionViolation_ViolationTypeId').val();
+    
+    var jsonObject = {
+        "questionId": questionId,
+        "violationTypeId": violationTypeId
+    };
 
-    var json = '{"questionId":' + questionId + ', "violationTypeId":' + violationTypeId + '}';
+    var json = JSON.stringify(jsonObject);
 
     postJson('/violation/addQuestionViolation', json, function (data) {
         if (data.success) {

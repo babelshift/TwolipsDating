@@ -32,7 +32,12 @@ function onBuyGift(e, obj) {
     var giftCount = $("#text-gift-count").val();
     var purchasePointCost = $("#span-total-price").html();
 
-    var json = '{"giftId":' + giftId + ', "giftCount":' + giftCount + '}';
+    var jsonObject = {
+        "giftId": giftId,
+        "giftCount": giftCount
+    };
+
+    var json = JSON.stringify(jsonObject);
 
     postJson('/store/buyGift', json, function (data) {
         if (data.success) {

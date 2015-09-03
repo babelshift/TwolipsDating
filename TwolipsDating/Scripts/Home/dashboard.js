@@ -61,17 +61,15 @@
 function onSubmitAnswer(e, obj) {
     e.preventDefault();
 
-    //$("#button-next").addClass("hidden");
-    //$("#button-ok").removeClass("hidden");
-
     var questionId = $("#RandomQuestion_QuestionId").val();
-    var selectedAnswerId = $(obj).attr("data-answer-id");  //var selected = $("input[type='radio'][name='RandomQuestion.SelectedAnswerId']:checked");
-    //var answerId = "";
-    //if (selected.length > 0) {
-    //    answerId = selected.val();
-    //}
+    var selectedAnswerId = $(obj).attr("data-answer-id");
 
-    var json = '{"questionId":' + questionId + ', "answerId":' + selectedAnswerId + '}';
+    var jsonObject = {
+        "questionId": questionId,
+        "answerId": selectedAnswerId
+    };
+
+    var json = JSON.stringify(jsonObject);
 
     postJson('/trivia/submitAnswer', json, function (data) {
         if (data.success) {
@@ -127,12 +125,19 @@ function onAddReviewViolation(e, obj) {
     var authorUserId = $('#CurrentUserId').val();
     var content = $('#WriteReviewViolation_ViolationContent').val();
 
-    json = '{"reviewId":' + reviewId + ', "violationTypeId":' + violationTypeId + ', "content":"' + content + '"}';
+    var jsonObject = {
+        "reviewId": reviewId,
+        "violationTypeId": violationTypeId,
+        "content": content
+    };
+
+    json = JSON.stringify(jsonObject);
 
     postJson('/violation/addReviewViolation', json, function (data) {
         if (data.success) {
             $('#violation-success').show();
             $('#button-violation-submit').hide();
+            $('#violation-review-body').hide();
         } else {
             $('#violation-error').show();
             $('#violation-error-text').text(data.error);
@@ -178,7 +183,12 @@ $(document).ready(function () {
         var profileUserId = $(this).attr('data-user-id');
         var profileId = $(this).attr('data-profile-id');
 
-        var json = '{"profileUserId":"' + profileUserId + '", "profileId":' + profileId + '}';
+        var jsonObject = {
+            "profileUserId": profileUserId,
+            "profileId": profileId
+        };
+
+        var json = JSON.stringify(jsonObject);
 
         postJson('/profile/toggleFavoriteProfile', json, function (data) {
             if (data.success) {
@@ -196,13 +206,9 @@ $(document).ready(function () {
 
 function toggleFavoriteProfileIcon(profileId, isFavorite) {
     if (isFavorite) {
-        $('#icon-toggle-favorite-' + profileId).removeClass("glyphicon-heart-empty");
-        $('#icon-toggle-favorite-' + profileId).addClass("glyphicon-heart");
         $('#button-toggle-favorite-' + profileId).removeClass("btn-default");
         $('#button-toggle-favorite-' + profileId).addClass("btn-success");
     } else {
-        $('#icon-toggle-favorite-' + profileId).removeClass("glyphicon-heart");
-        $('#icon-toggle-favorite-' + profileId).addClass("glyphicon-heart-empty");
         $('#button-toggle-favorite-' + profileId).removeClass("btn-success");
         $('#button-toggle-favorite-' + profileId).addClass("btn-default");
     }
