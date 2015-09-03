@@ -16,17 +16,26 @@
         {
             @Html.Partial("_GiftSpotlightPartial", Model.GiftSpotlight)
         }
-        <div class="ad">
-            <!-- Store - Sidebar - 1 -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1823005717277864"
-                 data-ad-slot="2718406231"
-                 data-ad-format="auto"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
+        @if (!HttpContext.Current.IsDebuggingEnabled)
+        {
+            <div class="ad">
+                <!-- Store - Sidebar - 1 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1823005717277864"
+                     data-ad-slot="2718406231"
+                     data-ad-format="auto"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        }
+        else
+        {
+            <div style="width: 95px; margin: 5px auto;">
+                <img src="http://placehold.it/150x600" />
+            </div>
+        }
     </div>
     <div class="col-md-9">
         <div class="panel panel-default">
@@ -44,15 +53,24 @@
             </div>
         </div>
     </div>
-    <!-- Store - Footer - 1 -->
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-1823005717277864"
-         data-ad-slot="4806928234"
-         data-ad-format="auto"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+    @if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <!-- Store - Footer - 1 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1823005717277864"
+             data-ad-slot="4806928234"
+             data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    }
+    else
+    {
+        <div style="width: 610px; margin: 5px auto;">
+            <img src="http://placehold.it/600x90" />
+        </div>
+    }
 </div>
 
 @section Scripts {

@@ -36,34 +36,52 @@
         <div class="panel panel-default">
             @Html.Partial("_QuestionAndAnswerPartial", Model)
         </div>
-        <div class="ad">
-            <!-- Timed Question - Footer - 1 -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1823005717277864"
-                 data-ad-slot="3680435431"
-                 data-ad-format="auto"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
+        @if (!HttpContext.Current.IsDebuggingEnabled)
+        {
+            <div class="ad">
+                <!-- Timed Question - Footer - 1 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1823005717277864"
+                     data-ad-slot="3680435431"
+                     data-ad-format="auto"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        }
+        else
+        {
+            <div style="width: 610px; margin: 5px auto;">
+                <img src="http://placehold.it/600x90" />
+            </div>
+        }
     </div>
     <div class="col-md-4">
         @if (Model.UsersAnsweredCorrectly != null)
         {
             @Html.Partial("_SidebarOthersAnsweredCorrectlyPartial", Model.UsersAnsweredCorrectly)
         }
-        <div class="ad">
-            <!-- Timed Question - Sidebar - 1 -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1823005717277864"
-                 data-ad-slot="5671872638"
-                 data-ad-format="auto"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
+        @if (!HttpContext.Current.IsDebuggingEnabled)
+        {
+            <div class="ad">
+                <!-- Timed Question - Sidebar - 1 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1823005717277864"
+                     data-ad-slot="5671872638"
+                     data-ad-format="auto"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        }
+        else
+        {
+            <div style="width: 210px; margin: 5px auto;">
+                <img src="http://placehold.it/200x200" />
+            </div>
+        }
     </div>
 </div>
 

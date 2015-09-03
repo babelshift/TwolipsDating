@@ -80,17 +80,27 @@
         </div>
     </div>
 </div>
-<div class="ad">
-    <!-- Dashboard - Top - 1 -->
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-1823005717277864"
-         data-ad-slot="6266655036"
-         data-ad-format="auto"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
+
+@if (!HttpContext.Current.IsDebuggingEnabled)
+{
+    <div class="ad">
+        <!-- Dashboard - Top - 1 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1823005717277864"
+             data-ad-slot="6266655036"
+             data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+}
+else
+{
+    <div style="width: 610px; margin: 5px auto;">
+        <img src="http://placehold.it/600x90" />
+    </div>
+}
 <div class="row">
     @if (Model.IsCurrentUserEmailConfirmed)
     {
@@ -268,17 +278,26 @@
         </div>
     }
 </div>
-<div class="ad">
-    <!-- Dashboard - Sidebar - 1 -->
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-1823005717277864"
-         data-ad-slot="9881746234"
-         data-ad-format="auto"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
+@if (!HttpContext.Current.IsDebuggingEnabled)
+{
+    <div class="ad">
+        <!-- Dashboard - Sidebar - 1 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1823005717277864"
+             data-ad-slot="9881746234"
+             data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+}
+else
+{
+    <div style="width: 610px; margin: 5px auto;">
+        <img src="http://placehold.it/600x90" />
+    </div>
+}
 
 @section Scripts {
     <script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>

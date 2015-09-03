@@ -11,17 +11,26 @@
             users suggest those tags or when a user earns a tag by participating in the community.
         </div>
     </div>
-    <div class="ad">
-        <!-- Tags - Top - 1 -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1823005717277864"
-             data-ad-slot="7334919034"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
+    @if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="ad">
+            <!-- Tags - Top - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="7334919034"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    }
+    else
+    {
+        <div style="width: 610px; margin: 5px auto;">
+            <img src="http://placehold.it/600x90" />
+        </div>
+    }
     <div class="panel panel-default">
         <div class="panel-body">
             @foreach (var tag in Model)
@@ -52,15 +61,24 @@
             }
         </div>
     </div>
-    <!-- Tags - Bottom - 1 -->
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-1823005717277864"
-         data-ad-slot="5880035438"
-         data-ad-format="auto"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+    @if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <!-- Tags - Bottom - 1 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1823005717277864"
+             data-ad-slot="5880035438"
+             data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    }
+    else
+    {
+        <div style="width: 610px; margin: 5px auto;">
+            <img src="http://placehold.it/600x90" />
+        </div>
+    }
 </div>
 
 @section Scripts {

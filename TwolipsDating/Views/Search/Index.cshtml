@@ -24,18 +24,26 @@
         </div>
     </div>
 </div>
-<div class="ad">
-    <!-- Search - Header - 1 -->
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-1823005717277864"
-         data-ad-slot="9119376635"
-         data-ad-format="auto"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
-
+@if (!HttpContext.Current.IsDebuggingEnabled)
+{
+    <div class="ad">
+        <!-- Search - Header - 1 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1823005717277864"
+             data-ad-slot="9119376635"
+             data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+}
+else
+{
+    <div style="width: 610px; margin: 5px auto;">
+        <img src="http://placehold.it/600x90" />
+    </div>
+}
 @if (Model.SearchResults != null && Model.SearchResults.Count > 0)
 {
     <div class="row">
