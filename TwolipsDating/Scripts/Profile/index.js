@@ -109,14 +109,24 @@ $(document).ready(function () {
     });
 });
 
-function setupTextAreaForPost(buttonSave, textArea, param, postPath, buttonEdit, container, textDisplay, defaultText) {
+function setupTextAreaForPost(buttonSave, textArea, paramName, postPath, buttonEdit, container, textDisplay, defaultText) {
     $(buttonSave).on('click', function (e) {
         var text = $(textArea).val();
 
-        var json = '{"' + param + '":"' + text + '"}';
+        var jsonObject = {
+        };
+
+        jsonObject[paramName] = text;
+
+        var json = JSON.stringify(jsonObject);
+
+        //var json = '{"' + param + '":"' + text + '"}';
 
         postJson(postPath, json, function (data) {
             if (data.success) {
+
+                text = htmlEscape(text);
+
                 $(buttonEdit).removeClass('hidden');
                 $(container).addClass('hidden');
                 $(textDisplay).removeClass('hidden');
@@ -124,7 +134,7 @@ function setupTextAreaForPost(buttonSave, textArea, param, postPath, buttonEdit,
                 if (text == null || text.length == 0) {
                     $(textDisplay).text(defaultText);
                 } else {
-                    $(textDisplay).text(text);
+                    $(textDisplay).html(text);
                 }
                 $(textArea).val(text);
             }
