@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 
 namespace TwolipsDating.Utilities
 {
@@ -9,6 +10,7 @@ namespace TwolipsDating.Utilities
             private const string Subject = "{0} wrote a review about you on Twolips!";
             public static string GetSubject(string followerUserName)
             {
+                followerUserName = HttpUtility.HtmlEncode(followerUserName);
                 return String.Format(Subject, followerUserName);
             }
 
@@ -70,6 +72,10 @@ namespace TwolipsDating.Utilities
 
             public static string GetBody(string receiverUserName, string senderProfileImagePath, string senderUserName, string reviewText, string senderProfileUrl)
             {
+                receiverUserName = HttpUtility.HtmlEncode(receiverUserName);
+                senderUserName = HttpUtility.HtmlEncode(senderUserName);
+                reviewText = HttpUtility.HtmlEncode(reviewText);
+
                 return String.Format(Body, receiverUserName, senderProfileImagePath, senderUserName, reviewText, senderProfileUrl);
             }
         }
@@ -160,6 +166,9 @@ namespace TwolipsDating.Utilities
 
             public static string GetBody(string receiverUserName, string giftImagePath, string giftName, string senderProfileImagePath, string senderUserName, string senderProfileUrl)
             {
+                receiverUserName = HttpUtility.HtmlEncode(receiverUserName);
+                senderUserName = HttpUtility.HtmlEncode(senderUserName);
+                giftName = HttpUtility.HtmlEncode(giftName);
                 return String.Format(Body, receiverUserName, giftImagePath, senderProfileImagePath, giftName, senderUserName, senderProfileUrl);
             }
         }
@@ -230,6 +239,9 @@ namespace TwolipsDating.Utilities
 
             public static string GetBody(string receiverUserName, string senderProfileImagePath, string senderUserName, string messageText, string conversationUrl)
             {
+                receiverUserName = HttpUtility.HtmlEncode(receiverUserName);
+                senderUserName = HttpUtility.HtmlEncode(senderUserName);
+                messageText = HttpUtility.HtmlEncode(messageText);
                 return String.Format(Body, receiverUserName, senderProfileImagePath, senderUserName, messageText, conversationUrl);
             }
         }
@@ -299,6 +311,8 @@ namespace TwolipsDating.Utilities
 
             public static string GetBody(string followingUserName, string followerProfileImagePath, string followerUserName, string profileUrl)
             {
+                followerUserName = HttpUtility.HtmlEncode(followerUserName);
+                followingUserName = HttpUtility.HtmlEncode(followingUserName);
                 return String.Format(Body, followingUserName, followerProfileImagePath, followerUserName, profileUrl);
             }
         }
