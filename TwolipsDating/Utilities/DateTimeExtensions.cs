@@ -23,7 +23,7 @@ namespace TwolipsDating.Utilities
 
         public static int GetAge(this DateTime birthday)
         {
-            return (int)((DateTime.Now - birthday).TotalDays / 365);
+            return (int)Math.Floor(((DateTime.Now - birthday).TotalDays / (double)365));
         }
 
         public static string GetTimeAgo(this DateTime dateReviewCreated)

@@ -87,27 +87,41 @@
                 <ul class="nav navbar-nav navbar-right">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li>
-                            <a href="@Url.Action("points", "account")" title="Points">
-                                <i class="fa fa-money fa-lg"></i>&nbsp;&nbsp;<span id="span-points-count">@ViewBag.PointsCount</span>
-                            </a>
-                        </li>
-                        <li style="background: @(ViewBag.MessageNotificationCount > 0 ? "#e55f00" : String.Empty)">
-                            <a href="@Url.Action("conversation", "message")" title="Unread messages">
-                                <i class="fa fa-envelope fa-lg"></i>&nbsp;&nbsp;@ViewBag.MessageNotificationCount
-                            </a>
-                        </li>
-                        <li style="background: @(ViewBag.GiftNotificationCount > 0 ? "#e55f00" : String.Empty)">
-                            <a id="popover-gifts" href="#" title="Received Gifts" data-placement="bottom" data-container="body" data-animation="false">
-                                <i class="fa fa-gift fa-lg"></i>&nbsp;&nbsp;<span id="span-gift-notification-count">@ViewBag.GiftNotificationCount</span>&nbsp;<span class="caret"></span>
-                            </a>
-                            <input id="gift-notification-count" type="hidden" value="@ViewBag.GiftNotificationCount" />
-                        </li>
-                        <li style="background: @(ViewBag.AnnouncementNotificationCount > 0 ? "#e55f00" : String.Empty)">
-                            <a id="popover-announcements" href="#" title="Announcements" data-toggle="popover" data-placement="bottom" data-container="body" data-animation="false">
-                                <i class="fa fa-bullhorn fa-lg"></i>&nbsp;&nbsp;@ViewBag.AnnouncementNotificationCount&nbsp;<span class="caret"></span>
-                            </a>
-                        </li>
+                        if (ViewBag.PointsCount != null)
+                        {
+                            <li>
+                                <a href="@Url.Action("points", "account")" title="Points">
+                                    <i class="fa fa-money fa-lg"></i>&nbsp;&nbsp;<span id="span-points-count">@ViewBag.PointsCount</span>
+                                </a>
+                            </li>
+                        }
+                        if (ViewBag.MessageNotificationCount != null)
+                        {
+                            <li style="background: @(ViewBag.MessageNotificationCount > 0 ? "#e55f00" : String.Empty)">
+                                <a href="@Url.Action("conversation", "message")" title="Unread messages">
+                                    <i class="fa fa-envelope fa-lg"></i>&nbsp;&nbsp;@ViewBag.MessageNotificationCount
+                                </a>
+                            </li>
+                        }
+
+                        if (ViewBag.GiftNotificationCount != null)
+                        {
+                            <li style="background: @(ViewBag.GiftNotificationCount > 0 ? "#e55f00" : String.Empty)">
+                                <a id="popover-gifts" href="#" title="Received Gifts" data-placement="bottom" data-container="body" data-animation="false">
+                                    <i class="fa fa-gift fa-lg"></i>&nbsp;&nbsp;<span id="span-gift-notification-count">@ViewBag.GiftNotificationCount</span>&nbsp;<span class="caret"></span>
+                                </a>
+                                <input id="gift-notification-count" type="hidden" value="@ViewBag.GiftNotificationCount" />
+                            </li>
+                        }
+
+                        if (ViewBag.AnnouncementNotificationCount != null)
+                        {
+                            <li style="background: @(ViewBag.AnnouncementNotificationCount > 0 ? "#e55f00" : String.Empty)">
+                                <a id="popover-announcements" href="#" title="Announcements" data-toggle="popover" data-placement="bottom" data-container="body" data-animation="false">
+                                    <i class="fa fa-bullhorn fa-lg"></i>&nbsp;&nbsp;@ViewBag.AnnouncementNotificationCount&nbsp;<span class="caret"></span>
+                                </a>
+                            </li>
+                        }
                     }
                 </ul>
             </div>
