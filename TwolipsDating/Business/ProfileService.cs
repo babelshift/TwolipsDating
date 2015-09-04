@@ -153,11 +153,12 @@ namespace TwolipsDating.Business
 
             // clear out any profiles that are using this image
             var profilesUsingThisImage = db.Profiles.Where(p => p.BannerImageId == userImageId);
+            var thisImage = await db.UserImages.FindAsync(userImageId);
             foreach (var profile in profilesUsingThisImage)
             {
-                db.UserImages.Remove(profile.BannerImage);
                 profile.BannerImageId = null;
             }
+            db.UserImages.Remove(thisImage);
 
             return await db.SaveChangesAsync();
         }
@@ -415,7 +416,6 @@ namespace TwolipsDating.Business
             profile.BannerImageId = null;
             profile.BannerPositionX = 0;
             profile.BannerPositionY = 0;
-            db.UserImages.Remove(profile.BannerImage);
 
             // add new
             profile.BannerImageId = userImageId;
@@ -474,7 +474,7 @@ namespace TwolipsDating.Business
             db.UserImages.Add(userImage);
             int count = await db.SaveChangesAsync();
 
-            // don't count banner uploads
+            // don't count banner uploads towards achievements
             if(!isBanner)
             {
                 await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.ProfileImagesUploaded);

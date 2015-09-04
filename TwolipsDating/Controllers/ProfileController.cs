@@ -439,8 +439,9 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private static async Task DeleteThumbnailImageFromAzureStorageAsync(string fileName, CloudBlobContainer container)
+        private static async Task DeleteThumbnailImageFromAzureStorageAsync(string fileName)
         {
+            var container = GetAzureStorageContainer();
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
             string fileExtension = Path.GetExtension(fileName);
             string thumbnailName = String.Format("{0}_{1}{2}", fileNameWithoutExtension, "thumb", fileExtension);
@@ -448,42 +449,24 @@ namespace TwolipsDating.Controllers
             await blockBlobThumbnail.DeleteAsync();
         }
 
-        private static async Task DeleteFullSizeImageFromAzureStorageAsync(string fileName, CloudBlobContainer container)
+        private static async Task DeleteFullSizeImageFromAzureStorageAsync(string fileName)
         {
+            var container = GetAzureStorageContainer();
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
             await blockBlob.DeleteAsync();
         }
 
-        private async Task<bool> DeleteImageAsync(int userImageId, string fileName, bool isBanner = false)
+        private async Task<bool> DeleteImageAsync(int userImageId, string fileName)
         {
-            try
+            int changes = await ProfileService.DeleteUserImageAsync(userImageId);
+
+            if (changes > 0)
             {
-                int changes = 0;
-
-                // TODO: how to make this atomic?
-                if (isBanner)
-                {
-                    changes = await ProfileService.DeleteBannerImageAsync(userImageId);
-                }
-                else
-                {
-                    changes = await ProfileService.DeleteUserImageAsync(userImageId);
-                }
-
-                if (changes > 0)
-                {
-                    var container = GetAzureStorageContainer();
-                    await DeleteFullSizeImageFromAzureStorageAsync(fileName, container);
-                    await DeleteThumbnailImageFromAzureStorageAsync(fileName, container);
-                }
-
-                return changes > 0;
-
+                await DeleteFullSizeImageFromAzureStorageAsync(fileName);
+                await DeleteThumbnailImageFromAzureStorageAsync(fileName);
             }
-            catch (Exception ex)
-            {
-                return false;
-            }
+
+            return changes > 0;
         }
 
         /// <summary>
@@ -495,7 +478,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, RequireConfirmedEmail, ExportModelStateToTempData]
         public async Task<ActionResult> UploadImage(UploadImageViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -504,48 +487,26 @@ namespace TwolipsDating.Controllers
             }
 
             string currentUserId = User.Identity.GetUserId();
-
-            // user cannot upload an image if they haven't confirmed their email address
-            // user cannot upload an image for someone else's profile
-            bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
-            if (viewModel.ProfileUserId != currentUserId || !isCurrentUserEmailConfirmed)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
-            }
-
             int i = 0;
             foreach (var uploadedImage in viewModel.UploadedImages)
             {
-                // skip over non-images
-                if (!IsValidImageFileType(uploadedImage.ContentType))
-                {
-                    continue;
-                }
+                UploadedProfileImage newImage = new UploadedProfileImage(uploadedImage);
+
+                if (!newImage.IsValidImage) { continue; }
 
                 try
                 {
-                    string fileType = Path.GetExtension(uploadedImage.FileName);
-                    Guid guid = Guid.NewGuid();
-                    string fileName = String.Format("{0}{1}", guid, fileType);
-                    string fileNameThumb = String.Format("{0}_{2}{1}", guid, fileType, "thumb");
-                    string contentType = uploadedImage.ContentType;
-
                     // add the image id to our database
-                    int newUserImageId = await ProfileService.AddUploadedImageForUserAsync(currentUserId, fileName);
+                    int newUserImageId = await ProfileService.AddUploadedImageForUserAsync(currentUserId, newImage.FileName);
 
                     // if we saved to our database successfully, save to Azure Storage Blob
                     if (newUserImageId > 0)
                     {
-                        var container = GetAzureStorageContainer();
-
-                        CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
-                        blockBlob.Properties.ContentType = contentType;
-
                         // upload the full image and return it in case it had to be resized
-                        WebImage image = await UploadFullProfileImageToAzureStorageAsync(uploadedImage, blockBlob);
+                        await UploadFullProfileImageToAzureStorageAsync(newImage);
 
                         // upload the thumbnail of the now possibly resized image
-                        await UploadProfileThumbnailToAzureStorageAsync(fileNameThumb, contentType, container, image);
+                        await UploadProfileThumbnailToAzureStorageAsync(newImage);
 
                         // if this is the first image being uploaded and the user doesn't have a profile image set, set the user's profile image to the file being uploaded
                         if (i == 0)
@@ -559,37 +520,19 @@ namespace TwolipsDating.Controllers
                     }
                     else
                     {
-                        Log.Warn(
-                            "UploadImage", ErrorMessages.UserImageNotUploaded,
-                            parameters: new { currentUserId = currentUserId, fileType = fileType, fileName = fileName }
-                        );
-
-                        AddError(ErrorMessages.UserImageNotUploaded);
+                        AddError(ErrorMessages.UserImageNotUploaded, "UploadImage",
+                            parameters: new { currentUserId = currentUserId, fileType = newImage.FileType, fileName = newImage.FileName });
                     }
                 }
+
                 catch (DbUpdateException e)
                 {
-                    Log.Error("UploadImage", e);
-                    AddError(ErrorMessages.UserImageNotUploaded);
+                    AddError(e.Message, "UploadImage",
+                        parameters: new { currentUserId = currentUserId, fileType = newImage.FileType, fileName = newImage.FileName });
                 }
             }
 
             return RedirectToIndex(new { tab = "pictures" });
-        }
-
-        private bool IsValidImageFileType(string contentType)
-        {
-            if (contentType != "image/jpeg"
-                    && contentType != "image/png"
-                    && contentType != "image/bmp"
-                    && contentType != "image/gif")
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
         }
 
         private static CloudBlobContainer GetAzureStorageContainer()
@@ -608,12 +551,13 @@ namespace TwolipsDating.Controllers
         /// <param name="container"></param>
         /// <param name="image"></param>
         /// <returns></returns>
-        private static async Task UploadProfileThumbnailToAzureStorageAsync(string fileNameThumb, string contentType, CloudBlobContainer container, WebImage image)
+        private static async Task UploadProfileThumbnailToAzureStorageAsync(UploadedProfileImage newImage)
         {
-            CreateThumbnail(image);
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileNameThumb);
-            blockBlob.Properties.ContentType = contentType;
-            byte[] rawImageThumb = image.GetBytes();
+            var container = GetAzureStorageContainer();
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(newImage.ThumbnailFileName);
+            blockBlob.Properties.ContentType = newImage.ContentType;
+
+            var rawImageThumb = newImage.ThumbnailImage.GetBytes();
             await blockBlob.UploadFromByteArrayAsync(rawImageThumb, 0, rawImageThumb.Length);
         }
 
@@ -624,41 +568,14 @@ namespace TwolipsDating.Controllers
         /// <param name="uploadedImage"></param>
         /// <param name="blockBlob"></param>
         /// <returns></returns>
-        private static async Task<WebImage> UploadFullProfileImageToAzureStorageAsync(HttpPostedFileBase uploadedImage, CloudBlockBlob blockBlob)
+        private static async Task UploadFullProfileImageToAzureStorageAsync(UploadedProfileImage newImage)
         {
-            WebImage image = new WebImage(uploadedImage.InputStream);
-            byte[] rawImage = image.GetBytes();
+            var container = GetAzureStorageContainer();
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(newImage.FileName);
+            blockBlob.Properties.ContentType = newImage.ContentType;
 
-            // resize the image if it's too big
-            if (image.Width > 1000 || image.Height > 1000)
-            {
-                image = image.Resize(1000, 1000, true);
-                rawImage = image.GetBytes();
-            }
-
+            var rawImage = newImage.FullImage.GetBytes();
             await blockBlob.UploadFromByteArrayAsync(rawImage, 0, rawImage.Length);
-
-            return image;
-        }
-
-        /// <summary>
-        /// Creates a thumbnail of the size 200x200 from the passed image parameter. Will crop the image into a square prior to resizing if not already a square.
-        /// </summary>
-        /// <param name="image"></param>
-        private static void CreateThumbnail(WebImage image)
-        {
-            if (image.Width > image.Height)
-            {
-                int cropAmount = (image.Width - image.Height) / 2;
-                image = image.Crop(0, cropAmount, 0, cropAmount);
-            }
-            else
-            {
-                int cropAmount = (image.Height - image.Width) / 2;
-                image = image.Crop(cropAmount, 0, cropAmount, 0);
-            }
-
-            image.Resize(200, 200, true);
         }
 
         /// <summary>
@@ -668,7 +585,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, RequireConfirmedEmail, ExportModelStateToTempData]
         public async Task<ActionResult> ChangeImage(ProfileViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -676,52 +593,31 @@ namespace TwolipsDating.Controllers
                 return RedirectToIndex(new { tab = viewModel.ActiveTab });
             }
 
+            string currentUserId = User.Identity.GetUserId();
+
             try
             {
-                string currentUserId = User.Identity.GetUserId();
-                bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
-                if (viewModel.ProfileUserId != currentUserId || !isCurrentUserEmailConfirmed)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
-                }
-
                 int changes = await ProfileService.ChangeProfileUserImageAsync(viewModel.ProfileId, viewModel.ChangeImage.UserImageId);
 
                 if (changes == 0)
                 {
-                    Log.Warn(
-                        "UploadImage", ErrorMessages.ProfileImageNotChanged,
-                        new { currentUserId = currentUserId, profileUserId = viewModel.ProfileUserId, userImageId = viewModel.ChangeImage.UserImageId }
-                    );
-
-                    AddError(ErrorMessages.ProfileImageNotChanged);
+                    AddError(ErrorMessages.ProfileImageNotChanged, "UploadImage",
+                        new { currentUserId = currentUserId, profileUserId = viewModel.ProfileUserId, userImageId = viewModel.ChangeImage.UserImageId });
                 }
             }
             catch (DbUpdateException e)
             {
-                Log.Error(
-                    "UploadImage",
-                    e,
-                    new { profileUserId = viewModel.ProfileUserId, userImageId = viewModel.ChangeImage.UserImageId }
-                );
-
-                AddError(ErrorMessages.ProfileImageNotChanged);
+                AddError(ErrorMessages.ProfileImageNotChanged, "UploadImage",
+                    new { currentUserId = currentUserId, profileUserId = viewModel.ProfileUserId, userImageId = viewModel.ChangeImage.UserImageId });
             }
 
             return RedirectToIndex(new { tab = viewModel.ActiveTab });
         }
 
-        [HttpPost]
+        [HttpPost, RequireConfirmedEmail]
         public async Task<JsonResult> SaveBackgroundImage(string profileUserId, int profileId, int bannerPositionX, int bannerPositionY)
         {
             string currentUserId = User.Identity.GetUserId();
-
-            // user should only change background if email is confirmed and only their own profile
-            bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
-            if (profileUserId != currentUserId || !isCurrentUserEmailConfirmed)
-            {
-                return Json(new { success = false, error = "403 Forbidden" });
-            }
 
             int changes = await ProfileService.SetBannerImagePositionAsync(profileId, bannerPositionX, bannerPositionY);
 
@@ -733,71 +629,67 @@ namespace TwolipsDating.Controllers
             return Json(new { success = false });
         }
 
-        [HttpPost]
-        public async Task<JsonResult> ChangeBackgroundImage(string profileUserId, int profileId)
+        [HttpPost, RequireConfirmedEmail]
+        public async Task<JsonResult> ChangeBackgroundImage(string profileUserId)
         {
             string currentUserId = User.Identity.GetUserId();
-
-            // user should only change background if email is confirmed and only their own profile
-            bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
-            if (profileUserId != currentUserId || !isCurrentUserEmailConfirmed)
-            {
-                return Json(new { success = false, error = "403 Forbidden" });
-            }
 
             if (Request.Files.Count > 0)
             {
                 var uploadedImage = Request.Files[0] as HttpPostedFileBase;
-                string contentType = uploadedImage.ContentType;
 
-                // don't bother with non images
-                if (!IsValidImageFileType(contentType))
+                UploadedBannerImage newImage = new UploadedBannerImage(uploadedImage);
+
+                if (!newImage.IsValidImage)
                 {
                     return Json(new { success = false });
                 }
 
-                string fileType = Path.GetExtension(uploadedImage.FileName);
-                Guid guid = Guid.NewGuid();
-                string fileName = String.Format("{0}{1}", guid, fileType);
-
                 // add the image id to our database
-                int newUserImageId = await ProfileService.AddUploadedImageForUserAsync(currentUserId, fileName, true);
+                int newUserImageId = await ProfileService.AddUploadedImageForUserAsync(currentUserId, newImage.FileName, true);
 
                 // if we saved to our database successfully, save to Azure Storage Blob
                 if (newUserImageId > 0)
                 {
-                    var container = GetAzureStorageContainer();
-
-                    CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
-                    blockBlob.Properties.ContentType = contentType;
-
-                    // upload the full image and return it in case it had to be resized
-                    await UploadBannerImageToAzureStorageAsync(uploadedImage, blockBlob);
+                    // upload the new banner to azure
+                    await UploadBannerImageToAzureStorageAsync(newImage);
 
                     var profile = await ProfileService.GetProfileAsync(currentUserId);
+
                     if (profile != null)
                     {
-                        await ProfileService.ChangeProfileBannerImageAsync(profileId, newUserImageId);
+                        if (profile.BannerImage != null)
+                        {
+                            string previousBannerFileName = profile.BannerImage.FileName;
+                            // TODO: ATOMIC?
+                            // remove the previous banner from database
+                            int changes = await ProfileService.DeleteBannerImageAsync(profile.BannerImage.Id);
+
+                            if (changes > 0)
+                            {
+                                // remove the previous banner from azure
+                                await DeleteFullSizeImageFromAzureStorageAsync(previousBannerFileName);
+                            }
+                        }
+
+                        // change the user's profile to use the new banner
+                        await ProfileService.ChangeProfileBannerImageAsync(profile.Id, newUserImageId);
                     }
                 }
 
-                return Json(new { success = true, bannerImagePath = UserImageExtensions.GetPath(fileName) });
+                return Json(new { success = true, bannerImagePath = UserImageExtensions.GetPath(newImage.FileName) });
             }
 
             return Json(new { success = false });
         }
 
-        private async Task UploadBannerImageToAzureStorageAsync(HttpPostedFileBase uploadedImage, CloudBlockBlob blockBlob)
+        private async Task UploadBannerImageToAzureStorageAsync(UploadedBannerImage newImage)
         {
-            WebImage image = new WebImage(uploadedImage.InputStream);
-            byte[] rawImage = image.GetBytes();
+            var container = GetAzureStorageContainer();
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(newImage.FileName);
+            blockBlob.Properties.ContentType = newImage.ContentType;
 
-            // resize the image if it's too big
-            if (image.Width > 1170 || image.Height > 1170)
-            {
-                image = image.Resize(1170, 1170, true);
-                rawImage = image.GetBytes();
-            }
+            var rawImage = newImage.FullImage.GetBytes();
 
             await blockBlob.UploadFromByteArrayAsync(rawImage, 0, rawImage.Length);
         }

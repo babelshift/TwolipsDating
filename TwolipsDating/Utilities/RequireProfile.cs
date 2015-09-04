@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNet.Identity;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using TwolipsDating.Business;
-using System.Threading.Tasks;
 using System.Web.Routing;
+using TwolipsDating.Business;
 
 namespace TwolipsDating.Utilities
 {
@@ -28,10 +24,10 @@ namespace TwolipsDating.Utilities
                 if (!doesUserHaveProfile)
                 {
                     filterContext.Result = new RedirectToRouteResult(
-                        new RouteValueDictionary 
-                        { 
-                            { "controller", "Profile" }, 
-                            { "action", "Index" } 
+                        new RouteValueDictionary
+                        {
+                            { "controller", "Profile" },
+                            { "action", "Index" }
                         });
                 }
             }

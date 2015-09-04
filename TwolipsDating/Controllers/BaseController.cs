@@ -138,8 +138,9 @@ namespace TwolipsDating.Controllers
         /// Adds an error to the model state to be displayed back to the view.
         /// </summary>
         /// <param name="errorMessage"></param>
-        protected void AddError(string errorMessage)
+        protected void AddError(string errorMessage, string actionName = null, object parameters = null)
         {
+            Log.Error(actionName, errorMessage, parameters);
             ModelState.AddModelError(Guid.NewGuid().ToString(), errorMessage);
         }
 

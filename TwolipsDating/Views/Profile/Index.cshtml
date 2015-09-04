@@ -84,7 +84,6 @@ else
                     using (Html.BeginForm("changebackgroundimage", "profile", FormMethod.Post, new { @id = "upload-header-form", enctype = "multipart/form-data" }))
                     {
                         @Html.HiddenFor(m => m.ProfileUserId)
-                        @Html.HiddenFor(m => m.ProfileId)
                         <span class="btn btn-default btn-xs btn-file" style="position: absolute; left: 20px; top: 15px; ">
                             <i class="fa fa-camera fa-lg"></i> Change header
                             <input id="upload-header" name="upload-header" type="file" />

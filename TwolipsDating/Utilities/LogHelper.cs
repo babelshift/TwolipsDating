@@ -14,6 +14,30 @@ namespace TwolipsDating.Utilities
             logger = LogManager.GetLogger(typeName);
         }
 
+        public void Error(string actionName, string message, object parameters = null)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(actionName));
+            Debug.Assert(!String.IsNullOrEmpty(message));
+
+            StringBuilder logMessage = new StringBuilder();
+
+            logMessage.AppendFormat("Action: {0}", actionName);
+            logMessage.AppendFormat(", Message: {0}", message);
+
+            if (parameters != null)
+            {
+                logMessage.Append(", Params: [");
+                Type anonType = parameters.GetType();
+                foreach (var property in anonType.GetProperties())
+                {
+                    logMessage.AppendFormat("{0}: {1}", property.Name, property.GetValue(parameters, null));
+                }
+                logMessage.Append("]");
+            }
+
+            logger.Error(logMessage.ToString());
+        }
+
         public void Error(string message, string stackTrace)
         {
             Debug.Assert(!String.IsNullOrEmpty(message));
