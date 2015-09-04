@@ -448,6 +448,7 @@ namespace TwolipsDating.Business
 
             var userImageResult = from userImages in db.UserImages
                                   where userImages.ApplicationUserId == userId
+                                  where userImages.IsBanner == false
                                   select userImages;
 
             var results = await userImageResult.ToListAsync();
@@ -1387,9 +1388,10 @@ namespace TwolipsDating.Business
 
         internal async Task<int> GetImagesUploadedCountByUserAsync(string userId)
         {
-            var imagesUploadedCount = await (from image in db.UserImages
-                                             where image.ApplicationUserId == userId
-                                             select image).CountAsync();
+            var imagesUploadedCount = await (from userImages in db.UserImages
+                                             where userImages.ApplicationUserId == userId
+                                             where userImages.IsBanner == false
+                                             select userImages).CountAsync();
 
             return imagesUploadedCount;
         }

@@ -25,6 +25,7 @@ namespace TwolipsDating.Business
                                             join favoritedProfiles in db.FavoriteProfiles on userImages.ApplicationUser.Profile.Id equals favoritedProfiles.ProfileId
                                             where favoritedProfiles.UserId == userId
                                             where userImages.ApplicationUser.IsActive
+                                            where userImages.IsBanner == false
                                             select userImages;
 
             var results = await imagesUploadedByFavorites.ToListAsync();

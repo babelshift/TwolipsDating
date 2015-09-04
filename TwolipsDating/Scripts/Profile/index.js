@@ -112,22 +112,35 @@ $(document).ready(function () {
         }
     });
 
+    // when the user uploads a banner image, immediately submit the upload banner form
     $('#upload-header').on('change', function () {
         $('#upload-header-form').submit();
     });
 
+    // when the user click sto submit the "upload banner image" form, submit and then callback to hide the save button and update the banner image
     $('#upload-header-form').ajaxForm({
         success: function (data) {
             if (data.success) {
                 $('#profile-banner-background').css('background', 'url(' + data.bannerImagePath + ')');
                 $('#profile-banner-background').css('background-size', 'cover');
                 $('#profile-banner-background').backgroundDraggable();
+                $('#profile-banner-background').backgroundDraggable({
+                    done: function () {
+                        var backgroundPosition = $('#profile-banner-background').css('background-position');
+                        var split = backgroundPosition.split(" ");
+                        var x = split[0].replace("px", "");
+                        var y = split[1].replace("px", "");
+                        $('#BannerPositionX').val(parseInt(x));
+                        $('#BannerPositionY').val(parseInt(y));
+                    }
+                });
                 $('#save-header').removeClass('hidden');
             } else {
             }
         }
     });
 
+    // when the user clicks to reposition the banner, enable dragging and show the button to save the position
     $('#reposition-header').on('click', function (e) {
         e.preventDefault();
 
@@ -136,24 +149,36 @@ $(document).ready(function () {
             done: function () {
                 var backgroundPosition = $('#profile-banner-background').css('background-position');
                 var split = backgroundPosition.split(" ");
-                var x = split[0].replace("px", "");
-                var y = split[1].replace("px", "");
-                $('#BannerPositionX').val(parseInt(x));
-                $('#BannerPositionY').val(parseInt(y));
+                var x = parseInt(split[0].replace("px", ""));
+                var y = parseInt(split[1].replace("px", ""));
+
+                var containerHeight = $('#profile-banner-background').height();
+
+                var percentY = parseInt((Math.abs(y) / containerHeight) * 100);
+                if (percentY > 100) {
+                    percentY = 100;
+                }
+
+                $('#BannerPositionX').val(x);
+                $('#BannerPositionY').val(percentY);
             }
         });
         $('#save-header').removeClass('hidden');
+        $('#cancel-header').removeClass('hidden');
     });
 
-    $('#save-header-form').ajaxForm(function () {
-        $('#save-header-form').addClass('hidden');
+    $('#cancel-header').on('click', function () {
+        $('#save-header').addClass('hidden');
+        $('#cancel-header').addClass('hidden');
         $('#profile-banner-background').backgroundDraggable('disable');
     });
 
-    //$('#save-header').on('click', function () {
-    //    $(this).addClass('hidden');
-    //    $('#profile-banner-background').backgroundDraggable('disable');
-    //});
+    // when the user clicks to submit the "save banner position" form, submit and then callback to hide the button and disable draggong
+    $('#save-header-form').ajaxForm(function () {
+        $('#save-header').addClass('hidden');
+        $('#cancel-header').addClass('hidden');
+        $('#profile-banner-background').backgroundDraggable('disable');
+    });
 });
 
 function setupTextAreaForPost(buttonSave, textArea, paramName, postPath, buttonEdit, container, textDisplay, defaultText) {
@@ -358,19 +383,8 @@ function initializeStarRating() {
 
 function setupFileUploadText() {
     // handle file selection text updating
-    $('.btn-file :file').on('fileselect', function (event, numFiles, label) {
+    $('#form-upload-images').on('change', function () {
         $('#form-upload-images').submit();
-
-        /*
-        var input = $(this).parents('.input-group').find(':text'),
-            log = numFiles > 1 ? numFiles + ' files selected' : label;
-
-        if (input.length) {
-            input.val(log);
-        } else {
-            if (log) alert(log);
-        }
-        */
     });
 }
 

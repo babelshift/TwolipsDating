@@ -615,11 +615,13 @@ namespace TwolipsDating.Controllers
         }
 
         [HttpPost, RequireConfirmedEmail]
-        public async Task<JsonResult> SaveBackgroundImage(string profileUserId, int profileId, int bannerPositionX, int bannerPositionY)
+        public async Task<JsonResult> SaveBackgroundImage(string profileUserId, int bannerPositionX, int bannerPositionY)
         {
             string currentUserId = User.Identity.GetUserId();
 
-            int changes = await ProfileService.SetBannerImagePositionAsync(profileId, bannerPositionX, bannerPositionY);
+            var profile = await ProfileService.GetProfileAsync(profileUserId);
+
+            int changes = await ProfileService.SetBannerImagePositionAsync(profile.Id, bannerPositionX, bannerPositionY);
 
             if (changes > 0)
             {
