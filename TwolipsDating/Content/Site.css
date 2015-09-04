@@ -156,6 +156,8 @@ input[type="checkbox"].input-validation-error {
         color: #008cba;
     }
 
+.navbar { margin-bottom: 10px; }
+
 .navbar-right {
     margin-right: 0;
 }
