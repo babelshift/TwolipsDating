@@ -22,6 +22,16 @@ namespace TwolipsDating.Utilities
             return String.Empty;
         }
 
+        public static string GetPath(string fileName)
+        {
+            if (!String.IsNullOrEmpty(fileName))
+            {
+                return String.Format("{0}/{1}", cdn, fileName);
+            }
+
+            return String.Empty;
+        }
+
         public static string GetThumbnailPath(this UserImage userImage)
         {
             string realFileName = Path.GetFileNameWithoutExtension(userImage.FileName);

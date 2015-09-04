@@ -111,6 +111,49 @@ $(document).ready(function () {
             }
         }
     });
+
+    $('#upload-header').on('change', function () {
+        $('#upload-header-form').submit();
+    });
+
+    $('#upload-header-form').ajaxForm({
+        success: function (data) {
+            if (data.success) {
+                $('#profile-banner-background').css('background', 'url(' + data.bannerImagePath + ')');
+                $('#profile-banner-background').css('background-size', 'cover');
+                $('#profile-banner-background').backgroundDraggable();
+                $('#save-header').removeClass('hidden');
+            } else {
+            }
+        }
+    });
+
+    $('#reposition-header').on('click', function (e) {
+        e.preventDefault();
+
+        $('#profile-banner-background').backgroundDraggable();
+        $('#profile-banner-background').backgroundDraggable({
+            done: function () {
+                var backgroundPosition = $('#profile-banner-background').css('background-position');
+                var split = backgroundPosition.split(" ");
+                var x = split[0].replace("px", "");
+                var y = split[1].replace("px", "");
+                $('#BannerPositionX').val(parseInt(x));
+                $('#BannerPositionY').val(parseInt(y));
+            }
+        });
+        $('#save-header').removeClass('hidden');
+    });
+
+    $('#save-header-form').ajaxForm(function () {
+        $('#save-header-form').addClass('hidden');
+        $('#profile-banner-background').backgroundDraggable('disable');
+    });
+
+    //$('#save-header').on('click', function () {
+    //    $(this).addClass('hidden');
+    //    $('#profile-banner-background').backgroundDraggable('disable');
+    //});
 });
 
 function setupTextAreaForPost(buttonSave, textArea, paramName, postPath, buttonEdit, container, textDisplay, defaultText) {

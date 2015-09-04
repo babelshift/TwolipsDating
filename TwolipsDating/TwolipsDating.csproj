@@ -383,6 +383,14 @@
     <Compile Include="Migrations\201509012154097_AddProfileDetails.Designer.cs">
       <DependentUpon>201509012154097_AddProfileDetails.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509032023599_AddBannerImagesToProfiles.cs" />
+    <Compile Include="Migrations\201509032023599_AddBannerImagesToProfiles.Designer.cs">
+      <DependentUpon>201509032023599_AddBannerImagesToProfiles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509032025420_AddBannerImagePosition.cs" />
+    <Compile Include="Migrations\201509032025420_AddBannerImagePosition.Designer.cs">
+      <DependentUpon>201509032025420_AddBannerImagePosition.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\EmailNotifications.cs" />
     <Compile Include="Models\Language.cs" />
     <Compile Include="Models\LookingForLocation.cs" />
@@ -831,11 +839,13 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\chosen.jquery.js" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="Scripts\draggable_background.js" />
     <Content Include="Scripts\Home\dashboard.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
     <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery.form.min.js" />
     <Content Include="Scripts\jquery.raty.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
@@ -1178,6 +1188,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509012154097_AddProfileDetails.resx">
       <DependentUpon>201509012154097_AddProfileDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509032023599_AddBannerImagesToProfiles.resx">
+      <DependentUpon>201509032023599_AddBannerImagesToProfiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509032025420_AddBannerImagePosition.resx">
+      <DependentUpon>201509032025420_AddBannerImagePosition.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

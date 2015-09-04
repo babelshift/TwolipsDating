@@ -27,7 +27,11 @@ namespace TwolipsDating.Models
         public int? LookingForTypeId { get; set; }
         public int? RelationshipStatusId { get; set; }
         public int? LookingForLocationId { get; set; }
+        public int? BannerImageId { get; set; }
+        public int? BannerPositionX { get; set; }
+        public int? BannerPositionY { get; set; }
 
+        public virtual UserImage BannerImage { get; set; }
         public virtual UserImage UserImage { get; set; }
         public virtual Gender Gender { get; set; }
         public virtual GeoCity GeoCity { get; set; }

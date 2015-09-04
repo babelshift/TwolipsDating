@@ -76,6 +76,10 @@ namespace TwolipsDating.ViewModels
 
         public string LastLoginTimeAgo { get; set; }
 
+        public string BannerImagePath { get; set; }
+        public int BannerPositionX { get; set; }
+        public int BannerPositionY { get; set; }
+
         #endregion Profile view stuff
 
         #region Report review stuff

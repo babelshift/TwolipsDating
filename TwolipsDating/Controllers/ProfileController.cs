@@ -410,15 +410,10 @@ namespace TwolipsDating.Controllers
 
             try
             {
-                // TODO: how to make this atomic?
-                int changes = await ProfileService.DeleteUserImage(id);
+                bool isDeleted = await DeleteImageAsync(id, fileName);
 
-                if (changes > 0)
+                if (isDeleted)
                 {
-                    var container = GetAzureStorageContainer();
-                    await DeleteFullSizeImageFromAzureStorageAsync(fileName, container);
-                    await DeleteThumbnailImageFromAzureStorageAsync(fileName, container);
-
                     return Json(new { success = true });
                 }
                 else
@@ -459,6 +454,38 @@ namespace TwolipsDating.Controllers
             await blockBlob.DeleteAsync();
         }
 
+        private async Task<bool> DeleteImageAsync(int userImageId, string fileName, bool isBanner = false)
+        {
+            try
+            {
+                int changes = 0;
+
+                // TODO: how to make this atomic?
+                if (isBanner)
+                {
+                    changes = await ProfileService.DeleteBannerImageAsync(userImageId);
+                }
+                else
+                {
+                    changes = await ProfileService.DeleteUserImageAsync(userImageId);
+                }
+
+                if (changes > 0)
+                {
+                    var container = GetAzureStorageContainer();
+                    await DeleteFullSizeImageFromAzureStorageAsync(fileName, container);
+                    await DeleteThumbnailImageFromAzureStorageAsync(fileName, container);
+                }
+
+                return changes > 0;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// Uploads multiple images from a user's selection.
         /// Does nothing if attempting to upload to someone else's profile.
@@ -490,10 +517,7 @@ namespace TwolipsDating.Controllers
             foreach (var uploadedImage in viewModel.UploadedImages)
             {
                 // skip over non-images
-                if (uploadedImage.ContentType != "image/jpeg"
-                    && uploadedImage.ContentType != "image/png"
-                    && uploadedImage.ContentType != "image/bmp"
-                    && uploadedImage.ContentType != "image/gif")
+                if (!IsValidImageFileType(uploadedImage.ContentType))
                 {
                     continue;
                 }
@@ -518,16 +542,16 @@ namespace TwolipsDating.Controllers
                         blockBlob.Properties.ContentType = contentType;
 
                         // upload the full image and return it in case it had to be resized
-                        WebImage image = await UploadFullImageToAzureStorageAsync(uploadedImage, blockBlob);
+                        WebImage image = await UploadFullProfileImageToAzureStorageAsync(uploadedImage, blockBlob);
 
                         // upload the thumbnail of the now possibly resized image
-                        await UploadThumbnailToAzureStorageAsync(fileNameThumb, contentType, container, image);
+                        await UploadProfileThumbnailToAzureStorageAsync(fileNameThumb, contentType, container, image);
 
                         // if this is the first image being uploaded and the user doesn't have a profile image set, set the user's profile image to the file being uploaded
                         if (i == 0)
                         {
                             var profile = await ProfileService.GetProfileAsync(currentUserId);
-                            if(profile != null && profile.UserImage == null)
+                            if (profile != null && profile.UserImage == null)
                             {
                                 await ProfileService.ChangeProfileUserImageAsync(profile.Id, newUserImageId);
                             }
@@ -553,6 +577,21 @@ namespace TwolipsDating.Controllers
             return RedirectToIndex(new { tab = "pictures" });
         }
 
+        private bool IsValidImageFileType(string contentType)
+        {
+            if (contentType != "image/jpeg"
+                    && contentType != "image/png"
+                    && contentType != "image/bmp"
+                    && contentType != "image/gif")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         private static CloudBlobContainer GetAzureStorageContainer()
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
@@ -569,7 +608,7 @@ namespace TwolipsDating.Controllers
         /// <param name="container"></param>
         /// <param name="image"></param>
         /// <returns></returns>
-        private static async Task UploadThumbnailToAzureStorageAsync(string fileNameThumb, string contentType, CloudBlobContainer container, WebImage image)
+        private static async Task UploadProfileThumbnailToAzureStorageAsync(string fileNameThumb, string contentType, CloudBlobContainer container, WebImage image)
         {
             CreateThumbnail(image);
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileNameThumb);
@@ -585,7 +624,7 @@ namespace TwolipsDating.Controllers
         /// <param name="uploadedImage"></param>
         /// <param name="blockBlob"></param>
         /// <returns></returns>
-        private static async Task<WebImage> UploadFullImageToAzureStorageAsync(HttpPostedFileBase uploadedImage, CloudBlockBlob blockBlob)
+        private static async Task<WebImage> UploadFullProfileImageToAzureStorageAsync(HttpPostedFileBase uploadedImage, CloudBlockBlob blockBlob)
         {
             WebImage image = new WebImage(uploadedImage.InputStream);
             byte[] rawImage = image.GetBytes();
@@ -670,6 +709,97 @@ namespace TwolipsDating.Controllers
             }
 
             return RedirectToIndex(new { tab = viewModel.ActiveTab });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SaveBackgroundImage(string profileUserId, int profileId, int bannerPositionX, int bannerPositionY)
+        {
+            string currentUserId = User.Identity.GetUserId();
+
+            // user should only change background if email is confirmed and only their own profile
+            bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+            if (profileUserId != currentUserId || !isCurrentUserEmailConfirmed)
+            {
+                return Json(new { success = false, error = "403 Forbidden" });
+            }
+
+            int changes = await ProfileService.SetBannerImagePositionAsync(profileId, bannerPositionX, bannerPositionY);
+
+            if (changes > 0)
+            {
+                return Json(new { success = true });
+            }
+
+            return Json(new { success = false });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ChangeBackgroundImage(string profileUserId, int profileId)
+        {
+            string currentUserId = User.Identity.GetUserId();
+
+            // user should only change background if email is confirmed and only their own profile
+            bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+            if (profileUserId != currentUserId || !isCurrentUserEmailConfirmed)
+            {
+                return Json(new { success = false, error = "403 Forbidden" });
+            }
+
+            if (Request.Files.Count > 0)
+            {
+                var uploadedImage = Request.Files[0] as HttpPostedFileBase;
+                string contentType = uploadedImage.ContentType;
+
+                // don't bother with non images
+                if (!IsValidImageFileType(contentType))
+                {
+                    return Json(new { success = false });
+                }
+
+                string fileType = Path.GetExtension(uploadedImage.FileName);
+                Guid guid = Guid.NewGuid();
+                string fileName = String.Format("{0}{1}", guid, fileType);
+
+                // add the image id to our database
+                int newUserImageId = await ProfileService.AddUploadedImageForUserAsync(currentUserId, fileName, true);
+
+                // if we saved to our database successfully, save to Azure Storage Blob
+                if (newUserImageId > 0)
+                {
+                    var container = GetAzureStorageContainer();
+
+                    CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
+                    blockBlob.Properties.ContentType = contentType;
+
+                    // upload the full image and return it in case it had to be resized
+                    await UploadBannerImageToAzureStorageAsync(uploadedImage, blockBlob);
+
+                    var profile = await ProfileService.GetProfileAsync(currentUserId);
+                    if (profile != null)
+                    {
+                        await ProfileService.ChangeProfileBannerImageAsync(profileId, newUserImageId);
+                    }
+                }
+
+                return Json(new { success = true, bannerImagePath = UserImageExtensions.GetPath(fileName) });
+            }
+
+            return Json(new { success = false });
+        }
+
+        private async Task UploadBannerImageToAzureStorageAsync(HttpPostedFileBase uploadedImage, CloudBlockBlob blockBlob)
+        {
+            WebImage image = new WebImage(uploadedImage.InputStream);
+            byte[] rawImage = image.GetBytes();
+
+            // resize the image if it's too big
+            if (image.Width > 1170 || image.Height > 1170)
+            {
+                image = image.Resize(1170, 1170, true);
+                rawImage = image.GetBytes();
+            }
+
+            await blockBlob.UploadFromByteArrayAsync(rawImage, 0, rawImage.Length);
         }
 
         #endregion Manage Image Uploads
@@ -848,7 +978,7 @@ namespace TwolipsDating.Controllers
             string currentUserId,
             int? page)
         {
-            if(viewModel.ActiveTab == "about")
+            if (viewModel.ActiveTab == "about")
             {
                 var lookingForTypes = await ProfileService.GetLookingForTypesAsync();
                 var lookingForLocations = await ProfileService.GetLookingForLocationsAsync();
@@ -892,20 +1022,20 @@ namespace TwolipsDating.Controllers
                 viewModel.Reviews.ProfileUserName = profile.ApplicationUser.UserName;
                 viewModel.Reviews.ProfileId = profile.Id;
             }
-            if(viewModel.ActiveTab == "achievements")
+            if (viewModel.ActiveTab == "achievements")
             {
                 MilestoneService milestoneService = new MilestoneService(UserManager.EmailService);
                 var achievements = await milestoneService.GetAchievementsAndStatusForUserAsync(profile.ApplicationUser.Id);
                 viewModel.Achievements = achievements;
             }
-            if(viewModel.ActiveTab == "tags")
+            if (viewModel.ActiveTab == "tags")
             {
                 var tagsSuggestedForProfile = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profile.Id);
                 viewModel.SuggestedTags = tagsSuggestedForProfile; // these are the tag suggestions that will be displayed at the profile screen
                 viewModel.AllTags = await GetAllTagsAndCountsInSystemAsync(tagsSuggestedForProfile); // these are all tags to be displayed in the "suggest" popup
                 viewModel.AwardedTags = await ProfileService.GetTagsAwardedToProfileAsync(profile.Id);
             }
-            if(viewModel.ActiveTab == "inventory")
+            if (viewModel.ActiveTab == "inventory")
             {
                 var profileInventoryItems = await ProfileService.GetInventoryAsync(profile.ApplicationUser.Id);
                 viewModel.Inventory = new ProfileInventoryViewModel();
@@ -1216,9 +1346,9 @@ namespace TwolipsDating.Controllers
 
             AchievementManagerViewModel viewModel = new AchievementManagerViewModel();
             viewModel.Achievements = achievements;
-            
+
             return View(viewModel);
-            
+
         }
 
         #endregion
@@ -1311,7 +1441,7 @@ namespace TwolipsDating.Controllers
         {
             string currentUserId = User.Identity.GetUserId();
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
             }

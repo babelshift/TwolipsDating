@@ -36,6 +36,9 @@ namespace TwolipsDating
                 .ForMember(dest => dest.LookingForAgeMin, opts => opts.MapFrom(source => source.LookingForAgeMin))
                 .ForMember(dest => dest.LookingForAgeMax, opts => opts.MapFrom(source => source.LookingForAgeMax))
                 .ForMember(dest => dest.LastLoginTimeAgo, opts => opts.MapFrom(source => source.ApplicationUser.DateLastLogin.GetTimeAgo()))
+                .ForMember(dest => dest.BannerImagePath, opts => opts.MapFrom(source => source.BannerImage.GetPath()))
+                .ForMember(dest => dest.BannerPositionX, opts => opts.MapFrom(source => source.BannerPositionX))
+                .ForMember(dest => dest.BannerPositionY, opts => opts.MapFrom(source => source.BannerPositionY))
                 .ForMember(dest => dest.Languages, opts => opts.MapFrom(source => source.Languages.Select(a => a.Name).ToList()));
 
             Mapper.CreateMap<Review, ReviewViewModel>()

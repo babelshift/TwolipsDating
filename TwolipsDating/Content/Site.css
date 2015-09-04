@@ -478,10 +478,20 @@ input[readonly] {
     }
 }
 
+.profile-banner .circular-image-wrapper {
+    width: 128px;
+    height: 128px;
+    border: 1px solid #777;
+}
+
 .profile-banner-info {
-    line-height: 12px;
-    font-weight: 300;
-    padding-top: 4px;
+    font-weight: 200;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.profile-banner-info p {
+    margin-bottom: 0;
 }
 
     .profile-banner-info .user-name {
@@ -490,13 +500,13 @@ input[readonly] {
     }
 
     .profile-banner-info .rating {
-        font-size: 18px;
+        font-size: 16px;
     }
 
     .profile-banner-info .user-info,
     .profile-banner-info .user-location,
     .profile-banner-info .user-title {
-        font-size: 18px;
+        font-size: 16px;
     }
 
 .chosen-container-multi .chosen-choices {

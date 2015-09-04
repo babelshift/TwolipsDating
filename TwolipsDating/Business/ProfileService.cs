@@ -123,7 +123,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userImageId"></param>
         /// <returns></returns>
-        internal async Task<int> DeleteUserImage(int userImageId)
+        internal async Task<int> DeleteUserImageAsync(int userImageId)
         {
             Debug.Assert(userImageId > 0);
 
@@ -138,6 +138,26 @@ namespace TwolipsDating.Business
             UserImage userImage = new UserImage() { Id = userImageId };
             db.UserImages.Attach(userImage);
             db.UserImages.Remove(userImage);
+
+            return await db.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Deletes a user image from the database. Will also detach the image from any profiles that have this selected as their profile image.
+        /// </summary>
+        /// <param name="userImageId"></param>
+        /// <returns></returns>
+        internal async Task<int> DeleteBannerImageAsync(int userImageId)
+        {
+            Debug.Assert(userImageId > 0);
+
+            // clear out any profiles that are using this image
+            var profilesUsingThisImage = db.Profiles.Where(p => p.BannerImageId == userImageId);
+            foreach (var profile in profilesUsingThisImage)
+            {
+                db.UserImages.Remove(profile.BannerImage);
+                profile.BannerImageId = null;
+            }
 
             return await db.SaveChangesAsync();
         }
@@ -382,6 +402,41 @@ namespace TwolipsDating.Business
             return await db.SaveChangesAsync();
         }
 
+        internal async Task<int> ChangeProfileBannerImageAsync(int profileId, int userImageId)
+        {
+            Debug.Assert(profileId > 0);
+            Debug.Assert(userImageId > 0);
+
+            var profile = await (from profiles in db.Profiles
+                                 where profiles.Id == profileId
+                                 select profiles).FirstOrDefaultAsync();
+
+            // delete old and reset
+            profile.BannerImageId = null;
+            profile.BannerPositionX = 0;
+            profile.BannerPositionY = 0;
+            db.UserImages.Remove(profile.BannerImage);
+
+            // add new
+            profile.BannerImageId = userImageId;
+
+            return await db.SaveChangesAsync();
+        }
+
+        internal async Task<int> SetBannerImagePositionAsync(int profileId, int bannerPositionX, int bannerPositionY)
+        {
+            Debug.Assert(profileId > 0);
+
+            var profile = await (from profiles in db.Profiles
+                                 where profiles.Id == profileId
+                                 select profiles).FirstOrDefaultAsync();
+
+            profile.BannerPositionX = bannerPositionX;
+            profile.BannerPositionY = bannerPositionY;
+
+            return await db.SaveChangesAsync();
+        }
+
         /// <summary>
         /// Returns a collection of a user's uploaded images.
         /// </summary>
@@ -405,7 +460,7 @@ namespace TwolipsDating.Business
         /// <param name="userId"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public async Task<int> AddUploadedImageForUserAsync(string userId, string fileName)
+        public async Task<int> AddUploadedImageForUserAsync(string userId, string fileName, bool isBanner = false)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(!String.IsNullOrEmpty(fileName));
@@ -414,12 +469,17 @@ namespace TwolipsDating.Business
             userImage.ApplicationUserId = userId;
             userImage.FileName = fileName;
             userImage.DateUploaded = DateTime.Now;
+            userImage.IsBanner = isBanner;
 
             db.UserImages.Add(userImage);
             int count = await db.SaveChangesAsync();
 
-            await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.ProfileImagesUploaded);
-
+            // don't count banner uploads
+            if(!isBanner)
+            {
+                await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.ProfileImagesUploaded);
+            }
+            
             return userImage.Id;
         }
 
