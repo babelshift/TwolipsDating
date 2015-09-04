@@ -5,6 +5,145 @@ var defaultSummaryOfGoingText = "This user hasn't entered where they're going ye
 $(document).ready(function () {
     var profileUserId = $('#ProfileUserId').val();
 
+    setupPopoverSelectTitle();
+    toggleFavoriteIcon();
+    toggleIgnoredIcon();
+    initializeStarRating();
+    setupFileUploadText();
+    setupReportViolation();
+    setupMessageSend();
+    setupGiftSend();
+    setupReviewWrite();
+
+    // loop through all share review links and turn them into valid popovers with share buttons
+    setupPopoverWithContent("a[id^='share-profile-link']", function () {
+        var reviewId = $(this).attr('data-review-id'); // extract the review ID
+        var shareButtonsDiv = "#share-profile-buttons-popover-" + reviewId;
+        var clone = $(shareButtonsDiv).clone(true);
+        var cloneUnhide = clone.removeClass('hide');
+        return cloneUnhide.html();
+    });
+
+    setupTextAreaForEdit('#edit-self-summary', '#self-summary', '#text-edit-self-summary', '#button-edit-self-summary', '#button-save-self-summary', '#button-cancel-self-summary', defaultSelfSummaryText);
+    setupTextAreaForEdit('#edit-summary-of-doing', '#summary-of-doing', '#text-edit-summary-of-doing', '#button-edit-summary-of-doing', '#button-save-summary-of-doing', '#button-cancel-summary-of-doing', defaultSummaryOfDoingText);
+    setupTextAreaForEdit('#edit-summary-of-going', '#summary-of-going', '#text-edit-summary-of-going', '#button-edit-summary-of-going', '#button-save-summary-of-going', '#button-cancel-summary-of-going', defaultSummaryOfGoingText);
+
+    setupTextAreaForPost('#button-save-self-summary', '#text-edit-self-summary', 'selfSummary', '/profile/saveSelfSummary', '#button-edit-self-summary', '#edit-self-summary', '#self-summary', defaultSelfSummaryText);
+    setupTextAreaForPost('#button-save-summary-of-doing', '#text-edit-summary-of-doing', 'summaryOfDoing', '/profile/saveSummaryOfDoing', '#button-edit-summary-of-doing', '#edit-summary-of-doing', '#summary-of-doing', defaultSummaryOfDoingText);
+    setupTextAreaForPost('#button-save-summary-of-going', '#text-edit-summary-of-going', 'summaryOfGoing', '/profile/saveSummaryOfGoing', '#button-edit-summary-of-going', '#edit-summary-of-going', '#summary-of-going', defaultSummaryOfGoingText);
+
+    setupProfileDetailsEditControls();
+
+    setupEditBanner();
+});
+
+$(window).load(function () {
+    repositionBannerCoverToLimits();
+});
+
+function setupEditBanner() {
+    // when the user uploads a banner image, immediately submit the upload banner form
+    $('#upload-header').on('change', function () {
+        $('#upload-header-form').submit();
+    });
+
+    // when the user click sto submit the "upload banner image" form, submit and then callback to hide the save button and update the banner image
+    $('#upload-header-form').ajaxForm({
+        success: function (data) {
+            if (data.success) {
+                $('#profile-banner-background').css('background', 'url(' + data.bannerImagePath + ')');
+                $('#profile-banner-background').css('background-size', 'cover');
+                $('#profile-banner-background').backgroundDraggable();
+                $('#profile-banner-background').backgroundDraggable({
+                    done: function () {
+                        var backgroundPosition = $('#profile-banner-background').css('background-position');
+                        var split = backgroundPosition.split(" ");
+                        var x = split[0].replace("px", "");
+                        var y = split[1].replace("px", "");
+                        $('#BannerPositionX').val(parseInt(x));
+                        $('#BannerPositionY').val(parseInt(y));
+                    }
+                });
+                $('#save-header').removeClass('hidden');
+            } else {
+            }
+        }
+    });
+
+    // when the user clicks to reposition the banner, enable dragging and show the button to save the position
+    $('#reposition-header').on('click', function (e) {
+        e.preventDefault();
+
+        $('#profile-banner-background').backgroundDraggable();
+        $('#profile-banner-background').backgroundDraggable({
+            done: function () {
+                var backgroundPosition = $('#profile-banner-background').css('background-position');
+                var split = backgroundPosition.split(" ");
+                var x = parseInt(split[0].replace("px", ""));
+                var y = parseInt(split[1].replace("px", ""));
+
+                $('#BannerPositionX').val(x);
+                $('#BannerPositionY').val(y);
+            }
+        });
+        $('#save-header').removeClass('hidden');
+        $('#cancel-header').removeClass('hidden');
+    });
+
+    $('#cancel-header').on('click', function () {
+        $('#save-header').addClass('hidden');
+        $('#cancel-header').addClass('hidden');
+        $('#profile-banner-background').backgroundDraggable('disable');
+    });
+
+    // when the user clicks to submit the "save banner position" form, submit and then callback to hide the button and disable draggong
+    $('#save-header-form').ajaxForm(function () {
+        $('#save-header').addClass('hidden');
+        $('#cancel-header').addClass('hidden');
+        $('#profile-banner-background').backgroundDraggable('disable');
+    });
+}
+
+function setupProfileDetailsEditControls() {
+    $('#modalWhatImLookingFor').on('shown.bs.modal', function (e) {
+        $('#LookingForTypeId').chosen({ allow_single_deselect: true, disable_search_threshold: 10 });
+        $('#LookingForLocationId').chosen({ allow_single_deselect: true, disable_search_threshold: 10 });
+    });
+
+    $('#modalMyDetails').on('shown.bs.modal', function (e) {
+        $('#RelationshipStatusId').chosen({ allow_single_deselect: true, disable_search_threshold: 10 });
+        $('#SelectedLanguages').chosen();
+    });
+
+    var minAgeTextBox = $('#looking-for-age-min');
+    var maxAgeTextBox = $('#looking-for-age-max');
+    minAgeTextBox.on('change', function (e) {
+        var value = parseInt(minAgeTextBox.val());
+        if (isNaN(value)) {
+            minAgeTextBox.val(18);
+        } else {
+            if (value < 18) {
+                minAgeTextBox.val(18);
+            } else if (value > 99) {
+                minAgeTextBox.val(99);
+            }
+        }
+    });
+    maxAgeTextBox.on('change', function (e) {
+        var value = parseInt(maxAgeTextBox.val());
+        if (isNaN(value)) {
+            maxAgeTextBox.val(18);
+        } else {
+            if (value < 18) {
+                maxAgeTextBox.val(18);
+            } else if (value > 99) {
+                maxAgeTextBox.val(99);
+            }
+        }
+    });
+}
+
+function setupPopoverSelectTitle() {
     // only bother setting up the select title popover if the content is visible
     // the content will only be visible if the user is viewing their own profile
     if ($('#popover-titles-content').length) {
@@ -48,138 +187,22 @@ $(document).ready(function () {
                 });
         });
     }
+}
 
-    toggleFavoriteIcon();
-    toggleIgnoredIcon();
-    initializeStarRating();
-    setupFileUploadText();
-    setupReportViolation();
-    setupMessageSend();
-    setupGiftSend();
-    setupReviewWrite();
+function repositionBannerCoverToLimits() {
+    var $el = $('#profile-banner-background');
 
-    // loop through all share review links and turn them into valid popovers with share buttons
-    setupPopoverWithContent("a[id^='share-profile-link']", function () {
-        var reviewId = $(this).attr('data-review-id'); // extract the review ID
-        var shareButtonsDiv = "#share-profile-buttons-popover-" + reviewId;
-        var clone = $(shareButtonsDiv).clone(true);
-        var cloneUnhide = clone.removeClass('hide');
-        return cloneUnhide.html();
-    });
+    var imageDimensions = getBackgroundImageDimensions($el);
 
-    setupTextAreaForEdit('#edit-self-summary', '#self-summary', '#text-edit-self-summary', '#button-edit-self-summary', '#button-save-self-summary', '#button-cancel-self-summary', defaultSelfSummaryText);
-    setupTextAreaForEdit('#edit-summary-of-doing', '#summary-of-doing', '#text-edit-summary-of-doing', '#button-edit-summary-of-doing', '#button-save-summary-of-doing', '#button-cancel-summary-of-doing', defaultSummaryOfDoingText);
-    setupTextAreaForEdit('#edit-summary-of-going', '#summary-of-going', '#text-edit-summary-of-going', '#button-edit-summary-of-going', '#button-save-summary-of-going', '#button-cancel-summary-of-going', defaultSummaryOfGoingText);
+    var pos = $el.css('background-position').match(/(-?\d+).*?\s(-?\d+)/) || [],
+    xPos = parseInt(pos[1]) || 0,
+    yPos = parseInt(pos[2]) || 0;
 
-    setupTextAreaForPost('#button-save-self-summary', '#text-edit-self-summary', 'selfSummary', '/profile/saveSelfSummary', '#button-edit-self-summary', '#edit-self-summary', '#self-summary', defaultSelfSummaryText);
-    setupTextAreaForPost('#button-save-summary-of-doing', '#text-edit-summary-of-doing', 'summaryOfDoing', '/profile/saveSummaryOfDoing', '#button-edit-summary-of-doing', '#edit-summary-of-doing', '#summary-of-doing', defaultSummaryOfDoingText);
-    setupTextAreaForPost('#button-save-summary-of-going', '#text-edit-summary-of-going', 'summaryOfGoing', '/profile/saveSummaryOfGoing', '#button-edit-summary-of-going', '#edit-summary-of-going', '#summary-of-going', defaultSummaryOfGoingText);
+    xPos = limit($el.innerWidth() - imageDimensions.width, 0, xPos, true);
+    yPos = limit($el.innerHeight() - imageDimensions.height, 0, yPos, true);
 
-    $('#modalWhatImLookingFor').on('shown.bs.modal', function (e) {
-        $('#LookingForTypeId').chosen({ allow_single_deselect: true, disable_search_threshold: 10 });
-        $('#LookingForLocationId').chosen({ allow_single_deselect: true, disable_search_threshold: 10 });
-    });
-
-    $('#modalMyDetails').on('shown.bs.modal', function (e) {
-        $('#RelationshipStatusId').chosen({ allow_single_deselect: true, disable_search_threshold: 10 });
-        $('#SelectedLanguages').chosen();
-    });
-
-    var minAgeTextBox = $('#looking-for-age-min');
-    var maxAgeTextBox = $('#looking-for-age-max');
-    minAgeTextBox.on('change', function (e) {
-        var value = parseInt(minAgeTextBox.val());
-        if (isNaN(value)) {
-            minAgeTextBox.val(18);
-        } else {
-            if (value < 18) {
-                minAgeTextBox.val(18);
-            } else if (value > 99) {
-                minAgeTextBox.val(99);
-            }
-        }
-    });
-    maxAgeTextBox.on('change', function (e) {
-        var value = parseInt(maxAgeTextBox.val());
-        if (isNaN(value)) {
-            maxAgeTextBox.val(18);
-        } else {
-            if (value < 18) {
-                maxAgeTextBox.val(18);
-            } else if (value > 99) {
-                maxAgeTextBox.val(99);
-            }
-        }
-    });
-
-    // when the user uploads a banner image, immediately submit the upload banner form
-    $('#upload-header').on('change', function () {
-        $('#upload-header-form').submit();
-    });
-
-    // when the user click sto submit the "upload banner image" form, submit and then callback to hide the save button and update the banner image
-    $('#upload-header-form').ajaxForm({
-        success: function (data) {
-            if (data.success) {
-                $('#profile-banner-background').css('background', 'url(' + data.bannerImagePath + ')');
-                $('#profile-banner-background').css('background-size', 'cover');
-                $('#profile-banner-background').backgroundDraggable();
-                $('#profile-banner-background').backgroundDraggable({
-                    done: function () {
-                        var backgroundPosition = $('#profile-banner-background').css('background-position');
-                        var split = backgroundPosition.split(" ");
-                        var x = split[0].replace("px", "");
-                        var y = split[1].replace("px", "");
-                        $('#BannerPositionX').val(parseInt(x));
-                        $('#BannerPositionY').val(parseInt(y));
-                    }
-                });
-                $('#save-header').removeClass('hidden');
-            } else {
-            }
-        }
-    });
-
-    // when the user clicks to reposition the banner, enable dragging and show the button to save the position
-    $('#reposition-header').on('click', function (e) {
-        e.preventDefault();
-
-        $('#profile-banner-background').backgroundDraggable();
-        $('#profile-banner-background').backgroundDraggable({
-            done: function () {
-                var backgroundPosition = $('#profile-banner-background').css('background-position');
-                var split = backgroundPosition.split(" ");
-                var x = parseInt(split[0].replace("px", ""));
-                var y = parseInt(split[1].replace("px", ""));
-
-                var containerHeight = $('#profile-banner-background').height();
-
-                var percentY = parseInt((Math.abs(y) / containerHeight) * 100);
-                if (percentY > 100) {
-                    percentY = 100;
-                }
-
-                $('#BannerPositionX').val(x);
-                $('#BannerPositionY').val(percentY);
-            }
-        });
-        $('#save-header').removeClass('hidden');
-        $('#cancel-header').removeClass('hidden');
-    });
-
-    $('#cancel-header').on('click', function () {
-        $('#save-header').addClass('hidden');
-        $('#cancel-header').addClass('hidden');
-        $('#profile-banner-background').backgroundDraggable('disable');
-    });
-
-    // when the user clicks to submit the "save banner position" form, submit and then callback to hide the button and disable draggong
-    $('#save-header-form').ajaxForm(function () {
-        $('#save-header').addClass('hidden');
-        $('#cancel-header').addClass('hidden');
-        $('#profile-banner-background').backgroundDraggable('disable');
-    });
-});
+    $el.css('background-position', xPos + 'px ' + yPos + 'px');
+}
 
 function setupTextAreaForPost(buttonSave, textArea, paramName, postPath, buttonEdit, container, textDisplay, defaultText) {
     $(buttonSave).on('click', function (e) {
@@ -655,3 +678,47 @@ function htmlEscape(str) {
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;');
 }
+
+var bannerImage = new Image();
+
+var getBackgroundImageDimensions = function ($el) {
+    var bgSrc = ($el.css('background-image').match(/^url\(['"]?(.*?)['"]?\)$/i) || [])[1];
+    if (!bgSrc) return;
+
+    var imageDimensions = { width: 0, height: 0 }
+
+    if (bannerImage.src == '') {
+        bannerImage.src = bgSrc;
+    }
+
+    if ($el.css('background-size') == "cover") {
+        var elementWidth = $el.innerWidth(),
+            elementHeight = $el.innerHeight(),
+            elementAspectRatio = elementWidth / elementHeight;
+        imageAspectRatio = bannerImage.width / bannerImage.height,
+        scale = 1;
+
+        if (imageAspectRatio >= elementAspectRatio) {
+            scale = elementHeight / bannerImage.height;
+        } else {
+            scale = elementWidth / bannerImage.width;
+        }
+
+        imageDimensions.width = bannerImage.width * scale;
+        imageDimensions.height = bannerImage.height * scale;
+    } else {
+        imageDimensions.width = bannerImage.width;
+        imageDimensions.height = bannerImage.height;
+    }
+
+    return imageDimensions;
+};
+
+// Helper function to guarantee a value between low and hi unless bool is false
+var limit = function (low, hi, value, bool) {
+    if (arguments.length === 3 || bool) {
+        if (value < low) return low;
+        if (value > hi) return hi;
+    }
+    return value;
+};
