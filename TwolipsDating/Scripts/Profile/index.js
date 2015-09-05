@@ -47,6 +47,10 @@ function setupEditBanner() {
         $('#upload-header-form').submit();
     });
 
+    $('#upload-header-mobile').on('change', function () {
+        $('#upload-header-form-mobile').submit();
+    })
+
     // when the user click sto submit the "upload banner image" form, submit and then callback to hide the save button and update the banner image
     $('#upload-header-form').ajaxForm({
         success: function (data) {
@@ -64,14 +68,20 @@ function setupEditBanner() {
                         $('#BannerPositionY').val(parseInt(y));
                     }
                 });
-                $('#save-header').removeClass('hidden');
-            } else {
             }
         }
     });
 
-    // when the user clicks to reposition the banner, enable dragging and show the button to save the position
-    $('#reposition-header').on('click', function (e) {
+    $('#upload-header-form-mobile').ajaxForm({
+        success: function (data) {
+            if (data.success) {
+                $('#profile-banner-background').css('background', 'url(' + data.bannerImagePath + ')');
+                $('#profile-banner-background').css('background-size', 'cover');
+            }
+        }
+    });
+
+    var beginMoveBanner = function (e) {
         e.preventDefault();
 
         $('#profile-banner-background').backgroundDraggable();
@@ -86,6 +96,12 @@ function setupEditBanner() {
                 $('#BannerPositionY').val(y);
             }
         });
+    };
+
+    // when the user clicks to reposition the banner, enable dragging and show the button to save the position
+    $('#reposition-header').on('click', function (e) {
+        beginMoveBanner(e);
+
         $('#save-header').removeClass('hidden');
         $('#cancel-header').removeClass('hidden');
     });
