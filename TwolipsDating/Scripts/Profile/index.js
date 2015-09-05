@@ -44,6 +44,8 @@ $(window).load(function () {
 function setupEditBanner() {
     // when the user uploads a banner image, immediately submit the upload banner form
     $('#upload-header').on('change', function () {
+        $('#upload-header-camera').addClass('hidden');
+        $('#upload-header-spinner').removeClass('hidden');
         $('#upload-header-form').submit();
     });
 
@@ -58,6 +60,8 @@ function setupEditBanner() {
     $('#upload-header-form').ajaxForm({
         success: function (data) {
             if (data.success) {
+                $('#upload-header-camera').removeClass('hidden');
+                $('#upload-header-spinner').addClass('hidden');
                 profileBanner.css('background', 'url(' + data.bannerImagePath + ')');
                 profileBanner.css('background-size', 'cover');
                 profileBanner.backgroundDraggable();
@@ -117,10 +121,18 @@ function setupEditBanner() {
     });
 
     // when the user clicks to submit the "save banner position" form, submit and then callback to hide the button and disable draggong
-    $('#save-header-form').ajaxForm(function () {
-        saveBannerButton.addClass('hidden');
-        $('#cancel-header').addClass('hidden');
-        profileBanner.backgroundDraggable('disable');
+    $('#save-header-form').ajaxForm({
+        beforeSubmit: function() {
+            $('#save-header-spinner').removeClass('hidden');
+            $('#save-header-check').addClass('hidden');
+        },
+        success: function () {
+            saveBannerButton.addClass('hidden');
+            $('#cancel-header').addClass('hidden');
+            profileBanner.backgroundDraggable('disable');
+            $('#save-header-spinner').addClass('hidden');
+            $('#save-header-check').removeClass('hidden');
+        }
     });
 }
 
