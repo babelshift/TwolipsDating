@@ -15,9 +15,14 @@ namespace TwolipsDating.Controllers
     {
         #region Services
 
-        private SearchService searchService = new SearchService();
+        private SearchService searchService;
 
         #endregion Services
+
+        public SearchController()
+        {
+            searchService = new SearchService(new ModelStateWrapper(ModelState));
+        }
 
         /// <summary>
         /// Sets up a view model which can be used to display search results based on a user name or a tag name.
@@ -38,7 +43,7 @@ namespace TwolipsDating.Controllers
 
             if (tags != null && tags.Length > 0)
             {
-                var results = await searchService.SearchProfilesByTagNames(tags);
+                var results = await searchService.GetProfilesByTagNamesAsync(tags);
 
                 await SetupViewModel(tags, currentUserId, viewModel, results, page);
             }
@@ -91,7 +96,7 @@ namespace TwolipsDating.Controllers
 
             await SetNotificationsAsync();
 
-            var quizzes = await searchService.GetQuizzesByTagAsync(tag);
+            var quizzes = await searchService.GetQuizzesByTagsAsync(tag);
 
             return View(quizzes);
         }

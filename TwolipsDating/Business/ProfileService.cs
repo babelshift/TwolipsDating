@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,14 +17,21 @@ namespace TwolipsDating.Business
     {
         public ProfileService() : base() { }
 
-        public ProfileService(IIdentityMessageService emailService)
-            : base(emailService) { }
+        public ProfileService(IIdentityMessageService emailService, IValidationDictionary validationDictionary)
+            : base(emailService, validationDictionary) { }
 
         public ProfileService(ApplicationDbContext db, IIdentityMessageService emailService)
             : base(db, emailService) { }
 
+        /// <summary>
+        /// Returns a count of the number of reviews written by a user.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         internal async Task<int> GetReviewsWrittenCountByUserAsync(string userId)
         {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
             int reviewsWrittenCount = await (from review in db.Reviews
                                              where review.AuthorUserId == userId
                                              select review).CountAsync();
@@ -31,6 +39,11 @@ namespace TwolipsDating.Business
             return reviewsWrittenCount;
         }
 
+        /// <summary>
+        /// Returns the current points owned by a user.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         internal async Task<int> GetPointsForUserAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
@@ -123,23 +136,35 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userImageId"></param>
         /// <returns></returns>
-        internal async Task<int> DeleteUserImageAsync(int userImageId)
+        internal async Task<ServiceResult> DeleteUserImageAsync(int userImageId)
         {
             Debug.Assert(userImageId > 0);
 
-            // clear out any profiles that are using this image
-            var profilesUsingThisImage = db.Profiles.Where(p => p.UserImageId == userImageId);
-            foreach (var profile in profilesUsingThisImage)
+            bool success = false;
+
+            try
             {
-                profile.UserImageId = null;
+                // clear out any profiles that are using this image
+                var profilesUsingThisImage = db.Profiles.Where(p => p.UserImageId == userImageId);
+                foreach (var profile in profilesUsingThisImage)
+                {
+                    profile.UserImageId = null;
+                }
+
+                // now we can remove the image safely
+                UserImage userImage = new UserImage() { Id = userImageId };
+                db.UserImages.Attach(userImage);
+                db.UserImages.Remove(userImage);
+
+                success = (await db.SaveChangesAsync() > 0);
+            }
+            catch(DbUpdateException ex)
+            {
+                Log.Error("ProfileService.DeleteUserImageAsync", ex, new { userImageId = userImageId });
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.UserImageNotDeleted);
             }
 
-            // now we can remove the image safely
-            UserImage userImage = new UserImage() { Id = userImageId };
-            db.UserImages.Attach(userImage);
-            db.UserImages.Remove(userImage);
-
-            return await db.SaveChangesAsync();
+            return success ? ServiceResult.Success : ServiceResult.Failed(ErrorMessages.UserImageNotDeleted);
         }
 
         /// <summary>
@@ -476,11 +501,11 @@ namespace TwolipsDating.Business
             int count = await db.SaveChangesAsync();
 
             // don't count banner uploads towards achievements
-            if(!isBanner)
+            if (!isBanner)
             {
                 await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.ProfileImagesUploaded);
             }
-            
+
             return userImage.Id;
         }
 
@@ -1365,7 +1390,7 @@ namespace TwolipsDating.Business
             }
 
             Random random = new Random();
-            foreach(var profile in UniqueRandomValues(allProfiles).Take(numberOfProfilesToRetrieve))
+            foreach (var profile in UniqueRandomValues(allProfiles).Take(numberOfProfilesToRetrieve))
             {
                 randomProfiles.Add(profile);
             }
@@ -1450,7 +1475,7 @@ namespace TwolipsDating.Business
         internal async Task<IReadOnlyCollection<LookingForLocation>> GetLookingForLocationsAsync()
         {
             var lookingForLocations = from lookingFor in db.LookingForLocations
-                                  select lookingFor;
+                                      select lookingFor;
 
             return (await lookingForLocations.ToListAsync()).AsReadOnly();
         }
@@ -1474,7 +1499,7 @@ namespace TwolipsDating.Business
 
             profile.Languages.Clear();
 
-            foreach(var languageId in languageIds)
+            foreach (var languageId in languageIds)
             {
                 var language = await db.Languages.FindAsync(languageId);
                 profile.Languages.Add(language);

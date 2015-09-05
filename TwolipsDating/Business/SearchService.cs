@@ -11,7 +11,9 @@ namespace TwolipsDating.Business
 {
     public class SearchService : BaseService
     {
-        internal async Task<IReadOnlyCollection<Profile>> SearchProfilesByUserName(string userName)
+        public SearchService(IValidationDictionary validationDictionary) : base(validationDictionary) { }
+
+        internal async Task<IReadOnlyCollection<Profile>> GetProfilesByUserNameAsync(string userName)
         {
             var results = await (from profiles in db.Profiles
                                  where profiles.ApplicationUser.UserName.Contains(userName)
@@ -21,7 +23,7 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<Profile>> SearchProfilesByTagName(string userName)
+        internal async Task<IReadOnlyCollection<Profile>> GetProfilesByTagNameAsync(string userName)
         {
             var results = await (from profiles in db.Profiles
                                  join tagSuggestions in db.TagSuggestions on profiles.Id equals tagSuggestions.ProfileId
@@ -34,7 +36,7 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<Profile>> SearchProfilesByTagNames(string[] tags)
+        internal async Task<IReadOnlyCollection<Profile>> GetProfilesByTagNamesAsync(string[] tags)
         {
             var results = await (from profiles in db.Profiles
                                  join tagSuggestions in db.TagSuggestions on profiles.Id equals tagSuggestions.ProfileId
@@ -47,7 +49,7 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<QuizSearchResultViewModel>> GetQuizzesByTagAsync(string tag)
+        internal async Task<IReadOnlyCollection<QuizSearchResultViewModel>> GetQuizzesByTagsAsync(string tag)
         {
             Debug.Assert(!String.IsNullOrEmpty(tag));
 

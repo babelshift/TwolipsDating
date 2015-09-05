@@ -28,7 +28,10 @@ namespace TwolipsDating.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
-            profileService = new ProfileService(UserManager.EmailService);
+            if (profileService == null)
+            {
+                profileService = new ProfileService(UserManager.EmailService, new ModelStateWrapper(ModelState));
+            }
         }
 
         #region Properties

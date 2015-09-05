@@ -50,6 +50,8 @@ function setupEditBanner() {
     });
 
     $('#upload-header-mobile').on('change', function () {
+        $('#upload-header-camera-mobile').addClass('hidden');
+        $('#upload-header-spinner-mobile').removeClass('hidden');
         $('#upload-header-form-mobile').submit();
     })
 
@@ -83,6 +85,8 @@ function setupEditBanner() {
     $('#upload-header-form-mobile').ajaxForm({
         success: function (data) {
             if (data.success) {
+                $('#upload-header-camera-mobile').removeClass('hidden');
+                $('#upload-header-spinner-mobile').addClass('hidden');
                 profileBanner.css('background', 'url(' + data.bannerImagePath + ')');
                 profileBanner.css('background-size', 'cover');
             }

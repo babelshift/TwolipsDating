@@ -6,21 +6,33 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using TwolipsDating.Models;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.Business
 {
     public class BaseService
     {
+        private IValidationDictionary validationDictionary;
         private IIdentityMessageService emailService;
         protected ApplicationDbContext db = new ApplicationDbContext();
+        protected LogHelper Log { get; private set; }
 
         protected IIdentityMessageService EmailService { get { return emailService; } }
 
+        protected IValidationDictionary ValidationDictionary { get { return validationDictionary; } }
+
         public BaseService()
         {
+            Log = new LogHelper(GetType().FullName);
 #if DEBUG
             db.Database.Log = s => { Debug.WriteLine(s); };
 #endif
+        }
+
+        public BaseService(IValidationDictionary validationDictionary)
+            : this()
+        {
+            this.validationDictionary = validationDictionary;
         }
 
         public BaseService(IIdentityMessageService emailService)
@@ -29,11 +41,17 @@ namespace TwolipsDating.Business
             this.emailService = emailService;
         }
 
-        public BaseService(ApplicationDbContext db, IIdentityMessageService emailService)
+        public BaseService(IIdentityMessageService emailService, IValidationDictionary validationDictionary)
             : this()
         {
-            this.db = db;
             this.emailService = emailService;
+            this.validationDictionary = validationDictionary;
+        }
+
+        public BaseService(ApplicationDbContext db, IIdentityMessageService emailService)
+            : this(emailService)
+        {
+            this.db = db;
         }
 
         /// <summary>

@@ -280,10 +280,13 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Business\BaseService.cs" />
     <Compile Include="Business\DashboardService.cs" />
+    <Compile Include="Business\IValidationDictionary.cs" />
     <Compile Include="Business\MilestoneService.cs" />
+    <Compile Include="Business\ModelStateWrapper.cs" />
     <Compile Include="Business\NotificationService.cs" />
     <Compile Include="Business\ProfileService.cs" />
     <Compile Include="Business\SearchService.cs" />
+    <Compile Include="Business\ServiceResult.cs" />
     <Compile Include="Business\StoreService.cs" />
     <Compile Include="Business\TriviaService.cs" />
     <Compile Include="Business\UserService.cs" />

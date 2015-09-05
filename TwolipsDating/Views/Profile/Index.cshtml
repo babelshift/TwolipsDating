@@ -228,7 +228,8 @@ else
                                     {
                                         @Html.HiddenFor(m => m.ProfileUserId)
                                         <span class="btn btn-default btn-xs btn-file" style="display: inline-block;">
-                                            <i class="fa fa-camera fa-lg"></i> Change banner
+                                            <i id="upload-header-spinner-mobile" class="hidden fa fa-cog fa-spin fa-lg fa-fw"></i>
+                                            <i id="upload-header-camera-mobile" class="fa fa-camera fa-lg fa-fw"></i> Change banner
                                             <input id="upload-header-mobile" name="upload-header-mobile" type="file" accept="image/jpeg,image/gif,image/bmp,image/png" />
                                         </span>
                                     }

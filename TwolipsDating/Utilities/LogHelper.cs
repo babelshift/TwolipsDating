@@ -14,14 +14,14 @@ namespace TwolipsDating.Utilities
             logger = LogManager.GetLogger(typeName);
         }
 
-        public void Error(string actionName, string message, object parameters = null)
+        public void Error(string methodName, string message, object parameters = null)
         {
-            Debug.Assert(!String.IsNullOrEmpty(actionName));
+            Debug.Assert(!String.IsNullOrEmpty(methodName));
             Debug.Assert(!String.IsNullOrEmpty(message));
 
             StringBuilder logMessage = new StringBuilder();
 
-            logMessage.AppendFormat("Action: {0}", actionName);
+            logMessage.AppendFormat("Action: {0}", methodName);
             logMessage.AppendFormat(", Message: {0}", message);
 
             if (parameters != null)
@@ -47,6 +47,42 @@ namespace TwolipsDating.Utilities
 
             logMessage.AppendFormat("Message: {0}", message);
             logMessage.AppendFormat(", StackTrace: {0}", stackTrace);
+
+            logger.Error(logMessage.ToString());
+        }
+
+        public void Error(string methodName, Exception e, object parameters = null)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(methodName));
+            Debug.Assert(e != null);
+
+            StringBuilder logMessage = new StringBuilder();
+
+            logMessage.AppendFormat("Action: {0}", methodName);
+            logMessage.AppendFormat(", Message: {0}", e.Message);
+
+            if (e.InnerException != null)
+            {
+                logMessage.AppendFormat(", InnerMessage: {0}", e.InnerException.Message);
+
+                if (e.InnerException.InnerException != null)
+                {
+                    logMessage.AppendFormat(", InnerInnerMessage: {0}", e.InnerException.Message);
+                }
+            }
+
+            if (parameters != null)
+            {
+                logMessage.Append(", Params: [");
+                Type anonType = parameters.GetType();
+                foreach (var property in anonType.GetProperties())
+                {
+                    logMessage.AppendFormat("{0}: {1}, ", property.Name, property.GetValue(parameters, null));
+                }
+                logMessage.Append("]");
+            }
+
+            logMessage.AppendFormat(", StackTrace: {0}", e.StackTrace);
 
             logger.Error(logMessage.ToString());
         }
@@ -82,40 +118,5 @@ namespace TwolipsDating.Utilities
             logger.Warn(logMessage.ToString());
         }
 
-        public void Error(string actionName, Exception e, object parameters = null)
-        {
-            Debug.Assert(!String.IsNullOrEmpty(actionName));
-            Debug.Assert(e != null);
-
-            StringBuilder logMessage = new StringBuilder();
-
-            logMessage.AppendFormat("Action: {0}", actionName);
-            logMessage.AppendFormat(", Message: {0}", e.Message);
-
-            if (e.InnerException != null)
-            {
-                logMessage.AppendFormat(", InnerMessage: {0}", e.InnerException.Message);
-
-                if (e.InnerException.InnerException != null)
-                {
-                    logMessage.AppendFormat(", InnerInnerMessage: {0}", e.InnerException.Message);
-                }
-            }
-
-            if (parameters != null)
-            {
-                logMessage.Append(", Params: [");
-                Type anonType = parameters.GetType();
-                foreach (var property in anonType.GetProperties())
-                {
-                    logMessage.AppendFormat("{0}: {1}, ", property.Name, property.GetValue(parameters, null));
-                }
-                logMessage.Append("]");
-            }
-
-            logMessage.AppendFormat(", StackTrace: {0}", e.StackTrace);
-
-            logger.Error(logMessage.ToString());
-        }
     }
 }

@@ -408,33 +408,14 @@ namespace TwolipsDating.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
 
-            try
+            bool isDeleted = await DeleteImageAsync(id, fileName);
+
+            if (isDeleted)
             {
-                bool isDeleted = await DeleteImageAsync(id, fileName);
-
-                if (isDeleted)
-                {
-                    return Json(new { success = true });
-                }
-                else
-                {
-                    Log.Warn(
-                        "DeleteImage",
-                        ErrorMessages.UserImageNotDeleted,
-                        parameters: new { userImageId = id, fileName = fileName, profileUserId = profileUserId }
-                    );
-
-                    return Json(new { success = false, error = ErrorMessages.UserImageNotDeleted });
-                }
+                return Json(new { success = true });
             }
-            catch (DbUpdateException e)
+            else
             {
-                Log.Error(
-                    "DeleteImage",
-                    e,
-                    parameters: new { userImageId = id, fileName = fileName, profileUserId = profileUserId }
-                );
-
                 return Json(new { success = false, error = ErrorMessages.UserImageNotDeleted });
             }
         }
@@ -458,15 +439,15 @@ namespace TwolipsDating.Controllers
 
         private async Task<bool> DeleteImageAsync(int userImageId, string fileName)
         {
-            int changes = await ProfileService.DeleteUserImageAsync(userImageId);
+            var result = await ProfileService.DeleteUserImageAsync(userImageId);
 
-            if (changes > 0)
+            if (result.Succeeded)
             {
                 await DeleteFullSizeImageFromAzureStorageAsync(fileName);
                 await DeleteThumbnailImageFromAzureStorageAsync(fileName);
             }
 
-            return changes > 0;
+            return result.Succeeded;
         }
 
         /// <summary>
