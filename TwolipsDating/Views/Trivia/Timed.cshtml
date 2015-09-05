@@ -102,6 +102,10 @@
 </div>
 
 @section Scripts {
+    @Scripts.Render("~/bundles/trivia/timed")
+
+@if (!HttpContext.Current.IsDebuggingEnabled)
+{
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script src="@Url.Content("~/Scripts/Trivia/timed.js")" type="text/javascript"></script>
+}
 }

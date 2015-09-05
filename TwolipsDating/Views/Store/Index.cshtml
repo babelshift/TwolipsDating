@@ -74,6 +74,10 @@
 </div>
 
 @section Scripts {
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script src="@Url.Content("~/Scripts/Store/index.js")" type="text/javascript"></script>
+    @Scripts.Render("~/bundles/store/index")
+
+    @if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    }
 }

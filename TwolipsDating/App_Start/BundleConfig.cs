@@ -12,29 +12,51 @@ namespace TwolipsDating
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
-
-            bundles.Add(new ScriptBundle("~/bundles/jquery-ui").Include(
-                        "~/Scripts/jquery-ui.js"));
-
-            // Use the development version of Modernizr to develop with and learn from. Then, when you're
-            // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
-            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
-
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                     "~/Scripts/bootstrap.js",
                     "~/Scripts/respond.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/raty").Include(
-                    "~/Scripts/jquery.raty.js"));
+            bundles.Add(new ScriptBundle("~/bundles/trivia/timed").Include(
+                "~/Scripts/Trivia/timed.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/chosen").Include(
-                    "~/Scripts/chosen.jquery.js"));
+            bundles.Add(new ScriptBundle("~/bundles/trivia/random").Include(
+                "~/Scripts/Trivia/random.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/bootstrap-image-gallery").Include(
-                    "~/Scripts/bootstrap-image-gallery.js"));
+            bundles.Add(new ScriptBundle("~/bundles/trivia/quiz").Include(
+                "~/Scripts/Trivia/index.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/tags/index").Include(
+                "~/Scripts/Tags/index.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/store/index").Include(
+                "~/Scripts/Store/index.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/store/cart").Include(
+                "~/Scripts/Store/cart.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/search/index").Include(
+                "~/Scripts/chosen.jquery.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/profile/create").Include(
+                    "~/Scripts/jquery.validate*",
+                    "~/Scripts/jquery.unobtrusive-ajax.js",
+                    "~/Scripts/chosen.jquery.js",
+                    "~/Scripts/jquery-ui.js",
+                    "~/Scripts/Profile/create.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/home/dashboard").Include(
+                    "~/Scripts/bootstrap-image-gallery.js",
+                    "~/Scripts/Home/dashboard.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/profile/index").Include(
+                    "~/Scripts/jquery.validate*",
+                    "~/Scripts/jquery.unobtrusive-ajax.js",
+                    "~/Scripts/bootstrap-image-gallery.js",
+                    "~/Scripts/jquery.raty.js",
+                    "~/Scripts/chosen.jquery.js",
+                    "~/Scripts/jquery.form.min.js",
+                    "~/Scripts/draggable_background.js",
+                    "~/Scripts/Profile/index.js"));
 
             #endregion
 

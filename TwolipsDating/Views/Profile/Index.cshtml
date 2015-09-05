@@ -921,14 +921,8 @@ else
     </div>
 }
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
     <script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
-    @Scripts.Render("~/bundles/bootstrap-image-gallery")
-    @Scripts.Render("~/bundles/raty")
-    @Scripts.Render("~/bundles/chosen")
-    <script src="@Url.Content("~/Scripts/jquery.form.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/draggable_background.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/Profile/index.js")" type="text/javascript"></script>
+    @Scripts.Render("~/bundles/profile/index")
 
     @if (!HttpContext.Current.IsDebuggingEnabled)
     {

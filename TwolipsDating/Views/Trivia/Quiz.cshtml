@@ -246,8 +246,12 @@
     </div>
 </div>
 @section Scripts {
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script src="@Url.Content("~/Scripts/Trivia/quiz.js")" type="text/javascript"></script>
+    @Scripts.Render("~/bundles/trivia/quiz")
+
+    @if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    }
 }
 @section Styles {
     @Styles.Render("~/Content/awesome-bootstrap-checkbox")

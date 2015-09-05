@@ -142,13 +142,18 @@ else
     </div>
 }
 @section Scripts {
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    @Scripts.Render("~/bundles/chosen")
+    @Scripts.Render("~/bundles/search/index")
+
     <script type="text/javascript">
         $(document).ready(function () {
             $('#select-search').chosen();
         });
     </script>
+
+    @if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    }
 }
 @section Styles {
     @Styles.Render("~/Content/chosen")

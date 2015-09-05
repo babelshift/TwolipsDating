@@ -51,16 +51,19 @@ function setupEditBanner() {
         $('#upload-header-form-mobile').submit();
     })
 
+    var profileBanner = $('#profile-banner-background');
+    var saveBannerButton = $('#save-header');
+
     // when the user click sto submit the "upload banner image" form, submit and then callback to hide the save button and update the banner image
     $('#upload-header-form').ajaxForm({
         success: function (data) {
             if (data.success) {
-                $('#profile-banner-background').css('background', 'url(' + data.bannerImagePath + ')');
-                $('#profile-banner-background').css('background-size', 'cover');
-                $('#profile-banner-background').backgroundDraggable();
-                $('#profile-banner-background').backgroundDraggable({
+                profileBanner.css('background', 'url(' + data.bannerImagePath + ')');
+                profileBanner.css('background-size', 'cover');
+                profileBanner.backgroundDraggable();
+                profileBanner.backgroundDraggable({
                     done: function () {
-                        var backgroundPosition = $('#profile-banner-background').css('background-position');
+                        var backgroundPosition = profileBanner.css('background-position');
                         var split = backgroundPosition.split(" ");
                         var x = split[0].replace("px", "");
                         var y = split[1].replace("px", "");
@@ -68,6 +71,7 @@ function setupEditBanner() {
                         $('#BannerPositionY').val(parseInt(y));
                     }
                 });
+                saveBannerButton.removeClass('hidden');
             }
         }
     });
@@ -75,8 +79,8 @@ function setupEditBanner() {
     $('#upload-header-form-mobile').ajaxForm({
         success: function (data) {
             if (data.success) {
-                $('#profile-banner-background').css('background', 'url(' + data.bannerImagePath + ')');
-                $('#profile-banner-background').css('background-size', 'cover');
+                profileBanner.css('background', 'url(' + data.bannerImagePath + ')');
+                profileBanner.css('background-size', 'cover');
             }
         }
     });
@@ -84,10 +88,10 @@ function setupEditBanner() {
     var beginMoveBanner = function (e) {
         e.preventDefault();
 
-        $('#profile-banner-background').backgroundDraggable();
-        $('#profile-banner-background').backgroundDraggable({
+        profileBanner.backgroundDraggable();
+        profileBanner.backgroundDraggable({
             done: function () {
-                var backgroundPosition = $('#profile-banner-background').css('background-position');
+                var backgroundPosition = profileBanner.css('background-position');
                 var split = backgroundPosition.split(" ");
                 var x = parseInt(split[0].replace("px", ""));
                 var y = parseInt(split[1].replace("px", ""));
@@ -102,21 +106,21 @@ function setupEditBanner() {
     $('#reposition-header').on('click', function (e) {
         beginMoveBanner(e);
 
-        $('#save-header').removeClass('hidden');
+        saveBannerButton.removeClass('hidden');
         $('#cancel-header').removeClass('hidden');
     });
 
     $('#cancel-header').on('click', function () {
-        $('#save-header').addClass('hidden');
+        saveBannerButton.addClass('hidden');
         $('#cancel-header').addClass('hidden');
-        $('#profile-banner-background').backgroundDraggable('disable');
+        profileBanner.backgroundDraggable('disable');
     });
 
     // when the user clicks to submit the "save banner position" form, submit and then callback to hide the button and disable draggong
     $('#save-header-form').ajaxForm(function () {
-        $('#save-header').addClass('hidden');
+        saveBannerButton.addClass('hidden');
         $('#cancel-header').addClass('hidden');
-        $('#profile-banner-background').backgroundDraggable('disable');
+        profileBanner.backgroundDraggable('disable');
     });
 }
 
@@ -131,31 +135,26 @@ function setupProfileDetailsEditControls() {
         $('#SelectedLanguages').chosen();
     });
 
+    var limitEnteredAge = function (textBox) {
+        var value = parseInt(textBox.val());
+        if (isNaN(value)) {
+            textBox.val(18);
+        } else {
+            if (value < 18) {
+                textBox.val(18);
+            } else if (value > 99) {
+                textBox.val(99);
+            }
+        }
+    }
+
     var minAgeTextBox = $('#looking-for-age-min');
     var maxAgeTextBox = $('#looking-for-age-max');
     minAgeTextBox.on('change', function (e) {
-        var value = parseInt(minAgeTextBox.val());
-        if (isNaN(value)) {
-            minAgeTextBox.val(18);
-        } else {
-            if (value < 18) {
-                minAgeTextBox.val(18);
-            } else if (value > 99) {
-                minAgeTextBox.val(99);
-            }
-        }
+        limitEnteredAge(minAgeTextBox);
     });
     maxAgeTextBox.on('change', function (e) {
-        var value = parseInt(maxAgeTextBox.val());
-        if (isNaN(value)) {
-            maxAgeTextBox.val(18);
-        } else {
-            if (value < 18) {
-                maxAgeTextBox.val(18);
-            } else if (value > 99) {
-                maxAgeTextBox.val(99);
-            }
-        }
+        limitEnteredAge(maxAgeTextBox);
     });
 }
 
@@ -208,16 +207,18 @@ function setupPopoverSelectTitle() {
 function repositionBannerCoverToLimits() {
     var $el = $('#profile-banner-background');
 
-    var imageDimensions = getBackgroundImageDimensions($el);
-
     var pos = $el.css('background-position').match(/(-?\d+).*?\s(-?\d+)/) || [],
     xPos = parseInt(pos[1]) || 0,
     yPos = parseInt(pos[2]) || 0;
 
-    xPos = limit($el.innerWidth() - imageDimensions.width, 0, xPos, true);
-    yPos = limit($el.innerHeight() - imageDimensions.height, 0, yPos, true);
+    var imageDimensions = getBackgroundImageDimensions($el);
 
-    $el.css('background-position', xPos + 'px ' + yPos + 'px');
+    if (imageDimensions != null) {
+        xPos = limit($el.innerWidth() - imageDimensions.width, 0, xPos, true);
+        yPos = limit($el.innerHeight() - imageDimensions.height, 0, yPos, true);
+
+        $el.css('background-position', xPos + 'px ' + yPos + 'px');
+    }
 }
 
 function setupTextAreaForPost(buttonSave, textArea, paramName, postPath, buttonEdit, container, textDisplay, defaultText) {
@@ -572,37 +573,43 @@ function onToggleFavoriteProfile(e, obj, profileUserId, profileId) {
 }
 
 function toggleFavoriteProfileIcon(isFavorite) {
+    var buttonToggleFavoriteIcon = $(".button-toggle-favorite-icon");
+    var buttonToggleFavorite = $(".button-toggle-favorite");
+
     if (isFavorite) {
-        $(".button-toggle-favorite-icon").removeClass("fa-user-plus");
-        $(".button-toggle-favorite-icon").addClass("fa-check");
-        $(".button-toggle-favorite").removeClass("btn-primary");
-        $(".button-toggle-favorite").addClass("btn-success");
-        $(".button-toggle-favorite").attr("title", "Stop following updates");
+        buttonToggleFavoriteIcon.removeClass("fa-user-plus");
+        buttonToggleFavoriteIcon.addClass("fa-check");
+        buttonToggleFavorite.removeClass("btn-primary");
+        buttonToggleFavorite.addClass("btn-success");
+        buttonToggleFavorite.attr("title", "Stop following updates");
         $(".button-toggle-favorite-text").text("Following");
     } else {
-        $(".button-toggle-favorite-icon").removeClass("fa-check");
-        $(".button-toggle-favorite-icon").addClass("fa-user-plus");
-        $(".button-toggle-favorite").removeClass("btn-success");
-        $(".button-toggle-favorite").addClass("btn-primary");
-        $(".button-toggle-favorite").attr("title", "Start following updates");
+        buttonToggleFavoriteIcon.removeClass("fa-check");
+        buttonToggleFavoriteIcon.addClass("fa-user-plus");
+        buttonToggleFavorite.removeClass("btn-success");
+        buttonToggleFavorite.addClass("btn-primary");
+        buttonToggleFavorite.attr("title", "Start following updates");
         $(".button-toggle-favorite-text").text("Follow");
     }
 }
 
 function toggleIgnoredUserIcon(isIgnored) {
+    var buttonToggleIgnoredIcon = $(".button-toggle-ignored-icon");
+    var buttonToggleIgnored = $(".button-toggle-ignored");
+
     if (isIgnored) {
-        $(".button-toggle-ignored-icon").removeClass("glyphicon-volume-up");
-        $(".button-toggle-ignored-icon").addClass("glyphicon-volume-off");
-        $(".button-toggle-ignored").removeClass("btn-default");
-        $(".button-toggle-ignored").addClass("btn-danger");
-        $(".button-toggle-ignored").attr("title", "Not receiving updates and messages from this user");
+        buttonToggleIgnoredIcon.removeClass("glyphicon-volume-up");
+        buttonToggleIgnoredIcon.addClass("glyphicon-volume-off");
+        buttonToggleIgnored.removeClass("btn-default");
+        buttonToggleIgnored.addClass("btn-danger");
+        buttonToggleIgnored.attr("title", "Not receiving updates and messages from this user");
         $(".button-toggle-ignored-text").text("Ignoring");
     } else {
-        $(".button-toggle-ignored-icon").removeClass("glyphicon-volume-off");
-        $(".button-toggle-ignored-icon").addClass("glyphicon-volume-up");
-        $(".button-toggle-ignored").removeClass("btn-danger");
-        $(".button-toggle-ignored").addClass("btn-default");
-        $(".button-toggle-ignored").attr("title", "Receiving updates and messages from this user");
+        buttonToggleIgnoredIcon.removeClass("glyphicon-volume-off");
+        buttonToggleIgnoredIcon.addClass("glyphicon-volume-up");
+        buttonToggleIgnored.removeClass("btn-danger");
+        buttonToggleIgnored.addClass("btn-default");
+        buttonToggleIgnored.attr("title", "Receiving updates and messages from this user");
         $(".button-toggle-ignored-text").text("Ignore");
     }
 }
