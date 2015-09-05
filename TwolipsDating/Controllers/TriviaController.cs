@@ -338,8 +338,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [RequireProfile]
-        [AllowAnonymous]
+        [AllowAnonymous, RequireProfile, RequireConfirmedEmail, ImportModelStateFromTempData]
         public async Task<ActionResult> Quiz(int id, string seoName)
         {
             await SetNotificationsAsync();
@@ -435,12 +434,12 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, ExportModelStateToTempData]
         public async Task<ActionResult> Quiz(QuizViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                return View(viewModel);
+                return RedirectToAction("quiz", new { id = viewModel.QuizId, seoName = viewModel.SEOName });
             }
 
             string currentUserId = User.Identity.GetUserId();

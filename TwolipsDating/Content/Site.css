@@ -18,13 +18,13 @@ body {
 
 /* styles for validation helpers */
 .field-validation-error {
-    background-color: #f2dede;
-    border-color: #eed3d7;
-    color: #b94a48;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
+    background-color: #f04124;
+    border-color: #ea2f10;
+    color: #ffffff;
+    padding: 5px;
+    margin-bottom: 10px;
     border-radius: 4px;
+    font-size: 13px;
 }
 
     .field-validation-error > p,
@@ -156,7 +156,9 @@ input[type="checkbox"].input-validation-error {
         color: #008cba;
     }
 
-.navbar { margin-bottom: 10px; }
+.navbar {
+    margin-bottom: 10px;
+}
 
 .navbar-right {
     margin-right: 0;
@@ -492,9 +494,9 @@ input[readonly] {
     margin-bottom: 5px;
 }
 
-.profile-banner-info p {
-    margin-bottom: 0;
-}
+    .profile-banner-info p {
+        margin-bottom: 0;
+    }
 
     .profile-banner-info .user-name {
         font-size: 22px;

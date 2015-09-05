@@ -23,6 +23,8 @@ namespace TwolipsDating
                 "~/Scripts/Trivia/random.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/trivia/quiz").Include(
+                "~/Scripts/jquery.validate*",
+                "~/Scripts/jquery.unobtrusive-ajax.js",
                 "~/Scripts/Trivia/index.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/tags/index").Include(
@@ -67,10 +69,10 @@ namespace TwolipsDating
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                     "~/Content/site.css"));
-            
+
             bundles.Add(new StyleBundle("~/Content/chosen").Include(
                     "~/Content/chosen.css"));
-            
+
             bundles.Add(new StyleBundle("~/Content/bootstrap-image-gallery").Include(
                     "~/Content/bootstrap-image-gallery.css"));
 

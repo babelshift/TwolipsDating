@@ -30,7 +30,7 @@ namespace TwolipsDating.Utilities
                         {
                             filterContext.Result = new JsonResult
                             {
-                                Data = new { success = false, message = ErrorMessages.UnhandledException }
+                                Data = new { success = false, message = String.Format("{0} {1}", (int)HttpStatusCode.Forbidden, HttpStatusCode.Forbidden.ToString()) }
                             };
                         }
                         else

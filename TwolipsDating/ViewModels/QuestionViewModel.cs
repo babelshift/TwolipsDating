@@ -12,7 +12,7 @@ namespace TwolipsDating.ViewModels
 
         public bool IsAlreadyAnswered { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "You have to select an answer to this question.")]
         public int? SelectedAnswerId { get; set; }
 
         public int CorrectAnswerId { get; set; }

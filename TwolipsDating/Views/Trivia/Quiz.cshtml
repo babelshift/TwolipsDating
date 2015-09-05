@@ -40,17 +40,26 @@
 }
 
 <div class="row">
-    <div class="ad">
-        <!-- Quiz - Top - 1 -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1823005717277864"
-             data-ad-slot="9186755439"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
+    @if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="ad">
+            <!-- Quiz - Top - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="9186755439"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    }
+    else
+    {
+        <div style="width: 610px; margin: 5px auto;">
+            <img src="http://placehold.it/600x90" />
+        </div>
+    }
     <div class="col-md-8">
         <div style="margin-bottom: 5px">
             <div class="col-sm-4">
@@ -142,51 +151,56 @@
                             var question = Model.Questions[i];
                             if (User.Identity.IsAuthenticated)
                             {
-                                <div class="col-xs-9 col-sm-10" style="padding-left: 0; padding-right: 0">
-                                    @String.Format("{0}. {1}", i + 1, question.Content)
+                                <div class="row" style="margin: 0">
+                                    <div class="col-xs-9 col-sm-10" style="padding-left: 0; padding-right: 0">
+                                        @String.Format("{0}. {1}", i + 1, question.Content)
+                                    </div>
+                                    <div class="col-xs-3 col-sm-2" style="padding-left: 0; padding-right: 0">
+                                        <a href="#" data-toggle="modal" data-target="#modalQuestionViolation" data-question-id="@question.QuestionId" class="btn btn-default btn-xs pull-right">
+                                            <i class="glyphicon glyphicon-flag"></i> Report
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="col-xs-3 col-sm-2" style="padding-left: 0; padding-right: 0">
-                                    <a href="#" data-toggle="modal" data-target="#modalQuestionViolation" data-question-id="@question.QuestionId" class="btn btn-default btn-xs pull-right">
-                                        <i class="glyphicon glyphicon-flag"></i> Report
-                                    </a>
-                                </div>
+                                @Html.ValidationMessage(String.Format("Questions[{0}].SelectedAnswerId", i))
                             }
                             else
                             {
                                 @String.Format("{0}. {1}", i + 1, question.Content)
+                                <div class="clearfix"></div>
                             }
-                            <div class="clearfix"></div>
-                            foreach (var answer in question.Answers)
-                            {
-                                string radioStyle = "radio-info";
-                                <div>
-                                    @if (Model.Questions[i].IsAlreadyAnswered)
-                                    {
-                                        if (answer.IsCorrect)
+                            <div style="margin-top: 5px;">
+                                @foreach (var answer in question.Answers)
+                                {
+                                    string radioStyle = "radio-info";
+                                    <div>
+                                        @if (Model.Questions[i].IsAlreadyAnswered)
                                         {
-                                            radioStyle = "radio-success";
-                                            <span class="text-success"><i class="glyphicon glyphicon-ok"></i></span>
+                                            if (answer.IsCorrect)
+                                            {
+                                                radioStyle = "radio-success";
+                                                <span class="text-success"><i class="glyphicon glyphicon-ok"></i></span>
+                                            }
+                                            else
+                                            {
+                                                radioStyle = "radio-danger";
+                                                <span class="text-danger"><i class="glyphicon glyphicon-remove"></i></span>
+                                            }
                                         }
-                                        else
-                                        {
-                                            radioStyle = "radio-danger";
-                                            <span class="text-danger"><i class="glyphicon glyphicon-remove"></i></span>
-                                        }
-                                    }
-                                    <div class="radio @radioStyle" style="display: inline-block">
-                                        @if (Model.Questions[i].IsAlreadyAnswered || !User.Identity.IsAuthenticated)
-                                        {
-                                            @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { id = answer.AnswerId, disabled = "disabled" })
-                                        }
-                                        else
-                                        {
-                                            @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { id = answer.AnswerId })
-                                        }
-                                        <label for="@answer.AnswerId">@answer.Content</label>
+                                        <div class="radio @radioStyle" style="display: inline-block">
+                                            @if (Model.Questions[i].IsAlreadyAnswered || !User.Identity.IsAuthenticated)
+                                            {
+                                                @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { id = answer.AnswerId, disabled = "disabled" })
+                                            }
+                                            else
+                                            {
+                                                @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { id = answer.AnswerId })
+                                            }
+                                            <label for="@answer.AnswerId">@answer.Content</label>
+                                        </div>
                                     </div>
-                                </div>
-                            }
-                            @Html.HiddenFor(m => Model.Questions[i].QuestionId)
+                                }
+                                @Html.HiddenFor(m => Model.Questions[i].QuestionId)
+                            </div>
                             <hr />
                         }
 
@@ -199,6 +213,7 @@
                             <a href="@Url.Action("login", "account")" class="btn btn-primary">Log in to complete this quiz</a>
                         }
                         @Html.HiddenFor(m => m.QuizId)
+                        @Html.HiddenFor(m => m.SEOName)
                     }
                 }
                 else
@@ -232,17 +247,26 @@
                     </div>
                 }
             </div>*@
-        <div class="ad">
-            <!-- Quiz - Sidebar - 1 -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1823005717277864"
-                 data-ad-slot="7710022230"
-                 data-ad-format="auto"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
+        @if (!HttpContext.Current.IsDebuggingEnabled)
+        {
+            <div class="ad">
+                <!-- Quiz - Sidebar - 1 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1823005717277864"
+                     data-ad-slot="7710022230"
+                     data-ad-format="auto"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        }
+        else
+        {
+            <div style="width: 610px; margin: 5px auto;">
+                <img src="http://placehold.it/600x90" />
+            </div>
+        }
     </div>
 </div>
 @section Scripts {
