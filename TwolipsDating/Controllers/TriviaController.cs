@@ -434,7 +434,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        [HttpPost, ExportModelStateToTempData]
+        [HttpPost, ExportModelStateToTempData, ValidateAntiForgeryToken]
         public async Task<ActionResult> Quiz(QuizViewModel viewModel)
         {
             if (!ModelState.IsValid)

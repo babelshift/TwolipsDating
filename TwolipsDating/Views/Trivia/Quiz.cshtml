@@ -126,6 +126,8 @@
 
                     using (Html.BeginForm("quiz", "trivia", FormMethod.Post, new { role = "form" }))
                     {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
                         if (User.Identity.IsAuthenticated)
                         {
                             if (Model.IsAlreadyCompleted)
