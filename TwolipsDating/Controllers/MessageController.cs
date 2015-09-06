@@ -30,7 +30,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [RequireProfile]
+        [RequireProfileIfAuthenticated]
         public async Task<ActionResult> Conversation(string id, int? page)
         {
             // we want to look up conversations between a user and another user
@@ -190,7 +190,7 @@ namespace TwolipsDating.Controllers
         /// Sets up a view model displaying all received messages for the currently logged in user.
         /// </summary>
         /// <returns></returns>
-        [RequireProfile]
+        [RequireProfileIfAuthenticated]
         public async Task<ActionResult> Received()
         {
             var currentUserId = User.Identity.GetUserId();
@@ -215,7 +215,7 @@ namespace TwolipsDating.Controllers
         /// Sets up a view model displaying all sent messages for the currently logged in user.
         /// </summary>
         /// <returns></returns>
-        [RequireProfile]
+        [RequireProfileIfAuthenticated]
         public async Task<ActionResult> Sent()
         {
             var currentUserId = User.Identity.GetUserId();

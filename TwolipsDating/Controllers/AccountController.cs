@@ -598,7 +598,7 @@ namespace TwolipsDating.Controllers
             return View();
         }
 
-        [RequireProfile]
+        [RequireProfileIfAuthenticated]
         public async Task<ActionResult> Points(int? page)
         {
             await SetNotificationsAsync();

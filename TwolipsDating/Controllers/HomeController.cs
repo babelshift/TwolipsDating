@@ -24,7 +24,7 @@ namespace TwolipsDating.Controllers
 
         #endregion Services
 
-        [RequireProfile]
+        [RequireProfileIfAuthenticated]
         [AllowAnonymous]
         public async Task<ActionResult> Index(int? page)
         {

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,8 +15,11 @@ namespace TwolipsDating.Business
 {
     internal class TriviaService : BaseService
     {
-        public TriviaService() 
+        public TriviaService()
             : base() { }
+
+        public TriviaService(IIdentityMessageService emailService, IValidationDictionary validationDictionary)
+            : base(emailService, validationDictionary) { }
 
         public TriviaService(ApplicationDbContext db, IIdentityMessageService emailService)
             : base(db, emailService) { }
@@ -121,7 +125,7 @@ namespace TwolipsDating.Business
             }
         }
 
-        internal async Task<int> RecordAnsweredQuestionAsync(string userId, int profileId, int questionId, int answerId, int questionTypeId)
+        internal async Task<AnsweredQuestionResult> RecordAnsweredQuestionAsync(string userId, int profileId, int questionId, int answerId, int questionTypeId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(profileId > 0);
@@ -129,35 +133,53 @@ namespace TwolipsDating.Business
             Debug.Assert(answerId > 0);
             Debug.Assert(questionTypeId > 0);
 
-            // save the user's answer to the database
-            SaveAnswerToDatabase(userId, questionId, answerId);
+            bool success = false;
+            int correctAnswerId = 0;
 
-            // check if the supplied answer is correct
-            int correctAnswerId = await GetCorrectAnswerAsync(questionId, answerId);
-
-            // give the player the correct number of points for the question if they got it correct
-            if (answerId == correctAnswerId)
+            try
             {
-                var user = db.Users.Find(userId);
-                int questionPoints = await GetQuestionPointsAsync(questionId);
-                IncreaseUserPoints(user, questionPoints);
+                // save the user's answer to the database
+                AddAnsweredQuestion(userId, questionId, answerId);
+
+                // check if the supplied answer is correct
+                correctAnswerId = await GetCorrectAnswerAsync(questionId, answerId);
+
+                // give the player the correct number of points for the question if they got it correct
+                if (answerId == correctAnswerId)
+                {
+                    var user = db.Users.Find(userId);
+                    int questionPoints = await GetQuestionPointsAsync(questionId);
+                    IncreaseUserPoints(user, questionPoints);
+                }
+
+                // award the user any tags for question-related points
+                await HandleTagAwards(userId, profileId);
+
+                // save the changes regarding the answered question
+                int changes = await db.SaveChangesAsync();
+
+                // only award if there are changes
+                if (changes > 0)
+                {
+                    MilestoneService milestoneService = new MilestoneService(db, EmailService);
+
+                    // award the user any question-related milestones if they have enough question-related points
+                    await milestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.QuestionsAnsweredCorrectly);
+
+                    // save the milestone and tag award changes
+                    changes = await db.SaveChangesAsync();
+
+                    success = true;
+                }
+
+            }
+            catch(DbUpdateException ex)
+            {
+                Log.Error("TriviaService.RecordAnsweredQuestionAsync", ex, new { userId, profileId, questionId, answerId, questionTypeId });
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.AnswerNotSubmitted);
             }
 
-            // award the user any tags for question-related points
-            await HandleTagAwards(userId, profileId);
-
-            // save the changes regarding the answered question
-            await db.SaveChangesAsync();
-
-            MilestoneService milestoneService = new MilestoneService(db, EmailService);
-
-            // award the user any question-related milestones if they have enough question-related points
-            await milestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.QuestionsAnsweredCorrectly);
-
-            // save the milestone and tag award changes
-            await db.SaveChangesAsync();
-
-            return correctAnswerId;
+            return success ? AnsweredQuestionResult.Success(correctAnswerId) : AnsweredQuestionResult.Failed(ErrorMessages.AnswerNotSubmitted);
         }
 
         private async Task<int> GetQuestionPointsAsync(int questionId)
@@ -197,7 +219,7 @@ namespace TwolipsDating.Business
             }
         }
 
-        private void SaveAnswerToDatabase(string userId, int questionId, int answerId)
+        private void AddAnsweredQuestion(string userId, int questionId, int answerId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(questionId > 0);
@@ -439,7 +461,7 @@ namespace TwolipsDating.Business
                 results = await QueryAsync<UserCompletedQuizViewModel>(sql, new { });
             }
 
-            foreach(var viewModel in results)
+            foreach (var viewModel in results)
             {
                 viewModel.ProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(viewModel.ProfileImagePath);
             }
@@ -484,9 +506,9 @@ namespace TwolipsDating.Business
         internal async Task<int> GetQuestionsAnsweredCorrectlyCountAsync(string userId)
         {
             var questionsAnsweredCorrectly = from answeredQuestion in db.AnsweredQuestions
-                            where answeredQuestion.UserId == userId
-                            where answeredQuestion.AnswerId == answeredQuestion.Question.CorrectAnswerId
-                            select answeredQuestion;
+                                             where answeredQuestion.UserId == userId
+                                             where answeredQuestion.AnswerId == answeredQuestion.Question.CorrectAnswerId
+                                             select answeredQuestion;
 
             return await questionsAnsweredCorrectly.CountAsync();
         }

@@ -56,7 +56,7 @@ namespace TwolipsDating.Controllers
         /// Returns a view to display the trivia dashboard
         /// </summary>
         /// <returns></returns>
-        [RequireProfile]
+        [RequireProfileIfAuthenticated]
         public async Task<ActionResult> Index()
         {
             await SetNotificationsAsync();
@@ -145,8 +145,7 @@ namespace TwolipsDating.Controllers
         /// Returns a view containing a random question. Redirects to the user's create profile if no profile exists for the user.
         /// </summary>
         /// <returns></returns>
-        [RequireProfile]
-        [AllowAnonymous]
+        [AllowAnonymous, RequireProfileIfAuthenticated]
         public async Task<ActionResult> Random()
         {
             QuestionViewModel viewModel = new QuestionViewModel();
@@ -176,41 +175,33 @@ namespace TwolipsDating.Controllers
         [HttpPost]
         public async Task<JsonResult> SubmitAnswer(int questionId, int answerId)
         {
-            try
+            var currentUserId = User.Identity.GetUserId();
+
+            int? currentUserProfileId = await userService.GetProfileIdAsync(currentUserId);
+
+            // only allow submit answer if the user has a profile
+            if (currentUserProfileId.HasValue)
             {
-                var currentUserId = User.Identity.GetUserId();
+                var result = await triviaService.RecordAnsweredQuestionAsync(
+                    currentUserId,
+                    currentUserProfileId.Value,
+                    questionId,
+                    answerId,
+                    (int)QuestionTypeValues.Random);
 
-                int? currentUserProfileId = await userService.GetProfileIdAsync(currentUserId);
-
-                // only allow submit answer if the user has a profile
-                if (currentUserProfileId.HasValue)
+                if (result.Succeeded)
                 {
-                    int correctAnswerId = await triviaService.RecordAnsweredQuestionAsync(
-                        currentUserId,
-                        currentUserProfileId.Value,
-                        questionId,
-                        answerId,
-                        (int)QuestionTypeValues.Random);
-
-                    return Json(new { success = true, correctAnswerId = correctAnswerId });
-                }
-                else
-                {
-                    Log.Warn("SubmitAnswer", ErrorMessages.AnswerNotSubmitted,
-                        parameters: new { questionId = questionId, answerId = answerId }
-                    );
-
-                    return Json(new { success = false, error = ErrorMessages.AnswerNotSubmitted });
+                    return Json(new { success = true, correctAnswerId = result.CorrectAnswerId });
                 }
             }
-            catch (DbUpdateException e)
+            else
             {
-                Log.Error("SubmitAnswer", e,
-                    parameters: new { questionId = questionId, answerId = answerId }
+                Log.Error("TriviaController/SubmitAnswer", ErrorMessages.AnswerNotSubmitted,
+                    parameters: new { questionId, answerId }
                 );
-
-                return Json(new { success = false, error = ErrorMessages.AnswerNotSubmitted });
             }
+
+            return Json(new { success = false, error = ErrorMessages.AnswerNotSubmitted });
         }
 
         #endregion Random Question
@@ -221,7 +212,7 @@ namespace TwolipsDating.Controllers
         /// Returns a view containing a timed random question. Redirects to the user's create profile if no profile exists for the user.
         /// </summary>
         /// <returns></returns>
-        [RequireProfile]
+        [RequireProfileIfAuthenticated]
         [AllowAnonymous]
         public async Task<ActionResult> Timed()
         {
@@ -252,60 +243,56 @@ namespace TwolipsDating.Controllers
         [HttpPost]
         public async Task<JsonResult> SubmitTimedAnswer(int questionId, int answerId)
         {
-            try
+            DateTime utcNow = DateTime.UtcNow;
+            string responseMessage = String.Empty;
+
+            if (QuestionStartTime.HasValue)
             {
-                DateTime utcNow = DateTime.UtcNow;
-                if (QuestionStartTime.HasValue)
+                TimeSpan timeSpentOnQuestion = utcNow.Subtract(QuestionStartTime.Value);
+                bool didUserAnswerInTime = timeSpentOnQuestion.TotalSeconds <= 10 ? true : false;
+                QuestionStartTime = null;
+
+                if (didUserAnswerInTime)
                 {
-                    TimeSpan timeSpentOnQuestion = utcNow.Subtract(QuestionStartTime.Value);
-                    bool didUserAnswerInTime = timeSpentOnQuestion.TotalSeconds <= 10 ? true : false;
-                    QuestionStartTime = null;
+                    var currentUserId = User.Identity.GetUserId();
 
-                    if (didUserAnswerInTime)
+                    int? currentUserProfileId = await userService.GetProfileIdAsync(currentUserId);
+
+                    if (currentUserProfileId.HasValue)
                     {
-                        var currentUserId = User.Identity.GetUserId();
+                        // log the answer for this user's question history
+                        var result = await triviaService.RecordAnsweredQuestionAsync(
+                            currentUserId,
+                            currentUserProfileId.Value,
+                            questionId,
+                            answerId,
+                            (int)QuestionTypeValues.Timed);
 
-                        int? currentUserProfileId = await userService.GetProfileIdAsync(currentUserId);
-
-                        if (currentUserProfileId.HasValue)
+                        if (result.Succeeded)
                         {
-                            // log the answer for this user's question history
-                            int correctAnswerId = await triviaService.RecordAnsweredQuestionAsync(
-                                currentUserId,
-                                currentUserProfileId.Value,
-                                questionId,
-                                answerId,
-                                (int)QuestionTypeValues.Timed);
-
-                            return Json(new { success = true, correctAnswerId = correctAnswerId });
-                        }
-                        else
-                        {
-                            Log.Warn("SubmitTimedAnswer", ErrorMessages.AnswerNotSubmitted,
-                                parameters: new { questionId = questionId, answerId = answerId }
-                            );
-
-                            return Json(new { success = false, error = ErrorMessages.AnswerNotSubmitted });
+                            return Json(new { success = true, correctAnswerId = result.CorrectAnswerId });
                         }
                     }
                     else
                     {
-                        return Json(new { success = false, error = "You ran out of time." });
+                        Log.Error("SubmitTimedAnswer", ErrorMessages.AnswerNotSubmitted,
+                            parameters: new { questionId = questionId, answerId = answerId }
+                        );
+
+                        responseMessage = ErrorMessages.AnswerNotSubmitted;
                     }
                 }
                 else
                 {
-                    return Json(new { success = false, error = "How did you answer without starting the question?" });
+                    responseMessage = ErrorMessages.TimedQuestionOutOfTime;
                 }
             }
-            catch (DbUpdateException e)
+            else
             {
-                Log.Error("SubmitAnswer", e,
-                    parameters: new { questionId = questionId, answerId = answerId }
-                );
-
-                return Json(new { success = false, error = ErrorMessages.AnswerNotSubmitted });
+                responseMessage = ErrorMessages.TimedQuestionNoStart;
             }
+
+            return Json(new { success = false, error = responseMessage });
         }
 
         /// <summary>
@@ -338,7 +325,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [AllowAnonymous, RequireProfile, RequireConfirmedEmail, ImportModelStateFromTempData]
+        [AllowAnonymous, RequireProfileIfAuthenticated, RequireConfirmedEmail, ImportModelStateFromTempData]
         public async Task<ActionResult> Quiz(int id, string seoName)
         {
             await SetNotificationsAsync();
@@ -450,16 +437,19 @@ namespace TwolipsDating.Controllers
             int numberOfCorrectAnswers = 0;
             foreach (var question in viewModel.Questions)
             {
-                int correctAnswerId = await triviaService.RecordAnsweredQuestionAsync(
+                var result = await triviaService.RecordAnsweredQuestionAsync(
                     currentUserId,
                     profile.Id,
                     question.QuestionId,
                     question.SelectedAnswerId.Value,
                     (int)QuestionTypeValues.Quiz);
 
-                if (question.SelectedAnswerId.Value == correctAnswerId)
+                if(result.Succeeded)
                 {
-                    numberOfCorrectAnswers++;
+                    if (question.SelectedAnswerId.Value == result.CorrectAnswerId)
+                    {
+                        numberOfCorrectAnswers++;
+                    }
                 }
             }
 

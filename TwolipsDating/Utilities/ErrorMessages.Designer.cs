@@ -250,6 +250,24 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to How did you answer without starting the question?.
+        /// </summary>
+        internal static string TimedQuestionNoStart {
+            get {
+                return ResourceManager.GetString("TimedQuestionNoStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You ran out of time..
+        /// </summary>
+        internal static string TimedQuestionOutOfTime {
+            get {
+                return ResourceManager.GetString("TimedQuestionOutOfTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You cannot select that title because you haven&apos;t obtained it yet..
         /// </summary>
         internal static string TitleNotObtained {

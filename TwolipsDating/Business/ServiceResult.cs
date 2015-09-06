@@ -10,25 +10,25 @@ namespace TwolipsDating.Business
         public bool Succeeded { get; private set; }
         public IEnumerable<string> Errors { get; private set; }
 
-        public ServiceResult(bool success)
+        protected ServiceResult()
         {
-            Succeeded = success;
+            Succeeded = true;
         }
 
-        public ServiceResult(bool success, IEnumerable<string> errors)
+        protected ServiceResult(IEnumerable<string> errors)
         {
-            Succeeded = success;
+            Succeeded = false;
             Errors = errors;
         }
 
         public static ServiceResult Success
         {
-            get { return new ServiceResult(true); }
+            get { return new ServiceResult(); }
         }
 
         public static ServiceResult Failed(params string[] errors)
         {
-            return new ServiceResult(false, errors);
+            return new ServiceResult(errors);
         }
     }
 }

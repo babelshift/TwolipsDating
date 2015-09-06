@@ -48,7 +48,7 @@ namespace TwolipsDating.Controllers
         /// Returns a view model used to display the store of items.
         /// </summary>
         /// <returns></returns>
-        [RequireProfile]
+        [RequireProfileIfAuthenticated]
         public async Task<ActionResult> Index()
         {
             var currentUserId = User.Identity.GetUserId();
