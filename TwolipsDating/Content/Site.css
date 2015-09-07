@@ -660,6 +660,20 @@ input[readonly] {
     color: #d34836;
 }
 
+.btn-instagram {
+    color: #fff;
+    background-color: #2A5B83;
+    border-color: #1b4b71;
+}
+
+    .btn-instagram:hover,
+    .btn-instagram:focus,
+    .btn-instagram:active {
+        color: #fff;
+        background-color: #1b4b71;
+        border-color: #124064;
+    }
+
 .btn-twitter {
     color: #fff;
     background-color: #55acee;

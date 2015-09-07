@@ -54,26 +54,26 @@
 
                                             if (account.LoginProvider == "Google")
                                             {
-                                                <button type="submit" style="width:100%" class="btn btn-google-plus btn-sm"
+                                                <button type="submit" style="width:100%" class="btn btn-google-plus"
                                                         id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
                                                         title="Log in using your @account.LoginProvider account">
-                                                    <img src="~/Content/gp-icon-16.png" /> @account.LoginProvider
+                                                    <i class="fa fa-google-plus fa-fw fa-lg"></i> @account.LoginProvider
                                                 </button>
                                             }
                                             else if (account.LoginProvider == "Twitter")
                                             {
-                                                <button type="submit" style="width:100%" class="btn btn-twitter btn-sm"
+                                                <button type="submit" style="width:100%" class="btn btn-twitter"
                                                         id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
                                                         title="Log in using your @account.LoginProvider account">
-                                                    <img src="~/Content/tw-icon-16.png" /> @account.LoginProvider
+                                                    <i class="fa fa-twitter fa-fw fa-lg"></i> @account.LoginProvider
                                                 </button>
                                             }
                                             else if (account.LoginProvider == "Facebook")
                                             {
-                                                <button type="submit" style="width:100%" class="btn btn-facebook btn-sm"
+                                                <button type="submit" style="width:100%" class="btn btn-facebook"
                                                         id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
                                                         title="Log in using your @account.LoginProvider account">
-                                                    <img src="~/Content/fb-icon-16.png" /> @account.LoginProvider
+                                                    <i class="fa fa-facebook fa-fw fa-lg"></i> @account.LoginProvider
                                                 </button>
                                             }
                                         }
@@ -82,26 +82,26 @@
                                     {
                                         if (account.LoginProvider == "Google")
                                         {
-                                            <button type="button" style="width:100%" class="btn btn-google-plus btn-sm"
+                                            <button type="button" style="width:100%" class="btn btn-google-plus"
                                                     id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
                                                     title="You cannot remove your only login provider" disabled="disabled">
-                                                <img src="~/Content/gp-icon-16.png" /> @account.LoginProvider
+                                                <i class="fa fa-google-plus fa-fw fa-lg"></i> @account.LoginProvider
                                             </button>
                                         }
                                         else if (account.LoginProvider == "Twitter")
                                         {
-                                            <button type="button" style="width:100%" class="btn btn-twitter btn-sm"
+                                            <button type="button" style="width:100%" class="btn btn-twitter"
                                                     id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
                                                     title="You cannot remove your only login provider" disabled="disabled">
-                                                <img src="~/Content/tw-icon-16.png" /> @account.LoginProvider
+                                                <i class="fa fa-twitter fa-fw fa-lg"></i> @account.LoginProvider
                                             </button>
                                         }
                                         else if (account.LoginProvider == "Facebook")
                                         {
-                                            <button type="button" style="width:100%" class="btn btn-facebook btn-sm"
+                                            <button type="button" style="width:100%" class="btn btn-facebook"
                                                     id="@account.LoginProvider" name="provider" value="@account.LoginProvider"
                                                     title="You cannot remove your only login provider" disabled="disabled">
-                                                <img src="~/Content/fb-icon-16.png" /> @account.LoginProvider
+                                                <i class="fa fa-facebook fa-fw fa-lg"></i> @account.LoginProvider
                                             </button>
                                         }
                                     }
@@ -128,26 +128,26 @@
                                     <td>
                                         @if (p.AuthenticationType == "Google")
                                         {
-                                            <button type="submit" style="width:100%" class="btn btn-danger btn-sm"
+                                            <button type="submit" style="width:100%" class="btn btn-google-plus"
                                                     id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType"
                                                     title="Log in using your @p.Caption account">
-                                                <img src="~/Content/gp-icon-16.png" /> @p.AuthenticationType
+                                                <i class="fa fa-google-plus fa-fw fa-lg"></i> @p.AuthenticationType
                                             </button>
                                         }
                                         else if (p.AuthenticationType == "Twitter")
                                         {
-                                            <button type="submit" style="width:100%" class="btn btn-info btn-sm"
+                                            <button type="submit" style="width:100%" class="btn btn-twitter"
                                                     id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType"
                                                     title="Log in using your @p.Caption account">
-                                                <img src="~/Content/tw-icon-16.png" /> @p.AuthenticationType
+                                                <i class="fa fa-twitter fa-fw fa-lg"></i> @p.AuthenticationType
                                             </button>
                                         }
                                         else if (p.AuthenticationType == "Facebook")
                                         {
-                                            <button type="submit" style="width:100%" class="btn btn-primary btn-sm"
+                                            <button type="submit" style="width:100%" class="btn btn-facebook"
                                                     id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType"
                                                     title="Log in using your @p.Caption account">
-                                                <img src="~/Content/fb-icon-16.png" /> @p.AuthenticationType
+                                                <i class="fa fa-facebook fa-fw fa-lg"></i> @p.AuthenticationType
                                             </button>
                                         }
                                     </td>
