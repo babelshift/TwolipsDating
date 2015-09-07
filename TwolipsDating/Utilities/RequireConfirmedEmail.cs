@@ -10,7 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 
 namespace TwolipsDating.Utilities
 {
-    public class RequireConfirmedEmail : ActionFilterAttribute
+    public class RequireConfirmedEmailIfAuthenticated : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -30,12 +30,17 @@ namespace TwolipsDating.Utilities
                         {
                             filterContext.Result = new JsonResult
                             {
-                                Data = new { success = false, message = String.Format("{0} {1}", (int)HttpStatusCode.Forbidden, HttpStatusCode.Forbidden.ToString()) }
+                                Data = new { success = false, message = ErrorMessages.EmailAddressNotConfirmed }
                             };
                         }
                         else
                         {
-                            filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                            filterContext.Result = new RedirectToRouteResult(
+                                new RouteValueDictionary
+                                {
+                                    { "controller", "account" },
+                                    { "action", "confirmemailwarning" }
+                                });
                         }
                     }
                 }

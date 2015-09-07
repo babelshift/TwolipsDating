@@ -193,7 +193,7 @@ namespace TwolipsDating.Business
 
                 success = (await db.SaveChangesAsync() > 0);
             }
-            catch(DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 Log.Error("ProfileService.DeleteBannerImageAsync", ex, new { userImageId = userImageId });
                 ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.BannerImageNotDeleted);
@@ -530,7 +530,7 @@ namespace TwolipsDating.Business
                     }
                 }
             }
-            catch(DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 Log.Error("ProfileService.AddUploadedImageForUserAsync", ex, new { userId, fileName, isBanner });
                 ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.UserImageNotUploaded);
@@ -617,7 +617,7 @@ namespace TwolipsDating.Business
         /// <param name="receiverUserId"></param>
         /// <param name="body"></param>
         /// <returns></returns>
-        public async Task<int> SendMessageAsync(string senderUserId, string receiverUserId, string body, string conversationUrl)
+        public async Task<ServiceResult> SendMessageAsync(string senderUserId, string receiverUserId, string body, string conversationUrl)
         {
             Debug.Assert(!String.IsNullOrEmpty(senderUserId));
             Debug.Assert(!String.IsNullOrEmpty(receiverUserId));
@@ -626,29 +626,39 @@ namespace TwolipsDating.Business
             // don't allow us to send messages to our self
             if (senderUserId == receiverUserId)
             {
-                return 0;
+                return ServiceResult.Failed(ErrorMessages.CannotIgnoreSelf);
             }
 
             CreateMessage(senderUserId, receiverUserId, body);
 
-            int changes = await db.SaveChangesAsync();
+            bool success = false;
 
-            if (changes > 0)
+            try
             {
-                var senderUser = db.Users.Find(senderUserId);
-                string senderProfileImagePath = senderUser.Profile.GetProfileThumbnailImagePath();
-                string senderUserName = senderUser.UserName;
+                success = (await db.SaveChangesAsync() > 0);
 
-                var receiverUser = db.Users.Find(receiverUserId);
-                string receiverUserName = receiverUser.UserName;
-                string receiverEmail = receiverUser.Email;
+                if (success)
+                {
+                    var senderUser = db.Users.Find(senderUserId);
+                    string senderProfileImagePath = senderUser.Profile.GetProfileThumbnailImagePath();
+                    string senderUserName = senderUser.UserName;
 
-                UserService userService = new UserService(EmailService);
-                await userService.SendMessageEmailNotificationAsync(senderProfileImagePath, senderUserName, body,
-                    conversationUrl, receiverUserId, receiverUserName, receiverEmail);
+                    var receiverUser = db.Users.Find(receiverUserId);
+                    string receiverUserName = receiverUser.UserName;
+                    string receiverEmail = receiverUser.Email;
+
+                    UserService userService = new UserService(EmailService);
+                    await userService.SendMessageEmailNotificationAsync(senderProfileImagePath, senderUserName, body,
+                        conversationUrl, receiverUserId, receiverUserName, receiverEmail);
+                }
+            }
+            catch(DbUpdateException ex)
+            {
+                Log.Error("ProfileService.SendMessageAsync", ex, new { senderUserId, receiverUserId, body, conversationUrl });
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.MessageNotSent);
             }
 
-            return changes;
+            return success ? ServiceResult.Success : ServiceResult.Failed(ErrorMessages.MessageNotSent);
         }
 
         /// <summary>

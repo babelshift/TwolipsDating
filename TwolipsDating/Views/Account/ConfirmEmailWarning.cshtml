@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "You need to confirm your email";
+    ViewBag.Description = "Twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
+}
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2 col-lg-6 col-md-offset-3 col-lg-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-body text-center">
+                <img src="~/Content/MailSent.png" alt="Mail will be sent" />
+                <h3>Before you can continue, you need to confirm your email address.</h3>
+                <p>If you recently registered, please allow a few minutes for the email to arrive. It might be in your spam folders. Otherwise, click below to send a new confirmation email.</p>
+                <p>
+                    <a href="@Url.Action("sendconfirmemail", "account")" class="btn btn-primary">
+                        <i class="fa fa-send"></i> Send another confirmation
+                    </a>
+                </p>
+                <p>If you need help, connect with us on Twitter, Facebook, and Google+.</p>
+                <div class="row" style="margin-left: 0; margin-right: 0;">
+                    <div class="col-sm-4">
+                        <a href="http://twitter.com/twolipsdating" style="width: 100%;" class="btn btn-twitter" title="Follow us on Twitter">
+                            <span class="fa-stack">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse-twitter"></i>
+                            </span>
+                            Twitter
+                        </a>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="http://facebook.com/twolipsdating" style="width: 100%;" type="submit" class="btn btn-facebook" title="Like us on Facebook">
+                            <span class="fa-stack">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse-facebook"></i>
+                            </span>
+                            Facebook
+                        </a>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="http://plus.google.com/+twolipsdating" style="width: 100%;" class="btn btn-google-plus" title="Follow us on Google+">
+                            <span class="fa-stack">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-google-plus fa-stack-1x fa-inverse-google-plus"></i>
+                            </span>
+                            Google+
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

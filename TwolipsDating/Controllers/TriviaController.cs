@@ -325,7 +325,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [AllowAnonymous, RequireProfileIfAuthenticated, RequireConfirmedEmail, ImportModelStateFromTempData]
+        [AllowAnonymous, RequireProfileIfAuthenticated, ImportModelStateFromTempData]
         public async Task<ActionResult> Quiz(int id, string seoName)
         {
             await SetNotificationsAsync();

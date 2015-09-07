@@ -213,4 +213,7 @@
   <data name="BannerImageNotDeleted" xml:space="preserve">
     <value>Something prevented your banner image from being deleted. If this continues, contact support.</value>
   </data>
+  <data name="CannotMessageSelf" xml:space="preserve">
+    <value>You cannot message yourself.</value>
+  </data>
 </root>

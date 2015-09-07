@@ -287,44 +287,31 @@ namespace TwolipsDating.Controllers
         {
             string currentUserId = User.Identity.GetUserId();
 
-            try
+            bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+
+            if (isCurrentUserEmailConfirmed)
             {
-                bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
+                string conversationUrl = Url.ActionWithFullUrl(Request, "conversation", "message", new { id = currentUserId });
+                var result = await ProfileService.SendMessageAsync(currentUserId, profileUserId, messageBody, conversationUrl);
 
-                if (isCurrentUserEmailConfirmed)
+                if (result.Succeeded)
                 {
-                    string conversationUrl = Url.ActionWithFullUrl(Request, "conversation", "message", new { id = currentUserId });
-                    int changes = await ProfileService.SendMessageAsync(currentUserId, profileUserId, messageBody, conversationUrl);
-
-                    if (changes > 0)
-                    {
-                        return Json(new { success = true });
-                    }
-                    else
-                    {
-                        Log.Warn(
-                            "SendMessage",
-                            ErrorMessages.MessageNotSent,
-                            new { currentUserId = currentUserId, profileId = profileUserId, messageBody = messageBody }
-                        );
-
-                        return Json(new { success = false, error = ErrorMessages.MessageNotSent });
-                    }
+                    return Json(new { success = true });
                 }
                 else
                 {
-                    return Json(new { success = false, error = ErrorMessages.EmailAddressNotConfirmed });
+                    Log.Warn(
+                        "SendMessage",
+                        ErrorMessages.MessageNotSent,
+                        new { currentUserId = currentUserId, profileId = profileUserId, messageBody = messageBody }
+                    );
+
+                    return Json(new { success = false, error = ErrorMessages.MessageNotSent });
                 }
             }
-            catch (DbUpdateException e)
+            else
             {
-                Log.Error(
-                    "SendMessage",
-                    e,
-                    new { currentUserId = currentUserId, profileId = profileUserId, messageBody = messageBody }
-                );
-
-                return Json(new { success = false, error = ErrorMessages.MessageNotSent });
+                return Json(new { success = false, error = ErrorMessages.EmailAddressNotConfirmed });
             }
         }
 
@@ -473,7 +460,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        [HttpPost, RequireConfirmedEmail, ExportModelStateToTempData]
+        [HttpPost, RequireConfirmedEmailIfAuthenticated, ExportModelStateToTempData]
         public async Task<ActionResult> UploadImage(UploadImageViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -566,7 +553,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        [HttpPost, RequireConfirmedEmail, ExportModelStateToTempData]
+        [HttpPost, RequireConfirmedEmailIfAuthenticated, ExportModelStateToTempData]
         public async Task<ActionResult> ChangeImage(ProfileViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -595,7 +582,7 @@ namespace TwolipsDating.Controllers
             return RedirectToIndex(new { tab = viewModel.ActiveTab });
         }
 
-        [HttpPost, RequireConfirmedEmail]
+        [HttpPost, RequireConfirmedEmailIfAuthenticated]
         public async Task<JsonResult> SaveBackgroundImage(string profileUserId, int bannerPositionX, int bannerPositionY)
         {
             string currentUserId = User.Identity.GetUserId();
@@ -612,7 +599,7 @@ namespace TwolipsDating.Controllers
             return Json(new { success = false });
         }
 
-        [HttpPost, RequireConfirmedEmail]
+        [HttpPost, RequireConfirmedEmailIfAuthenticated]
         public async Task<JsonResult> ChangeBackgroundImage(string profileUserId)
         {
             string currentUserId = User.Identity.GetUserId();

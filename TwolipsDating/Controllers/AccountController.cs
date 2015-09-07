@@ -243,6 +243,30 @@ namespace TwolipsDating.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// This action is used when the user hasn't confirmed their email address yet. Other actions will be redirected here if that is the case.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ActionResult> ConfirmEmailWarning()
+        {
+            string userId = User.Identity.GetUserId();
+
+            ApplicationUser user = await UserManager.FindByIdAsync(userId);
+            
+            if (user.EmailConfirmed)
+            {
+                return RedirectToAction("index", "home");
+            }
+
+            await SetNotificationsAsync();
+
+            return View();
+        }
+
+        /// <summary>
+        /// This action is used when the user clicks to send a new email confirmation from various sources like reminders.
+        /// </summary>
+        /// <returns></returns>
         public async Task<ActionResult> SendConfirmEmail()
         {
             string userId = User.Identity.GetUserId();

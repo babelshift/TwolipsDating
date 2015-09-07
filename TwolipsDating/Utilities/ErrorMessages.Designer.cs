@@ -106,6 +106,15 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You cannot message yourself..
+        /// </summary>
+        internal static string CannotMessageSelf {
+            get {
+                return ResourceManager.GetString("CannotMessageSelf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You need to confirm your email address first..
         /// </summary>
         internal static string EmailAddressNotConfirmed {

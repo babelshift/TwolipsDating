@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
+using System;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -23,12 +25,22 @@ namespace TwolipsDating.Utilities
                 bool doesUserHaveProfile = userService.DoesUserHaveProfile(currentUserId);
                 if (!doesUserHaveProfile)
                 {
-                    filterContext.Result = new RedirectToRouteResult(
-                        new RouteValueDictionary
+                    if (filterContext.HttpContext.Request.IsAjaxRequest())
+                    {
+                        filterContext.Result = new JsonResult
                         {
-                            { "controller", "Profile" },
-                            { "action", "Index" }
-                        });
+                            Data = new { success = false, message = ErrorMessages.EmailAddressNotConfirmed }
+                        };
+                    }
+                    else
+                    {
+                        filterContext.Result = new RedirectToRouteResult(
+                            new RouteValueDictionary
+                            {
+                                { "controller", "profile" },
+                                { "action", "index" }
+                            });
+                    }
                 }
             }
         }

@@ -30,14 +30,14 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [RequireProfileIfAuthenticated]
+        [RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
         public async Task<ActionResult> Conversation(string id, int? page)
         {
             // we want to look up conversations between a user and another user
             // if no id is provided, we want to lookup the latest conversation set
-                // if there is no latest conversation set, we want to return a view that indicates to the user there are no messages
+            // if there is no latest conversation set, we want to return a view that indicates to the user there are no messages
             // if id is provided, look up conversations for that id
-                // if the id is invalid, return 404
+            // if the id is invalid, return 404
 
             var currentUserId = User.Identity.GetUserId();
 
@@ -55,7 +55,7 @@ namespace TwolipsDating.Controllers
             viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
             // there are no recent conversations, return the view with an empty set
-            if(viewModel.Conversations.Count == 0)
+            if (viewModel.Conversations.Count == 0)
             {
                 return View(viewModel);
             }
@@ -190,7 +190,7 @@ namespace TwolipsDating.Controllers
         /// Sets up a view model displaying all received messages for the currently logged in user.
         /// </summary>
         /// <returns></returns>
-        [RequireProfileIfAuthenticated]
+        [RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
         public async Task<ActionResult> Received()
         {
             var currentUserId = User.Identity.GetUserId();
@@ -215,7 +215,7 @@ namespace TwolipsDating.Controllers
         /// Sets up a view model displaying all sent messages for the currently logged in user.
         /// </summary>
         /// <returns></returns>
-        [RequireProfileIfAuthenticated]
+        [RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
         public async Task<ActionResult> Sent()
         {
             var currentUserId = User.Identity.GetUserId();
@@ -251,7 +251,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated, ExportModelStateToTempData]
         public async Task<ActionResult> Send(ConversationViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -259,39 +259,10 @@ namespace TwolipsDating.Controllers
                 return RedirectToConversation(new { id = viewModel.TargetApplicationUserId });
             }
 
-            try
-            {
-                string currentUserId = User.Identity.GetUserId();
+            string currentUserId = User.Identity.GetUserId();
 
-                bool isCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
-
-                if (isCurrentUserEmailConfirmed)
-                {
-                    string conversationUrl = Url.ActionWithFullUrl(Request, "conversation", "message", new { id = currentUserId });
-                    int changes = await ProfileService.SendMessageAsync(currentUserId, viewModel.TargetApplicationUserId, viewModel.NewMessage, conversationUrl);
-
-                    if (changes == 0)
-                    {
-                        Log.Warn(
-                            "SendMessage",
-                            ErrorMessages.MessageNotSent,
-                            new { targetProfileId = viewModel.TargetProfileId, newMessage = viewModel.NewMessage }
-                        );
-
-                        AddError(ErrorMessages.MessageNotSent);
-                    }
-                }
-            }
-            catch (DbUpdateException e)
-            {
-                Log.Error(
-                    "SendMessage",
-                    e,
-                    new { targetProfileId = viewModel.TargetProfileId, newMessage = viewModel.NewMessage }
-                );
-
-                AddError(ErrorMessages.MessageNotSent);
-            }
+            string conversationUrl = Url.ActionWithFullUrl(Request, "conversation", "message", new { id = currentUserId });
+            var result = await ProfileService.SendMessageAsync(currentUserId, viewModel.TargetApplicationUserId, viewModel.NewMessage, conversationUrl);
 
             return RedirectToConversation(new { id = viewModel.TargetApplicationUserId });
         }
