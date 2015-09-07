@@ -51,6 +51,11 @@ namespace TwolipsDating.Utilities
             Guid = Guid.NewGuid();
             FileName = String.Format("{0}{1}", Guid, FileType);
             ContentType = uploadedFile.ContentType;
+
+            if(!IsValidImage)
+            {
+                throw new InvalidOperationException("Uploaded file is not a valid image of type jpeg, png, gif, or bmp.");
+            }
         }
 
         protected void ResizeImageIfNecessary(HttpPostedFileBase uploadedFile, int maxWidth, int maxHeight)

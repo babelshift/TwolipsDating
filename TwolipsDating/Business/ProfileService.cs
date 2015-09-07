@@ -158,7 +158,7 @@ namespace TwolipsDating.Business
 
                 success = (await db.SaveChangesAsync() > 0);
             }
-            catch(DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 Log.Error("ProfileService.DeleteUserImageAsync", ex, new { userImageId = userImageId });
                 ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.UserImageNotDeleted);
@@ -172,20 +172,34 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userImageId"></param>
         /// <returns></returns>
-        internal async Task<int> DeleteBannerImageAsync(int userImageId)
+        internal async Task<ServiceResult> DeleteBannerImageAsync(int userImageId)
         {
             Debug.Assert(userImageId > 0);
 
-            // clear out any profiles that are using this image
-            var profilesUsingThisImage = db.Profiles.Where(p => p.BannerImageId == userImageId);
-            var thisImage = await db.UserImages.FindAsync(userImageId);
-            foreach (var profile in profilesUsingThisImage)
-            {
-                profile.BannerImageId = null;
-            }
-            db.UserImages.Remove(thisImage);
+            bool success = false;
 
-            return await db.SaveChangesAsync();
+            try
+            {
+                // clear out any profiles that are using this image
+                var profilesUsingThisImage = db.Profiles.Where(p => p.BannerImageId == userImageId);
+                var thisImage = await db.UserImages.FindAsync(userImageId);
+
+                foreach (var profile in profilesUsingThisImage)
+                {
+                    profile.BannerImageId = null;
+                }
+
+                db.UserImages.Remove(thisImage);
+
+                success = (await db.SaveChangesAsync() > 0);
+            }
+            catch(DbUpdateException ex)
+            {
+                Log.Error("ProfileService.DeleteBannerImageAsync", ex, new { userImageId = userImageId });
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.BannerImageNotDeleted);
+            }
+
+            return success ? ServiceResult.Success : ServiceResult.Failed(ErrorMessages.BannerImageNotDeleted);
         }
 
         internal async Task<IReadOnlyCollection<TagAndSuggestedCount>> GetAllTagsAndCountsAsync()
@@ -486,27 +500,43 @@ namespace TwolipsDating.Business
         /// <param name="userId"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public async Task<int> AddUploadedImageForUserAsync(string userId, string fileName, bool isBanner = false)
+        public async Task<UploadedImageResult> AddUploadedImageForUserAsync(string userId, string fileName, bool isBanner = false)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(!String.IsNullOrEmpty(fileName));
 
-            UserImage userImage = db.UserImages.Create();
-            userImage.ApplicationUserId = userId;
-            userImage.FileName = fileName;
-            userImage.DateUploaded = DateTime.Now;
-            userImage.IsBanner = isBanner;
+            bool success = false;
+            int uploadedImageId = 0;
 
-            db.UserImages.Add(userImage);
-            int count = await db.SaveChangesAsync();
-
-            // don't count banner uploads towards achievements
-            if (!isBanner)
+            try
             {
-                await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.ProfileImagesUploaded);
+                UserImage userImage = db.UserImages.Create();
+                userImage.ApplicationUserId = userId;
+                userImage.FileName = fileName;
+                userImage.DateUploaded = DateTime.Now;
+                userImage.IsBanner = isBanner;
+
+                db.UserImages.Add(userImage);
+                success = (await db.SaveChangesAsync() > 0);
+
+                // don't count banner uploads towards achievements and only try if the upload was successful
+                if (success)
+                {
+                    uploadedImageId = userImage.Id;
+
+                    if (!isBanner)
+                    {
+                        await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.ProfileImagesUploaded);
+                    }
+                }
+            }
+            catch(DbUpdateException ex)
+            {
+                Log.Error("ProfileService.AddUploadedImageForUserAsync", ex, new { userId, fileName, isBanner });
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.UserImageNotUploaded);
             }
 
-            return userImage.Id;
+            return success ? UploadedImageResult.Success(uploadedImageId) : UploadedImageResult.Failed(ErrorMessages.UserImageNotUploaded);
         }
 
         /// <summary>

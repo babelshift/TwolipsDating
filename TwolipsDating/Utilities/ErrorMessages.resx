@@ -210,4 +210,7 @@
   <data name="TimedQuestionOutOfTime" xml:space="preserve">
     <value>You ran out of time.</value>
   </data>
+  <data name="BannerImageNotDeleted" xml:space="preserve">
+    <value>Something prevented your banner image from being deleted. If this continues, contact support.</value>
+  </data>
 </root>

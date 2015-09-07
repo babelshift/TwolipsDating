@@ -420,21 +420,35 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private static async Task DeleteThumbnailImageFromAzureStorageAsync(string fileName)
+        private async Task DeleteThumbnailImageFromAzureStorageAsync(string fileName)
         {
-            var container = GetAzureStorageContainer();
-            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
-            string fileExtension = Path.GetExtension(fileName);
-            string thumbnailName = String.Format("{0}_{1}{2}", fileNameWithoutExtension, "thumb", fileExtension);
-            CloudBlockBlob blockBlobThumbnail = container.GetBlockBlobReference(thumbnailName);
-            await blockBlobThumbnail.DeleteAsync();
+            try
+            {
+                var container = GetAzureStorageContainer();
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+                string fileExtension = Path.GetExtension(fileName);
+                string thumbnailName = String.Format("{0}_{1}{2}", fileNameWithoutExtension, "thumb", fileExtension);
+                CloudBlockBlob blockBlobThumbnail = container.GetBlockBlobReference(thumbnailName);
+                await blockBlobThumbnail.DeleteAsync();
+            }
+            catch (StorageException ex)
+            {
+                Log.Error("ProfileController.DeleteThumbnailImageFromAzureStorageAsync", ex, new { fileName });
+            }
         }
 
-        private static async Task DeleteFullSizeImageFromAzureStorageAsync(string fileName)
+        private async Task DeleteFullSizeImageFromAzureStorageAsync(string fileName)
         {
-            var container = GetAzureStorageContainer();
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
-            await blockBlob.DeleteAsync();
+            try
+            {
+                var container = GetAzureStorageContainer();
+                CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
+                await blockBlob.DeleteAsync();
+            }
+            catch (StorageException ex)
+            {
+                Log.Error("ProfileController.DeleteFullSizeImageFromAzureStorageAsync", ex, new { fileName });
+            }
         }
 
         private async Task<bool> DeleteImageAsync(int userImageId, string fileName)
@@ -475,41 +489,27 @@ namespace TwolipsDating.Controllers
 
                 if (!newImage.IsValidImage) { continue; }
 
-                try
+                // add the image id to our database
+                var result = await ProfileService.AddUploadedImageForUserAsync(currentUserId, newImage.FileName);
+
+                // if we saved to our database successfully, save to Azure Storage Blob
+                if (result.Succeeded)
                 {
-                    // add the image id to our database
-                    int newUserImageId = await ProfileService.AddUploadedImageForUserAsync(currentUserId, newImage.FileName);
+                    // upload the full image and return it in case it had to be resized
+                    await UploadFullProfileImageToAzureStorageAsync(newImage);
 
-                    // if we saved to our database successfully, save to Azure Storage Blob
-                    if (newUserImageId > 0)
+                    // upload the thumbnail of the now possibly resized image
+                    await UploadProfileThumbnailToAzureStorageAsync(newImage);
+
+                    // if this is the first image being uploaded and the user doesn't have a profile image set, set the user's profile image to the file being uploaded
+                    if (i == 0)
                     {
-                        // upload the full image and return it in case it had to be resized
-                        await UploadFullProfileImageToAzureStorageAsync(newImage);
-
-                        // upload the thumbnail of the now possibly resized image
-                        await UploadProfileThumbnailToAzureStorageAsync(newImage);
-
-                        // if this is the first image being uploaded and the user doesn't have a profile image set, set the user's profile image to the file being uploaded
-                        if (i == 0)
+                        var profile = await ProfileService.GetProfileAsync(currentUserId);
+                        if (profile != null && profile.UserImage == null)
                         {
-                            var profile = await ProfileService.GetProfileAsync(currentUserId);
-                            if (profile != null && profile.UserImage == null)
-                            {
-                                await ProfileService.ChangeProfileUserImageAsync(profile.Id, newUserImageId);
-                            }
+                            await ProfileService.ChangeProfileUserImageAsync(profile.Id, result.UploadedImageId);
                         }
                     }
-                    else
-                    {
-                        AddError(ErrorMessages.UserImageNotUploaded, "UploadImage",
-                            parameters: new { currentUserId = currentUserId, fileType = newImage.FileType, fileName = newImage.FileName });
-                    }
-                }
-
-                catch (DbUpdateException e)
-                {
-                    AddError(e.Message, "UploadImage",
-                        parameters: new { currentUserId = currentUserId, fileType = newImage.FileType, fileName = newImage.FileName });
                 }
             }
 
@@ -629,10 +629,10 @@ namespace TwolipsDating.Controllers
                 }
 
                 // add the image id to our database
-                int newUserImageId = await ProfileService.AddUploadedImageForUserAsync(currentUserId, newImage.FileName, true);
+                var uploadResult = await ProfileService.AddUploadedImageForUserAsync(currentUserId, newImage.FileName, true);
 
                 // if we saved to our database successfully, save to Azure Storage Blob
-                if (newUserImageId > 0)
+                if (uploadResult.Succeeded)
                 {
                     // upload the new banner to azure
                     await UploadBannerImageToAzureStorageAsync(newImage);
@@ -644,11 +644,12 @@ namespace TwolipsDating.Controllers
                         if (profile.BannerImage != null)
                         {
                             string previousBannerFileName = profile.BannerImage.FileName;
+
                             // TODO: ATOMIC?
                             // remove the previous banner from database
-                            int changes = await ProfileService.DeleteBannerImageAsync(profile.BannerImage.Id);
+                            var deleteResult = await ProfileService.DeleteBannerImageAsync(profile.BannerImage.Id);
 
-                            if (changes > 0)
+                            if (deleteResult.Succeeded)
                             {
                                 // remove the previous banner from azure
                                 await DeleteFullSizeImageFromAzureStorageAsync(previousBannerFileName);
@@ -656,11 +657,11 @@ namespace TwolipsDating.Controllers
                         }
 
                         // change the user's profile to use the new banner
-                        await ProfileService.ChangeProfileBannerImageAsync(profile.Id, newUserImageId);
+                        await ProfileService.ChangeProfileBannerImageAsync(profile.Id, uploadResult.UploadedImageId);
                     }
-                }
 
-                return Json(new { success = true, bannerImagePath = UserImageExtensions.GetPath(newImage.FileName) });
+                    return Json(new { success = true, bannerImagePath = UserImageExtensions.GetPath(newImage.FileName) });
+                }
             }
 
             return Json(new { success = false });

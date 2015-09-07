@@ -808,9 +808,9 @@ else
                                 <div class="row">
                                     @foreach (var userImage in Model.UploadImage.UserImages)
                                     {
-                                        <div class="col-xs-6 col-md-3">
-                                            <a id="@userImage.Id" href="#" class="thumbnail" onclick="onSelectProfileImageClick(event, this)">
-                                                <img src="@userImage.Path" style="max-height: 128px;">
+                                        <div class="col-xs-4 col-sm-3 text-center">
+                                            <a id="@userImage.Id" class="thumbnail" href="#" onclick="onSelectProfileImageClick(event, this)">
+                                                <img src="@userImage.ThumbnailPath" />
                                             </a>
                                         </div>
                                     }
@@ -821,10 +821,10 @@ else
                             @Html.HiddenFor(m => m.ProfileId)
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">
-                                    <i class="fa fa-close"></i> Close
+                                    <i class="fa fa-close fa-lg"></i> Close
                                 </button>
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-check"></i> OK
+                                    <i class="fa fa-check fa-lg"></i> OK
                                 </button>
                             </div>
                         }

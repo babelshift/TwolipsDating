@@ -79,6 +79,15 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something prevented your banner image from being deleted. If this continues, contact support..
+        /// </summary>
+        internal static string BannerImageNotDeleted {
+            get {
+                return ResourceManager.GetString("BannerImageNotDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You cannot favorite your own profile..
         /// </summary>
         internal static string CannotFavoriteOwnProfile {

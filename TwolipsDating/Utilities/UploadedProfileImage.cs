@@ -19,25 +19,26 @@ namespace TwolipsDating.Utilities
             ThumbnailFileName = String.Format("{0}_{2}{1}", Guid, FileType, "thumb");
 
             ResizeImageIfNecessary(uploadedFile, 1000, 1000);
+            CreateThumbnail(uploadedFile);
         }
 
         private void CreateThumbnail(HttpPostedFileBase uploadedFile)
         {
-            WebImage image = new WebImage(uploadedFile.InputStream);
+            ThumbnailImage = new WebImage(FullImage.GetBytes());
 
             // transform to a square by cropping
-            if (image.Width > image.Height)
+            if (ThumbnailImage.Width > ThumbnailImage.Height)
             {
-                int cropAmount = (image.Width - image.Height) / 2;
-                image = image.Crop(0, cropAmount, 0, cropAmount);
+                int cropAmount = (ThumbnailImage.Width - ThumbnailImage.Height) / 2;
+                ThumbnailImage = ThumbnailImage.Crop(0, cropAmount, 0, cropAmount);
             }
             else
             {
-                int cropAmount = (image.Height - image.Width) / 2;
-                image = image.Crop(cropAmount, 0, cropAmount, 0);
+                int cropAmount = (ThumbnailImage.Height - ThumbnailImage.Width) / 2;
+                ThumbnailImage = ThumbnailImage.Crop(cropAmount, 0, cropAmount, 0);
             }
 
-            image.Resize(200, 200, true);
+            ThumbnailImage.Resize(200, 200, true);
         }
     }
 }
