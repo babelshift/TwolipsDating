@@ -2,6 +2,7 @@
 using Microsoft.Owin.Security;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Models
 {
@@ -18,28 +19,33 @@ namespace TwolipsDating.Models
         [Required]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "You must select a gender")]
         public int? SelectedGenderId { get; set; }
 
         public bool BrowserRemembered { get; set; }
 
         public IDictionary<int, string> Genders { get; set; }
         
-        [Required]
+        [Required(ErrorMessage = "You must input the month of your birth")]
         [Range(1, 12, ErrorMessage = "Month must be between 1 and 12")]
         public int? BirthMonth { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "You must input the day of your birth")]
         [Range(1, 31, ErrorMessage = "Day must be between 1 and 31")]
         public int? BirthDayOfMonth { get; set; }
 
-        [Required]
-        [Range(1900, 2100, ErrorMessage = "Year must be between 1900 and 18 years ago")]
+        [Required(ErrorMessage = "You must input the year of your birth")]
+        [Birthday("BirthDayOfMonth", "BirthMonth", "BirthYear", ErrorMessage = "You must be at least 18 years old.")]
+        [RangeYearTo18YearsAgo(1900, ErrorMessage = "You must be at least 18 years old.")]
         public int? BirthYear { get; set; }
 
         public string SelectedLocation { get; set; }
 
         public string CurrentLocation { get; set; }
+
+        public IDictionary<int, int> Days { get; set; }
+        public IDictionary<int, string> Months { get; set; }
+        public IDictionary<int, int> Years { get; set; }
     }
 
     public class ManageLoginsViewModel

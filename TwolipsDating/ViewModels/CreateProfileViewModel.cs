@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Web.Mvc;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.ViewModels
 {
@@ -10,26 +11,29 @@ namespace TwolipsDating.ViewModels
     {
         public bool IsCurrentUserEmailConfirmed { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "You must input the month of your birth")]
         [Range(1, 12, ErrorMessage = "Month must be between 1 and 12")]
         public int? BirthMonth { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "You must input the day of your birth")]
         [Range(1, 31, ErrorMessage = "Day must be between 1 and 31")]
         public int? BirthDayOfMonth { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "You must input the year of your birth")]
         [Birthday("BirthDayOfMonth", "BirthMonth", "BirthYear", ErrorMessage = "You must be at least 18 years old.")]
-        [RangeYearTo18YearsAgo(1900, ErrorMessage="You must be at least 18 years old.")]
+        [RangeYearTo18YearsAgo(1900, ErrorMessage = "You must be at least 18 years old.")]
         public int? BirthYear { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "You must select a gender")]
         public int? SelectedGenderId { get; set; }
 
         [Required(ErrorMessage = "You must select a location from the drop down menu")]
         public string SelectedLocation { get; set; }
 
         public IDictionary<int, string> Genders { get; set; }
+        public IDictionary<int, int> Days { get; set; }
+        public IDictionary<int, string> Months { get; set; }
+        public IDictionary<int, int> Years { get; set; }
     }
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]

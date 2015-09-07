@@ -3,7 +3,12 @@
         <div class="panel-body text-center">
             <img src="~/Content/MailSent.png" alt="Mail has been sent" />
             <h3>You need to confirm your email address before you can create your profile.</h3>
-            <p>If you don't see it, check your spam folders.</p>
+            <p>If you recently registered, please allow a few minutes for the email to arrive. It might be in your spam folders. Otherwise, click below to send a new confirmation email.</p>
+            <p>
+                <a href="@Url.Action("sendconfirmemail", "account")" class="btn btn-primary">
+                    <i class="fa fa-send"></i> Send another confirmation
+                </a>
+            </p>
             <p>If you need help, connect with us on Twitter, Facebook, and Google+.</p>
             <div class="row" style="margin-left: 0; margin-right: 0;">
                 <div class="col-sm-4">

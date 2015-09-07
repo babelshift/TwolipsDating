@@ -1059,6 +1059,10 @@ namespace TwolipsDating.Controllers
             string currentUserId = User.Identity.GetUserId();
             viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
+            viewModel.Months = CalendarHelper.GetMonths().ToDictionary(m => m.MonthNumber, m => m.MonthName);
+            viewModel.Years = CalendarHelper.GetYears().ToDictionary(m => m, m => m);
+            viewModel.Days = CalendarHelper.GetDaysOfMonth(Months.January).ToDictionary(m => m, m => m);
+
             return viewModel;
         }
 

@@ -50,13 +50,14 @@ namespace TwolipsDating.Controllers
 
         //
         // GET: /Manage/Index
+        [ImportModelStateFromTempData]
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
             var currentUserId = User.Identity.GetUserId();
 
             string email = await UserManager.GetEmailAsync(currentUserId);
 
-            IndexViewModel model = new IndexViewModel()
+            IndexViewModel viewModel = new IndexViewModel()
             {
                 Email = email,
                 UserName = User.Identity.Name,
@@ -68,22 +69,27 @@ namespace TwolipsDating.Controllers
             if (profile != null)
             {
                 var genders = await GetGendersAsync();
-                model.Genders = genders;
-                model.SelectedGenderId = profile.GenderId;
+                viewModel.Genders = genders;
+                viewModel.SelectedGenderId = profile.GenderId;
+
+                viewModel.Months = CalendarHelper.GetMonths().ToDictionary(m => m.MonthNumber, m => m.MonthName);
+                viewModel.Years = CalendarHelper.GetYears().ToDictionary(m => m, m => m);
 
                 DateTime birthDate = profile.Birthday;
-                model.BirthDayOfMonth = birthDate.Day;
-                model.BirthMonth = birthDate.Month;
-                model.BirthYear = birthDate.Year;
+                viewModel.BirthDayOfMonth = birthDate.Day;
+                viewModel.BirthMonth = birthDate.Month;
+                viewModel.BirthYear = birthDate.Year;
 
-                model.CurrentLocation = profile.GeoCity.ToFullLocationString();
+                viewModel.Days = CalendarHelper.GetDaysOfMonth(birthDate.Month).ToDictionary(m => m, m => m);
 
-                model.DoesUserHaveProfile = true;
+                viewModel.CurrentLocation = profile.GeoCity.ToFullLocationString();
+
+                viewModel.DoesUserHaveProfile = true;
             }
 
             await SetNotificationsAsync();
 
-            return View(model);
+            return View(viewModel);
         }
 
         private async Task<Dictionary<int, string>> GetGendersAsync()
@@ -99,14 +105,10 @@ namespace TwolipsDating.Controllers
             return genderCollection;
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, ExportModelStateToTempData]
         public async Task<ActionResult> Index(IndexViewModel model)
         {
             await SetNotificationsAsync();
-
-            var genders = await GetGendersAsync();
-            model.Genders = genders;
 
             if (ModelState.IsValid)
             {
@@ -148,15 +150,15 @@ namespace TwolipsDating.Controllers
                         }
 
                         model.CurrentLocation = user.Profile.GeoCity.ToFullLocationString();
-
-                        return View(model);
                     }
-
-                    AddErrors(result);
+                    else
+                    {
+                        AddErrors(result);
+                    }
                 }
             }
 
-            return View(model);
+            return RedirectToIndex();
         }
 
         private bool SetupUpdateBirthdate(IndexViewModel model, ApplicationUser user)

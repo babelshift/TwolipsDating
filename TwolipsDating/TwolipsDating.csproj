@@ -296,6 +296,7 @@
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\DateController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LocationJsonResult.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -410,6 +411,7 @@
     <Compile Include="Models\UserTitle.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\CalendarHelper.cs" />
     <Compile Include="Utilities\ModelStateTransfer.cs" />
     <Compile Include="Utilities\RequireConfirmedEmail.cs" />
     <Compile Include="Utilities\RequireProfile.cs" />
