@@ -16,6 +16,10 @@ namespace TwolipsDating
                     "~/Scripts/bootstrap.js",
                     "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/manage/settings").Include(
+                "~/Scripts/jquery.validate*",
+                "~/Scripts/jquery.unobtrusive-ajax.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/manage/index").Include(
                 "~/Scripts/jquery.validate*",
                 "~/Scripts/jquery.unobtrusive-ajax.js",

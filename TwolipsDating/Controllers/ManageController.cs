@@ -89,6 +89,11 @@ namespace TwolipsDating.Controllers
 
             await SetNotificationsAsync();
 
+            if (TempData["StatusMessage"] != null)
+            {
+                ViewBag.StatusMessage = TempData["StatusMessage"].ToString();
+            }
+
             return View(viewModel);
         }
 
@@ -140,13 +145,13 @@ namespace TwolipsDating.Controllers
                     {
                         await SignInAsync(user, isPersistent: false);
 
-                        ViewBag.StatusMessage = "Your account has been updated.";
+                        TempData["StatusMessage"] = "Your account has been updated.";
 
                         // user changed email address, send confirmation
                         if (isNewEmail)
                         {
                             await SendRegistrationConfirmationEmail(user);
-                            ViewBag.StatusMessage += " Remember to confirm your new email address.";
+                            TempData["StatusMessage"] += " Remember to confirm your new email address.";
                         }
 
                         model.CurrentLocation = user.Profile.GeoCity.ToFullLocationString();
@@ -185,7 +190,7 @@ namespace TwolipsDating.Controllers
 
             bool isNewLocation = false;
 
-            if(model.CurrentLocation != model.SelectedLocation)
+            if (model.CurrentLocation != model.SelectedLocation)
             {
                 isNewLocation = true;
                 user.Profile.GeoCityId = cityId;
@@ -368,6 +373,7 @@ namespace TwolipsDating.Controllers
 
         //
         // GET: /Manage/ChangePassword
+        [ImportModelStateFromTempData]
         public async Task<ActionResult> Settings(ManageMessageId? message)
         {
             await SetNotificationsAsync();
@@ -388,6 +394,11 @@ namespace TwolipsDating.Controllers
                 }
             };
 
+            if (TempData["StatusMessage"] != null)
+            {
+                ViewBag.StatusMessage = TempData["StatusMessage"].ToString();
+            }
+
             return View(model);
         }
 
@@ -400,13 +411,12 @@ namespace TwolipsDating.Controllers
 
         //
         // POST: /Manage/ChangePassword
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, ExportModelStateToTempData]
         public async Task<ActionResult> Settings(SettingsViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return RedirectToAction("settings");
             }
             var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.ChangePasswordViewModel.OldPassword, model.ChangePasswordViewModel.NewPassword);
 
@@ -423,12 +433,14 @@ namespace TwolipsDating.Controllers
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
-                ViewBag.StatusMessage = "Your password has been changed.";
+                TempData["StatusMessage"] = "Your password has been changed.";
                 model.ChangePasswordViewModel = null;
-                return View(model);
             }
-            AddErrors(result);
-            return View(model);
+            else
+            {
+                AddErrors(result);
+            }
+            return RedirectToAction("settings");
         }
 
         //
@@ -489,6 +501,7 @@ namespace TwolipsDating.Controllers
 
         //
         // GET: /Manage/ManageLogins
+        [ImportModelStateFromTempData]
         public async Task<ActionResult> Externals(ManageMessageId? message)
         {
             await SetNotificationsAsync();
@@ -517,8 +530,7 @@ namespace TwolipsDating.Controllers
 
         //
         // POST: /Manage/LinkLogin
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult LinkLogin(string provider)
         {
             // Request a redirect to the external login provider to link a login for the current user
@@ -527,6 +539,7 @@ namespace TwolipsDating.Controllers
 
         //
         // GET: /Manage/LinkLoginCallback
+        [ExportModelStateToTempData]
         public async Task<ActionResult> LinkLoginCallback()
         {
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
@@ -628,6 +641,7 @@ namespace TwolipsDating.Controllers
 
         #endregion Helpers
 
+        [ImportModelStateFromTempData]
         public async Task<ActionResult> Notifications()
         {
             await SetNotificationsAsync();
@@ -638,29 +652,35 @@ namespace TwolipsDating.Controllers
 
             ManageNotificationsViewModel viewModel = Mapper.Map<EmailNotifications, ManageNotificationsViewModel>(emailNotifications);
 
+            if (TempData["StatusMessage"] != null)
+            {
+                ViewBag.StatusMessage = TempData["StatusMessage"].ToString();
+            }
+
             return View(viewModel);
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken, ExportModelStateToTempData]
         public async Task<ActionResult> Notifications(ManageNotificationsViewModel viewModel)
         {
             await SetNotificationsAsync();
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(viewModel);
+
+                var currentUserId = User.Identity.GetUserId();
+
+                await userService.SaveEmailNotificationChangesAsync(currentUserId,
+                    viewModel.SendGiftNotifications,
+                    viewModel.SendMessageNotifications,
+                    viewModel.SendNewFollowerNotifications,
+                    viewModel.SendTagNotifications,
+                    viewModel.SendReviewNotifications);
+
+                TempData["StatusMessage"] = "Your notifications have been changed.";
             }
 
-            var currentUserId = User.Identity.GetUserId();
-
-            await userService.SaveEmailNotificationChangesAsync(currentUserId,
-                viewModel.SendGiftNotifications,
-                viewModel.SendMessageNotifications,
-                viewModel.SendNewFollowerNotifications,
-                viewModel.SendTagNotifications,
-                viewModel.SendReviewNotifications);
-
-            return View(viewModel);
+            return RedirectToAction("notifications");
         }
     }
 }

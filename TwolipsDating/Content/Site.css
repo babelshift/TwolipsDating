@@ -41,12 +41,12 @@ body {
 }
 
 input.input-validation-error {
-    border: 1px solid #b94a48;
+    border: 1px solid #ea2f10;
 }
 
 textarea.input-validation-error {
     outline: none !important;
-    border: 1px solid #b94a48;
+    border: 1px solid #ea2f10;
 }
 
 input[type="checkbox"].input-validation-error {
@@ -54,13 +54,13 @@ input[type="checkbox"].input-validation-error {
 }
 
 .validation-summary-errors {
-    background-color: #f2dede;
-    border-color: #eed3d7;
-    color: #b94a48;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
+    background-color: #f04124;
+    border-color: #ea2f10;
+    color: #ffffff;
+    padding: 5px;
+    margin-bottom: 10px;
     border-radius: 4px;
+    font-size: 13px;
 }
 
     .validation-summary-errors > p,

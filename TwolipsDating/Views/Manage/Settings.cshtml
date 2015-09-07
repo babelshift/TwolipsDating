@@ -32,6 +32,7 @@
             using (Html.BeginForm("Settings", "Manage", FormMethod.Post, new { role = "form" }))
             {
                 @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <p class="panel-title">Change password</p>
@@ -71,6 +72,7 @@
             using (Html.BeginForm("SetPassword", "Manage", FormMethod.Post, new { role = "form" }))
             {
                 @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <p class="panel-title">Set password</p>
@@ -105,6 +107,7 @@
         @using (Html.BeginForm("delete", "account", new { id = User.Identity.GetUserId() }, FormMethod.Post, new { role = "form" }))
         {
             @Html.AntiForgeryToken()
+            @Html.ValidationSummary()
             <div class="panel panel-danger">
                 <div class="panel-heading">
                     <p class="panel-title">Delete account</p>
@@ -118,5 +121,5 @@
     </div>
 </div>
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/manage/settings")
 }

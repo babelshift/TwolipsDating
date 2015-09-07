@@ -51,7 +51,7 @@
                     using (Html.BeginForm("index", "manage", FormMethod.Post, new { role = "form" }))
                     {
                         @Html.AntiForgeryToken()
-                        @Html.ValidationSummary("", new { @class = "alert alert-danger" })
+                        @Html.ValidationSummary()
                         @Html.HiddenFor(m => m.DoesUserHaveProfile)
                         @Html.HiddenFor(m => m.CurrentLocation)
                         <div class="form-group">

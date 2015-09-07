@@ -48,6 +48,7 @@
                                         using (Html.BeginForm("RemoveLogin", "Manage"))
                                         {
                                             @Html.AntiForgeryToken()
+                                            @Html.ValidationSummary()
                                             @Html.Hidden("loginProvider", account.LoginProvider)
                                             @Html.Hidden("providerKey", account.ProviderKey)
 
@@ -117,6 +118,7 @@
                 using (Html.BeginForm("LinkLogin", "Manage"))
                 {
                     @Html.AntiForgeryToken()
+                    @Html.ValidationSummary()
 
                     <table class="table">
                         <tbody>
