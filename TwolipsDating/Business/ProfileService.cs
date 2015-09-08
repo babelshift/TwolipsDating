@@ -629,36 +629,51 @@ namespace TwolipsDating.Business
                 return ServiceResult.Failed(ErrorMessages.CannotIgnoreSelf);
             }
 
-            CreateMessage(senderUserId, receiverUserId, body);
+            bool isReceiverIgnoringSender = await (from ignored in db.IgnoredUsers
+                                                   where ignored.SourceUserId == receiverUserId
+                                                   where ignored.TargetUserId == senderUserId
+                                                   select ignored).AnyAsync();
 
-            bool success = false;
-
-            try
+            // only send the message if the receiver is not ignoring the sender
+            if (!isReceiverIgnoringSender)
             {
-                success = (await db.SaveChangesAsync() > 0);
+                CreateMessage(senderUserId, receiverUserId, body);
 
-                if (success)
+                bool success = false;
+
+                try
                 {
-                    var senderUser = db.Users.Find(senderUserId);
-                    string senderProfileImagePath = senderUser.Profile.GetProfileThumbnailImagePath();
-                    string senderUserName = senderUser.UserName;
+                    success = (await db.SaveChangesAsync() > 0);
 
-                    var receiverUser = db.Users.Find(receiverUserId);
-                    string receiverUserName = receiverUser.UserName;
-                    string receiverEmail = receiverUser.Email;
+                    if (success)
+                    {
+                        var senderUser = db.Users.Find(senderUserId);
+                        string senderProfileImagePath = senderUser.Profile.GetProfileThumbnailImagePath();
+                        string senderUserName = senderUser.UserName;
 
-                    UserService userService = new UserService(EmailService);
-                    await userService.SendMessageEmailNotificationAsync(senderProfileImagePath, senderUserName, body,
-                        conversationUrl, receiverUserId, receiverUserName, receiverEmail);
+                        var receiverUser = db.Users.Find(receiverUserId);
+                        string receiverUserName = receiverUser.UserName;
+                        string receiverEmail = receiverUser.Email;
+
+                        UserService userService = new UserService(EmailService);
+                        await userService.SendMessageEmailNotificationAsync(senderProfileImagePath, senderUserName, body,
+                            conversationUrl, receiverUserId, receiverUserName, receiverEmail);
+                    }
                 }
-            }
-            catch(DbUpdateException ex)
-            {
-                Log.Error("ProfileService.SendMessageAsync", ex, new { senderUserId, receiverUserId, body, conversationUrl });
-                ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.MessageNotSent);
-            }
+                catch (DbUpdateException ex)
+                {
+                    Log.Error("ProfileService.SendMessageAsync", ex, new { senderUserId, receiverUserId, body, conversationUrl });
+                    ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.MessageNotSent);
+                }
 
-            return success ? ServiceResult.Success : ServiceResult.Failed(ErrorMessages.MessageNotSent);
+                return success ? ServiceResult.Success : ServiceResult.Failed(ErrorMessages.MessageNotSent);
+            }
+            // if the receiver is ignoring the sender, don't send a message, just pretend we succeeded
+            else
+            {
+                return ServiceResult.Success;
+            }
+            
         }
 
         /// <summary>
@@ -1255,40 +1270,59 @@ namespace TwolipsDating.Business
         /// <param name="sourceUserId"></param>
         /// <param name="targetUserId"></param>
         /// <returns></returns>
-        public async Task<bool> ToggleIgnoredUserAsync(string sourceUserId, string targetUserId)
+        public async Task<ToggleServiceResult> ToggleIgnoredUserAsync(string sourceUserId, string targetUserId)
         {
             Debug.Assert(!String.IsNullOrEmpty(sourceUserId));
             Debug.Assert(!String.IsNullOrEmpty(targetUserId));
 
-            var ignoredUserEntity = await (from ignoredUsers in db.IgnoredUsers
-                                           where ignoredUsers.SourceUserId == sourceUserId
-                                           where ignoredUsers.TargetUserId == targetUserId
-                                           select ignoredUsers).FirstOrDefaultAsync();
+            bool success = false;
+            bool toggleStatus = false;
 
-            bool isIgnored = false;
+            try
+            {
+                var ignoredUserEntity = await (from ignoredUsers in db.IgnoredUsers
+                                               where ignoredUsers.SourceUserId == sourceUserId
+                                               where ignoredUsers.TargetUserId == targetUserId
+                                               select ignoredUsers).FirstOrDefaultAsync();
 
-            // if there is an ignored user entity match, remove it
-            if (ignoredUserEntity != null)
-            {
-                db.IgnoredUsers.Remove(ignoredUserEntity);
-            }
-            // else, add it
-            else
-            {
-                IgnoredUser ignoredUser = new IgnoredUser()
+                // if there is an ignored user entity match, remove it
+                if (ignoredUserEntity != null)
                 {
-                    SourceUserId = sourceUserId,
-                    TargetUserId = targetUserId,
-                    DateIgnored = DateTime.Now
-                };
+                    db.IgnoredUsers.Remove(ignoredUserEntity);
 
-                db.IgnoredUsers.Add(ignoredUser);
-                isIgnored = true;
+                    // get profile for targetted user
+                    var possibleFavoriteProfile = await db.FavoriteProfiles.FirstOrDefaultAsync(t => t.Profile.ApplicationUser.Id == targetUserId);
+
+                    // unfollow that profile
+                    if (possibleFavoriteProfile != null)
+                    {
+                        db.FavoriteProfiles.Remove(possibleFavoriteProfile);
+                    }
+                }
+                // else, add it
+                else
+                {
+                    IgnoredUser ignoredUser = new IgnoredUser()
+                    {
+                        SourceUserId = sourceUserId,
+                        TargetUserId = targetUserId,
+                        DateIgnored = DateTime.Now
+                    };
+
+                    db.IgnoredUsers.Add(ignoredUser);
+
+                    toggleStatus = true;
+                }
+
+                success = (await db.SaveChangesAsync() > 0);
+            }
+            catch (DbUpdateException ex)
+            {
+                Log.Error("ProfileService.ToggleIgnoredUserAsync", ex, new { sourceUserId, targetUserId });
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.IgnoredUserNotSaved);
             }
 
-            await db.SaveChangesAsync();
-
-            return isIgnored;
+            return success ? ToggleServiceResult.Success(toggleStatus) : ToggleServiceResult.Failed(ErrorMessages.IgnoredUserNotSaved);
         }
 
         /// <summary>

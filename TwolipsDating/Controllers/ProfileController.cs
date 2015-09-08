@@ -80,26 +80,20 @@ namespace TwolipsDating.Controllers
         {
             var currentUserId = User.Identity.GetUserId();
 
-            try
+            // if user is ignoring himself, do nothing
+            if (currentUserId == profileUserId)
             {
-                // if user is ignoring himself, do nothing
-                if (currentUserId == profileUserId)
-                {
-                    return Json(new { success = false, error = ErrorMessages.CannotIgnoreSelf });
-                }
-
-                bool isIgnored = await ProfileService.ToggleIgnoredUserAsync(currentUserId, profileUserId);
-
-                return Json(new { success = true, isIgnored = isIgnored });
+                return Json(new { success = false, error = ErrorMessages.CannotIgnoreSelf });
             }
-            catch (DbUpdateException e)
+
+            var result = await ProfileService.ToggleIgnoredUserAsync(currentUserId, profileUserId);
+
+            if (result.Succeeded)
             {
-                Log.Error("ToggleIgnoredUser", e,
-                    parameters: new { currentUserId = currentUserId, profileUserId = profileUserId }
-                );
-
-                return Json(new { success = false, error = ErrorMessages.IgnoredUserNotSaved });
+                return Json(new { success = true, isIgnored = result.ToggleStatus });
             }
+
+            return Json(new { success = false, error = ErrorMessages.IgnoredUserNotSaved });
         }
 
         #endregion Toggle Favorite and Ignore
