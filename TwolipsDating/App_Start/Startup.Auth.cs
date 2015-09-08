@@ -6,7 +6,9 @@ using Microsoft.Owin.Security.Google;
 using Owin;
 using System;
 using System.Configuration;
+using TwolipsDating.Business;
 using TwolipsDating.Models;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating
 {
@@ -19,6 +21,7 @@ namespace TwolipsDating
             app.CreatePerOwinContext(ApplicationDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
+            app.CreatePerOwinContext<UserService>(UserService.Create);
 
             app.UseKentorOwinCookieSaver();
 
@@ -34,9 +37,17 @@ namespace TwolipsDating
                     OnException = context => { },
                     // Enables the application to validate the security stamp when the user logs in.
                     // This is a security feature which is used when you change a password or add an external login to your account.
-                    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
-                        validateInterval: TimeSpan.FromMinutes(30),
-                        regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+                    OnValidateIdentity = async context =>
+                        {
+                            await SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
+                                validateInterval: TimeSpan.FromMinutes(30),
+                                regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))(context);
+
+                            // each time the user's identity is validated, we want to refresh the last time they were logged in
+                            // this is used to display how active the user is to other people in the community
+                            var userService = context.OwinContext.Get<UserService>();
+                            await userService.SetUserLastLoginByIdAsync(context.Identity.GetUserId());
+                        }
                 }
             });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);

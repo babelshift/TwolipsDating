@@ -10,7 +10,7 @@ using TwolipsDating.Utilities;
 
 namespace TwolipsDating.Business
 {
-    public class BaseService
+    public class BaseService : IDisposable
     {
         private IValidationDictionary validationDictionary;
         private IIdentityMessageService emailService;
@@ -54,6 +54,11 @@ namespace TwolipsDating.Business
             this.db = db;
         }
 
+        public BaseService(ApplicationDbContext db)
+        {
+            this.db = db;
+        }
+
         /// <summary>
         /// This will commit any pending transaction.
         /// </summary>
@@ -86,9 +91,32 @@ namespace TwolipsDating.Business
             {
                 connection.Open();
                 var results = await db.Database.Connection.QueryAsync<T>(sql, parameters);
-                connection.Close();
                 return results;
             }
+        }
+
+        protected async Task<int> ExecuteAsync(string sql, object parameters)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(sql));
+            Debug.Assert(parameters != null);
+
+            string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    int count = await db.Database.Connection.ExecuteAsync(sql, parameters);
+                    return count;
+                }
+            }
+            catch (SqlException ex)
+            {
+                Log.Error(ex.Message, ex, parameters);
+            }
+
+            return 0;
         }
 
         /// <summary>

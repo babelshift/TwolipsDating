@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,6 +22,14 @@ namespace TwolipsDating.Business
 
         public UserService(ApplicationDbContext db, IIdentityMessageService emailService)
             : base(db, emailService) { }
+
+        public UserService(ApplicationDbContext db)
+            : base(db) { }
+
+        internal static UserService Create(IdentityFactoryOptions<UserService> options, IOwinContext context)
+        {
+            return new UserService(context.Get<ApplicationDbContext>());
+        }
 
         /// <summary>
         /// Returns a boolean indicating if a user has ignored another user.
@@ -285,9 +295,11 @@ namespace TwolipsDating.Business
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
-            var user = db.Users.Find(userId);
-            user.DateLastLogin = DateTime.Now;
-            await db.SaveChangesAsync();
+            string sql = @"update dbo.aspnetusers
+                set datelastlogin = @dateNow
+                where id = @userId";
+            
+            int count = await ExecuteAsync(sql, new { dateNow = DateTime.Now, userId });
         }
     }
 }
