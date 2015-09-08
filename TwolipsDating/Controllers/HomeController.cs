@@ -19,10 +19,15 @@ namespace TwolipsDating.Controllers
 
         private DashboardService dashboardService = new DashboardService();
         private ViolationService violationService = new ViolationService();
-        private TriviaService triviaService = new TriviaService();
+        private TriviaService triviaService;
         private UserService userService = new UserService();
 
         #endregion Services
+
+        public HomeController()
+        {
+            triviaService = new TriviaService(new ModelStateWrapper(ModelState));
+        }
 
         [RequireProfileIfAuthenticated]
         [AllowAnonymous]

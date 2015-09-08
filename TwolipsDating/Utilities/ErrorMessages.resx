@@ -181,10 +181,10 @@
     <value>Something prevented your question violation from being sent. If this continues, contact support.</value>
   </data>
   <data name="GiftPurchaseFailed" xml:space="preserve">
-    <value>Failed to purchase the gift. Contact support if you continue seeing this.</value>
+    <value>Something prevented your gift purchase. Contact support if you continue seeing this.</value>
   </data>
   <data name="TitlePurchaseFailed" xml:space="preserve">
-    <value>Failed to purchase the title. Contact support if you continue seeing this.</value>
+    <value>Something prevented your title purchase. Contact support if you continue seeing this.</value>
   </data>
   <data name="CannotFavoriteOwnProfile" xml:space="preserve">
     <value>You cannot favorite your own profile.</value>
@@ -215,5 +215,8 @@
   </data>
   <data name="CannotMessageSelf" xml:space="preserve">
     <value>You cannot message yourself.</value>
+  </data>
+  <data name="UserDoesNotHaveEnoughPointsToPurchase" xml:space="preserve">
+    <value>You do not have enough points to purchase {0}x {1}.</value>
   </data>
 </root>

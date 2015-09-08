@@ -15,11 +15,16 @@ namespace TwolipsDating.Controllers
     public class StoreController : BaseController
     {
         #region Services
-
-        private StoreService storeService = new StoreService();
+        
+        private StoreService storeService;
         private UserService userService = new UserService();
 
         #endregion Services
+
+        public StoreController()
+        {
+            storeService = new StoreService(new ModelStateWrapper(ModelState));
+        }
 
         /// <summary>
         /// Property exposing the shopping cart in the session.
@@ -48,7 +53,7 @@ namespace TwolipsDating.Controllers
         /// Returns a view model used to display the store of items.
         /// </summary>
         /// <returns></returns>
-        [RequireProfileIfAuthenticated]
+        [RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
         public async Task<ActionResult> Index()
         {
             var currentUserId = User.Identity.GetUserId();
@@ -105,6 +110,7 @@ namespace TwolipsDating.Controllers
         /// Returns a view containing the user's shopping cart contents.
         /// </summary>
         /// <returns></returns>
+        [RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated, ImportModelStateFromTempData]
         public async Task<ActionResult> Cart()
         {
             await SetNotificationsAsync();
@@ -119,7 +125,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="shoppingCart"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken, ExportModelStateToTempData]
         public async Task<ActionResult> Checkout(ShoppingCartViewModel shoppingCart)
         {
             if (ModelState.IsValid)
@@ -131,8 +137,8 @@ namespace TwolipsDating.Controllers
                     // the user may have marked the item as removed from the cart in the UI, skip over those
                     if (!shoppingCartItem.IsRemoved)
                     {
-                        bool successful = await BuyItem(shoppingCartItem.Item.ItemId, shoppingCartItem.Item.ItemTypeId, shoppingCartItem.Quantity);
-                        if (successful)
+                        var result = await BuyItem(shoppingCartItem.Item.ItemId, shoppingCartItem.Item.ItemTypeId, shoppingCartItem.Quantity);
+                        if (result.Succeeded)
                         {
                             shoppingCartItemsPurchased.Add(shoppingCartItem.Item.ItemId);
                         }
@@ -145,9 +151,20 @@ namespace TwolipsDating.Controllers
                 {
                     ShoppingCart.RemoveItem(shoppingCartItemId);
                 }
-            }
 
-            return RedirectToAction("index", "store");
+                if(ModelState.IsValid)
+                {
+                    return RedirectToAction("index", "store");
+                }
+                else
+                {
+                    return RedirectToAction("cart", "store");
+                }
+            }
+            else
+            {
+                return RedirectToAction("cart", "store");
+            }
         }
 
         /// <summary>
@@ -157,31 +174,22 @@ namespace TwolipsDating.Controllers
         /// <param name="storeItemTypeId"></param>
         /// <param name="quantity"></param>
         /// <returns></returns>
-        private async Task<bool> BuyItem(int storeItemId, int storeItemTypeId, int quantity)
+        private async Task<ServiceResult> BuyItem(int storeItemId, int storeItemTypeId, int quantity)
         {
-            int count = 0;
+            ServiceResult result = null;
             string currentUserId = User.Identity.GetUserId();
 
-            try
+            if (storeItemTypeId == (int)StoreItemTypeValues.Gift)
             {
-                if (storeItemTypeId == (int)StoreItemTypeValues.Gift)
-                {
-                    count = await storeService.BuyGiftAsync(currentUserId, storeItemId, quantity);
-                }
-                else if (storeItemTypeId == (int)StoreItemTypeValues.Title)
-                {
-                    count = await storeService.BuyTitleAsync(currentUserId, storeItemId);
-                }
+                result = await storeService.BuyGiftAsync(currentUserId, storeItemId, quantity);
             }
-            catch (DbUpdateException e)
+            else if (storeItemTypeId == (int)StoreItemTypeValues.Title)
             {
-                Log.Error("BuyStoreItem", e,
-                    parameters: new { storeItemId = storeItemId, currentUserId = currentUserId }
-                );
+                result = await storeService.BuyTitleAsync(currentUserId, storeItemId);
             }
 
             // if there were changes then the purchase was successful
-            return count > 0;
+            return result;
         }
 
         /// <summary>

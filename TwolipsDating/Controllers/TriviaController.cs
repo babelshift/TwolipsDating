@@ -18,11 +18,16 @@ namespace TwolipsDating.Controllers
     {
         #region Services
 
-        private TriviaService triviaService = new TriviaService();
+        private TriviaService triviaService;
         private ViolationService violationService = new ViolationService();
         private UserService userService = new UserService();
 
         #endregion
+
+        public TriviaController()
+        {
+            triviaService = new TriviaService(new ModelStateWrapper(ModelState));
+        }
 
         /// <summary>
         /// Get or set the date and time at which the current user has started viewing a question.

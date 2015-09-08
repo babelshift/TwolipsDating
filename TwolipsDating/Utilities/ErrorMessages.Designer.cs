@@ -160,7 +160,7 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to purchase the gift. Contact support if you continue seeing this..
+        ///   Looks up a localized string similar to Something prevented your gift purchase. Contact support if you continue seeing this..
         /// </summary>
         internal static string GiftPurchaseFailed {
             get {
@@ -304,7 +304,7 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to purchase the title. Contact support if you continue seeing this..
+        ///   Looks up a localized string similar to Something prevented your title purchase. Contact support if you continue seeing this..
         /// </summary>
         internal static string TitlePurchaseFailed {
             get {
@@ -336,6 +336,15 @@ namespace TwolipsDating.Utilities {
         internal static string UserAlreadyReportedReview {
             get {
                 return ResourceManager.GetString("UserAlreadyReportedReview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You do not have enough points to purchase {0}x {1}..
+        /// </summary>
+        internal static string UserDoesNotHaveEnoughPointsToPurchase {
+            get {
+                return ResourceManager.GetString("UserDoesNotHaveEnoughPointsToPurchase", resourceCulture);
             }
         }
         

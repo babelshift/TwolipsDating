@@ -7,11 +7,15 @@ using System.Threading.Tasks;
 using TwolipsDating.Models;
 using TwolipsDating.ViewModels;
 using TwolipsDating.Utilities;
+using System.Data.Entity.Infrastructure;
 
 namespace TwolipsDating.Business
 {
     public class StoreService : BaseService
     {
+        public StoreService(IValidationDictionary validationDictionary)
+            : base(validationDictionary) { }
+
         /// <summary>
         /// Returns a store item.
         /// </summary>
@@ -76,7 +80,7 @@ namespace TwolipsDating.Business
         /// <param name="userId"></param>
         /// <param name="storeItemId"></param>
         /// <returns></returns>
-        public async Task<int> BuyTitleAsync(string userId, int storeItemId)
+        public async Task<ServiceResult> BuyTitleAsync(string userId, int storeItemId)
         {
             var title = await db.StoreItems.FindAsync(storeItemId);
             var user = db.Users.Find(userId);
@@ -84,27 +88,50 @@ namespace TwolipsDating.Business
             // get any sales that this item is under
             int pointsCost = await GetAdjustedSalePrice(storeItemId, title.PointPrice);
 
+            bool success = false;
+            string failMessage = String.Empty;
+
             if (user.Points >= pointsCost)
             {
-                UserTitle userTitle = new UserTitle()
+                try
                 {
-                    UserId = userId,
-                    StoreItemId = storeItemId,
-                    DateObtained = DateTime.Now
-                };
+                    UserTitle userTitle = new UserTitle()
+                    {
+                        UserId = userId,
+                        StoreItemId = storeItemId,
+                        DateObtained = DateTime.Now
+                    };
 
-                db.UserTitles.Add(userTitle);
+                    db.UserTitles.Add(userTitle);
 
-                LogStoreTransaction(userId, storeItemId, 1, pointsCost);
+                    LogStoreTransaction(userId, storeItemId, 1, pointsCost);
 
-                user.Points -= pointsCost;
+                    user.Points -= pointsCost;
+
+                    success = (await db.SaveChangesAsync()) > 0;
+                }
+                catch (DbUpdateException ex)
+                {
+                    Log.Error("StoreService.BuyGiftAsync", ex, new { userId, storeItemId });
+                    ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.TitlePurchaseFailed);
+                }
+
+                if (success)
+                {
+                    await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.TitlesPurchased);
+                }
+                else
+                {
+                    failMessage = ErrorMessages.TitlePurchaseFailed;
+                }
+            }
+            else
+            {
+                failMessage = String.Format(ErrorMessages.UserDoesNotHaveEnoughPointsToPurchase, 1, title.Name);
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), failMessage);
             }
 
-            int count = await db.SaveChangesAsync();
-
-            await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.TitlesPurchased);
-
-            return count;
+            return success ? ServiceResult.Success : ServiceResult.Failed(failMessage);
         }
 
         /// <summary>
@@ -114,7 +141,7 @@ namespace TwolipsDating.Business
         /// <param name="storeItemId"></param>
         /// <param name="buyCount"></param>
         /// <returns></returns>
-        public async Task<int> BuyGiftAsync(string userId, int storeItemId, int buyCount)
+        public async Task<ServiceResult> BuyGiftAsync(string userId, int storeItemId, int buyCount)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(storeItemId > 0);
@@ -127,42 +154,66 @@ namespace TwolipsDating.Business
             // get any sales that this item is under
             int pointsCost = await GetAdjustedSalePrice(storeItemId, gift.PointPrice);
 
+            bool success = false;
+            string failMessage = String.Empty;
+
             if (user.Points >= pointsCost * buyCount)
             {
-                // check if user already has an item of this type
-                var inventoryItem = await (from inventory in db.InventoryItems
-                                           where inventory.StoreItemId == storeItemId
-                                           where inventory.ApplicationUserId == userId
-                                           select inventory).FirstOrDefaultAsync();
-
-                // if they do, increase the count of their item based on buyCount
-                if (inventoryItem != null)
+                try
                 {
-                    inventoryItem.ItemCount += buyCount;
+                    // check if user already has an item of this type
+                    var inventoryItem = await (from inventory in db.InventoryItems
+                                               where inventory.StoreItemId == storeItemId
+                                               where inventory.ApplicationUserId == userId
+                                               select inventory).FirstOrDefaultAsync();
+
+                    // if they do, increase the count of their item based on buyCount
+                    if (inventoryItem != null)
+                    {
+                        inventoryItem.ItemCount += buyCount;
+                    }
+                    // if they don't, create a new item and add it to their inventory
+                    else
+                    {
+                        InventoryItem item = new InventoryItem()
+                        {
+                            ApplicationUserId = userId,
+                            StoreItemId = storeItemId,
+                            ItemCount = buyCount
+                        };
+
+                        db.InventoryItems.Add(item);
+                    }
+
+                    LogStoreTransaction(userId, storeItemId, buyCount, pointsCost);
+
+                    user.Points -= pointsCost * buyCount;
+
+                    success = (await db.SaveChangesAsync()) > 0;
                 }
-                // if they don't, create a new item and add it to their inventory
+                catch (DbUpdateException ex)
+                {
+                    Log.Error("StoreService.BuyGiftAsync", ex, new { userId, storeItemId, buyCount });
+                    ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.GiftPurchaseFailed);
+                }
+
+                if (success)
+                {
+                    await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.GiftsPurchased);
+                }
                 else
                 {
-                    InventoryItem item = new InventoryItem()
-                    {
-                        ApplicationUserId = userId,
-                        StoreItemId = storeItemId,
-                        ItemCount = buyCount
-                    };
-
-                    db.InventoryItems.Add(item);
+                    failMessage = ErrorMessages.GiftPurchaseFailed;
                 }
 
-                LogStoreTransaction(userId, storeItemId, buyCount, pointsCost);
-
-                user.Points -= pointsCost * buyCount;
+            }
+            else
+            {
+                failMessage = String.Format(ErrorMessages.UserDoesNotHaveEnoughPointsToPurchase, buyCount, gift.Name);
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), failMessage);
             }
 
-            int count = await db.SaveChangesAsync();
-
-            await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.GiftsPurchased);
-
-            return count;
+            return success ? ServiceResult.Success : ServiceResult.Failed(failMessage);
         }
 
         private void LogStoreTransaction(string userId, int storeItemId, int buyCount, int pointPrice)
@@ -203,8 +254,8 @@ namespace TwolipsDating.Business
             DateTime now = DateTime.Now;
 
             var currentSpotlightSale = await (from spotlights in db.StoreSpotlights
-                                          where now >= spotlights.DateStart && now <= spotlights.DateEnd
-                                          select spotlights.StoreSale).FirstOrDefaultAsync();
+                                              where now >= spotlights.DateStart && now <= spotlights.DateEnd
+                                              select spotlights.StoreSale).FirstOrDefaultAsync();
 
             return currentSpotlightSale;
         }

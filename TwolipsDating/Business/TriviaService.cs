@@ -15,8 +15,8 @@ namespace TwolipsDating.Business
 {
     internal class TriviaService : BaseService
     {
-        public TriviaService()
-            : base() { }
+        public TriviaService(IValidationDictionary validationDictionary)
+            : base(validationDictionary) { }
 
         public TriviaService(IIdentityMessageService emailService, IValidationDictionary validationDictionary)
             : base(emailService, validationDictionary) { }

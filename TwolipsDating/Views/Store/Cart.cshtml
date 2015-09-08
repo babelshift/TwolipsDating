@@ -8,17 +8,22 @@
 
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        <a class="btn btn-success btn-xs pull-right" style="margin-bottom: 5px" href="@Url.Action("index", "store")">Continue Shopping</a>
+        <a class="btn btn-success btn-xs pull-right" style="margin-bottom: 5px" href="@Url.Action("index", "store")">
+            <i class="fa fa-cart-plus fa-lg fa-fw"></i> Continue Shopping
+        </a>
         <div class="clearfix"></div>
         @using (Html.BeginForm("checkout", "store", FormMethod.Post, new { role = "form" }))
         {
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="panel-title">
-                        Shopping Cart
+                        <i class="fa fa-shopping-cart fa-lg"></i> Shopping Cart
                     </div>
                 </div>
                 <div class="panel-body">
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary()
+
                     @if (Model != null && Model.Items != null && Model.Items.Count > 0)
                     {
                         <table class="table" id="shopping-cart-table">
@@ -34,9 +39,10 @@
                                 {
                                     <tr id="@String.Format("row-item-{0}", i)">
                                         <td>
-                                            <h4>
-                                                <img src="@Model.Items[i].Item.ItemImagePath" />
+                                            <img src="@Model.Items[i].Item.ItemImagePath" style="display: inline-block" />
+                                            <h4 style="display: inline-block; vertical-align: top; margin-top: 9px">
                                                 @Model.Items[i].Item.ItemName
+                                                <br />
                                                 <small>@((TwolipsDating.Models.StoreItemTypeValues)Model.Items[i].Item.ItemTypeId)</small>
                                             </h4>
                                         </td>
@@ -49,7 +55,11 @@
                                                 oninput = "onTextQtyBlur(event, this, " + i + ")",
                                                 min = 1
                                             })
-                                            <p><a href="#" data-item-id="@Model.Items[i].Item.ItemId" data-item-number="@i" class="remove-item">Remove</a></p>
+                                            <p>
+                                                <a href="#" data-item-id="@Model.Items[i].Item.ItemId" data-item-number="@i" class="remove-item">
+                                                    Remove
+                                                </a>
+                                            </p>
                                             @Html.HiddenFor(m => Model.Items[i].Item.ItemId)
                                             @Html.HiddenFor(m => Model.Items[i].Item.DiscountedPointsCost)
                                             @Html.HiddenFor(m => Model.Items[i].Item.ItemTypeId)
@@ -65,10 +75,20 @@
                                 }
                                 <tr>
                                     <td></td>
-                                    <td>Subtotal:</td>
                                     <td>
-                                        <i class="fa fa-money"></i>
-                                        <span id="subtotal">@Model.TotalCost</span>
+                                        <h5 style="margin: 0">
+                                            <strong>
+                                                Subtotal:
+                                            </strong>
+                                        </h5>
+                                    </td>
+                                    <td>
+                                        <h5 style="margin: 0">
+                                            <strong>
+                                                <i class="fa fa-money"></i>
+                                                <span id="subtotal">@Model.TotalCost</span>
+                                            </strong>
+                                        </h5>
                                     </td>
                                 </tr>
                             </tbody>
@@ -80,7 +100,12 @@
                     }
                 </div>
             </div>
-            <button type="submit" class="btn btn-success pull-right">Checkout</button>
+            if (Model != null && Model.Items != null && Model.Items.Count > 0)
+            {
+                <button type="submit" class="btn btn-success pull-right">
+                    <i class="fa fa-check fa-fw"></i> Checkout
+                </button>
+            }
         }
     </div>
 </div>
