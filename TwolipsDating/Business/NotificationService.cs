@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +10,18 @@ namespace TwolipsDating.Business
 {
     public class NotificationService : BaseService
     {
+        private NotificationService(ApplicationDbContext db)
+            : base(db)
+        {
+        }
+
+        internal static NotificationService Create(IdentityFactoryOptions<NotificationService> options, IOwinContext context)
+        {
+            var service = new NotificationService(context.Get<ApplicationDbContext>());
+            service.EmailService = new EmailService();
+            return service;
+        }
+
         /// <summary>
         /// Returns a collection of announcements.
         /// </summary>

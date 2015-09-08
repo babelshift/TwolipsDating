@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,11 +14,20 @@ namespace TwolipsDating.Business
 {
     public class MilestoneService : BaseService
     {
-        public MilestoneService(IIdentityMessageService emailService)
-            : base(emailService) { }
+        public TriviaService TriviaService { private get; set; }
+        public ProfileService ProfileService { private get; set; }
 
-        public MilestoneService(ApplicationDbContext db, IIdentityMessageService emailService)
-            : base(db, emailService) { }
+        private MilestoneService(ApplicationDbContext db)
+            : base(db)
+        {
+        }
+
+        internal static MilestoneService Create(IdentityFactoryOptions<MilestoneService> options, IOwinContext context)
+        {
+            var service = new MilestoneService(context.Get<ApplicationDbContext>());
+            service.EmailService = new EmailService();
+            return service;
+        }
 
         /// <summary>
         /// Based on the milestone type, performs a lookup to see if the user has met the requirements of any milestones of that type. If the user
@@ -55,54 +65,51 @@ namespace TwolipsDating.Business
         {
             int amount = 0;
 
-            TriviaService triviaService = new TriviaService(db, EmailService);
-            ProfileService profileService = new ProfileService(db, EmailService);
-
             // get the number of questions answered correctly
             if (milestoneTypeId == (int)MilestoneTypeValues.QuestionsAnsweredCorrectly)
             {
-                amount = await triviaService.GetQuestionsAnsweredCorrectlyCountAsync(userId);
+                amount = await TriviaService.GetQuestionsAnsweredCorrectlyCountAsync(userId);
             }
             // get the number of quizzes completed successfully
             else if (milestoneTypeId == (int)MilestoneTypeValues.QuizzesCompletedSuccessfully)
             {
-                var completedQuizzes = await triviaService.GetCompletedQuizzesForUserAsync(userId);
+                var completedQuizzes = await TriviaService.GetCompletedQuizzesForUserAsync(userId);
                 amount = completedQuizzes.Count;
             }
             // get the number of gifts sent
             else if (milestoneTypeId == (int)MilestoneTypeValues.GiftSent)
             {
-                amount = await profileService.GetSentGiftCountForUserAsync(userId);
+                amount = await ProfileService.GetSentGiftCountForUserAsync(userId);
             }
             // get the number of gifts purchased
             else if (milestoneTypeId == (int)MilestoneTypeValues.GiftsPurchased)
             {
-                amount = await profileService.GetPurchasedItemCountForUserAsync(userId, (int)StoreItemTypeValues.Gift);
+                amount = await ProfileService.GetPurchasedItemCountForUserAsync(userId, (int)StoreItemTypeValues.Gift);
             }
             // get the number of points obtained
             else if (milestoneTypeId == (int)MilestoneTypeValues.PointsObtained)
             {
-                amount = await profileService.GetPointsForUserAsync(userId);
+                amount = await ProfileService.GetPointsForUserAsync(userId);
             }
             // get the number of profiles reviewed
             else if (milestoneTypeId == (int)MilestoneTypeValues.ProfileReviewsWritten)
             {
-                amount = await profileService.GetReviewsWrittenCountByUserAsync(userId);
+                amount = await ProfileService.GetReviewsWrittenCountByUserAsync(userId);
             }
             // get the number of images uploaded
             else if (milestoneTypeId == (int)MilestoneTypeValues.ProfileImagesUploaded)
             {
-                amount = await profileService.GetImagesUploadedCountByUserAsync(userId);
+                amount = await ProfileService.GetImagesUploadedCountByUserAsync(userId);
             }
             // get the number of titles purchased
             else if (milestoneTypeId == (int)MilestoneTypeValues.TitlesPurchased)
             {
-                amount = await profileService.GetPurchasedItemCountForUserAsync(userId, (int)StoreItemTypeValues.Title);
+                amount = await ProfileService.GetPurchasedItemCountForUserAsync(userId, (int)StoreItemTypeValues.Title);
             }
             // get the number of tags awarded
             else if (milestoneTypeId == (int)MilestoneTypeValues.TagsAwarded)
             {
-                amount = await profileService.GetTagAwardCountForUserAsync(userId);
+                amount = await ProfileService.GetTagAwardCountForUserAsync(userId);
             }
 
             return amount;
@@ -331,7 +338,7 @@ namespace TwolipsDating.Business
         internal async Task<int> GetPossibleAchievementCount()
         {
             int possibleCount = await (from achievements in db.Milestones
-                                        select achievements).CountAsync();
+                                       select achievements).CountAsync();
 
             return possibleCount;
         }

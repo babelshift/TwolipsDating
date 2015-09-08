@@ -219,4 +219,7 @@
   <data name="UserDoesNotHaveEnoughPointsToPurchase" xml:space="preserve">
     <value>You do not have enough points to purchase {0}x {1}.</value>
   </data>
+  <data name="TitleAlreadyObtained" xml:space="preserve">
+    <value>You already own that title and cannot purchase it again.</value>
+  </data>
 </root>

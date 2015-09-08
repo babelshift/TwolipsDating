@@ -17,12 +17,6 @@ namespace TwolipsDating.Controllers
 {
     public class MessageController : BaseController
     {
-        #region Services
-
-        private UserService userService = new UserService();
-
-        #endregion Services
-
         #region Conversations
 
         /// <summary>
@@ -261,30 +255,12 @@ namespace TwolipsDating.Controllers
 
             string currentUserId = User.Identity.GetUserId();
 
-            string conversationUrl = Url.ActionWithFullUrl(Request, "conversation", "message", new { id = currentUserId });
+            string conversationUrl = Url.ActionWithFullUrl(Request, "conversation", "message", new { id = viewModel.TargetApplicationUserId });
             var result = await ProfileService.SendMessageAsync(currentUserId, viewModel.TargetApplicationUserId, viewModel.NewMessage, conversationUrl);
 
             return RedirectToConversation(new { id = viewModel.TargetApplicationUserId });
         }
 
         #endregion Sent/Received
-
-        /// <summary>
-        /// Disposes all services.
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (userService != null)
-                {
-                    userService.Dispose();
-                    userService = null;
-                }
-            }
-
-            base.Dispose(disposing);
-        }
     }
 }

@@ -12,51 +12,24 @@ namespace TwolipsDating.Business
 {
     public class BaseService : IDisposable
     {
-        private IValidationDictionary validationDictionary;
-        private IIdentityMessageService emailService;
-        protected ApplicationDbContext db = new ApplicationDbContext();
+        protected ApplicationDbContext db;
+
         protected LogHelper Log { get; private set; }
 
-        protected IIdentityMessageService EmailService { get { return emailService; } }
+        protected IIdentityMessageService EmailService { get; set; }
 
-        protected IValidationDictionary ValidationDictionary { get { return validationDictionary; } }
+        public IValidationDictionary ValidationDictionary { get; set; }
 
-        public BaseService()
-        {
-            Log = new LogHelper(GetType().FullName);
-#if DEBUG
-            db.Database.Log = s => { Debug.WriteLine(s); };
-#endif
-        }
-
-        public BaseService(IValidationDictionary validationDictionary)
-            : this()
-        {
-            this.validationDictionary = validationDictionary;
-        }
-
-        public BaseService(IIdentityMessageService emailService)
-            : this()
-        {
-            this.emailService = emailService;
-        }
-
-        public BaseService(IIdentityMessageService emailService, IValidationDictionary validationDictionary)
-            : this()
-        {
-            this.emailService = emailService;
-            this.validationDictionary = validationDictionary;
-        }
-
-        public BaseService(ApplicationDbContext db, IIdentityMessageService emailService)
-            : this(emailService)
-        {
-            this.db = db;
-        }
+        public MilestoneService MilestoneService { protected get; set; }
 
         public BaseService(ApplicationDbContext db)
         {
             this.db = db;
+
+            Log = new LogHelper(GetType().FullName);
+#if DEBUG
+            this.db.Database.Log = s => { Debug.WriteLine(s); };
+#endif
         }
 
         /// <summary>
@@ -68,8 +41,7 @@ namespace TwolipsDating.Business
         protected async Task AwardAchievedMilestonesForUserAsync(string fromUserId, int milestoneTypeId)
         {
             // handle and save any milestones that the user may have met
-            MilestoneService milestoneService = new MilestoneService(db, emailService);
-            await milestoneService.AwardAchievedMilestonesAsync(fromUserId, milestoneTypeId);
+            await MilestoneService.AwardAchievedMilestonesAsync(fromUserId, milestoneTypeId);
             await db.SaveChangesAsync();
         }
 

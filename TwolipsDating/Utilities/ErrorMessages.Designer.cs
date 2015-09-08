@@ -286,6 +286,15 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You already own that title and cannot purchase it again..
+        /// </summary>
+        internal static string TitleAlreadyObtained {
+            get {
+                return ResourceManager.GetString("TitleAlreadyObtained", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You cannot select that title because you haven&apos;t obtained it yet..
         /// </summary>
         internal static string TitleNotObtained {

@@ -14,18 +14,6 @@ namespace TwolipsDating.Controllers
 {
     public class StoreController : BaseController
     {
-        #region Services
-        
-        private StoreService storeService;
-        private UserService userService = new UserService();
-
-        #endregion Services
-
-        public StoreController()
-        {
-            storeService = new StoreService(new ModelStateWrapper(ModelState));
-        }
-
         /// <summary>
         /// Property exposing the shopping cart in the session.
         /// </summary>
@@ -60,7 +48,7 @@ namespace TwolipsDating.Controllers
 
             await SetNotificationsAsync();
 
-            var storeItems = await storeService.GetNewStoreItemsAsync();
+            var storeItems = await StoreService.GetNewStoreItemsAsync();
             StoreViewModel viewModel = await GetStoreViewModelAsync(storeItems);
 
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
@@ -79,7 +67,7 @@ namespace TwolipsDating.Controllers
 
         //    await SetNotificationsAsync();
 
-        //    var storeItems = await storeService.GetStoreItemsAsync();
+        //    var storeItems = await StoreService.GetStoreItemsAsync();
         //    StoreViewModel viewModel = await GetStoreViewModelAsync(storeItems);
 
         //    viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
@@ -98,7 +86,7 @@ namespace TwolipsDating.Controllers
 
         //    await SetNotificationsAsync();
 
-        //    var storeItems = await storeService.GetStoreItemsAsync();
+        //    var storeItems = await StoreService.GetStoreItemsAsync();
         //    StoreViewModel viewModel = await GetStoreViewModelAsync(storeItems);
 
         //    viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
@@ -182,11 +170,11 @@ namespace TwolipsDating.Controllers
 
             if (storeItemTypeId == (int)StoreItemTypeValues.Gift)
             {
-                result = await storeService.BuyGiftAsync(currentUserId, storeItemId, quantity);
+                result = await StoreService.BuyGiftAsync(currentUserId, storeItemId, quantity);
             }
             else if (storeItemTypeId == (int)StoreItemTypeValues.Title)
             {
-                result = await storeService.BuyTitleAsync(currentUserId, storeItemId);
+                result = await StoreService.BuyTitleAsync(currentUserId, storeItemId);
             }
 
             // if there were changes then the purchase was successful
@@ -204,10 +192,10 @@ namespace TwolipsDating.Controllers
 
             viewModel.StoreItems = storeItemViewModel;
 
-            var spotlightSale = await storeService.GetCurrentSpotlightAsync();
+            var spotlightSale = await StoreService.GetCurrentSpotlightAsync();
             viewModel.Spotlight = Mapper.Map<StoreSale, StoreItemViewModel>(spotlightSale);
 
-            var giftSpotlightSale = await storeService.GetCurrentGiftSpotlightAsync();
+            var giftSpotlightSale = await StoreService.GetCurrentGiftSpotlightAsync();
             viewModel.GiftSpotlight = Mapper.Map<StoreSale, StoreItemViewModel>(giftSpotlightSale);
 
             viewModel.ShoppingCartItemCount = ShoppingCart.Count;
@@ -224,7 +212,7 @@ namespace TwolipsDating.Controllers
         [HttpPost]
         public async Task<JsonResult> AddToCart(int storeItemId, int storeItemTypeId)
         {
-            var storeItem = await storeService.GetStoreItemAsync(storeItemId);
+            var storeItem = await StoreService.GetStoreItemAsync(storeItemId);
             var storeItemViewModel = Mapper.Map<StoreItem, StoreItemViewModel>(storeItem);
             ShoppingCart.AddItem(storeItemViewModel);
             return Json(new { success = true, count = 1 });
@@ -240,30 +228,6 @@ namespace TwolipsDating.Controllers
         {
             ShoppingCart.RemoveItem(storeItemId);
             return Json(new { success = true });
-        }
-
-        /// <summary>
-        /// Disposes all services.
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (storeService != null)
-                {
-                    storeService.Dispose();
-                    storeService = null;
-                }
-
-                if (userService != null)
-                {
-                    userService.Dispose();
-                    userService = null;
-                }
-            }
-
-            base.Dispose(disposing);
         }
     }
 }

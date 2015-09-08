@@ -20,7 +20,6 @@ namespace TwolipsDating.Controllers
     public class AccountController : BaseController
     {
         private ApplicationSignInManager _signInManager;
-        private UserService userService = new UserService();
 
         public AccountController()
         {
@@ -115,7 +114,7 @@ namespace TwolipsDating.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    await userService.SetUserLastLoginByEmailAsync(model.Email);
+                    await UserService.SetUserLastLoginByEmailAsync(model.Email);
                     return RedirectToLocal(returnUrl);
 
                 case SignInStatus.LockedOut:
@@ -215,7 +214,7 @@ namespace TwolipsDating.Controllers
 
         private async Task SetupDefaultEmailNotifications(ApplicationUser user)
         {
-            await userService.SaveEmailNotificationChangesAsync(user.Id, true, true, true, true, true);
+            await UserService.SaveEmailNotificationChangesAsync(user.Id, true, true, true, true, true);
         }
 
         //
@@ -528,7 +527,7 @@ namespace TwolipsDating.Controllers
             {
                 case SignInStatus.Success:
                     var user = await UserManager.FindAsync(loginInfo.Login);
-                    await userService.SetUserLastLoginByIdAsync(user.Id);
+                    await UserService.SetUserLastLoginByIdAsync(user.Id);
                     return RedirectToLocal(returnUrl);
 
                 case SignInStatus.LockedOut:
@@ -630,7 +629,7 @@ namespace TwolipsDating.Controllers
             string currentUserId = User.Identity.GetUserId();
 
             // get transactions (expenses)
-            var transactions = await userService.GetStoreTransactionsAsync(currentUserId);
+            var transactions = await UserService.GetStoreTransactionsAsync(currentUserId);
 
             UserPointsViewModel viewModel = new UserPointsViewModel();
             viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
@@ -663,7 +662,7 @@ namespace TwolipsDating.Controllers
 
         //private async Task AddTitlesToStoreTransactions(List<StoreTransactionViewModel> storeTransactions, string currentUserId)
         //{
-        //    var titles = await userService.GetTitlesOwnedByUserAsync(currentUserId);
+        //    var titles = await UserService.GetTitlesOwnedByUserAsync(currentUserId);
 
         //    foreach (var title in titles)
         //    {
@@ -687,12 +686,6 @@ namespace TwolipsDating.Controllers
                 {
                     _signInManager.Dispose();
                     _signInManager = null;
-                }
-
-                if (userService != null)
-                {
-                    userService.Dispose();
-                    userService = null;
                 }
             }
             base.Dispose(disposing);

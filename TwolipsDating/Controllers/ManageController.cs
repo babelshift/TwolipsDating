@@ -17,7 +17,6 @@ namespace TwolipsDating.Controllers
 {
     public class ManageController : BaseController
     {
-        private UserService userService = new UserService();
         private ApplicationSignInManager _signInManager;
 
         public ManageController()
@@ -570,12 +569,6 @@ namespace TwolipsDating.Controllers
                     _signInManager.Dispose();
                     _signInManager = null;
                 }
-
-                if (userService != null)
-                {
-                    userService.Dispose();
-                    userService = null;
-                }
             }
 
             base.Dispose(disposing);
@@ -648,7 +641,7 @@ namespace TwolipsDating.Controllers
 
             var currentUserId = User.Identity.GetUserId();
 
-            var emailNotifications = await userService.GetEmailNotificationsForUserAsync(currentUserId);
+            var emailNotifications = await UserService.GetEmailNotificationsForUserAsync(currentUserId);
 
             ManageNotificationsViewModel viewModel = Mapper.Map<EmailNotifications, ManageNotificationsViewModel>(emailNotifications);
 
@@ -670,7 +663,7 @@ namespace TwolipsDating.Controllers
 
                 var currentUserId = User.Identity.GetUserId();
 
-                await userService.SaveEmailNotificationChangesAsync(currentUserId,
+                await UserService.SaveEmailNotificationChangesAsync(currentUserId,
                     viewModel.SendGiftNotifications,
                     viewModel.SendMessageNotifications,
                     viewModel.SendNewFollowerNotifications,

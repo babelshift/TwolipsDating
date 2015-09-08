@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -11,7 +13,17 @@ namespace TwolipsDating.Business
 {
     public class SearchService : BaseService
     {
-        public SearchService(IValidationDictionary validationDictionary) : base(validationDictionary) { }
+        public SearchService(ApplicationDbContext db)
+            : base(db)
+        {
+        }
+
+        internal static SearchService Create(IdentityFactoryOptions<SearchService> options, IOwinContext context)
+        {
+            var service = new SearchService(context.Get<ApplicationDbContext>());
+            service.EmailService = new EmailService();
+            return service;
+        }
 
         internal async Task<IReadOnlyCollection<Profile>> GetProfilesByUserNameAsync(string userName)
         {
@@ -60,11 +72,11 @@ namespace TwolipsDating.Business
 	                q.Description as QuizDescription,
 	                qqc.QuestionCount as QuestionCount,
 	                qqc.QuestionPointAverage as AveragePoints
-                from 
+                from
 	                dbo.Quizs q
-	                inner join 
+	                inner join
 	                (
-		                select 
+		                select
 		                qq.Quiz_Id as QuizId,
                         round(avg(cast(qu.Points as float)), 0) as QuestionPointAverage,
 		                count(qq.Question_Id) as QuestionCount
@@ -76,9 +88,9 @@ namespace TwolipsDating.Business
 	                inner join dbo.questions qu on qu.Id = qq.Question_Id
 	                inner join dbo.TagQuestions tq on tq.Question_Id = qu.Id
 	                inner join dbo.Tags t on t.TagId = tq.Tag_TagId
-                where 
+                where
 	                t.Name in (@tagList)
-                group by 
+                group by
 	                q.Id,
 	                q.Name,
 	                q.Description,

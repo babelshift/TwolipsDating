@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using TwolipsDating.Business;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace TwolipsDating.Utilities
 {
@@ -21,7 +22,7 @@ namespace TwolipsDating.Utilities
             if (HttpContext.Current.User.Identity.IsAuthenticated)
             {
                 string currentUserId = HttpContext.Current.User.Identity.GetUserId();
-                UserService userService = new UserService();
+                UserService userService = HttpContext.Current.GetOwinContext().Get<UserService>();
                 bool doesUserHaveProfile = userService.DoesUserHaveProfile(currentUserId);
                 if (!doesUserHaveProfile)
                 {

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -10,6 +12,18 @@ namespace TwolipsDating.Business
 {
     public class ViolationService : BaseService
     {
+        private ViolationService(ApplicationDbContext db)
+            : base(db)
+        {
+        }
+
+        internal static ViolationService Create(IdentityFactoryOptions<ViolationService> options, IOwinContext context)
+        {
+            var service = new ViolationService(context.Get<ApplicationDbContext>());
+            service.EmailService = new EmailService();
+            return service;
+        }
+
         /// <summary>
         /// Returns a boolean indicating if a user has already reported a review violation.
         /// </summary>

@@ -15,20 +15,16 @@ namespace TwolipsDating.Business
 {
     public class UserService : BaseService
     {
-        public UserService() : base() { }
-        
-        public UserService(IIdentityMessageService emailService)
-            : base(emailService) { }
-
-        public UserService(ApplicationDbContext db, IIdentityMessageService emailService)
-            : base(db, emailService) { }
-
-        public UserService(ApplicationDbContext db)
-            : base(db) { }
+        private UserService(ApplicationDbContext db)
+            : base(db)
+        {
+        }
 
         internal static UserService Create(IdentityFactoryOptions<UserService> options, IOwinContext context)
         {
-            return new UserService(context.Get<ApplicationDbContext>());
+            var service = new UserService(context.Get<ApplicationDbContext>());
+            service.EmailService = new EmailService();
+            return service;
         }
 
         /// <summary>
@@ -94,8 +90,8 @@ namespace TwolipsDating.Business
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
             var profile = (from profiles in db.Profiles
-                                 where profiles.ApplicationUser.Id == userId
-                                 select profiles).FirstOrDefault();
+                           where profiles.ApplicationUser.Id == userId
+                           select profiles).FirstOrDefault();
 
             if (profile != null)
             {
@@ -185,7 +181,7 @@ namespace TwolipsDating.Business
             }
         }
 
-        internal async Task SendGiftEmailNotificationAsync(string senderUserName, string senderProfileImagePath, string senderProfileUrl, string giftName, string giftImagePath, 
+        internal async Task SendGiftEmailNotificationAsync(string senderUserName, string senderProfileImagePath, string senderProfileUrl, string giftName, string giftImagePath,
             string receiverUserId, string receiverUserName, string receiverEmail)
         {
             var emailNotifications = await GetEmailNotificationsForUserAsync(receiverUserId);
@@ -229,7 +225,7 @@ namespace TwolipsDating.Business
 
             var result = await emailNotifications.FirstOrDefaultAsync();
 
-            if(result == null)
+            if (result == null)
             {
                 result = new EmailNotifications()
                 {
@@ -244,17 +240,17 @@ namespace TwolipsDating.Business
             return result;
         }
 
-        internal async Task SaveEmailNotificationChangesAsync(string currentUserId, 
-            bool sendGiftNotifications, 
-            bool sendMessageNotifications, 
-            bool sendNewFollowerNotifications, 
+        internal async Task SaveEmailNotificationChangesAsync(string currentUserId,
+            bool sendGiftNotifications,
+            bool sendMessageNotifications,
+            bool sendNewFollowerNotifications,
             bool sendTagNotifications,
             bool sendReviewNotifications)
         {
             Debug.Assert(!String.IsNullOrEmpty(currentUserId));
 
             EmailNotifications emailNotifications = await db.EmailNotifications.FindAsync(currentUserId);
-            if(emailNotifications == null)
+            if (emailNotifications == null)
             {
                 emailNotifications = new EmailNotifications();
                 emailNotifications.ApplicationUserId = currentUserId;
@@ -298,7 +294,7 @@ namespace TwolipsDating.Business
             string sql = @"update dbo.aspnetusers
                 set datelastlogin = @dateNow
                 where id = @userId";
-            
+
             int count = await ExecuteAsync(sql, new { dateNow = DateTime.Now, userId });
         }
     }

@@ -19,8 +19,6 @@ namespace TwolipsDating.Controllers
     {
         #region Members
 
-        private ProfileService profileService;
-        private NotificationService notificationService = new NotificationService();
         private ApplicationUserManager userManager;
 
         #endregion Members
@@ -28,15 +26,44 @@ namespace TwolipsDating.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
-            if (profileService == null)
-            {
-                profileService = new ProfileService(UserManager.EmailService, new ModelStateWrapper(ModelState));
-            }
+
+            ProfileService.ValidationDictionary = new ModelStateWrapper(ModelState);
+            UserService.ValidationDictionary = new ModelStateWrapper(ModelState);
+            DashboardService.ValidationDictionary = new ModelStateWrapper(ModelState);
+            MilestoneService.ValidationDictionary = new ModelStateWrapper(ModelState);
+            NotificationService.ValidationDictionary = new ModelStateWrapper(ModelState);
+            SearchService.ValidationDictionary = new ModelStateWrapper(ModelState);
+            StoreService.ValidationDictionary = new ModelStateWrapper(ModelState);
+            TriviaService.ValidationDictionary = new ModelStateWrapper(ModelState);
+            ViolationService.ValidationDictionary = new ModelStateWrapper(ModelState);
+
+            MilestoneService.ProfileService = ProfileService;
+            MilestoneService.TriviaService = TriviaService;
+
+            ProfileService.UserService = UserService;
+            ProfileService.MilestoneService = MilestoneService;
+
+            UserService.MilestoneService = MilestoneService;
+            DashboardService.MilestoneService = MilestoneService;
+            MilestoneService.MilestoneService = MilestoneService;
+            NotificationService.MilestoneService = MilestoneService;
+            SearchService.MilestoneService = MilestoneService;
+            StoreService.MilestoneService = MilestoneService;
+            TriviaService.MilestoneService = MilestoneService;
+            ViolationService.MilestoneService = MilestoneService;
         }
 
         #region Properties
 
-        public ProfileService ProfileService { get { return profileService; } }
+        protected ProfileService ProfileService { get { return HttpContext.GetOwinContext().Get<ProfileService>(); } }
+        protected UserService UserService { get { return HttpContext.GetOwinContext().Get<UserService>(); } }
+        protected DashboardService DashboardService { get { return HttpContext.GetOwinContext().Get<DashboardService>(); } }
+        protected MilestoneService MilestoneService { get { return HttpContext.GetOwinContext().Get<MilestoneService>(); } }
+        protected NotificationService NotificationService { get { return HttpContext.GetOwinContext().Get<NotificationService>(); } }
+        protected SearchService SearchService { get { return HttpContext.GetOwinContext().Get<SearchService>(); } }
+        protected StoreService StoreService { get { return HttpContext.GetOwinContext().Get<StoreService>(); } }
+        protected TriviaService TriviaService { get { return HttpContext.GetOwinContext().Get<TriviaService>(); } }
+        protected ViolationService ViolationService { get { return HttpContext.GetOwinContext().Get<ViolationService>(); } }
 
         /// <summary>
         /// Allows inherited controllers to properly log any events.
@@ -125,13 +152,13 @@ namespace TwolipsDating.Controllers
             {
                 string currentUserId = User.Identity.GetUserId();
                 var currentUser = await UserManager.FindByIdAsync(currentUserId);
-                ViewBag.MessageNotificationCount = await notificationService.GetMessageNotificationCountAsync(currentUserId);
+                ViewBag.MessageNotificationCount = await NotificationService.GetMessageNotificationCountAsync(currentUserId);
                 ViewBag.PointsCount = currentUser.Points;
 
-                ViewBag.Announcements = await notificationService.GetAnnouncementNotificationsAsync();
+                ViewBag.Announcements = await NotificationService.GetAnnouncementNotificationsAsync();
                 ViewBag.AnnouncementNotificationCount = ViewBag.Announcements.Count;
 
-                var gifts = await profileService.GetUnreviewedGiftTransactionsAsync(currentUserId);
+                var gifts = await ProfileService.GetUnreviewedGiftTransactionsAsync(currentUserId);
                 ViewBag.GiftsReceived = Mapper.Map<IReadOnlyCollection<GiftTransactionLog>, IReadOnlyCollection<GiftTransactionViewModel>>(gifts);
                 ViewBag.GiftNotificationCount = ViewBag.GiftsReceived != null ? ViewBag.GiftsReceived.Count : 0;
             }
@@ -164,35 +191,6 @@ namespace TwolipsDating.Controllers
         protected ActionResult RedirectToProfileIndex()
         {
             return RedirectToAction("index", "profile");
-        }
-
-        /// <summary>
-        /// Disposes of the services and their associated DbContexts.
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (userManager != null)
-                {
-                    userManager.Dispose();
-                    userManager = null;
-                }
-
-                if (profileService != null)
-                {
-                    profileService.Dispose();
-                    profileService = null;
-                }
-
-                if (notificationService != null)
-                {
-                    notificationService.Dispose();
-                    notificationService = null;
-                }
-            }
-            base.Dispose(disposing);
         }
     }
 }

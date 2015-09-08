@@ -24,14 +24,6 @@ namespace TwolipsDating.Controllers
 {
     public class ProfileController : BaseController
     {
-        #region Members
-
-        private DashboardService dashboardService = new DashboardService();
-        private UserService userService = new UserService();
-        private ViolationService violationService = new ViolationService();
-
-        #endregion Members
-
         #region Toggle Favorite and Ignore
 
         /// <summary>
@@ -738,14 +730,14 @@ namespace TwolipsDating.Controllers
             {
                 // setup favorites and ignores
                 viewModel.IsFavoritedByCurrentUser = profile.FavoritedBy.Any(f => f.UserId == currentUserId);
-                viewModel.IsIgnoredByCurrentUser = await userService.IsUserIgnoredByUserAsync(currentUserId, profile.ApplicationUser.Id);
+                viewModel.IsIgnoredByCurrentUser = await UserService.IsUserIgnoredByUserAsync(currentUserId, profile.ApplicationUser.Id);
 
                 // setup inventory for the viewer of the profile
                 var viewerInventoryItems = await ProfileService.GetInventoryAsync(currentUserId);
                 viewModel.ViewerInventoryItems = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(viewerInventoryItems);
 
                 // setup violation types
-                var violationTypes = await violationService.GetViolationTypesAsync();
+                var violationTypes = await ViolationService.GetViolationTypesAsync();
                 viewModel.WriteReviewViolation = new WriteReviewViolationViewModel();
                 viewModel.WriteReviewViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
 
@@ -753,7 +745,7 @@ namespace TwolipsDating.Controllers
                 // TODO: optimize this
                 if (currentUserId == profile.ApplicationUser.Id)
                 {
-                    var titles = await userService.GetTitlesOwnedByUserAsync(currentUserId);
+                    var titles = await UserService.GetTitlesOwnedByUserAsync(currentUserId);
                     var titlesViewModel = titles.Select(t => new TitleViewModel()
                     {
                         TitleId = t.Key,
@@ -774,9 +766,8 @@ namespace TwolipsDating.Controllers
             viewModel.TagCount = await ProfileService.GetTagCountAsync(profile.ApplicationUser.Id);
             viewModel.InventoryCount = await ProfileService.GetInventoryCountAsync(profile.ApplicationUser.Id);
 
-            MilestoneService milestoneService = new MilestoneService(UserManager.EmailService);
-            viewModel.CompletedAchievementCount = await milestoneService.GetCompletedAchievementCount(profile.ApplicationUser.Id);
-            viewModel.PossibleAchievementCount = await milestoneService.GetPossibleAchievementCount();
+            viewModel.CompletedAchievementCount = await MilestoneService.GetCompletedAchievementCount(profile.ApplicationUser.Id);
+            viewModel.PossibleAchievementCount = await MilestoneService.GetPossibleAchievementCount();
 
             return View(viewModel);
         }
@@ -867,8 +858,7 @@ namespace TwolipsDating.Controllers
             }
             if (viewModel.ActiveTab == "achievements")
             {
-                MilestoneService milestoneService = new MilestoneService(UserManager.EmailService);
-                var achievements = await milestoneService.GetAchievementsAndStatusForUserAsync(profile.ApplicationUser.Id);
+                var achievements = await MilestoneService.GetAchievementsAndStatusForUserAsync(profile.ApplicationUser.Id);
                 viewModel.Achievements = achievements;
             }
             if (viewModel.ActiveTab == "tags")
@@ -956,7 +946,7 @@ namespace TwolipsDating.Controllers
 
         private async Task AddGiftTransactionsToFeedAsync(string currentUserId, IList<ProfileFeedItemViewModel> profileFeedItems)
         {
-            var giftTransactions = await dashboardService.GetGiftTransactionsForUserAsync(currentUserId);
+            var giftTransactions = await DashboardService.GetGiftTransactionsForUserAsync(currentUserId);
             var giftTransactionsConsolidated = giftTransactions.GetConsolidatedGiftTransactions();
 
             foreach (var giftTransactionViewModel in giftTransactionsConsolidated)
@@ -972,7 +962,7 @@ namespace TwolipsDating.Controllers
 
         private async Task AddCompletedQuizzesToFeedAsync(string currentUserId, IList<ProfileFeedItemViewModel> profileFeedItems)
         {
-            var completedQuizzes = await dashboardService.GetQuizCompletionsForUserAsync(currentUserId);
+            var completedQuizzes = await DashboardService.GetQuizCompletionsForUserAsync(currentUserId);
 
             foreach (var quizCompletionViewModel in completedQuizzes)
             {
@@ -987,7 +977,7 @@ namespace TwolipsDating.Controllers
 
         private async Task AddTagSuggestionsToFeedAsync(string currentUserId, IList<ProfileFeedItemViewModel> profileFeedItems)
         {
-            var tagsSuggested = await dashboardService.GetFollowerTagSuggestionsForUserAsync(currentUserId);
+            var tagsSuggested = await DashboardService.GetFollowerTagSuggestionsForUserAsync(currentUserId);
             var tagsSuggestedConsolidated = tagsSuggested.GetConsolidatedTagsSuggested();
 
             foreach (var tagsSuggestedViewModel in tagsSuggestedConsolidated)
@@ -1003,7 +993,7 @@ namespace TwolipsDating.Controllers
 
         private async Task AddAchievementsToFeedAsync(string currentUserId, IList<ProfileFeedItemViewModel> profileFeedItems)
         {
-            var achievements = await dashboardService.GetFollowerAchievementsForUserAsync(currentUserId);
+            var achievements = await DashboardService.GetFollowerAchievementsForUserAsync(currentUserId);
             var achievementFeedViewModels = Mapper.Map<IReadOnlyCollection<MilestoneAchievement>, IReadOnlyCollection<AchievementFeedViewModel>>(achievements);
 
             foreach (var achievementFeedViewModel in achievementFeedViewModels)
@@ -1188,8 +1178,7 @@ namespace TwolipsDating.Controllers
 
             string currentUserId = User.Identity.GetUserId();
 
-            MilestoneService milestoneService = new MilestoneService(UserManager.EmailService);
-            var achievements = await milestoneService.GetAchievementsAndStatusForUserAsync(currentUserId);
+            var achievements = await MilestoneService.GetAchievementsAndStatusForUserAsync(currentUserId);
 
             AchievementManagerViewModel viewModel = new AchievementManagerViewModel();
             viewModel.Achievements = achievements;
@@ -1315,35 +1304,5 @@ namespace TwolipsDating.Controllers
         }
 
         #endregion
-
-        /// <summary>
-        /// Disposes of all services.
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (userService != null)
-                {
-                    userService.Dispose();
-                    userService = null;
-                }
-
-                if (violationService != null)
-                {
-                    violationService.Dispose();
-                    violationService = null;
-                }
-
-                if (dashboardService != null)
-                {
-                    dashboardService.Dispose();
-                    dashboardService = null;
-                }
-            }
-
-            base.Dispose(disposing);
-        }
     }
 }

@@ -13,17 +13,6 @@ namespace TwolipsDating.Controllers
 {
     public class SearchController : BaseController
     {
-        #region Services
-
-        private SearchService searchService;
-
-        #endregion Services
-
-        public SearchController()
-        {
-            searchService = new SearchService(new ModelStateWrapper(ModelState));
-        }
-
         /// <summary>
         /// Sets up a view model which can be used to display search results based on a user name or a tag name.
         /// </summary>
@@ -43,7 +32,7 @@ namespace TwolipsDating.Controllers
 
             if (tags != null && tags.Length > 0)
             {
-                var results = await searchService.GetProfilesByTagNamesAsync(tags);
+                var results = await SearchService.GetProfilesByTagNamesAsync(tags);
 
                 await SetupViewModel(tags, currentUserId, viewModel, results, page);
             }
@@ -96,27 +85,9 @@ namespace TwolipsDating.Controllers
 
             await SetNotificationsAsync();
 
-            var quizzes = await searchService.GetQuizzesByTagsAsync(tag);
+            var quizzes = await SearchService.GetQuizzesByTagsAsync(tag);
 
             return View(quizzes);
-        }
-
-        /// <summary>
-        /// Disposes all services.
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (searchService != null)
-                {
-                    searchService.Dispose();
-                    searchService = null;
-                }
-            }
-
-            base.Dispose(disposing);
         }
     }
 }

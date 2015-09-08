@@ -1,20 +1,31 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TwolipsDating.Models;
-using TwolipsDating.ViewModels;
 using TwolipsDating.Utilities;
-using System.Data.Entity.Infrastructure;
+using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
 {
     public class StoreService : BaseService
     {
-        public StoreService(IValidationDictionary validationDictionary)
-            : base(validationDictionary) { }
+        private StoreService(ApplicationDbContext db)
+            : base(db)
+        {
+        }
+
+        internal static StoreService Create(IdentityFactoryOptions<StoreService> options, IOwinContext context)
+        {
+            var service = new StoreService(context.Get<ApplicationDbContext>());
+            service.EmailService = new EmailService();
+            return service;
+        }
 
         /// <summary>
         /// Returns a store item.
@@ -89,7 +100,7 @@ namespace TwolipsDating.Business
             int pointsCost = await GetAdjustedSalePrice(storeItemId, title.PointPrice);
 
             bool success = false;
-            string failMessage = String.Empty;
+            List<string> errors = new List<string>();
 
             if (user.Points >= pointsCost)
             {
@@ -102,36 +113,43 @@ namespace TwolipsDating.Business
                         DateObtained = DateTime.Now
                     };
 
-                    db.UserTitles.Add(userTitle);
+                    // if the user does not own the title, let them purchase it
+                    bool doesUserAlreadyHaveTitle = await db.UserTitles.AnyAsync(a => a.StoreItemId == storeItemId && a.UserId == userId);
+                    if (!doesUserAlreadyHaveTitle)
+                    {
+                        db.UserTitles.Add(userTitle);
 
-                    LogStoreTransaction(userId, storeItemId, 1, pointsCost);
+                        LogStoreTransaction(userId, storeItemId, 1, pointsCost);
 
-                    user.Points -= pointsCost;
+                        user.Points -= pointsCost;
 
-                    success = (await db.SaveChangesAsync()) > 0;
+                        success = (await db.SaveChangesAsync()) > 0;
+                    }
+                    else
+                    {
+                        errors.Add(ErrorMessages.TitleAlreadyObtained);
+                        ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.TitleAlreadyObtained);
+                    }
                 }
                 catch (DbUpdateException ex)
                 {
                     Log.Error("StoreService.BuyGiftAsync", ex, new { userId, storeItemId });
-                    ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.TitlePurchaseFailed);
+                    errors.Add(ErrorMessages.TitleAlreadyObtained);
                 }
 
                 if (success)
                 {
                     await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.TitlesPurchased);
                 }
-                else
-                {
-                    failMessage = ErrorMessages.TitlePurchaseFailed;
-                }
             }
             else
             {
-                failMessage = String.Format(ErrorMessages.UserDoesNotHaveEnoughPointsToPurchase, 1, title.Name);
-                ValidationDictionary.AddError(Guid.NewGuid().ToString(), failMessage);
+                string error = String.Format(ErrorMessages.UserDoesNotHaveEnoughPointsToPurchase, 1, title.Name);
+                errors.Add(error);
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), error);
             }
 
-            return success ? ServiceResult.Success : ServiceResult.Failed(failMessage);
+            return success ? ServiceResult.Success : ServiceResult.Failed(errors.ToArray());
         }
 
         /// <summary>
@@ -205,7 +223,6 @@ namespace TwolipsDating.Business
                 {
                     failMessage = ErrorMessages.GiftPurchaseFailed;
                 }
-
             }
             else
             {

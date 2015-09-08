@@ -22,6 +22,14 @@ namespace TwolipsDating
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
             app.CreatePerOwinContext<UserService>(UserService.Create);
+            app.CreatePerOwinContext<ProfileService>(ProfileService.Create);
+            app.CreatePerOwinContext<DashboardService>(DashboardService.Create);
+            app.CreatePerOwinContext<MilestoneService>(MilestoneService.Create);
+            app.CreatePerOwinContext<NotificationService>(NotificationService.Create);
+            app.CreatePerOwinContext<SearchService>(SearchService.Create);
+            app.CreatePerOwinContext<StoreService>(StoreService.Create);
+            app.CreatePerOwinContext<TriviaService>(TriviaService.Create);
+            app.CreatePerOwinContext<ViolationService>(ViolationService.Create);
 
             app.UseKentorOwinCookieSaver();
 

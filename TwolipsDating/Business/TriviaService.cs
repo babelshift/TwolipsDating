@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,16 +14,19 @@ using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
 {
-    internal class TriviaService : BaseService
+    public class TriviaService : BaseService
     {
-        public TriviaService(IValidationDictionary validationDictionary)
-            : base(validationDictionary) { }
+        private TriviaService(ApplicationDbContext db)
+            : base(db)
+        {
+        }
 
-        public TriviaService(IIdentityMessageService emailService, IValidationDictionary validationDictionary)
-            : base(emailService, validationDictionary) { }
-
-        public TriviaService(ApplicationDbContext db, IIdentityMessageService emailService)
-            : base(db, emailService) { }
+        internal static TriviaService Create(IdentityFactoryOptions<TriviaService> options, IOwinContext context)
+        {
+            var service = new TriviaService(context.Get<ApplicationDbContext>());
+            service.EmailService = new EmailService();
+            return service;
+        }
 
         internal async Task<Quiz> GetQuizAsync(int quizId)
         {
@@ -161,19 +165,16 @@ namespace TwolipsDating.Business
                 // only award if there are changes
                 if (changes > 0)
                 {
-                    MilestoneService milestoneService = new MilestoneService(db, EmailService);
-
                     // award the user any question-related milestones if they have enough question-related points
-                    await milestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.QuestionsAnsweredCorrectly);
+                    await MilestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.QuestionsAnsweredCorrectly);
 
                     // save the milestone and tag award changes
                     changes = await db.SaveChangesAsync();
 
                     success = true;
                 }
-
             }
-            catch(DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 Log.Error("TriviaService.RecordAnsweredQuestionAsync", ex, new { userId, profileId, questionId, answerId, questionTypeId });
                 ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.AnswerNotSubmitted);
@@ -422,11 +423,11 @@ namespace TwolipsDating.Business
 	                p.Id ProfileId,
 	                count(*) CorrectAnswerCount,
 	                (
-		                select count(*) 
+		                select count(*)
 		                from dbo.QuizQuestions qq2
 		                where qq2.Quiz_Id = q.Id
 	                ) TotalAnswerCount
-                from 
+                from
 	                dbo.CompletedQuizs cq
 	                inner join dbo.AspNetUsers u on u.Id = cq.UserId
 	                inner join dbo.Profiles p on p.ApplicationUser_Id = u.Id
@@ -435,7 +436,7 @@ namespace TwolipsDating.Business
 	                inner join dbo.QuizQuestions qq on qq.Quiz_Id = q.Id
 	                inner join dbo.AnsweredQuestions aq on aq.UserId = cq.UserId and aq.QuestionId = qq.Question_Id
 	                inner join dbo.Questions qu on qu.Id = aq.QuestionId
-                where 
+                where
 	                aq.AnswerId = qu.CorrectAnswerId
                     and u.IsActive = 1
                     {0}

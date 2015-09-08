@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -6,7 +7,6 @@ using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
@@ -15,13 +15,19 @@ namespace TwolipsDating.Business
 {
     public class ProfileService : BaseService
     {
-        public ProfileService() : base() { }
+        public UserService UserService { private get; set; }
 
-        public ProfileService(IIdentityMessageService emailService, IValidationDictionary validationDictionary)
-            : base(emailService, validationDictionary) { }
+        private ProfileService(ApplicationDbContext db)
+            : base(db)
+        {
+        }
 
-        public ProfileService(ApplicationDbContext db, IIdentityMessageService emailService)
-            : base(db, emailService) { }
+        internal static ProfileService Create(IdentityFactoryOptions<ProfileService> options, IOwinContext context)
+        {
+            var service = new ProfileService(context.Get<ApplicationDbContext>());
+            service.EmailService = new EmailService();
+            return service;
+        }
 
         /// <summary>
         /// Returns a count of the number of reviews written by a user.
@@ -445,7 +451,7 @@ namespace TwolipsDating.Business
 
                 success = (await db.SaveChangesAsync()) > 0;
             }
-            catch(DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 Log.Error("ProfileService.ChangeProfileUserImageAsync", ex, new { profileId, userImageId });
                 ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.ProfileImageNotChanged);
@@ -614,8 +620,7 @@ namespace TwolipsDating.Business
                 string targetUserName = targetUser.UserName;
                 string targetUserEmail = targetUser.Email;
 
-                UserService userService = new UserService(EmailService);
-                await userService.SendReviewEmailNotificationAsync(authorUserProfileImagePath, authorUserName, content, authorProfileUrl,
+                await UserService.SendReviewEmailNotificationAsync(authorUserProfileImagePath, authorUserName, content, authorProfileUrl,
                     targetUserId, targetUserName, targetUserEmail);
             }
 
@@ -667,8 +672,7 @@ namespace TwolipsDating.Business
                         string receiverUserName = receiverUser.UserName;
                         string receiverEmail = receiverUser.Email;
 
-                        UserService userService = new UserService(EmailService);
-                        await userService.SendMessageEmailNotificationAsync(senderProfileImagePath, senderUserName, body,
+                        await UserService.SendMessageEmailNotificationAsync(senderProfileImagePath, senderUserName, body,
                             conversationUrl, receiverUserId, receiverUserName, receiverEmail);
                     }
                 }
@@ -685,7 +689,6 @@ namespace TwolipsDating.Business
             {
                 return ServiceResult.Success;
             }
-
         }
 
         /// <summary>
@@ -1073,8 +1076,7 @@ namespace TwolipsDating.Business
 
                 var gift = await db.StoreItems.FindAsync(giftId);
 
-                UserService userService = new UserService(EmailService);
-                await userService.SendGiftEmailNotificationAsync(
+                await UserService.SendGiftEmailNotificationAsync(
                     senderUserName, senderProfileImagePath, senderProfileUrl,
                     gift.Name, gift.GetIconPath(),
                     toUserId, receiverUserName, receiverEmail
@@ -1271,8 +1273,7 @@ namespace TwolipsDating.Business
             string followerProfileUrl = String.Format("{0}/{1}", profileIndexUrlRoot, followerProfile.Id);
             string followerUserName = followerProfile.ApplicationUser.UserName;
 
-            UserService userService = new UserService(EmailService);
-            await userService.SendNewFollowerEmailNotificationAsync(followerProfileImagePath, followerUserName, followerProfileUrl,
+            await UserService.SendNewFollowerEmailNotificationAsync(followerProfileImagePath, followerUserName, followerProfileUrl,
                 followingUserId, followingUserName, followingUserEmail);
         }
 
@@ -1490,7 +1491,7 @@ namespace TwolipsDating.Business
             Dictionary<TKey, TValue> values = new Dictionary<TKey, TValue>(dict);
             while (values.Count > 0)
             {
-                TKey randomKey = values.Keys.ElementAt(rand.Next(0, values.Count));  // hat tip @yshuditelu 
+                TKey randomKey = values.Keys.ElementAt(rand.Next(0, values.Count));  // hat tip @yshuditelu
                 TValue randomValue = values[randomKey];
                 values.Remove(randomKey);
                 yield return randomValue;

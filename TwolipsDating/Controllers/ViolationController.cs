@@ -9,8 +9,6 @@ namespace TwolipsDating.Controllers
 {
     public class ViolationController : BaseController
     {
-        private ViolationService violationService = new ViolationService();
-
         /// <summary>
         /// Adds a review violation to the database for the currently logged in user. Does nothing if the user has already reported this review.
         /// </summary>
@@ -26,12 +24,12 @@ namespace TwolipsDating.Controllers
             try
             {
                 // don't allow the user to report a review that they've already reported
-                if (await violationService.HasUserAlreadyReportedReview(reviewId, authorUserId))
+                if (await ViolationService.HasUserAlreadyReportedReview(reviewId, authorUserId))
                 {
                     return Json(new { success = false, error = ErrorMessages.UserAlreadyReportedReview });
                 }
 
-                int changes = await violationService.AddReviewViolation(reviewId, violationTypeId, content, authorUserId);
+                int changes = await ViolationService.AddReviewViolation(reviewId, violationTypeId, content, authorUserId);
 
                 if (changes > 0)
                 {
@@ -74,12 +72,12 @@ namespace TwolipsDating.Controllers
             try
             {
                 // don't allow the user to report a question that they've already reported
-                if (await violationService.HasUserAlreadyReportedQuestion(questionId, currentUserId))
+                if (await ViolationService.HasUserAlreadyReportedQuestion(questionId, currentUserId))
                 {
                     return Json(new { success = false, error = ErrorMessages.UserAlreadyReportedQuestion });
                 }
 
-                int changes = await violationService.AddQuestionViolation(questionId, violationTypeId, currentUserId);
+                int changes = await ViolationService.AddQuestionViolation(questionId, violationTypeId, currentUserId);
 
                 if (changes > 0)
                 {
@@ -114,9 +112,9 @@ namespace TwolipsDating.Controllers
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && violationService != null)
+            if (disposing && ViolationService != null)
             {
-                violationService.Dispose();
+                ViolationService.Dispose();
             }
 
             base.Dispose(disposing);

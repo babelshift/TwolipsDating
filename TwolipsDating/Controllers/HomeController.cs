@@ -15,20 +15,6 @@ namespace TwolipsDating.Controllers
 {
     public class HomeController : BaseController
     {
-        #region Services
-
-        private DashboardService dashboardService = new DashboardService();
-        private ViolationService violationService = new ViolationService();
-        private TriviaService triviaService;
-        private UserService userService = new UserService();
-
-        #endregion Services
-
-        public HomeController()
-        {
-            triviaService = new TriviaService(new ModelStateWrapper(ModelState));
-        }
-
         [RequireProfileIfAuthenticated]
         [AllowAnonymous]
         public async Task<ActionResult> Index(int? page)
@@ -103,7 +89,7 @@ namespace TwolipsDating.Controllers
         /// <returns></returns>
         private async Task SetupReviewViolationsOnDashboardAsync(DashboardViewModel viewModel)
         {
-            var violationTypes = await violationService.GetViolationTypesAsync();
+            var violationTypes = await ViolationService.GetViolationTypesAsync();
             viewModel.WriteReviewViolation = new WriteReviewViolationViewModel();
             viewModel.WriteReviewViolation.ViolationTypes = violationTypes.ToDictionary(v => v.Id, v => v.Name);
         }
@@ -116,9 +102,9 @@ namespace TwolipsDating.Controllers
         /// <returns></returns>
         private async Task SetupQuizzesOnDashboardAsync(string currentUserId, DashboardViewModel viewModel)
         {
-            var quizzes = await triviaService.GetQuizzesAsync();
+            var quizzes = await TriviaService.GetQuizzesAsync();
             viewModel.Quizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(quizzes);
-            var completedQuizzes = await triviaService.GetCompletedQuizzesForUserAsync(currentUserId);
+            var completedQuizzes = await TriviaService.GetCompletedQuizzesForUserAsync(currentUserId);
 
             foreach (var quiz in viewModel.Quizzes)
             {
@@ -138,7 +124,7 @@ namespace TwolipsDating.Controllers
         private async Task SetupRandomQuestionOnDashboardAsync(string currentUserId, DashboardViewModel viewModel)
         {
             // generate a random question with its answers to view
-            var randomQuestion = await triviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Random);
+            var randomQuestion = await TriviaService.GetRandomQuestionAsync(currentUserId, (int)QuestionTypeValues.Random);
             viewModel.RandomQuestion = Mapper.Map<Question, QuestionViewModel>(randomQuestion);
         }
 
@@ -150,7 +136,7 @@ namespace TwolipsDating.Controllers
         /// <returns></returns>
         private async Task AddUploadedImagesToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
-            var uploadedImages = await dashboardService.GetRecentFollowerImagesAsync(currentUserId);
+            var uploadedImages = await DashboardService.GetRecentFollowerImagesAsync(currentUserId);
             var uploadedImagesConsolidated = uploadedImages.GetConsolidatedImages();
 
             foreach (var userImageViewModel in uploadedImagesConsolidated)
@@ -172,7 +158,7 @@ namespace TwolipsDating.Controllers
         /// <returns></returns>
         private async Task AddReviewsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
-            var reviews = await dashboardService.GetRecentFollowerReviewsAsync(currentUserId);
+            var reviews = await DashboardService.GetRecentFollowerReviewsAsync(currentUserId);
             var reviewFeedViewModel = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewWrittenFeedViewModel>>(reviews);
 
             foreach (var reviewFeed in reviewFeedViewModel)
@@ -210,7 +196,7 @@ namespace TwolipsDating.Controllers
 
         private async Task AddGiftTransactionsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
-            var giftTransactions = await dashboardService.GetRecentFollowerGiftTransactionsAsync(currentUserId);
+            var giftTransactions = await DashboardService.GetRecentFollowerGiftTransactionsAsync(currentUserId);
             var giftTransactionsConsolidated = giftTransactions.GetConsolidatedGiftTransactions();
 
             foreach (var giftTransactionViewModel in giftTransactionsConsolidated)
@@ -226,7 +212,7 @@ namespace TwolipsDating.Controllers
 
         private async Task AddCompletedQuizzesToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
-            var completedQuizzes = await dashboardService.GetRecentFollowerQuizCompletionsAsync(currentUserId);
+            var completedQuizzes = await DashboardService.GetRecentFollowerQuizCompletionsAsync(currentUserId);
 
             foreach (var quizCompletionViewModel in completedQuizzes)
             {
@@ -241,7 +227,7 @@ namespace TwolipsDating.Controllers
 
         private async Task AddTagSuggestionsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
-            var tagsSuggested = await dashboardService.GetRecentFollowerTagSuggestionsAsync(currentUserId);
+            var tagsSuggested = await DashboardService.GetRecentFollowerTagSuggestionsAsync(currentUserId);
             var tagsSuggestedConsolidated = tagsSuggested.GetConsolidatedTagsSuggested();
 
             foreach (var tagsSuggestedViewModel in tagsSuggestedConsolidated)
@@ -257,7 +243,7 @@ namespace TwolipsDating.Controllers
 
         private async Task AddAchievementsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
-            var achievements = await dashboardService.GetRecentFollowerAchievementsAsync(currentUserId);
+            var achievements = await DashboardService.GetRecentFollowerAchievementsAsync(currentUserId);
             var achievementFeedViewModels = Mapper.Map<IReadOnlyCollection<MilestoneAchievement>, IReadOnlyCollection<AchievementFeedViewModel>>(achievements);
 
             foreach (var achievementFeedViewModel in achievementFeedViewModels)
@@ -273,7 +259,7 @@ namespace TwolipsDating.Controllers
 
         private async Task AddFollowersToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
-            var followers = await dashboardService.GetRecentFollowersAsync(currentUserId);
+            var followers = await DashboardService.GetRecentFollowersAsync(currentUserId);
             var followerFeedViewModels = Mapper.Map<IReadOnlyCollection<FavoriteProfile>, IReadOnlyCollection<FollowerFeedViewModel>>(followers);
 
             foreach (var followerFeedViewModel in followerFeedViewModels)
@@ -285,42 +271,6 @@ namespace TwolipsDating.Controllers
                     FollowerFeedItem = followerFeedViewModel
                 });
             }
-        }
-
-        /// <summary>
-        /// Disposes of the services and their associated DbContexts.
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (dashboardService != null)
-                {
-                    dashboardService.Dispose();
-                    dashboardService = null;
-                }
-
-                if (violationService != null)
-                {
-                    violationService.Dispose();
-                    violationService = null;
-                }
-
-                if (triviaService != null)
-                {
-                    triviaService.Dispose();
-                    triviaService = null;
-                }
-
-                if (userService != null)
-                {
-                    userService.Dispose();
-                    userService = null;
-                }
-            }
-
-            base.Dispose(disposing);
         }
     }
 }

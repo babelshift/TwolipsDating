@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -12,6 +14,18 @@ namespace TwolipsDating.Business
 {
     public class DashboardService : BaseService
     {
+        private DashboardService(ApplicationDbContext db)
+            : base(db)
+        {
+        }
+
+        internal static DashboardService Create(IdentityFactoryOptions<DashboardService> options, IOwinContext context)
+        {
+            var service = new DashboardService(context.Get<ApplicationDbContext>());
+            service.EmailService = new EmailService();
+            return service;
+        }
+
         /// <summary>
         /// Returns all uploaded images for profiles that the passed user id has marked as "favorite"
         /// </summary>
@@ -87,7 +101,7 @@ namespace TwolipsDating.Business
         internal async Task<IReadOnlyCollection<CompletedQuizFeedViewModel>> GetRecentFollowerQuizCompletionsAsync(string userId)
         {
             string sql = @"
-select 
+select
 	p.Id SourceProfileId,
 	u.UserName SourceUserName,
 	ui.FileName SourceProfileImagePath,
@@ -103,7 +117,7 @@ select
 		and aq.AnswerId = qu.CorrectAnswerId
 	) CorrectAnswerCount,
 	(
-		select count(*) 
+		select count(*)
 		from dbo.QuizQuestions qq2
 		where qq2.Quiz_Id = q.Id
 	) TotalAnswerCount
@@ -182,10 +196,10 @@ where
             var giftTransactions = from gifts in db.GiftTransactions
                                 .Include(g => g.StoreItem)
                                 .Include(g => g.FromUser)
-                                where (gifts.FromUserId == userId || gifts.ToUserId == userId)
-                                where gifts.FromUser.IsActive
-                                where gifts.ToUser.IsActive
-                                select gifts;
+                                   where (gifts.FromUserId == userId || gifts.ToUserId == userId)
+                                   where gifts.FromUser.IsActive
+                                   where gifts.ToUser.IsActive
+                                   select gifts;
 
             var results = await giftTransactions.ToListAsync();
             return results.AsReadOnly();
@@ -194,7 +208,7 @@ where
         internal async Task<IReadOnlyCollection<CompletedQuizFeedViewModel>> GetQuizCompletionsForUserAsync(string userId)
         {
             string sql = @"
-select 
+select
 	p.Id SourceProfileId,
 	u.UserName SourceUserName,
 	ui.FileName SourceProfileImagePath,
@@ -210,7 +224,7 @@ select
 		and aq.AnswerId = qu.CorrectAnswerId
 	) CorrectAnswerCount,
 	(
-		select count(*) 
+		select count(*)
 		from dbo.QuizQuestions qq2
 		where qq2.Quiz_Id = q.Id
 	) TotalAnswerCount
@@ -238,10 +252,10 @@ where
             var tagSuggestionsForUser = from tagSuggestion in db.TagSuggestions
                                            .Include(t => t.Profile)
                                            .Include(t => t.SuggestingUser)
-                                           where (tagSuggestion.SuggestingUserId == userId || tagSuggestion.Profile.ApplicationUser.Id == userId)
-                                          where tagSuggestion.SuggestingUser.IsActive
-                                          where tagSuggestion.Profile.ApplicationUser.IsActive
-                                          select tagSuggestion;
+                                        where (tagSuggestion.SuggestingUserId == userId || tagSuggestion.Profile.ApplicationUser.Id == userId)
+                                        where tagSuggestion.SuggestingUser.IsActive
+                                        where tagSuggestion.Profile.ApplicationUser.IsActive
+                                        select tagSuggestion;
 
             var results = await tagSuggestionsForUser.ToListAsync();
             return results.AsReadOnly();
