@@ -428,18 +428,30 @@ namespace TwolipsDating.Business
         /// <param name="profileId"></param>
         /// <param name="userImageId"></param>
         /// <returns></returns>
-        public async Task<int> ChangeProfileUserImageAsync(int profileId, int userImageId)
+        public async Task<ServiceResult> ChangeProfileUserImageAsync(int profileId, int userImageId)
         {
             Debug.Assert(profileId > 0);
             Debug.Assert(userImageId > 0);
 
-            var profile = await (from profiles in db.Profiles
-                                 where profiles.Id == profileId
-                                 select profiles).FirstOrDefaultAsync();
+            bool success = false;
 
-            profile.UserImageId = userImageId;
+            try
+            {
+                var profile = await (from profiles in db.Profiles
+                                     where profiles.Id == profileId
+                                     select profiles).FirstOrDefaultAsync();
 
-            return await db.SaveChangesAsync();
+                profile.UserImageId = userImageId;
+
+                success = (await db.SaveChangesAsync()) > 0;
+            }
+            catch(DbUpdateException ex)
+            {
+                Log.Error("ProfileService.ChangeProfileUserImageAsync", ex, new { profileId, userImageId });
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.ProfileImageNotChanged);
+            }
+
+            return success ? ServiceResult.Success : ServiceResult.Failed(ErrorMessages.ProfileImageNotChanged);
         }
 
         internal async Task<int> ChangeProfileBannerImageAsync(int profileId, int userImageId)
@@ -500,7 +512,7 @@ namespace TwolipsDating.Business
         /// <param name="userId"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public async Task<UploadedImageResult> AddUploadedImageForUserAsync(string userId, string fileName, bool isBanner = false)
+        public async Task<UploadedImageServiceResult> AddUploadedImageForUserAsync(string userId, string fileName, bool isBanner = false)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(!String.IsNullOrEmpty(fileName));
@@ -536,7 +548,7 @@ namespace TwolipsDating.Business
                 ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.UserImageNotUploaded);
             }
 
-            return success ? UploadedImageResult.Success(uploadedImageId) : UploadedImageResult.Failed(ErrorMessages.UserImageNotUploaded);
+            return success ? UploadedImageServiceResult.Success(uploadedImageId) : UploadedImageServiceResult.Failed(ErrorMessages.UserImageNotUploaded);
         }
 
         /// <summary>
@@ -673,7 +685,7 @@ namespace TwolipsDating.Business
             {
                 return ServiceResult.Success;
             }
-            
+
         }
 
         /// <summary>

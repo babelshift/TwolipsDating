@@ -125,7 +125,7 @@ namespace TwolipsDating.Business
             }
         }
 
-        internal async Task<AnsweredQuestionResult> RecordAnsweredQuestionAsync(string userId, int profileId, int questionId, int answerId, int questionTypeId)
+        internal async Task<AnsweredQuestionServiceResult> RecordAnsweredQuestionAsync(string userId, int profileId, int questionId, int answerId, int questionTypeId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(profileId > 0);
@@ -179,7 +179,7 @@ namespace TwolipsDating.Business
                 ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.AnswerNotSubmitted);
             }
 
-            return success ? AnsweredQuestionResult.Success(correctAnswerId) : AnsweredQuestionResult.Failed(ErrorMessages.AnswerNotSubmitted);
+            return success ? AnsweredQuestionServiceResult.Success(correctAnswerId) : AnsweredQuestionServiceResult.Failed(ErrorMessages.AnswerNotSubmitted);
         }
 
         private async Task<int> GetQuestionPointsAsync(int questionId)

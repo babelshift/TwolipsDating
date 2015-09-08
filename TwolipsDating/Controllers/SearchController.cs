@@ -107,7 +107,7 @@ namespace TwolipsDating.Controllers
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing != null)
+            if (disposing)
             {
                 if (searchService != null)
                 {

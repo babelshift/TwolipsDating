@@ -141,7 +141,7 @@ namespace TwolipsDating.Controllers
 
                 // remove only the items that were successfully purchased
                 // this allows us to keep items in the cart that weren't purchased for whatever reason
-                foreach(var shoppingCartItemId in shoppingCartItemsPurchased)
+                foreach (var shoppingCartItemId in shoppingCartItemsPurchased)
                 {
                     ShoppingCart.RemoveItem(shoppingCartItemId);
                 }
@@ -200,7 +200,7 @@ namespace TwolipsDating.Controllers
 
             var giftSpotlightSale = await storeService.GetCurrentGiftSpotlightAsync();
             viewModel.GiftSpotlight = Mapper.Map<StoreSale, StoreItemViewModel>(giftSpotlightSale);
-            
+
             viewModel.ShoppingCartItemCount = ShoppingCart.Count;
 
             return viewModel;
@@ -215,17 +215,10 @@ namespace TwolipsDating.Controllers
         [HttpPost]
         public async Task<JsonResult> AddToCart(int storeItemId, int storeItemTypeId)
         {
-            try
-            {
-                var storeItem = await storeService.GetStoreItemAsync(storeItemId);
-                var storeItemViewModel = Mapper.Map<StoreItem, StoreItemViewModel>(storeItem);
-                ShoppingCart.AddItem(storeItemViewModel);
-                return Json(new { success = true, count = 1 });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, count = 1 });
-            }
+            var storeItem = await storeService.GetStoreItemAsync(storeItemId);
+            var storeItemViewModel = Mapper.Map<StoreItem, StoreItemViewModel>(storeItem);
+            ShoppingCart.AddItem(storeItemViewModel);
+            return Json(new { success = true, count = 1 });
         }
 
         /// <summary>

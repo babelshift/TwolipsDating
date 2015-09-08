@@ -17,12 +17,12 @@ namespace TwolipsDating.Business
         private ToggleServiceResult(IEnumerable<string> errors)
             : base(errors) { }
 
-        public static ToggleServiceResult Success(bool toggleStatus)
+        public static new ToggleServiceResult Success(bool toggleStatus)
         {
             return new ToggleServiceResult(toggleStatus);
         }
 
-        public static ToggleServiceResult Failed(params string[] errors)
+        public static new ToggleServiceResult Failed(params string[] errors)
         {
             return new ToggleServiceResult(errors);
         }

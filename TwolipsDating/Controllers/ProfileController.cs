@@ -557,21 +557,7 @@ namespace TwolipsDating.Controllers
 
             string currentUserId = User.Identity.GetUserId();
 
-            try
-            {
-                int changes = await ProfileService.ChangeProfileUserImageAsync(viewModel.ProfileId, viewModel.ChangeImage.UserImageId);
-
-                if (changes == 0)
-                {
-                    AddError(ErrorMessages.ProfileImageNotChanged, "UploadImage",
-                        new { currentUserId = currentUserId, profileUserId = viewModel.ProfileUserId, userImageId = viewModel.ChangeImage.UserImageId });
-                }
-            }
-            catch (DbUpdateException e)
-            {
-                AddError(ErrorMessages.ProfileImageNotChanged, "UploadImage",
-                    new { currentUserId = currentUserId, profileUserId = viewModel.ProfileUserId, userImageId = viewModel.ChangeImage.UserImageId });
-            }
+            var result = await ProfileService.ChangeProfileUserImageAsync(viewModel.ProfileId, viewModel.ChangeImage.UserImageId);
 
             return RedirectToIndex(new { tab = viewModel.ActiveTab });
         }

@@ -15,7 +15,7 @@ namespace TwolipsDating.Business
             Succeeded = true;
         }
 
-        protected ServiceResult(IEnumerable<string> errors)
+        public ServiceResult(IEnumerable<string> errors)
         {
             Succeeded = false;
             Errors = errors;
