@@ -227,6 +227,10 @@ else
                             {
                                 Html.RenderPartial("_FeedItemAchievementPartial", feedItem.AchievementFeedItem);
                             }
+                            else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.NewFollower)
+                            {
+                                Html.RenderPartial("_FeedItemNewFollowerPartial", feedItem.FollowerFeedItem);
+                            }
                         </div>
                     </div>
                 }

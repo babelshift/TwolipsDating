@@ -130,6 +130,13 @@ namespace TwolipsDating
                 .ForMember(dest => dest.UserName, opts => opts.MapFrom(source => source.User.UserName))
                 .ForMember(dest => dest.UserProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileThumbnailImagePath()));
 
+            Mapper.CreateMap<FavoriteProfile, FollowerFeedViewModel>()
+                .ForMember(dest => dest.DateFollowed, opts => opts.MapFrom(source => source.DateFavorited))
+                .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateFavorited.GetTimeAgo()))
+                .ForMember(dest => dest.FollowerProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileThumbnailImagePath()))
+                .ForMember(dest => dest.FollowerName, opts => opts.MapFrom(source => source.User.UserName))
+                .ForMember(dest => dest.FollowerProfileId, opts => opts.MapFrom(source => source.User.Profile.Id));
+
             Mapper.CreateMap<Tag, TagViewModel>();
 
             Mapper.CreateMap<Tag, ProfileTagSuggestionViewModel>()

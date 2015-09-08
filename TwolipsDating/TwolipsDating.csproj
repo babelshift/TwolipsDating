@@ -429,6 +429,7 @@
     <Compile Include="ViewModels\AchievementOverviewViewModel.cs" />
     <Compile Include="ViewModels\AchievementStatusViewModel.cs" />
     <Compile Include="ViewModels\CompletedQuizFeedViewModel.cs" />
+    <Compile Include="ViewModels\FollowerFeedViewModel.cs" />
     <Compile Include="ViewModels\GiftReceivedFeedItemViewModel.cs" />
     <Compile Include="ViewModels\GiftReceivedFeedViewModel.cs" />
     <Compile Include="ViewModels\LanguageViewModel.cs" />
@@ -1008,6 +1009,7 @@
     <Content Include="Views\Profile\_TagsPartial.cshtml" />
     <Content Include="Views\Profile\_AboutPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmailWarning.cshtml" />
+    <Content Include="Views\Shared\_FeedItemNewFollowerPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -54,6 +54,8 @@ namespace TwolipsDating.Controllers
 
                 await AddAchievementsToFeedAsync(currentUserId, dashboardItems);
 
+                await AddFollowersToFeedAsync(currentUserId, dashboardItems);
+
                 await SetNotificationsAsync();
 
                 DashboardViewModel viewModel = new DashboardViewModel();
@@ -265,6 +267,22 @@ namespace TwolipsDating.Controllers
                     ItemType = DashboardFeedItemType.AchievementObtained,
                     DateOccurred = achievementFeedViewModel.DateAchieved,
                     AchievementFeedItem = achievementFeedViewModel
+                });
+            }
+        }
+
+        private async Task AddFollowersToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
+        {
+            var followers = await dashboardService.GetRecentFollowersAsync(currentUserId);
+            var followerFeedViewModels = Mapper.Map<IReadOnlyCollection<FavoriteProfile>, IReadOnlyCollection<FollowerFeedViewModel>>(followers);
+
+            foreach (var followerFeedViewModel in followerFeedViewModels)
+            {
+                dashboardItems.Add(new DashboardItemViewModel()
+                {
+                    ItemType = DashboardFeedItemType.NewFollower,
+                    DateOccurred = followerFeedViewModel.DateFollowed,
+                    FollowerFeedItem = followerFeedViewModel
                 });
             }
         }

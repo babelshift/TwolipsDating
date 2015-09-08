@@ -165,6 +165,18 @@ where
             return results.AsReadOnly();
         }
 
+        internal async Task<IReadOnlyCollection<FavoriteProfile>> GetRecentFollowersAsync(string currentUserId)
+        {
+            var followers = from favorite in db.FavoriteProfiles
+                            .Include(a => a.User)
+                            .Include(a => a.User.Profile)
+                            where favorite.Profile.ApplicationUser.Id == currentUserId
+                            select favorite;
+
+            var result = await followers.ToListAsync();
+            return result.AsReadOnly();
+        }
+
         internal async Task<IReadOnlyCollection<GiftTransactionLog>> GetGiftTransactionsForUserAsync(string userId)
         {
             var giftTransactions = from gifts in db.GiftTransactions

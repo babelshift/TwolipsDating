@@ -1,0 +1,16 @@
+﻿@model TwolipsDating.ViewModels.FollowerFeedViewModel
+
+<div class="feed-item-icon pull-left">
+    <i class="fa fa-heart fa-fw fa-lg"></i>
+</div>
+<div style="margin-left: 35px">
+    <div class="circular-image-wrapper">
+        <img class="circular-image" src="@Model.FollowerProfileImagePath" />
+    </div>
+    <div class="feed-item-headline">
+        <a href="@Url.Action("index", "profile", new { id = Model.FollowerProfileId })">@Model.FollowerName</a>
+        started following you
+        <br />
+        <small>@Model.TimeAgo</small>
+    </div>
+</div>

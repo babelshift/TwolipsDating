@@ -152,6 +152,7 @@ namespace TwolipsDating.Controllers
                     ShoppingCart.RemoveItem(shoppingCartItemId);
                 }
 
+                // model state may have become invalid as a result of attempting to buy the item
                 if(ModelState.IsValid)
                 {
                     return RedirectToAction("index", "store");
