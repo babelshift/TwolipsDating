@@ -19,7 +19,7 @@ namespace TwolipsDating.ViewModels
         public string TargetUserId { get; set; }
         public IPagedList<ConversationItemViewModel> ConversationMessages { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "You can't send a blank message.")]
         public string NewMessage { get; set; }
 
         [Required]

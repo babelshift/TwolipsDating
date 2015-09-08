@@ -30,7 +30,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
+        [RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated, ImportModelStateFromTempData]
         public async Task<ActionResult> Conversation(string id, int? page)
         {
             // we want to look up conversations between a user and another user
