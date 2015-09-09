@@ -1,4 +1,8 @@
 ﻿$(document).ready(function () {
+    if (window.canRunAds === undefined) {
+        $('#adblocker-warning-create').removeClass('hidden');
+    }
+
     $("#f_elem_city").autocomplete({
         source: function (request, response) {
             $.getJSON(

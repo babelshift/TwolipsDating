@@ -36,10 +36,11 @@
             <div class="panel-body">
                 @if (Model.DoesUserHaveProfile)
                 {
-                    <div class="alert alert-info">
-                        <p>Your user name must be unique.</p>
-                        <p>Your e-mail address must be unique.</p>
-                        <p>Changing your e-mail address will require you to confirm the new address.</p>
+                    <div id="adblocker-warning-manage" class="hidden alert alert-warning alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <p style="margin: 0; font-size: 14px">
+                            <i class="fa fa-warning fa-fw fa-lg"></i> Adblockers may prevent you from changing your profile settings. If you have trouble selecting a city below, disable your adblocker and try again.
+                        </p>
                     </div>
                     if (!String.IsNullOrEmpty(ViewBag.StatusMessage))
                     {

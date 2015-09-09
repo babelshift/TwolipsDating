@@ -1,4 +1,8 @@
 ﻿$(document).ready(function () {
+    if (window.canRunAds === undefined) {
+        $('#adblocker-warning-manage').removeClass('hidden');
+    }
+
     var selectedGenderIdMenu = $('#SelectedGenderId');
     if (selectedGenderIdMenu != null) {
         selectedGenderIdMenu.chosen({ disable_search_threshold: 20 });

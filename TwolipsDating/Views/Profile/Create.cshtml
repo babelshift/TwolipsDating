@@ -46,6 +46,12 @@
                     <br />
                     <div class="row">
                         <div class="col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4">
+                            <div id="adblocker-warning-create" class="hidden alert alert-warning alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <p style="margin: 0; font-size: 14px">
+                                    <i class="fa fa-warning fa-fw fa-lg"></i> Adblockers may prevent you from creating a profile. If you have trouble selecting a city below, disable your adblocker and try again.
+                                </p>
+                            </div>
                             @using (Html.BeginForm("create", "profile", FormMethod.Post, new { role = "form" }))
                             {
                                 @Html.AntiForgeryToken()
