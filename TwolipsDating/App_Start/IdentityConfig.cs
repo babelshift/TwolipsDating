@@ -25,6 +25,8 @@ namespace TwolipsDating
             sgMessage.Html = message.Body;
             sgMessage.Text = message.Body;
 
+            sgMessage.EnableTemplateEngine("bae59d00-659c-4617-817f-d96e83061d8b");
+
             string username = ConfigurationManager.AppSettings["sendGridUserName"];
             string password = ConfigurationManager.AppSettings["sendGridPassword"];
 

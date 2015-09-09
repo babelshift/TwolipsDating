@@ -95,7 +95,13 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-primary pull-right">OK</button>
+                                    <p class="control-label">Check the box below to prove you're human</p>
+                                    <div class="g-recaptcha" data-sitekey="6Lcv__sSAAAAAJakKXYAdl-MhgwSr8K_Pbrs-NxZ"></div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-check fa-lg fa-fw"></i> Create
+                                    </button>
                                 </div>
                             }
                         </div>
@@ -111,6 +117,7 @@
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/profile/create")
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 }
 @section Styles {
     @Styles.Render("~/Content/chosen")

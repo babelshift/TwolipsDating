@@ -1046,11 +1046,16 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Create(CreateProfileViewModel viewModel)
+        [HttpPost, RequireValidCaptcha]
+        public async Task<ActionResult> Create(CreateProfileViewModel viewModel, bool isCaptchaValid)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || !isCaptchaValid)
             {
+                if(!isCaptchaValid)
+                {
+                    ModelState.AddModelError(Guid.NewGuid().ToString(), "You need to solve the captcha.");
+                }
+
                 int selectedGenderId = viewModel.SelectedGenderId ?? default(int);
                 int day = viewModel.BirthDayOfMonth ?? default(int);
                 int month = viewModel.BirthMonth ?? default(int);

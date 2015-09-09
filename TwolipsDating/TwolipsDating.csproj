@@ -416,6 +416,7 @@
     <Compile Include="Utilities\ModelStateTransfer.cs" />
     <Compile Include="Utilities\RequireConfirmedEmail.cs" />
     <Compile Include="Utilities\RequireProfile.cs" />
+    <Compile Include="Utilities\RequireValidCaptcha.cs" />
     <Compile Include="Utilities\TagSuggestionFeedItemKey.cs" />
     <Compile Include="Utilities\QuizExtensions.cs" />
     <Compile Include="Utilities\StoreItemExtensions.cs" />
