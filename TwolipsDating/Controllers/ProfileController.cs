@@ -1040,18 +1040,19 @@ namespace TwolipsDating.Controllers
 
         #region Create Profile
 
+        [ImportModelStateFromTempData]
         public async Task<ActionResult> Create()
         {
             CreateProfileViewModel viewModel = await GetViewModelForProfileCreationAsync();
             return View(viewModel);
         }
 
-        [HttpPost, RequireValidCaptcha]
+        [HttpPost, RequireValidCaptcha, ExportModelStateToTempData]
         public async Task<ActionResult> Create(CreateProfileViewModel viewModel, bool isCaptchaValid)
         {
             if (!ModelState.IsValid || !isCaptchaValid)
             {
-                if(!isCaptchaValid)
+                if (!isCaptchaValid)
                 {
                     ModelState.AddModelError(Guid.NewGuid().ToString(), "You need to solve the captcha.");
                 }
@@ -1076,50 +1077,21 @@ namespace TwolipsDating.Controllers
             string stateAbbreviation = location[1].Trim();
             string countryName = location[2].Trim();
 
-            try
+            var result = await ProfileService.CreateProfileAsync(
+                viewModel.SelectedGenderId.Value,
+                cityName,
+                stateAbbreviation,
+                countryName,
+                currentUserId, birthday);
+
+            if(result.Succeeded)
             {
-                int changes = await ProfileService.CreateProfileAsync(
-                    viewModel.SelectedGenderId.Value,
-                    cityName,
-                    stateAbbreviation,
-                    countryName,
-                    currentUserId, birthday);
-
-                if (changes == 0)
-                {
-                    Log.Warn("Create", ErrorMessages.ProfileNotCreated,
-                        new
-                        {
-                            currentUserId = currentUserId,
-                            birthday = birthday.ToString(),
-                            genderId = viewModel.SelectedGenderId.Value,
-                            cityName = cityName,
-                            stateAbbreviation = stateAbbreviation,
-                            countryName = countryName
-                        }
-                    );
-
-                    AddError(ErrorMessages.ProfileNotCreated);
-                }
+                return RedirectToIndex();
             }
-            catch (DbUpdateException e)
+            else
             {
-                Log.Error("Create", e,
-                    new
-                    {
-                        currentUserId = currentUserId,
-                        birthday = birthday.ToString(),
-                        genderId = viewModel.SelectedGenderId.Value,
-                        cityName = cityName,
-                        stateAbbreviation = stateAbbreviation,
-                        countryName = countryName
-                    }
-                );
-
-                AddError(ErrorMessages.ProfileNotCreated);
+                return RedirectToAction("create");
             }
-
-            return RedirectToIndex();
         }
 
         #endregion Create Profile

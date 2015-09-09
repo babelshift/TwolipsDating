@@ -767,7 +767,7 @@ namespace TwolipsDating.Business
         /// <param name="userId"></param>
         /// <param name="birthday"></param>
         /// <returns></returns>
-        public async Task<int> CreateProfileAsync(int genderId, string cityName, string stateAbbreviation, string countryName, string userId, DateTime birthday)
+        public async Task<ServiceResult> CreateProfileAsync(int genderId, string cityName, string stateAbbreviation, string countryName, string userId, DateTime birthday)
         {
             Debug.Assert(!String.IsNullOrEmpty(cityName));
             Debug.Assert(!String.IsNullOrEmpty(stateAbbreviation));
@@ -775,20 +775,32 @@ namespace TwolipsDating.Business
             Debug.Assert(genderId > 0);
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
-            int cityId = await GetGeoCityIdAsync(cityName, stateAbbreviation, countryName);
+            bool success = false;
 
-            ApplicationUser user = new ApplicationUser() { Id = userId };
+            try
+            {
+                int cityId = await GetGeoCityIdAsync(cityName, stateAbbreviation, countryName);
 
-            db.Users.Attach(user);
+                ApplicationUser user = new ApplicationUser() { Id = userId };
 
-            Profile newProfile = db.Profiles.Create();
-            newProfile.Birthday = birthday;
-            newProfile.ApplicationUser = user;
-            newProfile.GeoCityId = cityId;
-            newProfile.GenderId = genderId;
+                db.Users.Attach(user);
 
-            db.Profiles.Add(newProfile);
-            return await db.SaveChangesAsync();
+                Profile newProfile = db.Profiles.Create();
+                newProfile.Birthday = birthday;
+                newProfile.ApplicationUser = user;
+                newProfile.GeoCityId = cityId;
+                newProfile.GenderId = genderId;
+
+                db.Profiles.Add(newProfile);
+                success = (await db.SaveChangesAsync()) > 0;
+            }
+            catch(DbUpdateException ex)
+            {
+                Log.Error("ProfileService.CreateProfileAsync", ex, new { genderId, cityName, stateAbbreviation, countryName, userId, birthday });
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.ProfileNotCreated);
+            }
+
+            return success ? ServiceResult.Success : ServiceResult.Failed(ErrorMessages.ProfileNotCreated);
         }
 
         public async Task<int> GetGeoCityIdAsync(string cityName, string stateAbbreviation, string countryName)

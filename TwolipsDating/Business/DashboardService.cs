@@ -59,6 +59,7 @@ namespace TwolipsDating.Business
             var reviewsWrittenByFavorites = from reviews in db.Reviews
                                             join favoritedProfiles in db.FavoriteProfiles on reviews.AuthorUser.Profile.Id equals favoritedProfiles.ProfileId
                                             where favoritedProfiles.UserId == userId
+                                            where reviews.TargetUser.IsActive
                                             where reviews.AuthorUser.IsActive
                                             select reviews;
 
@@ -67,6 +68,7 @@ namespace TwolipsDating.Business
                                                join favoritedProfiles in db.FavoriteProfiles on reviews.TargetUser.Profile.Id equals favoritedProfiles.ProfileId
                                                where favoritedProfiles.UserId == userId
                                                where reviews.TargetUser.IsActive
+                                               where reviews.AuthorUser.IsActive
                                                select reviews;
 
             // union the two sets together and return them
