@@ -89,6 +89,10 @@ function get(url, successFunction) {
 }
 
 $(document).ready(function () {
+    if (window.canRunAds === undefined) {
+        $('#adblocker-warning').removeClass('hidden');
+    }
+
     $('.custom-tooltip').tooltip({ animation: false });
 
     // setup announcement/gift popovers

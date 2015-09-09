@@ -873,6 +873,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\PublishProfiles\twolipsdating.pubxml" />
+    <Content Include="Scripts\advertisement.js" />
     <Content Include="Scripts\analytics.js" />
     <Content Include="Scripts\bootstrap-image-gallery.js" />
     <Content Include="Scripts\bootstrap.js" />
