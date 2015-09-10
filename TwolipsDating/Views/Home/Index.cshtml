@@ -10,8 +10,8 @@
         <div class="container">
             <div class="row" style="padding: 15px;">
                 <div class="text-center">
-                    <h1>The most entertaining way to meet new people and make new friends.</h1>
-                    <h2>Get in free. Start a profile. Attract people. Earn, collect, and trade items.</h2>
+                    <h1>Online dating with a twist of entertainment.</h1>
+                    <h2>Start a profile. Attract people. Earn, collect, and trade items.</h2>
                 </div>
                 <div class="col-sm-6 col-md-5 col-md-offset-1 col-lg-4 col-lg-offset-2">
                     @using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = "" }, FormMethod.Post))
@@ -89,74 +89,86 @@
     </div>
 </div>
 
-<div class="container" style="padding-top: 25px; padding-bottom: 25px">
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
-                <div class="panel-body" style="margin: 15px">
-                    <div class="row">
-                        <div class="col-sm-7">
-                            <h3 class="text-primary" style="margin-top: 5px"><i class="glyphicon glyphicon-user"></i> Profiles &amp; Friends</h3>
-                            <h4><i class="glyphicon glyphicon-chevron-right"></i> Customize your profile with images, tags, titles, and reviews.</h4>
-                            <h4><i class="glyphicon glyphicon-chevron-right"></i> Display unique titles that you've earned.</h4>
-                            <h4><i class="glyphicon glyphicon-chevron-right"></i> Raise your profile rank by being a positive influence.</h4>
-                        </div>
-                        <div class="col-sm-5 text-center">
-                            <img src="~/Content/TabletImage1.png" />
-                        </div>
-                    </div>
-                    <div class="row" style="margin-top: 40px">
-                        <div class="col-sm-5 text-center">
-                            <img src="~/Content/CellPhoneImage1.png" />
-                        </div>
-                        <div class="col-sm-7">
-                            <h3 class="text-primary" style="margin-top: 5px"><i class="glyphicon glyphicon-education"></i> Trivia &amp; Games</h3>
-                            <h4><i class="glyphicon glyphicon-chevron-right"></i> Answer trivia questions and complete quizzes to earn points.</h4>
-                            <h4><i class="glyphicon glyphicon-chevron-right"></i> Show off your knowledge by earning profile various tags.</h4>
-                            <h4><i class="glyphicon glyphicon-chevron-right"></i> Prove to others that you have a certain knowledge skillset.</h4>
-                            <h4><i class="glyphicon glyphicon-chevron-right"></i> Get matched with potential friends based on your actual knowledge and actions.</h4>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-top: 40px">
-                        <div class="col-sm-7">
-                            <h3 class="text-primary" style="margin-top: 5px"><i class="glyphicon glyphicon-search"></i> Search &amp; Match</h3>
-                            <h4><i class="glyphicon glyphicon-chevron-right"></i> Find others based on their awarded and suggested tags.</h4>
-                            <h4><i class="glyphicon glyphicon-chevron-right"></i> Interested in people who have earned the 'intellectual' tag and the 'creative' tag? Search for it!</h4>
-                            <h4><i class="glyphicon glyphicon-chevron-right"></i> Improve a friend's search results by suggesting relevant tags for their profile.</h4>
-                        </div>
-                        <div class="col-sm-5 text-center">
-                            <img src="~/Content/MonitorImage1.png" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container-fluid" style="background-color: #fff; padding-top: 50px; padding-bottom: 125px">
-    <div class="container">
+<div style="background: url('../../Content/congruent_pentagon_gray.png')">
+    <div class="container" style="padding-top: 75px; padding-bottom: 75px;">
         <div class="row">
-            <div class="col-md-12">
-                <div class="text-center">
-                    <h1>Get Started Now</h1>
+            <div class="col-md-10 col-md-offset-1">
+                <div class="row">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-sm-6">
+                                <img src="~/Content/ProfileRotated.jpg" class="img-responsive center-block" />
+                            </div>
+                            <div class="col-sm-6">
+                                <h3 class="text-danger"><i class="fa fa-user-plus fa-lg fa-fw"></i> CREATE A PROFILE</h3>
+                                <h4 style="line-height: 26px">
+                                    Show off your best pictures, earned and suggested tags, any reviews that people have written about you, and any items or achievements that you have obtained.
+                                </h4>
+                                <h4 style="line-height: 26px">
+                                    You get your profile started, and we'll take it from there. Everything you do contributes to building up your profile reputation and increases your match accuracy.
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6 col-md-offset-1">
-                    <h3><i class="glyphicon glyphicon-chevron-right"></i> <a href="@Url.Action("register", "account")">Sign up</a> through Twitter, Facebook, Google+, or by creating a twolips account.</h3>
-                    <h3><i class="glyphicon glyphicon-chevron-right"></i> To get started, provide us with what you are, how old you are, and where you live.</h3>
-                    <h3><i class="glyphicon glyphicon-chevron-right"></i> Consider being a bit silly with what you are. Are you an Ogre? How about a Robot? Or maybe just a simple Man.</h3>
+                <div class="row">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-sm-6">
+                                <h3 class="text-danger"><i class="fa fa-comments fa-lg fa-fw"></i> TALK TO PEOPLE</h3>
+                                <h4 style="line-height: 26px">
+                                    We make it easy for you to find someone ready to talk about common interests.
+                                </h4>
+                                <h4 style="line-height: 26px">
+                                    Twolips has a unique matching system which relies on your answers to trivia,
+                                    reviews written about you, and tags that you earn.
+                                </h4>
+                            </div>
+                            <div class="col-sm-6">
+                                <img src="~/Content/People.jpg" class="img-responsive center-block" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <img src="~/Content/SplashHowTo1.png" style="border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 5px 5px rgba(0, 0, 0, 0.15); max-width: 100%" />
+                <div class="row">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-sm-4">
+                                <img src="~/Content/CellPhoneImage1.png" class="img-responsive center-block" />
+                            </div>
+                            <div class="col-sm-8">
+                                <h3 class="text-danger"><i class="fa fa-question-circle fa-lg fa-fw"></i> ANSWER TRIVIA</h3>
+                                <h4 style="line-height: 26px">
+                                    Trivia challenges can enhance your profile by showing off tags, items, and achievements that you earn.
+                                </h4>
+                                <h4 style="line-height: 26px">
+                                    Answering enough questions will cause your profile to reflect your knowledge. You can be found based on your intellect, your athleticism, or even your fashion-sense!
+                                </h4>
+                                <h4 style="line-height: 26px">
+                                    Our matching engine relies on your answers to trivia in addition to other actions that you take. Participating in these challenges will increase your match accuracy.
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-12" style="margin-top: 15px; margin-bottom: 15px">
-                    <hr />
-                </div>
-                <div class="clearfix"></div>
-                <div class="text-center">
-                    <h1>Show Off Your Skills</h1>
-                    <h3>The best way to match yourself with others is to engage in trivia and games to earn tags and points. Others can find you based on your actual knowledge rather than relying on vague matching algorithms.</h3>
-                    <img src="~/Content/TriviaDashboard.png" style="border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 5px 5px rgba(0, 0, 0, 0.15); max-width: 100%" />
+                <div class="row">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-sm-5">
+                                <h3 class="text-danger"><i class="fa fa-tags fa-lg fa-fw"></i> EARN TAGS AND ITEMS</h3>
+                                <h4 style="line-height: 26px">
+                                    Each trivia question, quiz, or challenge awards different amounts of points based on difficulty.
+                                </h4>
+                                <h4 style="line-height: 26px">
+                                    Build up a collection of points to earn profile tags or spend
+                                    your points on unique titles and items to trade with other people.
+                                </h4>
+                            </div>
+                            <div class="col-sm-7">
+                                <img src="~/Content/HowPointsWork.jpg" class="img-responsive center-block" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -792,6 +792,7 @@
     <Content Include="Content\chosen-sprite.png" />
     <Content Include="Content\chosen.css" />
     <Content Include="Content\chosen1.css" />
+    <Content Include="Content\congruent_pentagon_gray.png" />
     <Content Include="Content\CrazyCatLover.png" />
     <Content Include="Content\DogBone.png" />
     <Content Include="Content\ElGuapo.png" />
@@ -816,29 +817,29 @@
     <Content Include="Content\HeartsCollection.png" />
     <Content Include="Content\HighWarlord2.png" />
     <Content Include="Content\HomeSocialLogin.png" />
+    <Content Include="Content\HowPointsWork.jpg" />
     <Content Include="Content\ig-icon-32.png" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.min.css" />
+    <Content Include="Content\li-icon-32.png" />
     <Content Include="Content\LizardLord1.png" />
     <Content Include="Content\loading.gif" />
     <Content Include="Content\MailSent.png" />
     <Content Include="Content\MonitorImage1.png" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\PasswordResetLock.png" />
+    <Content Include="Content\People.jpg" />
     <Content Include="Content\Placeholder.png" />
     <Content Include="Content\Placeholder_thumb.png" />
     <Content Include="Content\President.png" />
+    <Content Include="Content\ProfileRotated.jpg" />
+    <Content Include="Content\ProfileRotated.png" />
     <Content Include="Content\PsychoDentist.png" />
     <Content Include="Content\RedRose.png" />
     <Content Include="Content\RobotCop2.png" />
     <Content Include="Content\Site.css" />
-    <Content Include="Content\SplashFeature1.png" />
-    <Content Include="Content\SplashFeature2.png" />
-    <Content Include="Content\SplashFeature3.png" />
-    <Content Include="Content\SplashFeature4.png" />
     <Content Include="Content\SplashHowTo1.png" />
     <Content Include="Content\SplashHowTo2.png" />
-    <Content Include="Content\SplashHowTo3.png" />
     <Content Include="Content\star-half.png" />
     <Content Include="Content\star-off.png" />
     <Content Include="Content\star-on.png" />
@@ -1012,6 +1013,7 @@
     <Content Include="Views\Profile\_AboutPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmailWarning.cshtml" />
     <Content Include="Views\Shared\_FeedItemNewFollowerPartial.cshtml" />
+    <Content Include="Views\Shared\_FooterPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
