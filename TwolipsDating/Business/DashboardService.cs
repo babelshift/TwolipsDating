@@ -13,9 +13,9 @@ using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
 {
-    public class DashboardService : BaseService
+    public class DashboardService : BaseService, IDashboardService
     {
-        private DashboardService(ApplicationDbContext db, IIdentityMessageService emailService)
+        public DashboardService(ApplicationDbContext db, IIdentityMessageService emailService)
             : base(db, emailService)
         {
         }
@@ -31,7 +31,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        internal async Task<IReadOnlyCollection<UserImage>> GetRecentFollowerImagesAsync(string userId)
+        public async Task<IReadOnlyCollection<UserImage>> GetRecentFollowerImagesAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -51,7 +51,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        internal async Task<IReadOnlyCollection<Review>> GetRecentFollowerReviewsAsync(string userId)
+        public async Task<IReadOnlyCollection<Review>> GetRecentFollowerReviewsAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -76,7 +76,7 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<GiftTransactionLog>> GetRecentFollowerGiftTransactionsAsync(string userId)
+        public async Task<IReadOnlyCollection<GiftTransactionLog>> GetRecentFollowerGiftTransactionsAsync(string userId)
         {
             var giftsFromUser = from gifts in db.GiftTransactions
                                 .Include(g => g.StoreItem)
@@ -100,7 +100,7 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<CompletedQuizFeedViewModel>> GetRecentFollowerQuizCompletionsAsync(string userId)
+        public async Task<IReadOnlyCollection<CompletedQuizFeedViewModel>> GetRecentFollowerQuizCompletionsAsync(string userId)
         {
             string sql = @"
 select
@@ -143,7 +143,7 @@ where
             return results.ToList().AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<TagSuggestion>> GetRecentFollowerTagSuggestionsAsync(string userId)
+        public async Task<IReadOnlyCollection<TagSuggestion>> GetRecentFollowerTagSuggestionsAsync(string userId)
         {
             var tagSuggestionForFavorite = from tagSuggestion in db.TagSuggestions
                                            .Include(t => t.Profile)
@@ -167,7 +167,7 @@ where
             return results.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<MilestoneAchievement>> GetRecentFollowerAchievementsAsync(string userId)
+        public async Task<IReadOnlyCollection<MilestoneAchievement>> GetRecentFollowerAchievementsAsync(string userId)
         {
             var achievements = from achievement in db.MilestoneAchievements
                                .Include(a => a.Milestone)
@@ -181,7 +181,7 @@ where
             return results.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<FavoriteProfile>> GetRecentFollowersAsync(string currentUserId)
+        public async Task<IReadOnlyCollection<FavoriteProfile>> GetRecentFollowersAsync(string currentUserId)
         {
             var followers = from favorite in db.FavoriteProfiles
                             .Include(a => a.User)
@@ -193,7 +193,7 @@ where
             return result.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<GiftTransactionLog>> GetGiftTransactionsForUserAsync(string userId)
+        public async Task<IReadOnlyCollection<GiftTransactionLog>> GetGiftTransactionsForUserAsync(string userId)
         {
             var giftTransactions = from gifts in db.GiftTransactions
                                 .Include(g => g.StoreItem)
@@ -207,7 +207,7 @@ where
             return results.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<CompletedQuizFeedViewModel>> GetQuizCompletionsForUserAsync(string userId)
+        public async Task<IReadOnlyCollection<CompletedQuizFeedViewModel>> GetQuizCompletionsForUserAsync(string userId)
         {
             string sql = @"
 select
@@ -249,7 +249,7 @@ where
             return results.ToList().AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<TagSuggestion>> GetFollowerTagSuggestionsForUserAsync(string userId)
+        public async Task<IReadOnlyCollection<TagSuggestion>> GetFollowerTagSuggestionsForUserAsync(string userId)
         {
             var tagSuggestionsForUser = from tagSuggestion in db.TagSuggestions
                                            .Include(t => t.Profile)
@@ -263,7 +263,7 @@ where
             return results.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<MilestoneAchievement>> GetFollowerAchievementsForUserAsync(string userId)
+        public async Task<IReadOnlyCollection<MilestoneAchievement>> GetFollowerAchievementsForUserAsync(string userId)
         {
             var achievements = from achievement in db.MilestoneAchievements
                                .Include(a => a.Milestone)

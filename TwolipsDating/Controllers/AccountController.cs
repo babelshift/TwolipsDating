@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,6 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
-using PagedList;
 
 namespace TwolipsDating.Controllers
 {
@@ -25,7 +25,28 @@ namespace TwolipsDating.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public AccountController(
+            ApplicationUserManager userManager,
+            ApplicationSignInManager signInManager,
+            IProfileService profileService,
+            IUserService userService,
+            IDashboardService dashboardService,
+            IMilestoneService milestoneService,
+            INotificationService notificationService,
+            ISearchService searchService,
+            IStoreService storeService,
+            ITriviaService triviaService,
+            IViolationService violationService)
+            : base(userManager,
+            profileService,
+            userService,
+            dashboardService,
+            milestoneService,
+            notificationService,
+            searchService,
+            storeService,
+            triviaService,
+            violationService)
         {
             SignInManager = signInManager;
         }
@@ -219,9 +240,7 @@ namespace TwolipsDating.Controllers
 
         //
         // POST: /Account/Register
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -251,7 +270,7 @@ namespace TwolipsDating.Controllers
             string userId = User.Identity.GetUserId();
 
             ApplicationUser user = await UserManager.FindByIdAsync(userId);
-            
+
             if (user.EmailConfirmed)
             {
                 return RedirectToAction("index", "home");
@@ -474,7 +493,7 @@ namespace TwolipsDating.Controllers
 
             var result = await AuthenticationManager.AuthenticateAsync(DefaultAuthenticationTypes.ExternalCookie);
 
-            if(result == null)
+            if (result == null)
             {
                 Log.Error("AuthenticationManager.AuthenticateAsync returned null.", String.Empty);
             }

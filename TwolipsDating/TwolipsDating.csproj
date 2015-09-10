@@ -278,6 +278,16 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Business\IBaseService.cs" />
+    <Compile Include="Business\IDashboardService.cs" />
+    <Compile Include="Business\IMilestoneService.cs" />
+    <Compile Include="Business\INotificationService.cs" />
+    <Compile Include="Business\IProfileService.cs" />
+    <Compile Include="Business\ISearchService.cs" />
+    <Compile Include="Business\IStoreService.cs" />
+    <Compile Include="Business\ITriviaService.cs" />
+    <Compile Include="Business\IUserService.cs" />
+    <Compile Include="Business\IViolationService.cs" />
     <Compile Include="Business\ToggleServiceResult.cs" />
     <Compile Include="Business\UploadedImageServiceResult.cs" />
     <Compile Include="Business\AnsweredQuestionServiceResult.cs" />

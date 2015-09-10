@@ -9,7 +9,7 @@ using TwolipsDating.Models;
 
 namespace TwolipsDating.Business
 {
-    public class NotificationService : BaseService
+    public class NotificationService : BaseService, INotificationService
     {
         public NotificationService(ApplicationDbContext db, IIdentityMessageService emailService)
             : base(db, emailService)

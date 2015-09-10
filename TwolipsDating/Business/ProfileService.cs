@@ -14,16 +14,16 @@ using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
 {
-    public class ProfileService : BaseService
+    public class ProfileService : BaseService, IProfileService
     {
-        public UserService UserService { private get; set; }
+        public IUserService UserService { get; set; }
 
         public ProfileService(ApplicationDbContext db, IIdentityMessageService emailService)
             : base(db, emailService)
         {
         }
 
-        public static ProfileService Create(IdentityFactoryOptions<ProfileService> options, IOwinContext context)
+        internal static ProfileService Create(IdentityFactoryOptions<ProfileService> options, IOwinContext context)
         {
             var service = new ProfileService(context.Get<ApplicationDbContext>(), new EmailService());
             return service;

@@ -11,9 +11,9 @@ using TwolipsDating.Models;
 
 namespace TwolipsDating.Business
 {
-    public class ViolationService : BaseService
+    public class ViolationService : BaseService, IViolationService
     {
-        private ViolationService(ApplicationDbContext db, IIdentityMessageService emailService)
+        public ViolationService(ApplicationDbContext db, IIdentityMessageService emailService)
             : base(db, emailService)
         {
         }
@@ -127,7 +127,7 @@ namespace TwolipsDating.Business
         /// <param name="violationTypeId"></param>
         /// <param name="authorUserId"></param>
         /// <returns></returns>
-        internal async Task<int> AddQuestionViolation(int questionId, int violationTypeId, string authorUserId)
+        public async Task<int> AddQuestionViolation(int questionId, int violationTypeId, string authorUserId)
         {
             Debug.Assert(questionId > 0);
             Debug.Assert(violationTypeId > 0);

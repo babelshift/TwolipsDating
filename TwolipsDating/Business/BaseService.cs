@@ -10,7 +10,7 @@ using TwolipsDating.Utilities;
 
 namespace TwolipsDating.Business
 {
-    public class BaseService : IDisposable
+    public class BaseService : IDisposable, TwolipsDating.Business.IBaseService
     {
         protected ApplicationDbContext db;
 
@@ -20,7 +20,7 @@ namespace TwolipsDating.Business
 
         public IValidationDictionary ValidationDictionary { get; set; }
 
-        public MilestoneService MilestoneService { protected get; set; }
+        public IMilestoneService MilestoneService { protected get; set; }
 
         public BaseService(ApplicationDbContext db, IIdentityMessageService emailService)
         {

@@ -13,12 +13,12 @@ using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
 {
-    public class MilestoneService : BaseService
+    public class MilestoneService : BaseService, IMilestoneService
     {
-        public TriviaService TriviaService { private get; set; }
-        public ProfileService ProfileService { private get; set; }
+        public ITriviaService TriviaService { get; set; }
+        public IProfileService ProfileService { get; set; }
 
-        private MilestoneService(ApplicationDbContext db, IIdentityMessageService emailService)
+        public MilestoneService(ApplicationDbContext db, IIdentityMessageService emailService)
             : base(db, emailService)
         {
         }
@@ -273,7 +273,7 @@ namespace TwolipsDating.Business
             return count;
         }
 
-        internal async Task<IReadOnlyCollection<AchievementOverviewViewModel>> GetAchievementsAndStatusForUserAsync(string userId)
+        public async Task<IReadOnlyCollection<AchievementOverviewViewModel>> GetAchievementsAndStatusForUserAsync(string userId)
         {
             var milestones = from milestone in db.Milestones
                              orderby new { milestone.MilestoneTypeId, milestone.AmountRequired }
@@ -326,7 +326,7 @@ namespace TwolipsDating.Business
             return achievementOverviews.AsReadOnly(); ;
         }
 
-        internal async Task<int> GetCompletedAchievementCount(string userId)
+        public async Task<int> GetCompletedAchievementCount(string userId)
         {
             int completedCount = await (from achievements in db.MilestoneAchievements
                                         where achievements.UserId == userId
@@ -335,7 +335,7 @@ namespace TwolipsDating.Business
             return completedCount;
         }
 
-        internal async Task<int> GetPossibleAchievementCount()
+        public async Task<int> GetPossibleAchievementCount()
         {
             int possibleCount = await (from achievements in db.Milestones
                                        select achievements).CountAsync();

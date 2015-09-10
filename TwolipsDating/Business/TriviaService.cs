@@ -15,9 +15,9 @@ using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
 {
-    public class TriviaService : BaseService
+    public class TriviaService : BaseService, ITriviaService
     {
-        private TriviaService(ApplicationDbContext db, IIdentityMessageService emailService)
+        public TriviaService(ApplicationDbContext db, IIdentityMessageService emailService)
             : base(db, emailService)
         {
         }
@@ -28,7 +28,7 @@ namespace TwolipsDating.Business
             return service;
         }
 
-        internal async Task<Quiz> GetQuizAsync(int quizId)
+        public async Task<Quiz> GetQuizAsync(int quizId)
         {
             Debug.Assert(quizId > 0);
 
@@ -39,7 +39,7 @@ namespace TwolipsDating.Business
             return await quizResult.FirstOrDefaultAsync();
         }
 
-        internal async Task<IReadOnlyCollection<Quiz>> GetQuizzesAsync()
+        public async Task<IReadOnlyCollection<Quiz>> GetQuizzesAsync()
         {
             var quizzes = from quiz in db.Quizzes
                           where quiz.IsActive
@@ -50,7 +50,7 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<Quiz>> GetNewQuizzesAsync()
+        public async Task<IReadOnlyCollection<Quiz>> GetNewQuizzesAsync()
         {
             var quizzes = from quiz in db.Quizzes.Include(t => t.Questions)
                           where quiz.IsActive
@@ -62,7 +62,7 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<Question>> GetQuizQuestionsAsync(int quizId)
+        public async Task<IReadOnlyCollection<Question>> GetQuizQuestionsAsync(int quizId)
         {
             Debug.Assert(quizId > 0);
 
@@ -82,7 +82,7 @@ namespace TwolipsDating.Business
         /// Returns a random question that the user has not answered yet
         /// </summary>
         /// <returns></returns>
-        internal async Task<Question> GetRandomQuestionAsync(string userId, int questionTypeId)
+        public async Task<Question> GetRandomQuestionAsync(string userId, int questionTypeId)
         {
             //Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(questionTypeId > 0);
@@ -110,7 +110,7 @@ namespace TwolipsDating.Business
             return randomQuestion;
         }
 
-        internal async Task<int> GetCorrectAnswerAsync(int questionId, int answerId)
+        public async Task<int> GetCorrectAnswerAsync(int questionId, int answerId)
         {
             Debug.Assert(questionId > 0);
             Debug.Assert(answerId > 0);
@@ -129,7 +129,7 @@ namespace TwolipsDating.Business
             }
         }
 
-        internal async Task<AnsweredQuestionServiceResult> RecordAnsweredQuestionAsync(string userId, int profileId, int questionId, int answerId, int questionTypeId)
+        public async Task<AnsweredQuestionServiceResult> RecordAnsweredQuestionAsync(string userId, int profileId, int questionId, int answerId, int questionTypeId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(profileId > 0);
@@ -285,7 +285,7 @@ namespace TwolipsDating.Business
             return results.ToList().AsReadOnly();
         }
 
-        internal async Task<int> GetUsersQuestionPointsForTypeAsync(string userId, int questionTypeId)
+        public async Task<int> GetUsersQuestionPointsForTypeAsync(string userId, int questionTypeId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(questionTypeId > 0);
@@ -312,7 +312,7 @@ namespace TwolipsDating.Business
             return points.Value;
         }
 
-        internal async Task<IReadOnlyDictionary<int, AnsweredQuestion>> GetAnsweredQuizQuestions(string userId, int quizId)
+        public async Task<IReadOnlyDictionary<int, AnsweredQuestion>> GetAnsweredQuizQuestions(string userId, int quizId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(quizId > 0);
@@ -332,7 +332,7 @@ namespace TwolipsDating.Business
             return new ReadOnlyDictionary<int, AnsweredQuestion>(result);
         }
 
-        internal async Task<int> SetQuizAsCompleted(string userId, int quizId, int numberOfCorrectAnswers)
+        public async Task<int> SetQuizAsCompleted(string userId, int quizId, int numberOfCorrectAnswers)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(quizId > 0);
@@ -376,7 +376,7 @@ namespace TwolipsDating.Business
             return points;
         }
 
-        internal async Task<bool> IsQuizAlreadyCompletedAsync(string userId, int quizId)
+        public async Task<bool> IsQuizAlreadyCompletedAsync(string userId, int quizId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(quizId > 0);
@@ -389,7 +389,7 @@ namespace TwolipsDating.Business
             return completedQuiz != null;
         }
 
-        internal async Task<IReadOnlyDictionary<int, CompletedQuiz>> GetCompletedQuizzesForUserAsync(string currentUserId)
+        public async Task<IReadOnlyDictionary<int, CompletedQuiz>> GetCompletedQuizzesForUserAsync(string currentUserId)
         {
             var completedQuizzes = await (from quizzes in db.CompletedQuizzes
                                           where quizzes.UserId == currentUserId
@@ -398,7 +398,7 @@ namespace TwolipsDating.Business
             return new ReadOnlyDictionary<int, CompletedQuiz>(completedQuizzes);
         }
 
-        internal async Task<IReadOnlyCollection<AnsweredQuestion>> GetUsersAnsweredCorrectlyAsync(int questionId)
+        public async Task<IReadOnlyCollection<AnsweredQuestion>> GetUsersAnsweredCorrectlyAsync(int questionId)
         {
             var usersAnsweredCorrectly = from questionsAnswered in db.AnsweredQuestions
                                          where questionsAnswered.QuestionId == questionId
@@ -411,7 +411,7 @@ namespace TwolipsDating.Business
             return await usersAnsweredCorrectly.ToListAsync();
         }
 
-        internal async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int? quizId = null)
+        public async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int? quizId = null)
         {
             string sql = String.Format(@"
                 select top 10
@@ -470,12 +470,12 @@ namespace TwolipsDating.Business
             return results.ToList().AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizzesAsync()
+        public async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizzesAsync()
         {
             return await GetUsersCompletedQuizAsync();
         }
 
-        internal async Task<IReadOnlyCollection<Tag>> GetTagsForQuestionAsync(int questionId)
+        public async Task<IReadOnlyCollection<Tag>> GetTagsForQuestionAsync(int questionId)
         {
             var tagsForQuestion = from questions in db.Questions
                                   where questions.Id == questionId
@@ -486,7 +486,7 @@ namespace TwolipsDating.Business
                 .AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<TagViewModel>> GetTagsForQuizAsync(int quizId)
+        public async Task<IReadOnlyCollection<TagViewModel>> GetTagsForQuizAsync(int quizId)
         {
             var tagsForQuiz = from quizzes in db.Quizzes
                               where quizzes.Id == quizId
@@ -504,7 +504,7 @@ namespace TwolipsDating.Business
             return await tagsForQuiz.ToListAsync();
         }
 
-        internal async Task<int> GetQuestionsAnsweredCorrectlyCountAsync(string userId)
+        public async Task<int> GetQuestionsAnsweredCorrectlyCountAsync(string userId)
         {
             var questionsAnsweredCorrectly = from answeredQuestion in db.AnsweredQuestions
                                              where answeredQuestion.UserId == userId

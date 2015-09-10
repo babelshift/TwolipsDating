@@ -14,9 +14,9 @@ using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
 {
-    public class StoreService : BaseService
+    public class StoreService : BaseService, IStoreService
     {
-        private StoreService(ApplicationDbContext db, IIdentityMessageService emailService)
+        public StoreService(ApplicationDbContext db, IIdentityMessageService emailService)
             : base(db, emailService)
         {
         }
@@ -32,7 +32,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="storeItemId"></param>
         /// <returns></returns>
-        internal async Task<StoreItem> GetStoreItemAsync(int storeItemId)
+        public async Task<StoreItem> GetStoreItemAsync(int storeItemId)
         {
             return await db.StoreItems.FindAsync(storeItemId);
         }
@@ -41,7 +41,7 @@ namespace TwolipsDating.Business
         /// Returns all store items.
         /// </summary>
         /// <returns></returns>
-        internal async Task<IReadOnlyList<StoreItem>> GetStoreItemsAsync()
+        public async Task<IReadOnlyList<StoreItem>> GetStoreItemsAsync()
         {
             var result = await (from storeItems in db.StoreItems
                                 select storeItems).ToListAsync();
@@ -53,7 +53,7 @@ namespace TwolipsDating.Business
         /// Returns all store items in descending order by the date at which they were added.
         /// </summary>
         /// <returns></returns>
-        internal async Task<IReadOnlyList<StoreItemViewModel>> GetNewStoreItemsAsync()
+        public async Task<IReadOnlyList<StoreItemViewModel>> GetNewStoreItemsAsync()
         {
             DateTime now = DateTime.Now;
 
@@ -266,7 +266,7 @@ namespace TwolipsDating.Business
             return salePointsPrice;
         }
 
-        internal async Task<StoreSale> GetCurrentSpotlightAsync()
+        public async Task<StoreSale> GetCurrentSpotlightAsync()
         {
             DateTime now = DateTime.Now;
 
@@ -277,7 +277,7 @@ namespace TwolipsDating.Business
             return currentSpotlightSale;
         }
 
-        internal async Task<StoreSale> GetCurrentGiftSpotlightAsync()
+        public async Task<StoreSale> GetCurrentGiftSpotlightAsync()
         {
             DateTime now = DateTime.Now;
 

@@ -13,14 +13,14 @@ using TwolipsDating.Utilities;
 
 namespace TwolipsDating.Business
 {
-    public class UserService : BaseService
+    public class UserService : BaseService, IUserService
     {
-        private UserService(ApplicationDbContext db, IIdentityMessageService emailService)
+        public UserService(ApplicationDbContext db, IIdentityMessageService emailService)
             : base(db, emailService)
         {
         }
 
-        internal static UserService Create(IdentityFactoryOptions<UserService> options, IOwinContext context)
+        public static UserService Create(IdentityFactoryOptions<UserService> options, IOwinContext context)
         {
             var service = new UserService(context.Get<ApplicationDbContext>(), new EmailService());
             return service;
@@ -68,7 +68,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="currentUserId"></param>
         /// <returns></returns>
-        internal async Task<IReadOnlyDictionary<int, UserTitle>> GetTitlesOwnedByUserAsync(string currentUserId)
+        public async Task<IReadOnlyDictionary<int, UserTitle>> GetTitlesOwnedByUserAsync(string currentUserId)
         {
             Debug.Assert(!String.IsNullOrEmpty(currentUserId));
 
@@ -84,7 +84,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        internal int? GetProfileId(string userId)
+        public int? GetProfileId(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -107,7 +107,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        internal async Task<int?> GetProfileIdAsync(string userId)
+        public async Task<int?> GetProfileIdAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -130,21 +130,21 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        internal async Task<bool> DoesUserHaveProfileAsync(string userId)
+        public async Task<bool> DoesUserHaveProfileAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
             return (await GetProfileIdAsync(userId)).HasValue;
         }
 
-        internal bool DoesUserHaveProfile(string userId)
+        public bool DoesUserHaveProfile(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
             return GetProfileId(userId).HasValue;
         }
 
-        internal async Task SendNewFollowerEmailNotificationAsync(string followerProfileImagePath, string followerUserName, string followerProfileUrl,
+        public async Task SendNewFollowerEmailNotificationAsync(string followerProfileImagePath, string followerUserName, string followerProfileUrl,
             string followingUserId, string followingUserName, string followingEmail)
         {
             var emailNotifications = await GetEmailNotificationsForUserAsync(followingUserId);
@@ -162,7 +162,7 @@ namespace TwolipsDating.Business
             }
         }
 
-        internal async Task SendMessageEmailNotificationAsync(string senderProfileImagePath, string senderUserName, string messageText, string conversationUrl,
+        public async Task SendMessageEmailNotificationAsync(string senderProfileImagePath, string senderUserName, string messageText, string conversationUrl,
             string receiverUserId, string receiverUserName, string receiverEmail)
         {
             var emailNotifications = await GetEmailNotificationsForUserAsync(receiverUserId);
@@ -180,7 +180,7 @@ namespace TwolipsDating.Business
             }
         }
 
-        internal async Task SendGiftEmailNotificationAsync(string senderUserName, string senderProfileImagePath, string senderProfileUrl, string giftName, string giftImagePath,
+        public async Task SendGiftEmailNotificationAsync(string senderUserName, string senderProfileImagePath, string senderProfileUrl, string giftName, string giftImagePath,
             string receiverUserId, string receiverUserName, string receiverEmail)
         {
             var emailNotifications = await GetEmailNotificationsForUserAsync(receiverUserId);
@@ -198,7 +198,7 @@ namespace TwolipsDating.Business
             }
         }
 
-        internal async Task SendReviewEmailNotificationAsync(string senderProfileImagePath, string senderUserName, string reviewText, string senderProfileUrl,
+        public async Task SendReviewEmailNotificationAsync(string senderProfileImagePath, string senderUserName, string reviewText, string senderProfileUrl,
             string receiverUserId, string receiverUserName, string receiverEmail)
         {
             var emailNotifications = await GetEmailNotificationsForUserAsync(receiverUserId);
@@ -216,7 +216,7 @@ namespace TwolipsDating.Business
             }
         }
 
-        internal async Task<EmailNotifications> GetEmailNotificationsForUserAsync(string userId)
+        public async Task<EmailNotifications> GetEmailNotificationsForUserAsync(string userId)
         {
             var emailNotifications = from emailNotification in db.EmailNotifications
                                      where emailNotification.ApplicationUserId == userId
@@ -239,7 +239,7 @@ namespace TwolipsDating.Business
             return result;
         }
 
-        internal async Task SaveEmailNotificationChangesAsync(string currentUserId,
+        public async Task SaveEmailNotificationChangesAsync(string currentUserId,
             bool sendGiftNotifications,
             bool sendMessageNotifications,
             bool sendNewFollowerNotifications,
@@ -277,7 +277,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        internal async Task SetUserLastLoginByEmailAsync(string email)
+        public async Task SetUserLastLoginByEmailAsync(string email)
         {
             Debug.Assert(!String.IsNullOrEmpty(email));
 
@@ -286,7 +286,7 @@ namespace TwolipsDating.Business
             await db.SaveChangesAsync();
         }
 
-        internal async Task SetUserLastLoginByIdAsync(string userId)
+        public async Task SetUserLastLoginByIdAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 

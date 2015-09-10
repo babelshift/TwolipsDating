@@ -12,7 +12,7 @@ using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
 {
-    public class SearchService : BaseService
+    public class SearchService : BaseService, ISearchService
     {
         public SearchService(ApplicationDbContext db, IIdentityMessageService emailService)
             : base(db, emailService)

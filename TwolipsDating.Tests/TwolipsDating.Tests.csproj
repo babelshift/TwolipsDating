@@ -140,6 +140,7 @@
   <ItemGroup>
     <Compile Include="Business\SearchServiceTest.cs" />
     <Compile Include="Business\ProfileServiceTest.cs" />
+    <Compile Include="Controllers\AccountControllerTest.cs" />
     <Compile Include="Controllers\ProfileControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />

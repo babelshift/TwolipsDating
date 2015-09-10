@@ -3,8 +3,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -21,7 +19,41 @@ namespace TwolipsDating.Controllers
 
         private ApplicationUserManager userManager;
 
+        private IProfileService profileService;
+        private IUserService userService;
+        private IDashboardService dashboardService;
+        private IMilestoneService milestoneService;
+        private INotificationService notificationService;
+        private ISearchService searchService;
+        private IStoreService storeService;
+        private ITriviaService triviaService;
+        private IViolationService violationService;
+
         #endregion Members
+
+        public BaseController(
+            ApplicationUserManager userManager,
+            IProfileService profileService,
+            IUserService userService,
+            IDashboardService dashboardService,
+            IMilestoneService milestoneService,
+            INotificationService notificationService,
+            ISearchService searchService,
+            IStoreService storeService,
+            ITriviaService triviaService,
+            IViolationService violationService)
+        {
+            UserManager = userManager;
+            this.profileService = profileService;
+            this.userService = userService;
+            this.dashboardService = dashboardService;
+            this.milestoneService = milestoneService;
+            this.notificationService = notificationService;
+            this.searchService = searchService;
+            this.storeService = storeService;
+            this.triviaService = triviaService;
+            this.violationService = violationService;
+        }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -55,15 +87,59 @@ namespace TwolipsDating.Controllers
 
         #region Properties
 
-        protected ProfileService ProfileService { get { return HttpContext.GetOwinContext().Get<ProfileService>(); } }
-        protected UserService UserService { get { return HttpContext.GetOwinContext().Get<UserService>(); } }
-        protected DashboardService DashboardService { get { return HttpContext.GetOwinContext().Get<DashboardService>(); } }
-        protected MilestoneService MilestoneService { get { return HttpContext.GetOwinContext().Get<MilestoneService>(); } }
-        protected NotificationService NotificationService { get { return HttpContext.GetOwinContext().Get<NotificationService>(); } }
-        protected SearchService SearchService { get { return HttpContext.GetOwinContext().Get<SearchService>(); } }
-        protected StoreService StoreService { get { return HttpContext.GetOwinContext().Get<StoreService>(); } }
-        protected TriviaService TriviaService { get { return HttpContext.GetOwinContext().Get<TriviaService>(); } }
-        protected ViolationService ViolationService { get { return HttpContext.GetOwinContext().Get<ViolationService>(); } }
+        protected IProfileService ProfileService
+        {
+            get { return profileService ?? HttpContext.GetOwinContext().Get<ProfileService>(); }
+            private set { profileService = value; }
+        }
+
+        protected IUserService UserService
+        {
+            get { return userService ?? HttpContext.GetOwinContext().Get<UserService>(); }
+            private set { userService = value; }
+        }
+
+        protected IDashboardService DashboardService
+        {
+            get { return dashboardService ?? HttpContext.GetOwinContext().Get<DashboardService>(); }
+            private set { dashboardService = value; }
+        }
+
+        protected IMilestoneService MilestoneService
+        {
+            get { return milestoneService ?? HttpContext.GetOwinContext().Get<MilestoneService>(); }
+            private set { milestoneService = value; }
+        }
+
+        protected INotificationService NotificationService
+        {
+            get { return notificationService ?? HttpContext.GetOwinContext().Get<NotificationService>(); }
+            private set { notificationService = value; }
+        }
+
+        protected ISearchService SearchService
+        {
+            get { return searchService ?? HttpContext.GetOwinContext().Get<SearchService>(); }
+            private set { searchService = value; }
+        }
+
+        protected IStoreService StoreService
+        {
+            get { return storeService ?? HttpContext.GetOwinContext().Get<StoreService>(); }
+            private set { storeService = value; }
+        }
+
+        protected ITriviaService TriviaService
+        {
+            get { return triviaService ?? HttpContext.GetOwinContext().Get<TriviaService>(); }
+            private set { triviaService = value; }
+        }
+
+        protected IViolationService ViolationService
+        {
+            get { return violationService ?? HttpContext.GetOwinContext().Get<ViolationService>(); }
+            private set { violationService = value; }
+        }
 
         /// <summary>
         /// Allows inherited controllers to properly log any events.
@@ -155,12 +231,14 @@ namespace TwolipsDating.Controllers
                 ViewBag.MessageNotificationCount = await NotificationService.GetMessageNotificationCountAsync(currentUserId);
                 ViewBag.PointsCount = currentUser.Points;
 
-                ViewBag.Announcements = await NotificationService.GetAnnouncementNotificationsAsync();
-                ViewBag.AnnouncementNotificationCount = ViewBag.Announcements.Count;
+                var announcements = await NotificationService.GetAnnouncementNotificationsAsync();
+                ViewBag.Announcements = announcements;
+                ViewBag.AnnouncementNotificationCount = announcements.Count;
 
                 var gifts = await ProfileService.GetUnreviewedGiftTransactionsAsync(currentUserId);
-                ViewBag.GiftsReceived = Mapper.Map<IReadOnlyCollection<GiftTransactionLog>, IReadOnlyCollection<GiftTransactionViewModel>>(gifts);
-                ViewBag.GiftNotificationCount = ViewBag.GiftsReceived != null ? ViewBag.GiftsReceived.Count : 0;
+                var giftsViewModels = Mapper.Map<IReadOnlyCollection<GiftTransactionLog>, IReadOnlyCollection<GiftTransactionViewModel>>(gifts);
+                ViewBag.GiftsReceived = giftsViewModels;
+                ViewBag.GiftNotificationCount = giftsViewModels != null ? giftsViewModels.Count : 0;
             }
         }
 
