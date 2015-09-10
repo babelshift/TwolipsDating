@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity.Owin;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -10,15 +11,14 @@ namespace TwolipsDating.Business
 {
     public class NotificationService : BaseService
     {
-        private NotificationService(ApplicationDbContext db)
-            : base(db)
+        public NotificationService(ApplicationDbContext db, IIdentityMessageService emailService)
+            : base(db, emailService)
         {
         }
 
-        internal static NotificationService Create(IdentityFactoryOptions<NotificationService> options, IOwinContext context)
+        public static NotificationService Create(IdentityFactoryOptions<NotificationService> options, IOwinContext context)
         {
-            var service = new NotificationService(context.Get<ApplicationDbContext>());
-            service.EmailService = new EmailService();
+            var service = new NotificationService(context.Get<ApplicationDbContext>(), new EmailService());
             return service;
         }
 
@@ -26,7 +26,7 @@ namespace TwolipsDating.Business
         /// Returns a collection of announcements.
         /// </summary>
         /// <returns></returns>
-        internal async Task<IReadOnlyList<Announcement>> GetAnnouncementNotificationsAsync()
+        public async Task<IReadOnlyList<Announcement>> GetAnnouncementNotificationsAsync()
         {
             var announcementsList = from announcements in db.Announcements
                                     select announcements;
@@ -40,7 +40,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        internal async Task<int> GetMessageNotificationCountAsync(string userId)
+        public async Task<int> GetMessageNotificationCountAsync(string userId)
         {
             var messageCount = await (from message in db.Messages
                                       where message.ReceiverApplicationUserId == userId

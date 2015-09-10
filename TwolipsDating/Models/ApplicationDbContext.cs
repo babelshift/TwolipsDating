@@ -12,52 +12,52 @@ namespace TwolipsDating.Models
         {
         }
 
-        public DbSet<Profile> Profiles { get; set; }
-        public DbSet<Gender> Genders { get; set; }
-        public DbSet<Message> Messages { get; set; }
-        public DbSet<MessageStatus> MessageStatuses { get; set; }
-        public DbSet<Review> Reviews { get; set; }
-        public DbSet<ReviewRating> ReviewRatings { get; set; }
-        public DbSet<UserImage> UserImages { get; set; }
-        public DbSet<Tag> Tags { get; set; }
-        public DbSet<TagSuggestion> TagSuggestions { get; set; }
-        public DbSet<MessageConversation> MessageConversations { get; set; }
-        public DbSet<ViolationType> ViolationTypes { get; set; }
-        public DbSet<ReviewViolation> ReviewViolations { get; set; }
-        public DbSet<InventoryItem> InventoryItems { get; set; }
-        public DbSet<GiftTransactionLog> GiftTransactions { get; set; }
-        public DbSet<FavoriteProfile> FavoriteProfiles { get; set; }
-        public DbSet<IgnoredUser> IgnoredUsers { get; set; }
-        public DbSet<Quiz> Quizzes { get; set; }
-        public DbSet<Question> Questions { get; set; }
-        public DbSet<Answer> Answers { get; set; }
-        public DbSet<AnsweredQuestion> AnsweredQuestions { get; set; }
-        public DbSet<QuestionType> QuestionTypes { get; set; }
-        public DbSet<TagAward> TagAwards { get; set; }
-        public DbSet<Milestone> Milestones { get; set; }
-        public DbSet<MilestoneAchievement> MilestoneAchievements { get; set; }
-        public DbSet<MilestoneType> MilestoneTypes { get; set; }
-        public DbSet<CompletedQuiz> CompletedQuizzes { get; set; }
-        public DbSet<StoreTransactionLog> StoreTransactions { get; set; }
-        public DbSet<UserTitle> UserTitles { get; set; }
-        public DbSet<Announcement> Announcements { get; set; }
-        public DbSet<GeoCity> GeoCities { get; set; }
-        public DbSet<GeoState> GeoStates { get; set; }
-        public DbSet<GeoCountry> GeoCountries { get; set; }
-        public DbSet<ProfileViewLog> ProfileViews { get; set; }
-        public DbSet<QuestionViolationType> QuestionViolationTypes { get; set; }
-        public DbSet<QuestionViolation> QuestionViolations { get; set; }
-        public DbSet<StoreItem> StoreItems { get; set; }
-        public DbSet<StoreItemType> StoreItemTypes { get; set; }
-        public DbSet<StoreSale> StoreSales { get; set; }
-        public DbSet<StoreSpotlight> StoreSpotlights { get; set; }
-        public DbSet<StoreGiftSpotlight> StoreGiftSpotlights { get; set; }
-        public DbSet<TagAndSuggestedCount> TagsAndSuggestedCounts { get; set; }
-        public DbSet<EmailNotifications> EmailNotifications { get; set; }
-        public DbSet<LookingForType> LookingForTypes { get; set; }
-        public DbSet<LookingForLocation> LookingForLocations { get; set; }
-        public DbSet<RelationshipStatus> RelationshipStatuses { get; set; }
-        public DbSet<Language> Languages { get; set; }
+        public virtual DbSet<Profile> Profiles { get; set; }
+        public virtual DbSet<Gender> Genders { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<MessageStatus> MessageStatuses { get; set; }
+        public virtual DbSet<Review> Reviews { get; set; }
+        public virtual DbSet<ReviewRating> ReviewRatings { get; set; }
+        public virtual DbSet<UserImage> UserImages { get; set; }
+        public virtual DbSet<Tag> Tags { get; set; }
+        public virtual DbSet<TagSuggestion> TagSuggestions { get; set; }
+        public virtual DbSet<MessageConversation> MessageConversations { get; set; }
+        public virtual DbSet<ViolationType> ViolationTypes { get; set; }
+        public virtual DbSet<ReviewViolation> ReviewViolations { get; set; }
+        public virtual DbSet<InventoryItem> InventoryItems { get; set; }
+        public virtual DbSet<GiftTransactionLog> GiftTransactions { get; set; }
+        public virtual DbSet<FavoriteProfile> FavoriteProfiles { get; set; }
+        public virtual DbSet<IgnoredUser> IgnoredUsers { get; set; }
+        public virtual DbSet<Quiz> Quizzes { get; set; }
+        public virtual DbSet<Question> Questions { get; set; }
+        public virtual DbSet<Answer> Answers { get; set; }
+        public virtual DbSet<AnsweredQuestion> AnsweredQuestions { get; set; }
+        public virtual DbSet<QuestionType> QuestionTypes { get; set; }
+        public virtual DbSet<TagAward> TagAwards { get; set; }
+        public virtual DbSet<Milestone> Milestones { get; set; }
+        public virtual DbSet<MilestoneAchievement> MilestoneAchievements { get; set; }
+        public virtual DbSet<MilestoneType> MilestoneTypes { get; set; }
+        public virtual DbSet<CompletedQuiz> CompletedQuizzes { get; set; }
+        public virtual DbSet<StoreTransactionLog> StoreTransactions { get; set; }
+        public virtual DbSet<UserTitle> UserTitles { get; set; }
+        public virtual DbSet<Announcement> Announcements { get; set; }
+        public virtual DbSet<GeoCity> GeoCities { get; set; }
+        public virtual DbSet<GeoState> GeoStates { get; set; }
+        public virtual DbSet<GeoCountry> GeoCountries { get; set; }
+        public virtual DbSet<ProfileViewLog> ProfileViews { get; set; }
+        public virtual DbSet<QuestionViolationType> QuestionViolationTypes { get; set; }
+        public virtual DbSet<QuestionViolation> QuestionViolations { get; set; }
+        public virtual DbSet<StoreItem> StoreItems { get; set; }
+        public virtual DbSet<StoreItemType> StoreItemTypes { get; set; }
+        public virtual DbSet<StoreSale> StoreSales { get; set; }
+        public virtual DbSet<StoreSpotlight> StoreSpotlights { get; set; }
+        public virtual DbSet<StoreGiftSpotlight> StoreGiftSpotlights { get; set; }
+        public virtual DbSet<TagAndSuggestedCount> TagsAndSuggestedCounts { get; set; }
+        public virtual DbSet<EmailNotifications> EmailNotifications { get; set; }
+        public virtual DbSet<LookingForType> LookingForTypes { get; set; }
+        public virtual DbSet<LookingForLocation> LookingForLocations { get; set; }
+        public virtual DbSet<RelationshipStatus> RelationshipStatuses { get; set; }
+        public virtual DbSet<Language> Languages { get; set; }
 
         public static ApplicationDbContext Create()
         {

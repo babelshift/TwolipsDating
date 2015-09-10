@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity.Owin;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
@@ -12,15 +13,14 @@ namespace TwolipsDating.Business
 {
     public class ViolationService : BaseService
     {
-        private ViolationService(ApplicationDbContext db)
-            : base(db)
+        private ViolationService(ApplicationDbContext db, IIdentityMessageService emailService)
+            : base(db, emailService)
         {
         }
 
         internal static ViolationService Create(IdentityFactoryOptions<ViolationService> options, IOwinContext context)
         {
-            var service = new ViolationService(context.Get<ApplicationDbContext>());
-            service.EmailService = new EmailService();
+            var service = new ViolationService(context.Get<ApplicationDbContext>(), new EmailService());
             return service;
         }
 

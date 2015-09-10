@@ -15,15 +15,14 @@ namespace TwolipsDating.Business
 {
     public class UserService : BaseService
     {
-        private UserService(ApplicationDbContext db)
-            : base(db)
+        private UserService(ApplicationDbContext db, IIdentityMessageService emailService)
+            : base(db, emailService)
         {
         }
 
         internal static UserService Create(IdentityFactoryOptions<UserService> options, IOwinContext context)
         {
-            var service = new UserService(context.Get<ApplicationDbContext>());
-            service.EmailService = new EmailService();
+            var service = new UserService(context.Get<ApplicationDbContext>(), new EmailService());
             return service;
         }
 

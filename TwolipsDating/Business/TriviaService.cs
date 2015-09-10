@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity.Owin;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
@@ -16,15 +17,14 @@ namespace TwolipsDating.Business
 {
     public class TriviaService : BaseService
     {
-        private TriviaService(ApplicationDbContext db)
-            : base(db)
+        private TriviaService(ApplicationDbContext db, IIdentityMessageService emailService)
+            : base(db, emailService)
         {
         }
 
         internal static TriviaService Create(IdentityFactoryOptions<TriviaService> options, IOwinContext context)
         {
-            var service = new TriviaService(context.Get<ApplicationDbContext>());
-            service.EmailService = new EmailService();
+            var service = new TriviaService(context.Get<ApplicationDbContext>(), new EmailService());
             return service;
         }
 

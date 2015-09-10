@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity.Owin;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
@@ -17,15 +18,14 @@ namespace TwolipsDating.Business
     {
         public UserService UserService { private get; set; }
 
-        private ProfileService(ApplicationDbContext db)
-            : base(db)
+        public ProfileService(ApplicationDbContext db, IIdentityMessageService emailService)
+            : base(db, emailService)
         {
         }
 
-        internal static ProfileService Create(IdentityFactoryOptions<ProfileService> options, IOwinContext context)
+        public static ProfileService Create(IdentityFactoryOptions<ProfileService> options, IOwinContext context)
         {
-            var service = new ProfileService(context.Get<ApplicationDbContext>());
-            service.EmailService = new EmailService();
+            var service = new ProfileService(context.Get<ApplicationDbContext>(), new EmailService());
             return service;
         }
 
@@ -34,7 +34,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        internal async Task<int> GetReviewsWrittenCountByUserAsync(string userId)
+        public async Task<int> GetReviewsWrittenCountByUserAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -50,7 +50,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        internal async Task<int> GetPointsForUserAsync(string userId)
+        public async Task<int> GetPointsForUserAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -65,7 +65,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        internal async Task<UserStatsViewModel> GetUserStatsAsync(string userId)
+        public async Task<UserStatsViewModel> GetUserStatsAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -142,7 +142,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userImageId"></param>
         /// <returns></returns>
-        internal async Task<ServiceResult> DeleteUserImageAsync(int userImageId)
+        public async Task<ServiceResult> DeleteUserImageAsync(int userImageId)
         {
             Debug.Assert(userImageId > 0);
 
@@ -178,7 +178,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userImageId"></param>
         /// <returns></returns>
-        internal async Task<ServiceResult> DeleteBannerImageAsync(int userImageId)
+        public async Task<ServiceResult> DeleteBannerImageAsync(int userImageId)
         {
             Debug.Assert(userImageId > 0);
 
@@ -208,7 +208,7 @@ namespace TwolipsDating.Business
             return success ? ServiceResult.Success : ServiceResult.Failed(ErrorMessages.BannerImageNotDeleted);
         }
 
-        internal async Task<IReadOnlyCollection<TagAndSuggestedCount>> GetAllTagsAndCountsAsync()
+        public async Task<IReadOnlyCollection<TagAndSuggestedCount>> GetAllTagsAndCountsAsync()
         {
             var tagsAndCounts = from tags in db.TagsAndSuggestedCounts
                                 orderby tags.SuggestedCount descending
@@ -221,7 +221,7 @@ namespace TwolipsDating.Business
         /// Returns a collection of all tags in the database.
         /// </summary>
         /// <returns></returns>
-        internal async Task<IReadOnlyCollection<Tag>> GetAllTagsAsync()
+        public async Task<IReadOnlyCollection<Tag>> GetAllTagsAsync()
         {
             var tags = from tag in db.Tags
                        orderby tag.Name
@@ -236,7 +236,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="profileId"></param>
         /// <returns></returns>
-        internal async Task<IReadOnlyCollection<ProfileTagAwardViewModel>> GetTagsAwardedToProfileAsync(int profileId)
+        public async Task<IReadOnlyCollection<ProfileTagAwardViewModel>> GetTagsAwardedToProfileAsync(int profileId)
         {
             Debug.Assert(profileId > 0);
 
@@ -258,7 +258,7 @@ namespace TwolipsDating.Business
             return results;
         }
 
-        internal async Task<int> GetTagAwardCountForUserAsync(string userId)
+        public async Task<int> GetTagAwardCountForUserAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -275,7 +275,7 @@ namespace TwolipsDating.Business
         /// <param name="userId"></param>
         /// <param name="profileId"></param>
         /// <returns></returns>
-        internal async Task<IReadOnlyCollection<ProfileTagSuggestionViewModel>> GetTagsSuggestedForProfileAsync(string userId, int profileId)
+        public async Task<IReadOnlyCollection<ProfileTagSuggestionViewModel>> GetTagsSuggestedForProfileAsync(string userId, int profileId)
         {
             Debug.Assert(profileId > 0);
 
@@ -361,7 +361,7 @@ namespace TwolipsDating.Business
         /// <param name="tagId"></param>
         /// <param name="profileId"></param>
         /// <returns></returns>
-        internal async Task<int> GetTagSuggestionCountForProfileAsync(int tagId, int profileId)
+        public async Task<int> GetTagSuggestionCountForProfileAsync(int tagId, int profileId)
         {
             Debug.Assert(tagId > 0);
             Debug.Assert(profileId > 0);
@@ -460,7 +460,7 @@ namespace TwolipsDating.Business
             return success ? ServiceResult.Success : ServiceResult.Failed(ErrorMessages.ProfileImageNotChanged);
         }
 
-        internal async Task<int> ChangeProfileBannerImageAsync(int profileId, int userImageId)
+        public async Task<int> ChangeProfileBannerImageAsync(int profileId, int userImageId)
         {
             Debug.Assert(profileId > 0);
             Debug.Assert(userImageId > 0);
@@ -480,7 +480,7 @@ namespace TwolipsDating.Business
             return await db.SaveChangesAsync();
         }
 
-        internal async Task<int> SetBannerImagePositionAsync(int profileId, int bannerPositionX, int bannerPositionY)
+        public async Task<int> SetBannerImagePositionAsync(int profileId, int bannerPositionX, int bannerPositionY)
         {
             Debug.Assert(profileId > 0);
 
@@ -794,7 +794,7 @@ namespace TwolipsDating.Business
                 db.Profiles.Add(newProfile);
                 success = (await db.SaveChangesAsync()) > 0;
             }
-            catch(DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 Log.Error("ProfileService.CreateProfileAsync", ex, new { genderId, cityName, stateAbbreviation, countryName, userId, birthday });
                 ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.ProfileNotCreated);
@@ -1128,7 +1128,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        internal async Task<IReadOnlyCollection<GiftTransactionLog>> GetUnreviewedGiftTransactionsAsync(string userId)
+        public async Task<IReadOnlyCollection<GiftTransactionLog>> GetUnreviewedGiftTransactionsAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -1140,7 +1140,7 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        internal async Task<int> GetSentGiftCountForUserAsync(string userId)
+        public async Task<int> GetSentGiftCountForUserAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -1151,7 +1151,7 @@ namespace TwolipsDating.Business
             return sentGiftCount;
         }
 
-        internal async Task<int> GetPurchasedItemCountForUserAsync(string userId, int storeItemTypeId)
+        public async Task<int> GetPurchasedItemCountForUserAsync(string userId, int storeItemTypeId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -1356,7 +1356,7 @@ namespace TwolipsDating.Business
         /// <param name="userId"></param>
         /// <param name="giftTransactionId"></param>
         /// <returns></returns>
-        internal async Task<int> RemoveGiftNotificationAsync(string userId, int giftTransactionId)
+        public async Task<int> RemoveGiftNotificationAsync(string userId, int giftTransactionId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(giftTransactionId > 0);
@@ -1376,7 +1376,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        internal async Task<int> RemoveAllGiftNotificationAsync(string userId)
+        public async Task<int> RemoveAllGiftNotificationAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -1398,7 +1398,7 @@ namespace TwolipsDating.Business
         /// <param name="userId"></param>
         /// <param name="titleId"></param>
         /// <returns></returns>
-        internal async Task<int> SetSelectedTitle(string userId, int titleId)
+        public async Task<int> SetSelectedTitle(string userId, int titleId)
         {
             var user = db.Users.Find(userId);
             bool hasUserObtainedTitle = user.ObtainedTitles.Any(t => t.StoreItemId == titleId);
@@ -1426,7 +1426,7 @@ namespace TwolipsDating.Business
         /// <param name="viewerUserId"></param>
         /// <param name="targetProfileId"></param>
         /// <returns></returns>
-        internal async Task<int> LogProfileViewAsync(string viewerUserId, int targetProfileId)
+        public async Task<int> LogProfileViewAsync(string viewerUserId, int targetProfileId)
         {
             Debug.Assert(!String.IsNullOrEmpty(viewerUserId));
             Debug.Assert(targetProfileId > 0);
@@ -1447,7 +1447,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="profileId"></param>
         /// <returns></returns>
-        internal async Task<int> GetGenderIdForProfileAsync(int profileId)
+        public async Task<int> GetGenderIdForProfileAsync(int profileId)
         {
             Debug.Assert(profileId > 0);
 
@@ -1463,7 +1463,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="numberOfProfilesToRetrieve"></param>
         /// <returns></returns>
-        internal async Task<IReadOnlyCollection<Profile>> GetRandomProfilesForDashboardAsync(string currentUserId, int numberOfProfilesToRetrieve)
+        public async Task<IReadOnlyCollection<Profile>> GetRandomProfilesForDashboardAsync(string currentUserId, int numberOfProfilesToRetrieve)
         {
             var allProfiles = await (from profiles in db.Profiles
                                      where profiles.ApplicationUser.IsActive
@@ -1510,7 +1510,7 @@ namespace TwolipsDating.Business
             }
         }
 
-        internal async Task<int> GetImagesUploadedCountByUserAsync(string userId)
+        public async Task<int> GetImagesUploadedCountByUserAsync(string userId)
         {
             var imagesUploadedCount = await (from userImages in db.UserImages
                                              where userImages.ApplicationUserId == userId
@@ -1520,7 +1520,7 @@ namespace TwolipsDating.Business
             return imagesUploadedCount;
         }
 
-        internal async Task<int> GetTagCountAsync(string userId)
+        public async Task<int> GetTagCountAsync(string userId)
         {
             int tagAwardCount = await (from tagAwards in db.TagAwards
                                        where tagAwards.Profile.ApplicationUser.Id == userId
@@ -1533,7 +1533,7 @@ namespace TwolipsDating.Business
             return tagAwardCount + tagSuggestedCount;
         }
 
-        internal async Task<int> GetInventoryCountAsync(string userId)
+        public async Task<int> GetInventoryCountAsync(string userId)
         {
             int inventoryCount = await (from inventory in db.InventoryItems
                                         where inventory.ApplicationUserId == userId
@@ -1542,28 +1542,28 @@ namespace TwolipsDating.Business
             return inventoryCount;
         }
 
-        internal async Task<int> SetSelfSummaryAsync(string userId, string selfSummary)
+        public async Task<int> SetSelfSummaryAsync(string userId, string selfSummary)
         {
             var profile = db.Users.Find(userId).Profile;
             profile.SummaryOfSelf = selfSummary;
             return await db.SaveChangesAsync();
         }
 
-        internal async Task<int> SetSummaryOfDoingAsync(string userId, string summaryOfDoing)
+        public async Task<int> SetSummaryOfDoingAsync(string userId, string summaryOfDoing)
         {
             var profile = db.Users.Find(userId).Profile;
             profile.SummaryOfDoing = summaryOfDoing;
             return await db.SaveChangesAsync();
         }
 
-        internal async Task<int> SetSummaryOfGoingAsync(string userId, string summaryOfGoing)
+        public async Task<int> SetSummaryOfGoingAsync(string userId, string summaryOfGoing)
         {
             var profile = db.Users.Find(userId).Profile;
             profile.SummaryOfGoing = summaryOfGoing;
             return await db.SaveChangesAsync();
         }
 
-        internal async Task<IReadOnlyCollection<LookingForType>> GetLookingForTypesAsync()
+        public async Task<IReadOnlyCollection<LookingForType>> GetLookingForTypesAsync()
         {
             var lookingForTypes = from lookingFor in db.LookingForTypes
                                   select lookingFor;
@@ -1571,7 +1571,7 @@ namespace TwolipsDating.Business
             return (await lookingForTypes.ToListAsync()).AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<LookingForLocation>> GetLookingForLocationsAsync()
+        public async Task<IReadOnlyCollection<LookingForLocation>> GetLookingForLocationsAsync()
         {
             var lookingForLocations = from lookingFor in db.LookingForLocations
                                       select lookingFor;
@@ -1579,7 +1579,7 @@ namespace TwolipsDating.Business
             return (await lookingForLocations.ToListAsync()).AsReadOnly();
         }
 
-        internal async Task<int> SetLookingForAsync(string userId, int? lookingForTypeId, int? lookingForLocationId, int? lookingForAgeMin, int? lookingForAgeMax)
+        public async Task<int> SetLookingForAsync(string userId, int? lookingForTypeId, int? lookingForLocationId, int? lookingForAgeMin, int? lookingForAgeMax)
         {
             var profile = db.Users.Find(userId).Profile;
             profile.LookingForTypeId = lookingForTypeId;
@@ -1589,7 +1589,7 @@ namespace TwolipsDating.Business
             return await db.SaveChangesAsync();
         }
 
-        internal async Task<int> SetDetailsAsync(string userId, IReadOnlyCollection<int> languageIds, int? relationshipStatusId)
+        public async Task<int> SetDetailsAsync(string userId, IReadOnlyCollection<int> languageIds, int? relationshipStatusId)
         {
             var profile = db.Users.Find(userId).Profile;
 
@@ -1607,7 +1607,7 @@ namespace TwolipsDating.Business
             return await db.SaveChangesAsync();
         }
 
-        internal async Task<IReadOnlyCollection<Language>> GetLanguagesAsync()
+        public async Task<IReadOnlyCollection<Language>> GetLanguagesAsync()
         {
             var languages = from language in db.Languages
                             select language;
@@ -1615,7 +1615,7 @@ namespace TwolipsDating.Business
             return (await languages.ToListAsync()).AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<RelationshipStatus>> GetRelationshipStatusesAsync()
+        public async Task<IReadOnlyCollection<RelationshipStatus>> GetRelationshipStatusesAsync()
         {
             var relationshipStatuses = from relationshipStatus in db.RelationshipStatuses
                                        select relationshipStatus;
@@ -1623,7 +1623,7 @@ namespace TwolipsDating.Business
             return (await relationshipStatuses.ToListAsync()).AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<Language>> GetSelectedLanguagesAsync(string currentUserId)
+        public async Task<IReadOnlyCollection<Language>> GetSelectedLanguagesAsync(string currentUserId)
         {
             var languages = from profile in db.Profiles
                             where profile.ApplicationUser.Id == currentUserId

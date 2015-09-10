@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity.Owin;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
@@ -13,19 +14,18 @@ namespace TwolipsDating.Business
 {
     public class SearchService : BaseService
     {
-        public SearchService(ApplicationDbContext db)
-            : base(db)
+        public SearchService(ApplicationDbContext db, IIdentityMessageService emailService)
+            : base(db, emailService)
         {
         }
 
-        internal static SearchService Create(IdentityFactoryOptions<SearchService> options, IOwinContext context)
+        public static SearchService Create(IdentityFactoryOptions<SearchService> options, IOwinContext context)
         {
-            var service = new SearchService(context.Get<ApplicationDbContext>());
-            service.EmailService = new EmailService();
+            var service = new SearchService(context.Get<ApplicationDbContext>(), new EmailService());
             return service;
         }
 
-        internal async Task<IReadOnlyCollection<Profile>> GetProfilesByUserNameAsync(string userName)
+        public async Task<IReadOnlyCollection<Profile>> GetProfilesByUserNameAsync(string userName)
         {
             var results = await (from profiles in db.Profiles
                                  where profiles.ApplicationUser.UserName.Contains(userName)
@@ -35,7 +35,7 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<Profile>> GetProfilesByTagNameAsync(string userName)
+        public async Task<IReadOnlyCollection<Profile>> GetProfilesByTagNameAsync(string userName)
         {
             var results = await (from profiles in db.Profiles
                                  join tagSuggestions in db.TagSuggestions on profiles.Id equals tagSuggestions.ProfileId
@@ -48,7 +48,7 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<Profile>> GetProfilesByTagNamesAsync(string[] tags)
+        public async Task<IReadOnlyCollection<Profile>> GetProfilesByTagNamesAsync(string[] tags)
         {
             var results = await (from profiles in db.Profiles
                                  join tagSuggestions in db.TagSuggestions on profiles.Id equals tagSuggestions.ProfileId
@@ -61,7 +61,7 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        internal async Task<IReadOnlyCollection<QuizSearchResultViewModel>> GetQuizzesByTagsAsync(string tag)
+        public async Task<IReadOnlyCollection<QuizSearchResultViewModel>> GetQuizzesByTagsAsync(string tag)
         {
             Debug.Assert(!String.IsNullOrEmpty(tag));
 

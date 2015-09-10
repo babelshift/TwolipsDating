@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity.Owin;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
@@ -15,15 +16,14 @@ namespace TwolipsDating.Business
 {
     public class StoreService : BaseService
     {
-        private StoreService(ApplicationDbContext db)
-            : base(db)
+        private StoreService(ApplicationDbContext db, IIdentityMessageService emailService)
+            : base(db, emailService)
         {
         }
 
         internal static StoreService Create(IdentityFactoryOptions<StoreService> options, IOwinContext context)
         {
-            var service = new StoreService(context.Get<ApplicationDbContext>());
-            service.EmailService = new EmailService();
+            var service = new StoreService(context.Get<ApplicationDbContext>(), new EmailService());
             return service;
         }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity.Owin;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
@@ -14,15 +15,14 @@ namespace TwolipsDating.Business
 {
     public class DashboardService : BaseService
     {
-        private DashboardService(ApplicationDbContext db)
-            : base(db)
+        private DashboardService(ApplicationDbContext db, IIdentityMessageService emailService)
+            : base(db, emailService)
         {
         }
 
         internal static DashboardService Create(IdentityFactoryOptions<DashboardService> options, IOwinContext context)
         {
-            var service = new DashboardService(context.Get<ApplicationDbContext>());
-            service.EmailService = new EmailService();
+            var service = new DashboardService(context.Get<ApplicationDbContext>(), new EmailService());
             return service;
         }
 

@@ -22,7 +22,7 @@ namespace TwolipsDating.Business
 
         public MilestoneService MilestoneService { protected get; set; }
 
-        public BaseService(ApplicationDbContext db)
+        public BaseService(ApplicationDbContext db, IIdentityMessageService emailService)
         {
             this.db = db;
 
@@ -30,6 +30,8 @@ namespace TwolipsDating.Business
 #if DEBUG
             this.db.Database.Log = s => { Debug.WriteLine(s); };
 #endif
+
+            EmailService = emailService;
         }
 
         /// <summary>

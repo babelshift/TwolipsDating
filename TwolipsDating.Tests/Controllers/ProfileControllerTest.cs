@@ -6,9 +6,9 @@ namespace TwolipsDating.Tests.Controllers
     [TestClass]
     public class ProfileControllerTest
     {
-        [TestMethod]
-        public void Index()
-        {
-        }
+        //[TestMethod]
+        //public void Index()
+        //{
+        //}
     }
 }
