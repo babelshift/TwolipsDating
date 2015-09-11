@@ -32,16 +32,11 @@
             using (Html.BeginForm("Settings", "Manage", FormMethod.Post, new { role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                @Html.ValidationSummary()
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <p class="panel-title">Change password</p>
+                        <h4 class="panel-title"><i class="fa fa-lock fa-lg"></i> Change password</h4>
                     </div>
                     <div class="panel-body">
-                        <div class="alert alert-info">
-                            <p>Your password must contain lowercase letters, uppercase letters, and numbers.</p>
-                            <p>Your password must be 8 characters or longer.</p>
-                        </div>
                         @if (!String.IsNullOrEmpty(ViewBag.StatusMessage))
                         {
                             <div class="alert alert-success alert-dismissable" role="alert">
@@ -49,7 +44,7 @@
                                 @ViewBag.StatusMessage
                             </div>
                         }
-                        @Html.ValidationSummary("", new { @class = "alert alert-danger" })
+                        @Html.ValidationSummary()
                         <div class="form-group">
                             @Html.LabelFor(m => m.ChangePasswordViewModel.OldPassword, new { @class = "control-label" })
                             @Html.PasswordFor(m => m.ChangePasswordViewModel.OldPassword, new { @class = "form-control" })
@@ -57,6 +52,7 @@
                         <div class="form-group">
                             @Html.LabelFor(m => m.ChangePasswordViewModel.NewPassword, new { @class = "control-label" })
                             @Html.PasswordFor(m => m.ChangePasswordViewModel.NewPassword, new { @class = "form-control" })
+                            <small>Your password must be at least 8 characters long and contain lowercase letters, uppercase letters, and numbers.</small>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(m => m.ChangePasswordViewModel.ConfirmPassword, new { @class = "control-label" })
@@ -107,14 +103,13 @@
         @using (Html.BeginForm("delete", "account", new { id = User.Identity.GetUserId() }, FormMethod.Post, new { role = "form" }))
         {
             @Html.AntiForgeryToken()
-            @Html.ValidationSummary()
             <div class="panel panel-danger">
                 <div class="panel-heading">
                     <p class="panel-title">Delete account</p>
                 </div>
                 <div class="panel-body">
                     <p><small>This is permanent. Make sure that this is absolutely what you want to do.</small></p>
-                    <button type="submit" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-remove"></i> Delete your account</button>
+                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-remove fa-lg"></i> Delete your account</button>
                 </div>
             </div>
         }

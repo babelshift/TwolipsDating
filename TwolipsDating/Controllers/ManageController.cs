@@ -40,11 +40,18 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private async Task SendRegistrationConfirmationEmail(ApplicationUser user)
+        private async Task SendEmailChangeConfirmationEmailAsync(ApplicationUser user)
         {
             string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
             var callbackUrl = Url.Action("confirmemail", "account", new { userId = user.Id, code = code }, Request.Url.Scheme);
-            await UserManager.SendEmailAsync(user.Id, EmailTextHelper.ConfirmationEmail.Subject, EmailTextHelper.ConfirmationEmail.GetBody(callbackUrl));
+            await UserManager.SendEmailAsync(user.Id, EmailTextHelper.EmailChangedEmail.Subject, EmailTextHelper.EmailChangedEmail.GetBody(callbackUrl));
+        }
+
+        private async Task SendPasswordChangedConfirmationEmailAsync(ApplicationUser user)
+        {
+            string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            var callbackUrl = Url.Action("confirmemail", "account", new { userId = user.Id, code = code }, Request.Url.Scheme);
+            await UserManager.SendEmailAsync(user.Id, EmailTextHelper.PasswordChangeEmail.Subject, EmailTextHelper.PasswordChangeEmail.GetBody(callbackUrl));
         }
 
         //
@@ -119,7 +126,7 @@ namespace TwolipsDating.Controllers
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
 
                 bool isNewUserName = SetupUpdateUserName(model, user);
-                bool isNewEmail = SetupUpdateUserEmail(model, user);
+                bool isNewEmail = SetupUpdateUserEmail(model.Email, user);
                 bool isNewGender = false;
                 bool isNewLocation = false;
                 bool isNewBirthdate = false;
@@ -149,7 +156,7 @@ namespace TwolipsDating.Controllers
                         // user changed email address, send confirmation
                         if (isNewEmail)
                         {
-                            await SendRegistrationConfirmationEmail(user);
+                            await SendEmailChangeConfirmationEmailAsync(user);
                             TempData["StatusMessage"] += " Remember to confirm your new email address.";
                         }
 
@@ -210,15 +217,15 @@ namespace TwolipsDating.Controllers
             return isNewGender;
         }
 
-        private static bool SetupUpdateUserEmail(IndexViewModel model, ApplicationUser user)
+        private static bool SetupUpdateUserEmail(string newEmail, ApplicationUser user)
         {
             // if the user is changing his email, we need to re-confirm
             bool isNewEmail = false;
-            if (user.Email != model.Email)
+            if (user.Email != newEmail)
             {
                 isNewEmail = true;
                 user.EmailConfirmed = false;
-                user.Email = model.Email;
+                user.Email = newEmail;
             }
             return isNewEmail;
         }
@@ -335,13 +342,8 @@ namespace TwolipsDating.Controllers
             {
                 return RedirectToAction("settings");
             }
-            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.ChangePasswordViewModel.OldPassword, model.ChangePasswordViewModel.NewPassword);
 
-            model.IndexViewModel = new IndexViewModel()
-            {
-                HasPassword = HasPassword(),
-                Logins = await UserManager.GetLoginsAsync(User.Identity.GetUserId())
-            };
+            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.ChangePasswordViewModel.OldPassword, model.ChangePasswordViewModel.NewPassword);
 
             if (result.Succeeded)
             {
@@ -349,14 +351,19 @@ namespace TwolipsDating.Controllers
                 if (user != null)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                    // user needs to confirm email address after changing password
+                    user.EmailConfirmed = false;
+                    await UserManager.UpdateAsync(user);
+                    await SendEmailChangeConfirmationEmailAsync(user);
                 }
-                TempData["StatusMessage"] = "Your password has been changed.";
-                model.ChangePasswordViewModel = null;
+                TempData["StatusMessage"] = "Your password has been changed. As a safety measure, you will now be required to reconfirm your email address.";
             }
             else
             {
                 AddErrors(result);
             }
+
             return RedirectToAction("settings");
         }
 

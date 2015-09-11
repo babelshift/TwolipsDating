@@ -171,16 +171,60 @@ namespace TwolipsDating.Utilities
             }
         }
 
+        public static class PasswordChangeEmail
+        {
+            public const string Subject = "Your twolips password has been changed";
+
+            private const string Body = @"
+<div style=""text-align: left"">
+<h3>We wanted to let you know that your password has been changed.</h3>
+
+<div style=""font-size: 14px; color: #4b4b4b;"">
+	<p>If you didn't do this, please let us know immediately. Otherwise, click below to confirm that this email address is still accurate.</p>
+
+	<h3><a href=""{0}"">Click to confirm your email</a></h3>
+</div>
+</div>
+</div>";
+
+            public static string GetBody(string callbackUrl)
+            {
+                return String.Format(Body, callbackUrl);
+            }
+        }
+
+        public static class EmailChangedEmail
+        {
+            public const string Subject = "Your twolips email has changed";
+
+            private const string Body = @"
+<div style=""text-align: left"">
+<h3>We wanted to let you know that your email address has been changed.</h3>
+
+<div style=""font-size: 14px; color: #4b4b4b;"">
+	<p>If you didn't do this, please let us know immediately. Otherwise, click below to confirm that this email address is accurate.</p>
+
+	<h3><a href=""{0}"">Click to confirm your email</a></h3>
+</div>
+</div>
+</div>";
+
+            public static string GetBody(string callbackUrl)
+            {
+                return String.Format(Body, callbackUrl);
+            }
+        }
+
         public static class ConfirmationEmail
         {
             public const string Subject = "Confirm your twolips dating account";
 
             private const string Body = @"
 <div style=""text-align: left"">
-<h2>Hello and thank you for registering!</h2>
+<h3>Congrats! Your account is all setup.</h3>
 
-<div style=""font-size: 12px; color: #4b4b4b;"">
-	<p>Your account has been created, but we just need you to confirm your email address to complete the process.</p>
+<div style=""font-size: 14px; color: #4b4b4b;"">
+	<p>Now we just need you to confirm your email address to complete the process.</p>
 
 	<h3><a href=""{0}"">Click to confirm your account</a></h3>
 </div>
