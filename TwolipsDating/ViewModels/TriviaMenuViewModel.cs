@@ -4,10 +4,11 @@ namespace TwolipsDating.ViewModels
 {
     public class TriviaMenuViewModel
     {
+        public IDictionary<int, IReadOnlyCollection<QuizOverviewViewModel>> DailyQuizzes { get; set; }
         public IReadOnlyCollection<QuizOverviewViewModel> NewQuizzes { get; set; }
-        public UserStatsViewModel UserStats { get; set; }
-        public bool IsCurrentUserEmailConfirmed { get; set; }
-
+        public IReadOnlyCollection<QuizOverviewViewModel> TrendingQuizzes { get; set; }
+        public IReadOnlyCollection<QuizOverviewViewModel> PopularQuizzes { get; set; }
+        public IReadOnlyCollection<QuizOverviewViewModel> UnfinishedQuizzes { get; set; }
         public IReadOnlyCollection<UserCompletedQuizViewModel> RecentlyCompletedQuizzes { get; set; }
     }
 }

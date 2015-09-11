@@ -1489,25 +1489,12 @@ namespace TwolipsDating.Business
             }
 
             Random random = new Random();
-            foreach (var profile in UniqueRandomValues(allProfiles).Take(numberOfProfilesToRetrieve))
+            foreach (var profile in DictionaryHelper.UniqueRandomValues(allProfiles).Take(numberOfProfilesToRetrieve))
             {
                 randomProfiles.Add(profile);
             }
 
             return randomProfiles.AsReadOnly();
-        }
-
-        private IEnumerable<TValue> UniqueRandomValues<TKey, TValue>(IDictionary<TKey, TValue> dict)
-        {
-            Random rand = new Random();
-            Dictionary<TKey, TValue> values = new Dictionary<TKey, TValue>(dict);
-            while (values.Count > 0)
-            {
-                TKey randomKey = values.Keys.ElementAt(rand.Next(0, values.Count));  // hat tip @yshuditelu
-                TValue randomValue = values[randomKey];
-                values.Remove(randomKey);
-                yield return randomValue;
-            }
         }
 
         public async Task<int> GetImagesUploadedCountByUserAsync(string userId)

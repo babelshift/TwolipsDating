@@ -52,14 +52,87 @@ namespace TwolipsDating.Business
 
         public async Task<IReadOnlyCollection<Quiz>> GetNewQuizzesAsync()
         {
-            var quizzes = from quiz in db.Quizzes.Include(t => t.Questions)
-                          where quiz.IsActive
-                          orderby quiz.DateCreated descending
-                          select quiz;
+            var quizzes = (from quiz in db.Quizzes
+                           where quiz.IsActive
+                           orderby quiz.DateCreated descending
+                           select quiz).Take(10);
 
             var results = await quizzes.ToListAsync();
 
             return results.AsReadOnly();
+        }
+
+        public async Task<ReadOnlyDictionary<int, IReadOnlyCollection<Quiz>>> GetDailyQuizzesAsync(int daysAgo)
+        {
+            var quizzes = from quiz in db.Quizzes
+                          where quiz.IsActive
+                          select quiz;
+
+            var allQuizzes = await quizzes.ToDictionaryAsync(x => x.Id, x => x);
+
+            SortedDictionary<int, IReadOnlyCollection<Quiz>> randomQuizzesResult = new SortedDictionary<int, IReadOnlyCollection<Quiz>>();
+
+            if (allQuizzes == null || allQuizzes.Count == 0)
+            {
+                return new ReadOnlyDictionary<int, IReadOnlyCollection<Quiz>>(randomQuizzesResult);
+            }
+
+            int numberOfQuizzesToRetrieve = 5;
+            // if there are less profiles than we want to collect, only collect that amount
+            if (allQuizzes.Count < numberOfQuizzesToRetrieve)
+            {
+                numberOfQuizzesToRetrieve = allQuizzes.Count;
+            }
+
+            for (int i = 0; i <= daysAgo; i++)
+            {
+                List<Quiz> randomQuizzes = new List<Quiz>();
+                int seed = DateTime.Today.AddDays(i * -1).DayOfYear;
+                foreach (var quiz in DictionaryHelper.UniqueRandomValues(allQuizzes, seed).Take(numberOfQuizzesToRetrieve))
+                {
+                    randomQuizzes.Add(quiz);
+                }
+                randomQuizzesResult.Add(i, randomQuizzes);
+            }
+
+            return new ReadOnlyDictionary<int, IReadOnlyCollection<Quiz>>(randomQuizzesResult);
+        }
+
+        public async Task<IReadOnlyCollection<Quiz>> GetTrendingQuizzesAsync()
+        {
+            var quizzes = (from completedQuiz in db.CompletedQuizzes
+                           orderby completedQuiz.DateCompleted descending
+                           select completedQuiz.Quiz).Distinct().Take(10);
+
+            var result = await quizzes.ToListAsync();
+            return result.AsReadOnly();
+        }
+
+        public async Task<IReadOnlyCollection<Quiz>> GetPopularQuizzesAsync()
+        {
+            var q = (from quiz in db.Quizzes
+                     where quiz.IsActive
+                     orderby quiz.CompletedByUsers.Count() descending
+                     select quiz).Take(10);
+
+            var result = await q.ToListAsync();
+            return result.AsReadOnly();
+        }
+
+        public async Task<IReadOnlyCollection<Quiz>> GetUnfinishedQuizzesAsync(string userId)
+        {
+            // get completed for user
+            var completedQuizIds = from completedQuiz in db.CompletedQuizzes
+                                   where completedQuiz.UserId == userId
+                                   select completedQuiz.QuizId;
+
+            // get from quizzes where not completed by user
+            var quizzes = from quiz in db.Quizzes
+                          where !completedQuizIds.Contains(quiz.Id)
+                          select quiz;
+
+            var result = await quizzes.ToListAsync();
+            return result.AsReadOnly();
         }
 
         public async Task<IReadOnlyCollection<Question>> GetQuizQuestionsAsync(int quizId)

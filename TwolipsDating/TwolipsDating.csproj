@@ -423,6 +423,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utilities\CalendarHelper.cs" />
+    <Compile Include="Utilities\DictionaryHelper.cs" />
     <Compile Include="Utilities\ModelStateTransfer.cs" />
     <Compile Include="Utilities\RequireConfirmedEmail.cs" />
     <Compile Include="Utilities\RequireProfile.cs" />

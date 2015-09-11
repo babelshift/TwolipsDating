@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using TwolipsDating.Models;
 namespace TwolipsDating.Business
 {
     public interface ITriviaService : IBaseService
@@ -21,5 +25,10 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task<bool> IsQuizAlreadyCompletedAsync(string userId, int quizId);
         System.Threading.Tasks.Task<AnsweredQuestionServiceResult> RecordAnsweredQuestionAsync(string userId, int profileId, int questionId, int answerId, int questionTypeId);
         System.Threading.Tasks.Task<int> SetQuizAsCompleted(string userId, int quizId, int numberOfCorrectAnswers);
+        Task<ReadOnlyDictionary<int, IReadOnlyCollection<Quiz>>> GetDailyQuizzesAsync(int daysAgo);
+
+        Task<IReadOnlyCollection<Quiz>> GetTrendingQuizzesAsync();
+        Task<IReadOnlyCollection<Quiz>> GetPopularQuizzesAsync();
+        Task<IReadOnlyCollection<Quiz>> GetUnfinishedQuizzesAsync(string userId);
     }
 }

@@ -344,18 +344,19 @@ input[readonly] {
     margin-bottom: 10px;
 }
 
-.search-result-quiz-rating-bar, .trivia-dashboard-rating-bar {
+.search-result-quiz-rating-bar {
     font-size: 14px;
     display: inline-block;
 }
 
-    .search-result-quiz-rating-bar .badge, .trivia-dashboard-rating-bar .badge {
+    .search-result-quiz-rating-bar .badge {
         font-size: 13px;
         padding: 5px;
         border-radius: 0;
     }
 
-    .search-result-quiz-rating-bar .current, .trivia-dashboard-rating-bar .current {
+    .search-result-quiz-rating-bar .current, 
+    .trivia-dashboard-rating-bar .current {
         padding: 10px;
         font-size: 15px;
     }
@@ -740,4 +741,8 @@ input[readonly] {
 .feed-item-icon {
     color: #ccc;
     margin-top: 4px;
+}
+
+.nav-tabs {
+    margin-bottom: 15px;
 }

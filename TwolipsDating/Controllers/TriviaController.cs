@@ -56,14 +56,22 @@ namespace TwolipsDating.Controllers
             var currentUserId = User.Identity.GetUserId();
 
             var newQuizzes = await TriviaService.GetNewQuizzesAsync();
+            var dailyQuizzes = await TriviaService.GetDailyQuizzesAsync(5);
+            var trendingQuizzes = await TriviaService.GetTrendingQuizzesAsync();
+            var popularQuizzes = await TriviaService.GetPopularQuizzesAsync();
+            var unfinishedQuizzes = await TriviaService.GetUnfinishedQuizzesAsync(User.Identity.GetUserId());
 
             TriviaMenuViewModel viewModel = new TriviaMenuViewModel();
             viewModel.NewQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(newQuizzes);
+            viewModel.DailyQuizzes = dailyQuizzes.ToDictionary(x => x.Key, x => Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(x.Value));
+            viewModel.TrendingQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(trendingQuizzes);
+            viewModel.PopularQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(popularQuizzes);
+            viewModel.UnfinishedQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(unfinishedQuizzes);
 
             // alters the viewmodel's list of quizzes to indicate if the quiz has already been completed by the currently logged in user
             await SetQuizzesCompletedByCurrentUser(currentUserId, viewModel);
 
-            viewModel.UserStats = await ProfileService.GetUserStatsAsync(currentUserId);
+            //viewModel.UserStats = await ProfileService.GetUserStatsAsync(currentUserId);
             viewModel.RecentlyCompletedQuizzes = await GetUsersCompletedQuizzesAsync();
 
             return View(viewModel);
@@ -401,7 +409,7 @@ namespace TwolipsDating.Controllers
                 AveragePoints = questionListViewModel != null && questionListViewModel.Count > 0
                     ? (int)Math.Round(questionListViewModel.Average(q => q.Points))
                     : 0,
-                ImageUrl = quiz.GetImageUrl(),
+                ImageUrl = quiz.GetImagePath(),
                 UserScorePercent = (int)Math.Round(((double)correctAnswerCount / (double)questionListViewModel.Count) * 100)
             };
 

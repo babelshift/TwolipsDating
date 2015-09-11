@@ -1,49 +1,30 @@
 ﻿@model int
 
-<div class="text-center trivia-dashboard-rating-bar">
+<span class="text-center trivia-dashboard-rating-bar">
     @if (Model == 1)
     {
-        <span title="Extremely easy - 10 bonus points" class="custom-tooltip badge marker-1 current">10</span>
+        <span class="label marker-1">VERY EASY</span>
+        <span title="Extremely easy - 10 bonus points" class="custom-tooltip label label-default">10 POINTS</span>
     }
-    else
+    else if (Model == 2)
     {
-        <span title="Extremely easy - 10 bonus points" class="custom-tooltip badge marker-1">10</span>
+        <span class="label marker-2">EASY</span>
+        <span title="Easy - 15 bonus points" class="custom-tooltip label label-default">15 POINTS</span>
     }
-
-    @if (Model == 2)
+    else if (Model == 3)
     {
-        <span title="Easy - 15 bonus points" class="custom-tooltip badge marker-2 current">15</span>
+        <span class="label marker-3">AVERAGE</span>
+        <span title="Average - 20 bonus points" class="custom-tooltip label label-default">20 POINTS</span>
     }
-    else
+    else if (Model == 4)
     {
-        <span title="Easy - 15 bonus points" class="custom-tooltip badge marker-2">15</span>
+        <span class="label marker-4">HARD</span>
+        <span title="Difficult - 25 bonus points" class="custom-tooltip label label-default">25 POINTS</span>
     }
-
-    @if (Model == 3)
+    else if (Model == 5)
     {
-        <span title="Average - 20 bonus points" class="custom-tooltip badge marker-3 current">20</span>
+        <span class="label marker-5">VERY HARD</span>
+        <span title="Extremely difficult - 30 bonus points" class="custom-tooltip label label-default">30 POINTS</span>
     }
-    else
-    {
-        <span title="Average - 20 bonus points" class="custom-tooltip badge marker-3">20</span>
-    }
-
-    @if (Model == 4)
-    {
-        <span title="Difficult - 25 bonus points" class="custom-tooltip badge marker-4 current">25</span>
-    }
-    else
-    {
-        <span title="Difficult - 25 bonus points" class="custom-tooltip badge marker-4">25</span>
-    }
-
-    @if (Model == 5)
-    {
-        <span title="Extremely difficult - 30 bonus points" class="custom-tooltip badge marker-5 current">30</span>
-    }
-    else
-    {
-        <span title="Extremely difficult - 30 bonus points" class="custom-tooltip badge marker-5">30</span>
-    }
-</div>
+</span>
 

@@ -3,93 +3,216 @@
     ViewBag.Title = "Trivia and quizzes";
     ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
 }
-
+@if (!HttpContext.Current.IsDebuggingEnabled)
+{
+    <div class="ad">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- TriviaDashboard - Middle - 1 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1823005717277864"
+             data-ad-slot="1241673033"
+             data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+}
+else
+{
+    <div style="width: 610px; margin: 5px auto;">
+        <img src="http://placehold.it/600x90" />
+    </div>
+}
 <div class="row">
     <div class="col-md-8">
         <div class="panel panel-default">
-            <div class="panel-heading text-center">
-                <h4 class="panel-title"><i class="fa fa-mortar-board"></i> Trivia</h4>
-            </div>
-            <div class="panel-body text-center">
-                <div class="col-sm-6">
-                    <h3><i class="fa fa-random"></i> <a href="@Url.Action("random")">Random</a></h3>
-                    <p>Each question is randomly selected from a pool of questions without any time limit.</p>
-                </div>
-                <div class="col-sm-6">
-                    <h3><i class="fa fa-clock-o"></i> <a href="@Url.Action("timed")">Timed</a></h3>
-                    <p>Each question is randomly selected from a pool of questions with a 10 second time limit.</p>
-                </div>
-            </div>
-        </div>
-        @if (!HttpContext.Current.IsDebuggingEnabled)
-        {
-            <div class="ad">
-                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <!-- TriviaDashboard - Middle - 1 -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1823005717277864"
-                     data-ad-slot="1241673033"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        }
-        else
-        {
-            <div style="width: 610px; margin: 5px auto;">
-                <img src="http://placehold.it/600x90" />
-            </div>
-        }
-        <div class="panel panel-default">
-            <div class="panel-heading text-center">
-                <h4 class="panel-title"><i class="fa fa-book"></i> Quizzes</h4>
-            </div>
-            <div class="panel-body text-center">
-                @foreach (var quiz in Model.NewQuizzes)
-                {
-                    <div class="col-lg-4 col-md-6 col-sm-4" style="max-height: 175px; min-height: 175px">
-                        <h4><a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a></h4>
-                        @if (quiz.IsComplete)
+            <div class="panel-body">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#daily" aria-controls="daily" role="tab" data-toggle="tab">
+                            <i class="fa fa-calendar fa-lg"></i> <span class="hidden-xs">Daily Trivia</span>
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#new" aria-controls="new" role="tab" data-toggle="tab">
+                            <i class="fa fa-asterisk fa-lg"></i> <span class="hidden-xs">New</span>
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#unfinished" aria-controls="unfinished" role="tab" data-toggle="tab">
+                            <i class="fa fa-file-text-o fa-lg"></i> <span class="hidden-xs">Unfinished</span>
+                        </a>
+                    </li>
+                    <li class="dropdown" role="presentation">
+                        <a href="#" aria-controls="dropdowncontents" data-toggle="dropdown">
+                            <i class="fa fa-question-circle fa-lg"></i> <span class="hidden-xs">Questions</span> <span class="caret"></span>
+                        </a>
+                        <ul id="dropdowncontents" class="dropdown-menu">
+                            <li>
+                                <a href="@Url.Action("random", "trivia")">
+                                    <i class="fa fa-random fa-lg fa-fw"></i> Random
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("timed", "trivia")">
+                                    <i class="fa fa-clock-o fa-lg fa-fw"></i> Timed
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="daily">
+                        @foreach (var daysAgo in Model.DailyQuizzes.Keys)
                         {
-                            <p class="label label-success">Completed</p>
-                        }
-                        else
-                        {
-                            if (quiz.AveragePoints > 0)
+                            var quizList = Model.DailyQuizzes[daysAgo];
+                            var dayAgo = DateTime.Today.AddDays(daysAgo * -1);
+
+                            if (daysAgo == 0)
                             {
-                                @Html.Partial("_DashboardQuizRatingBarPartial", quiz.AveragePoints)
+                                <h3 style="margin-top: 35px">Today's Quizzes <small>@dayAgo.ToString("MMMM dd")</small></h3>
                             }
-                            else
+                            else if (daysAgo == 1)
                             {
-                                <p class="label label-danger">No bonus</p>
+                                <h3 style="margin-top: 35px">Yesterday's Quizzes <small>@dayAgo.ToString("MMMM dd")</small></h3>
+                            }
+                            else if (daysAgo >= 2)
+                            {
+                                <h3 style="margin-top: 35px">@String.Format("{0}'s Quizzes", dayAgo.DayOfWeek.ToString()) <small>@dayAgo.ToString("MMMM d")</small></h3>
+                            }
+                            <hr />
+                            foreach (var quiz in quizList)
+                            {
+                                <div class="row" style="margin-bottom: 25px">
+                                    <div class="col-xs-4">
+                                        <a href="#">
+                                            <img class="pull-left img-responsive" src="@quiz.ThumbnailImagePath" alt="@quiz.Name">
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <h4 style="margin-top: 0; margin-bottom: 5px; font-weight: 400">
+                                            <a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a>
+                                        </h4>
+                                        <p>
+                                            <a class="label label-info">GAMES</a>
+                                            @if (quiz.IsComplete)
+                                            {
+                                                <span class="label label-success">COMPLETED</span>
+                                            }
+                                            else
+                                            {
+                                                if (quiz.AveragePoints > 0)
+                                                {
+                                                    @Html.Partial("_QuizRatingBarPartial", quiz.AveragePoints)
+                                                }
+                                                else
+                                                {
+                                                    <span class="label label-danger">NOT RATED</span>
+                                                }
+                                            }
+                                        </p>
+                                        <p style="font-weight: 300">@quiz.Description</p>
+                                    </div>
+                                </div>
                             }
                         }
-                        <br />
-                        <small style="margin-top: 5px;">@quiz.Description</small>
                     </div>
-                }
+                    <div role="tabpanel" class="tab-pane" id="new">
+                        @foreach (var quiz in Model.NewQuizzes)
+                        {
+                            <div class="row" style="margin-bottom: 25px">
+                                <div class="col-xs-4">
+                                    <a href="#">
+                                        <img class="pull-left img-responsive" src="@quiz.ThumbnailImagePath" alt="@quiz.Name">
+                                    </a>
+                                </div>
+                                <div class="col-xs-8">
+                                    <h4 style="margin-top: 0; margin-bottom: 5px; font-weight: 400">
+                                        <a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a>
+                                    </h4>
+                                    <p>
+                                        <a class="label label-info">GAMES</a>
+                                        @if (quiz.IsComplete)
+                                        {
+                                            <span class="label label-success">COMPLETED</span>
+                                        }
+                                        else
+                                        {
+                                            if (quiz.AveragePoints > 0)
+                                            {
+                                                @Html.Partial("_QuizRatingBarPartial", quiz.AveragePoints)
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-danger">NOT RATED</span>
+                                            }
+                                        }
+                                    </p>
+                                    <p style="font-weight: 300">@quiz.Description</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="unfinished">
+                        @foreach (var quiz in Model.UnfinishedQuizzes)
+                        {
+                            <div class="row" style="margin-bottom: 25px">
+                                <div class="col-xs-4">
+                                    <a href="#">
+                                        <img class="pull-left img-responsive" src="@quiz.ThumbnailImagePath" alt="@quiz.Name">
+                                    </a>
+                                </div>
+                                <div class="col-xs-8">
+                                    <h4 style="margin-top: 0; margin-bottom: 5px; font-weight: 400">
+                                        <a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a>
+                                    </h4>
+                                    <p>
+                                        <a class="label label-info">GAMES</a>
+                                        @if (quiz.IsComplete)
+                                        {
+                                            <span class="label label-success">COMPLETED</span>
+                                        }
+                                        else
+                                        {
+                                            if (quiz.AveragePoints > 0)
+                                            {
+                                                @Html.Partial("_QuizRatingBarPartial", quiz.AveragePoints)
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-danger">NOT RATED</span>
+                                            }
+                                        }
+                                    </p>
+                                    <p style="font-weight: 300">@quiz.Description</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div class="col-md-4 col-sm-6">
         <div class="panel panel-default">
             <div class="panel-heading text-center">
-                <h4 class="panel-title"><i class="fa fa-line-chart"></i> Your Stats</h4>
+                <h4 class="panel-title"><i class="fa fa-line-chart fa-lg fa-fw"></i> Trending Now</h4>
             </div>
-            <ul class="list-group">
-                <li class="list-group-item">Total Points<span class="badge">@Model.UserStats.TotalPoints</span></li>
-                <li class="list-group-item">Questions Answered<span class="badge">@Model.UserStats.QuestionsAnswered</span></li>
-                <li class="list-group-item">Questions Answered Correctly<span class="badge">@Model.UserStats.QuestionsAnsweredCorrectly</span></li>
-                <li class="list-group-item">Random Questions Answered<span class="badge">@Model.UserStats.RandomQuestionsAnswered</span></li>
-                <li class="list-group-item">Random Questions Answered Correctly<span class="badge">@Model.UserStats.RandomQuestionsAnsweredCorrectly</span></li>
-                <li class="list-group-item">Timed Questions Answered<span class="badge">@Model.UserStats.TimedQuestionsAnswered</span></li>
-                <li class="list-group-item">Timed Questions Answered Correctly<span class="badge">@Model.UserStats.TimedQuestionsAnsweredCorrectly</span></li>
-                <li class="list-group-item">Quiz Questions Answered<span class="badge">@Model.UserStats.QuizQuestionsAnswered</span></li>
-                <li class="list-group-item">Quiz Questions Answered Correctly<span class="badge">@Model.UserStats.QuizQuestionsAnsweredCorrectly</span></li>
-                <li class="list-group-item">Quizzes Completed<span class="badge">@Model.UserStats.QuizzesCompleted</span></li>
-            </ul>
+            <div class="list-group">
+                @foreach (var quiz in Model.TrendingQuizzes)
+                {
+                    <a class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.Id })"><i class="text-danger fa fa-fire fa-lg fa-fw"></i> @quiz.Name</a>
+                }
+            </div>
+            <div class="panel-footer text-center">
+                <a href="#"><small>See more quizzes</small></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6">
+        <div class="text-center" style="margin: 5px auto;">
+            <img src="http://placehold.it/350x250" />
         </div>
     </div>
     <div class="col-md-4 col-sm-6">
@@ -97,7 +220,7 @@
         {
             <div class="panel panel-default recently-completed-quizzes">
                 <div class="panel-heading text-center">
-                    <h4 class="panel-title"><i class="fa fa-users"></i> Recently Completed</h4>
+                    <h4 class="panel-title"><i class="fa fa-feed fa-lg fa-fw"></i> Recent Activity</h4>
                 </div>
                 <div class="list-group">
                     @foreach (var quiz in Model.RecentlyCompletedQuizzes)
@@ -117,7 +240,35 @@
                         </a>
                     }
                 </div>
+                <div class="panel-footer text-center">
+                    <a href="#"><small>Find more people</small></a>
+                </div>
             </div>
         }
+    </div>
+    <div class="col-md-4 col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-heading text-center">
+                <h4 class="panel-title"><i class="fa fa-bolt fa-lg fa-fw"></i> Most Popular</h4>
+            </div>
+            <div class="list-group">
+                @foreach (var quiz in Model.PopularQuizzes)
+                {
+                    <a class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.Id })">@quiz.Name</a>
+                }
+                @*<a class="list-group-item" href="#" style="font-size: 14px">
+                    <span class="badge">14</span>
+                    World of Warcraft (Scout)
+                </a>*@
+            </div>
+            <div class="panel-footer text-center">
+                <a href="#"><small>See more quizzes</small></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6">
+        <div class="text-center" style="margin: 5px auto;">
+            <img src="http://placehold.it/350x250" />
+        </div>
     </div>
 </div>

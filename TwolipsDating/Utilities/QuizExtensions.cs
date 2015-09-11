@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
 using System.Text.RegularExpressions;
 using TwolipsDating.Models;
 
@@ -8,6 +9,7 @@ namespace TwolipsDating.Utilities
     internal static class QuizExtensions
     {
         private static readonly string cdn = ConfigurationManager.AppSettings["cdnUrl"];
+        private const string placeholderFileName = "PlaceholderQuiz.jpg";
 
         internal static string GetSEOName(this Quiz quiz)
         {
@@ -20,7 +22,7 @@ namespace TwolipsDating.Utilities
             return Regex.Replace(root.ToLower().Replace(@"'", String.Empty), @"[^\w]+", "-");
         }
 
-        internal static string GetImageUrl(this Quiz quiz)
+        internal static string GetImagePath(this Quiz quiz)
         {
             if (quiz != null && quiz.ImageFileName != null)
             {
@@ -32,7 +34,37 @@ namespace TwolipsDating.Utilities
 
         internal static string GetImagePath(string fileName)
         {
-            return String.Format("{0}/{1}", cdn, fileName);
+            return String.Format("{0}/{1}?1", cdn, fileName);
+        }
+
+        public static string GetQuizThumbnailImagePath(string fileName)
+        {
+            return GetThumbnailImagePath(fileName);
+        }
+
+        private static string GetThumbnailImagePath(string fileName)
+        {
+            if (String.IsNullOrEmpty(fileName))
+            {
+                fileName = placeholderFileName;
+            }
+
+            string realFileName = Path.GetFileNameWithoutExtension(fileName);
+            string fileType = Path.GetExtension(fileName);
+
+            return String.Format("{0}/{1}_{2}{3}?1", cdn, realFileName, "thumb", fileType);
+        }
+
+        public static string GetQuizThumbnailImagePath(this Quiz quiz)
+        {
+            if (quiz != null && quiz.ImageFileName != null)
+            {
+                return GetThumbnailImagePath(quiz.ImageFileName);
+            }
+            else
+            {
+                return GetThumbnailImagePath(placeholderFileName);
+            }
         }
     }
 }
