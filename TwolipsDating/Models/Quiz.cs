@@ -16,7 +16,9 @@ namespace TwolipsDating.Models
         public int Points { get; set; }
         public bool IsActive { get; set; }
         public string ImageFileName { get; set; }
+        public int QuizCategoryId { get; set; }
 
+        public virtual QuizCategory QuizCategory { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
         public virtual ICollection<CompletedQuiz> CompletedByUsers { get; set; }
     }

@@ -58,6 +58,7 @@ namespace TwolipsDating.Models
         public virtual DbSet<LookingForLocation> LookingForLocations { get; set; }
         public virtual DbSet<RelationshipStatus> RelationshipStatuses { get; set; }
         public virtual DbSet<Language> Languages { get; set; }
+        public virtual DbSet<QuizCategory> QuizCategories { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -117,6 +118,25 @@ namespace TwolipsDating.Models
             SetupLookingForLocations(modelBuilder);
             SetupRelationshipStatuses(modelBuilder);
             SetupLanguages(modelBuilder);
+            SetupQuizCategories(modelBuilder);
+        }
+
+        private void SetupQuizCategories(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<QuizCategory>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<QuizCategory>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+            modelBuilder.Entity<QuizCategory>()
+                .Property(c => c.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<QuizCategory>()
+                .Property(c => c.Name)
+                .HasMaxLength(50);
         }
 
         private void SetupLanguages(DbModelBuilder modelBuilder)
@@ -712,6 +732,11 @@ namespace TwolipsDating.Models
             modelBuilder.Entity<Quiz>()
                 .Property(v => v.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+            modelBuilder.Entity<Quiz>()
+                .HasRequired(x => x.QuizCategory)
+                .WithMany(v => v.Quizzes)
+                .HasForeignKey(v => v.QuizCategoryId);
         }
 
         private void SetupIgnoredUsers(DbModelBuilder modelBuilder)

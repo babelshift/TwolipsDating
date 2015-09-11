@@ -95,7 +95,7 @@ else
                                             <a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a>
                                         </h4>
                                         <p>
-                                            <a class="label label-info">GAMES</a>
+                                            <a class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>
                                             @if (quiz.IsComplete)
                                             {
                                                 <span class="label label-success">COMPLETED</span>
@@ -132,7 +132,7 @@ else
                                         <a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a>
                                     </h4>
                                     <p>
-                                        <a class="label label-info">GAMES</a>
+                                        <a class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>
                                         @if (quiz.IsComplete)
                                         {
                                             <span class="label label-success">COMPLETED</span>
@@ -168,7 +168,7 @@ else
                                         <a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a>
                                     </h4>
                                     <p>
-                                        <a class="label label-info">GAMES</a>
+                                        <a class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>
                                         @if (quiz.IsComplete)
                                         {
                                             <span class="label label-success">COMPLETED</span>

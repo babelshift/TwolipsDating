@@ -15,7 +15,7 @@ namespace TwolipsDating.Migrations
         {
             AutomaticMigrationsEnabled = false;
         }
-        
+
         /// <summary>
         /// Wrapper for SaveChanges adding the Validation Messages to the generated exception
         /// </summary>
@@ -205,22 +205,36 @@ namespace TwolipsDating.Migrations
                 new Milestone() { Id = (int)MilestoneValues.PointsObtained3, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 500 },
                 new Milestone() { Id = (int)MilestoneValues.PointsObtained4, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 1000 });
 
+            context.QuizCategories.AddOrUpdate(m => m.Id,
+                new QuizCategory() { Id = (int)QuizCategoryValues.Uncategorized, Name = "Uncategorized" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Business, Name = "Business" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Creative, Name = "Creative" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Food, Name = "Food" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.History, Name = "History" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Literature, Name = "Literature" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Movies, Name = "Movies" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Science, Name = "Science" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Technical, Name = "Technical" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Television, Name = "Television" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.VideoGames, Name = "Video Games" }
+            );
+
             context.Quizzes.AddOrUpdate(m => m.Id,
-                new Quiz() { Id = 1, Name = "Technical Guru", Description = "If you can finish this, you're probably good with gadgets.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
-                new Quiz() { Id = 2, Name = "Gamer God", Description = "Pull out your Playstation and gear up to claim victory.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
-                new Quiz() { Id = 3, Name = "Creative Genius", Description = "Try to study up on your color theory and sewing terminology.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
-                new Quiz() { Id = 4, Name = "Business Sense", Description = "The former CEO of Enron would probably fail this one.", DateCreated = new DateTime(2015, 8, 1), Points = 15, IsActive = true },
-                new Quiz() { Id = 5, Name = "Language Linguist", Description = "If you're interested in the science of language, then this is the quiz for you.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
-                new Quiz() { Id = 6, Name = "World of Warcraft (Scout)", Description = "This entry level quiz will require you to know the basics of World of Warcraft.", DateCreated = new DateTime(2015, 8, 12), Points = 10, IsActive = true, ImageFileName = "WoW.jpg" },
-                new Quiz() { Id = 7, Name = "World of Warcraft (Champion)", Description = "This intermediate level quiz should only be completed by regulars of Azeroth.", DateCreated = new DateTime(2015, 8, 12), Points = 15, IsActive = true, ImageFileName = "WoW.jpg" },
-                new Quiz() { Id = 8, Name = "World of Warcraft (High Warlord)", Description = "Can you master the most difficult trivia only for seasoned veterans?", DateCreated = new DateTime(2015, 8, 12), Points = 25, IsActive = true, ImageFileName = "WoW.jpg" },
-                new Quiz() { Id = 9, Name = "Movies and Monsters", Description = "Giant spiders, spooky skeletons, swarms of ants, and a whole lot of stop motion animation.", DateCreated = new DateTime(2015, 8, 14), Points = 20, IsActive = true, ImageFileName = "MonstersAndMovies.jpg" },
-                new Quiz() { Id = 10, Name = "Legend of Zelda", Description = "The triforce can be yours with the completion of this one. OK, so the triforce isn't real, but this quiz is.", DateCreated = new DateTime(2015, 8, 17), Points = 20, IsActive = true, ImageFileName = "Zelda.jpg" },
-                new Quiz() { Id = 11, Name = "Movie Quotes", Description = "\"The force will be with you Harry.\" -Gandalf", DateCreated = new DateTime(2015, 8, 18), Points = 20, IsActive = true, ImageFileName = "MovieQuotes.jpg" },
-                new Quiz() { Id = 12, Name = "Harry Potter", Description = "Get out your wands and head to Hogwarts. There's a foul smell in the air. Only you can solve this problem.", DateCreated = new DateTime(2015, 8, 18), Points = 20, IsActive = true, ImageFileName = "HarryPotter.jpg" },
-                new Quiz() { Id = 13, Name = "Spaceballs: The Quiz", Description = "Brought to you by the makers of Spaceballs: The Blanket and Spaceballs: The Toilet Paper.", DateCreated = new DateTime(2015, 8, 19), Points = 25, IsActive = true, ImageFileName = "Spaceballs.jpg" },
-                new Quiz() { Id = 14, Name = "The Great Food Truck Quiz", Description = "All you could ever want to answer about food trucks.", DateCreated = new DateTime(2015, 8, 30), Points = 20, IsActive = true, ImageFileName = "Foodtruck.jpg" },
-                new Quiz() { Id = 15, Name = "The Walking Dead", Description = "If you can pass this quiz, you would probably survive a zombie apocolypse.", DateCreated = new DateTime(2015, 8, 30), Points = 20, IsActive = false, ImageFileName = "WalkingDead.jpg" });
+                new Quiz() { Id = 1, QuizCategoryId = (int)QuizCategoryValues.Technical, Name = "Technical Guru", Description = "If you can finish this, you're probably good with gadgets.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
+                new Quiz() { Id = 2, QuizCategoryId = (int)QuizCategoryValues.VideoGames, Name = "Gamer God", Description = "Pull out your Playstation and gear up to claim victory.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
+                new Quiz() { Id = 3, QuizCategoryId = (int)QuizCategoryValues.Creative, Name = "Creative Genius", Description = "Try to study up on your color theory and sewing terminology.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
+                new Quiz() { Id = 4, QuizCategoryId = (int)QuizCategoryValues.Business, Name = "Business Sense", Description = "The former CEO of Enron would probably fail this one.", DateCreated = new DateTime(2015, 8, 1), Points = 15, IsActive = true },
+                new Quiz() { Id = 5, QuizCategoryId = (int)QuizCategoryValues.Science, Name = "Language Linguist", Description = "If you're interested in the science of language, then this is the quiz for you.", DateCreated = new DateTime(2015, 8, 1), Points = 20, IsActive = true },
+                new Quiz() { Id = 6, QuizCategoryId = (int)QuizCategoryValues.VideoGames, Name = "World of Warcraft (Scout)", Description = "This entry level quiz will require you to know the basics of World of Warcraft.", DateCreated = new DateTime(2015, 8, 12), Points = 10, IsActive = true, ImageFileName = "WoW.jpg" },
+                new Quiz() { Id = 7, QuizCategoryId = (int)QuizCategoryValues.VideoGames, Name = "World of Warcraft (Champion)", Description = "This intermediate level quiz should only be completed by regulars of Azeroth.", DateCreated = new DateTime(2015, 8, 12), Points = 15, IsActive = true, ImageFileName = "WoW.jpg" },
+                new Quiz() { Id = 8, QuizCategoryId = (int)QuizCategoryValues.VideoGames, Name = "World of Warcraft (High Warlord)", Description = "Can you master the most difficult trivia only for seasoned veterans?", DateCreated = new DateTime(2015, 8, 12), Points = 25, IsActive = true, ImageFileName = "WoW.jpg" },
+                new Quiz() { Id = 9, QuizCategoryId = (int)QuizCategoryValues.Movies, Name = "Movies and Monsters", Description = "Giant spiders, spooky skeletons, swarms of ants, and a whole lot of stop motion animation.", DateCreated = new DateTime(2015, 8, 14), Points = 20, IsActive = true, ImageFileName = "MonstersAndMovies.jpg" },
+                new Quiz() { Id = 10, QuizCategoryId = (int)QuizCategoryValues.VideoGames, Name = "Legend of Zelda", Description = "The triforce can be yours with the completion of this one. OK, so the triforce isn't real, but this quiz is.", DateCreated = new DateTime(2015, 8, 17), Points = 20, IsActive = true, ImageFileName = "Zelda.jpg" },
+                new Quiz() { Id = 11, QuizCategoryId = (int)QuizCategoryValues.Movies, Name = "Movie Quotes", Description = "\"The force will be with you Harry.\" -Gandalf", DateCreated = new DateTime(2015, 8, 18), Points = 20, IsActive = true, ImageFileName = "MovieQuotes.jpg" },
+                new Quiz() { Id = 12, QuizCategoryId = (int)QuizCategoryValues.Literature, Name = "Harry Potter", Description = "Get out your wands and head to Hogwarts. There's a foul smell in the air. Only you can solve this problem.", DateCreated = new DateTime(2015, 8, 18), Points = 20, IsActive = true, ImageFileName = "HarryPotter.jpg" },
+                new Quiz() { Id = 13, QuizCategoryId = (int)QuizCategoryValues.Movies, Name = "Spaceballs: The Quiz", Description = "Brought to you by the makers of Spaceballs: The Blanket and Spaceballs: The Toilet Paper.", DateCreated = new DateTime(2015, 8, 19), Points = 25, IsActive = true, ImageFileName = "Spaceballs.jpg" },
+                new Quiz() { Id = 14, QuizCategoryId = (int)QuizCategoryValues.Food, Name = "The Great Food Truck Quiz", Description = "All you could ever want to answer about food trucks.", DateCreated = new DateTime(2015, 8, 30), Points = 20, IsActive = true, ImageFileName = "Foodtruck.jpg" },
+                new Quiz() { Id = 15, QuizCategoryId = (int)QuizCategoryValues.Television, Name = "The Walking Dead", Description = "If you can pass this quiz, you would probably survive a zombie apocolypse.", DateCreated = new DateTime(2015, 8, 30), Points = 20, IsActive = false, ImageFileName = "WalkingDead.jpg" });
 
             context.LookingForLocations.AddOrUpdate(m => m.Id,
                 new LookingForLocation() { Id = 1, Range = "Anywhere" },
@@ -240,7 +254,7 @@ namespace TwolipsDating.Migrations
                 new RelationshipStatus() { Id = 1, Name = "Single", Description = "Actively looking." },
                 new RelationshipStatus() { Id = 2, Name = "Dating", Description = "Happily dating." },
                 new RelationshipStatus() { Id = 3, Name = "Married", Description = "Happily married." },
-                new RelationshipStatus() { Id = 4, Name = "It's complicated", Description="Unknown." });
+                new RelationshipStatus() { Id = 4, Name = "It's complicated", Description = "Unknown." });
 
             SaveChanges(context);
         }

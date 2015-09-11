@@ -197,6 +197,8 @@ namespace TwolipsDating
             Mapper.CreateMap<Quiz, QuizOverviewViewModel>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(source => source.Id))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(source => source.Name))
+                .ForMember(dest => dest.QuizCategoryName, opts => opts.MapFrom(source => source.QuizCategory.Name))
+                .ForMember(dest => dest.QuizCategoryId, opts => opts.MapFrom(source => source.QuizCategoryId))
                 .ForMember(dest => dest.ThumbnailImagePath, opts => opts.MapFrom(source => source.GetQuizThumbnailImagePath()))
                 .ForMember(dest => dest.AveragePoints, opts => opts.MapFrom(source =>
                     source.Questions != null && source.Questions.Count > 0 ? (int)Math.Round(source.Questions.Average(x => x.Points)) : 0));
