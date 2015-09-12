@@ -222,4 +222,7 @@
   <data name="TitleAlreadyObtained" xml:space="preserve">
     <value>You already own that title and cannot purchase it again.</value>
   </data>
+  <data name="NeedPointsToMessage" xml:space="preserve">
+    <value>You need to earn at least 25 points to message someone. Go play some trivia and come back!</value>
+  </data>
 </root>

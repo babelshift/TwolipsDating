@@ -754,3 +754,7 @@ input[readonly] {
 .radio label {
     font-size: 14px;
 }
+.radio label::after {
+  width: 14px;
+  height: 14px;
+}

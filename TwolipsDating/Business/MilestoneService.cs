@@ -222,7 +222,7 @@ namespace TwolipsDating.Business
 
                 int currentPoints = (await (from user in db.Users
                                             where user.Id == userId
-                                            select (int?)user.Points).FirstOrDefaultAsync()) ?? 0;
+                                            select (int?)user.CurrentPoints).FirstOrDefaultAsync()) ?? 0;
 
                 count = pointsSpent + currentPoints;
             }

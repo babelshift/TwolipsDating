@@ -437,7 +437,7 @@ namespace TwolipsDating.Business
 
         private static void IncreaseUserPoints(ApplicationUser user, int points)
         {
-            user.Points += points;
+            user.CurrentPoints += points;
         }
 
         private async Task<int> GetQuizPointsAsync(int quizId)

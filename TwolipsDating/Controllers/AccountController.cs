@@ -90,7 +90,7 @@ namespace TwolipsDating.Controllers
             user.UserName = GuidEncoder.Encode(user.Id);
             user.Email = String.Format("{0}@disabled.com", user.UserName);
             user.IsActive = false;
-            user.Points = 0;
+            user.CurrentPoints = 0;
             IdentityResult updateUserResult = await UserManager.UpdateAsync(user);
             return RedirectToAction("index", "home");
         }

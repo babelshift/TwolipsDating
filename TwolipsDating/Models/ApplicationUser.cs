@@ -21,7 +21,9 @@ namespace TwolipsDating.Models
 
         public DateTime DateLastLogin { get; set; }
 
-        public virtual int Points { get; set; }
+        public virtual int CurrentPoints { get; set; }
+
+        public virtual int LifetimePoints { get; set; }
 
         public virtual Profile Profile { get; set; }
 

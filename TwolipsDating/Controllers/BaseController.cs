@@ -230,7 +230,7 @@ namespace TwolipsDating.Controllers
                 string currentUserId = User.Identity.GetUserId();
                 var currentUser = await UserManager.FindByIdAsync(currentUserId);
                 ViewBag.MessageNotificationCount = await NotificationService.GetMessageNotificationCountAsync(currentUserId);
-                ViewBag.PointsCount = currentUser.Points;
+                ViewBag.PointsCount = currentUser.CurrentPoints;
 
                 var announcements = await NotificationService.GetAnnouncementNotificationsAsync();
                 ViewBag.Announcements = announcements;

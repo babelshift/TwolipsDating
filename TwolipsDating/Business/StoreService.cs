@@ -102,7 +102,7 @@ namespace TwolipsDating.Business
             bool success = false;
             List<string> errors = new List<string>();
 
-            if (user.Points >= pointsCost)
+            if (user.CurrentPoints >= pointsCost)
             {
                 try
                 {
@@ -121,7 +121,7 @@ namespace TwolipsDating.Business
 
                         LogStoreTransaction(userId, storeItemId, 1, pointsCost);
 
-                        user.Points -= pointsCost;
+                        user.CurrentPoints -= pointsCost;
 
                         success = (await db.SaveChangesAsync()) > 0;
                     }
@@ -175,7 +175,7 @@ namespace TwolipsDating.Business
             bool success = false;
             string failMessage = String.Empty;
 
-            if (user.Points >= pointsCost * buyCount)
+            if (user.CurrentPoints >= pointsCost * buyCount)
             {
                 try
                 {
@@ -205,7 +205,7 @@ namespace TwolipsDating.Business
 
                     LogStoreTransaction(userId, storeItemId, buyCount, pointsCost);
 
-                    user.Points -= pointsCost * buyCount;
+                    user.CurrentPoints -= pointsCost * buyCount;
 
                     success = (await db.SaveChangesAsync()) > 0;
                 }

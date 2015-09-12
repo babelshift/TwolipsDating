@@ -187,6 +187,15 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You need to earn at least 25 points to message someone. Go play some trivia and come back!.
+        /// </summary>
+        internal static string NeedPointsToMessage {
+            get {
+                return ResourceManager.GetString("NeedPointsToMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Something prevented your profile image from being changed. If this continues, contact support..
         /// </summary>
         internal static string ProfileImageNotChanged {

@@ -97,7 +97,7 @@ namespace TwolipsDating.Tests.Controllers
             context.SetupGet(x => x.User.Identity).Returns(identity.Object);
 
             var user = new Mock<ApplicationUser>();
-            user.SetupGet(x => x.Points).Returns(0);
+            user.SetupGet(x => x.CurrentPoints).Returns(0);
             userManager.Setup(x => x.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(user.Object);
 
             controller.ControllerContext = new ControllerContext(context.Object, new RouteData(), controller);

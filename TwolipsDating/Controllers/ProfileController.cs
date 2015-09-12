@@ -286,13 +286,8 @@ namespace TwolipsDating.Controllers
                 }
                 else
                 {
-                    Log.Warn(
-                        "SendMessage",
-                        ErrorMessages.MessageNotSent,
-                        new { currentUserId = currentUserId, profileId = profileUserId, messageBody = messageBody }
-                    );
-
-                    return Json(new { success = false, error = ErrorMessages.MessageNotSent });
+                    string errorMessage = String.Join(" ", result.Errors);
+                    return Json(new { success = false, error = errorMessage });
                 }
             }
             else

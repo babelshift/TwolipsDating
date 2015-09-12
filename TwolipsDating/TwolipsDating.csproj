@@ -416,6 +416,14 @@
     <Compile Include="Migrations\201509112120163_AddQuizCategoryPart2.Designer.cs">
       <DependentUpon>201509112120163_AddQuizCategoryPart2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509121930450_RenamePointsToCurrentPoints.cs" />
+    <Compile Include="Migrations\201509121930450_RenamePointsToCurrentPoints.Designer.cs">
+      <DependentUpon>201509121930450_RenamePointsToCurrentPoints.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509121933539_AddLifetimePoints.cs" />
+    <Compile Include="Migrations\201509121933539_AddLifetimePoints.Designer.cs">
+      <DependentUpon>201509121933539_AddLifetimePoints.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\EmailNotifications.cs" />
     <Compile Include="Models\Language.cs" />
     <Compile Include="Models\LookingForLocation.cs" />
@@ -1261,6 +1269,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509112120163_AddQuizCategoryPart2.resx">
       <DependentUpon>201509112120163_AddQuizCategoryPart2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509121930450_RenamePointsToCurrentPoints.resx">
+      <DependentUpon>201509121930450_RenamePointsToCurrentPoints.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509121933539_AddLifetimePoints.resx">
+      <DependentUpon>201509121933539_AddLifetimePoints.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

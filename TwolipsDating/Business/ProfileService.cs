@@ -55,7 +55,7 @@ namespace TwolipsDating.Business
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
             var points = await (from user in db.Users
-                                select user.Points).FirstOrDefaultAsync();
+                                select user.CurrentPoints).FirstOrDefaultAsync();
 
             return points;
         }
@@ -75,7 +75,7 @@ namespace TwolipsDating.Business
             // question points + quiz points
             viewModel.TotalPoints = await (from users in db.Users
                                            where users.Id == userId
-                                           select users.Points).FirstAsync();
+                                           select users.CurrentPoints).FirstAsync();
 
             viewModel.QuestionsAnswered =
                 await (from answeredQuestion in db.AnsweredQuestions
@@ -658,31 +658,39 @@ namespace TwolipsDating.Business
 
                 bool success = false;
 
-                try
+                var senderUser = db.Users.Find(senderUserId);
+                if (senderUser.LifetimePoints > 25)
                 {
-                    success = (await db.SaveChangesAsync() > 0);
-
-                    if (success)
+                    try
                     {
-                        var senderUser = db.Users.Find(senderUserId);
-                        string senderProfileImagePath = senderUser.Profile.GetProfileThumbnailImagePath();
-                        string senderUserName = senderUser.UserName;
+                        success = (await db.SaveChangesAsync() > 0);
 
-                        var receiverUser = db.Users.Find(receiverUserId);
-                        string receiverUserName = receiverUser.UserName;
-                        string receiverEmail = receiverUser.Email;
+                        if (success)
+                        {
+                            string senderProfileImagePath = senderUser.Profile.GetProfileThumbnailImagePath();
+                            string senderUserName = senderUser.UserName;
 
-                        await UserService.SendMessageEmailNotificationAsync(senderProfileImagePath, senderUserName, body,
-                            conversationUrl, receiverUserId, receiverUserName, receiverEmail);
+                            var receiverUser = db.Users.Find(receiverUserId);
+                            string receiverUserName = receiverUser.UserName;
+                            string receiverEmail = receiverUser.Email;
+
+                            await UserService.SendMessageEmailNotificationAsync(senderProfileImagePath, senderUserName, body,
+                                conversationUrl, receiverUserId, receiverUserName, receiverEmail);
+                        }
                     }
+                    catch (DbUpdateException ex)
+                    {
+                        Log.Error("ProfileService.SendMessageAsync", ex, new { senderUserId, receiverUserId, body, conversationUrl });
+                        ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.MessageNotSent);
+                    }
+
+                    return success ? ServiceResult.Success : ServiceResult.Failed(ErrorMessages.MessageNotSent);
                 }
-                catch (DbUpdateException ex)
+                else
                 {
-                    Log.Error("ProfileService.SendMessageAsync", ex, new { senderUserId, receiverUserId, body, conversationUrl });
-                    ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.MessageNotSent);
+                    return success ? ServiceResult.Success : ServiceResult.Failed(ErrorMessages.NeedPointsToMessage);
                 }
 
-                return success ? ServiceResult.Success : ServiceResult.Failed(ErrorMessages.MessageNotSent);
             }
             // if the receiver is ignoring the sender, don't send a message, just pretend we succeeded
             else
