@@ -27,7 +27,7 @@
                         <p id="violation-error-text">Something happened which prevented your violation from being submitted.</p>
                     </div>
                     <div id="violation-success" class="alert alert-success" role="alert">
-                        <p>Thanks for the report! You won't see this question again until we review it.</p>
+                        <p>Thanks for the report!</p>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -133,7 +133,10 @@
                                 <hr />
                             }
                         }
-                        @Html.Partial("_SignUpIncentivePartial")
+                        else
+                        {
+                            <hr />
+                        }
 
                         for (int i = 0; i < Model.Questions.Count; i++)
                         {
@@ -193,11 +196,19 @@
                             <hr />
                         }
 
-                        if (!Model.IsAlreadyCompleted && User.Identity.IsAuthenticated)
+                        if (User.Identity.IsAuthenticated)
                         {
-                            <button id="button-submit" type="submit" class="btn btn-sm btn-primary">Complete Quiz</button>
+                            if (!Model.IsAlreadyCompleted)
+                            {
+                                <button id="button-submit" type="submit" class="btn btn-sm btn-primary">Complete Quiz</button>
+                            }
                         }
-                        @Html.Partial("_SignUpIncentivePartial")
+                        else
+                        {
+                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modalSignUpIncentive" data-keyboard="true">
+                                <i class="fa fa-check fa-lg fa-fw"></i> Complete Quiz
+                            </a>
+                        }
                         @Html.HiddenFor(m => m.QuizId)
                         @Html.HiddenFor(m => m.SEOName)
                     }
@@ -208,6 +219,7 @@
                 }
             </div>
         </div>
+        @Html.Partial("_SignUpIncentivePartial")
     </div>
 
     <div class="col-md-4">
@@ -215,24 +227,6 @@
         {
             @Html.Partial("_SidebarOthersCompletedQuizPartial", Model.UsersCompletedQuiz)
         }
-        @*
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <i class="fa fa-money"></i> Bonus points
-                        <small>
-                            <i title="Completing this quiz with a high score will award bonus points"
-                               class="custom-tooltip glyphicon glyphicon-info-sign"></i>
-                        </small>
-                    </h4>
-                </div>
-                @if (Model != null)
-                {
-                    <div class="panel-body">
-                        @Html.Partial("_QuizRatingBarPartial", Model.AveragePoints)
-                    </div>
-                }
-            </div>*@
         @if (!HttpContext.Current.IsDebuggingEnabled)
         {
             <div class="ad">
@@ -265,4 +259,22 @@
 }
 @section Styles {
     @Styles.Render("~/Content/awesome-bootstrap-checkbox")
+}
+@section Modals {
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div class="modal" id="modalSignUpIncentive" tabindex="-1" role="dialog" aria-labelledby="modalSignUpIncentiveLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modalSignUpIncentiveLabel">Sign up now to complete this quiz</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        @Html.Partial("_ModalSignUpIncentivePartial")
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 }

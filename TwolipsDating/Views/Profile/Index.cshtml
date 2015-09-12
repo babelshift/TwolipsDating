@@ -175,12 +175,12 @@ else
                             </div>
                         </div>
                     </div>
-                    @if (User.Identity.IsAuthenticated)
+                    @if (Model.ProfileUserId != User.Identity.GetUserId())
                     {
-                        if (Model.ProfileUserId != User.Identity.GetUserId() && Model.IsCurrentUserEmailConfirmed)
-                        {
-                            <div style="margin-top: 10px; margin-left: auto; margin-right: auto; width: 260px">
-                                <div class="btn-group">
+                        <div style="margin-top: 10px; margin-left: auto; margin-right: auto; width: 260px">
+                            <div class="btn-group">
+                                @if (User.Identity.IsAuthenticated)
+                                {
                                     <button type="button" class="button-toggle-favorite btn btn-primary" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
                                         <i class="button-toggle-favorite-icon fa fa-user-plus"></i> <span class="button-toggle-favorite-text">Following</span>
                                     </button>
@@ -217,25 +217,51 @@ else
                                     @*
                                         <li role="presentation"><a href="#" title="Send a challenge"><i class="glyphicon glyphicon-tower"></i></a></li>
                                     *@
-                                </div>
+                                }
+                                else
+                                {
+                                    <button type="button" class="button-toggle-favorite btn btn-primary" title="Add to favorites" data-toggle="modal" data-target="#modalSignUpIncentiveFollow" data-keyboard="true">
+                                        <i class="button-toggle-favorite-icon fa fa-user-plus"></i> <span class="button-toggle-favorite-text">Following</span>
+                                    </button>
+                                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
+                                        <i class="glyphicon glyphicon-comment"></i> Message
+                                    </button>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="glyphicon glyphicon-option-vertical"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li>
+                                                <button type="button" class="btn btn-default  btn-block" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
+                                                    <i class="glyphicon glyphicon-gift"></i> Gift
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button type="button" class="btn btn-default  btn-block" data-toggle="modal" data-target="#modalReview" data-keyboard="true" title="Write a review">
+                                                    <i class="fa fa-edit"></i> Review
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                }
                             </div>
-                        }
-                        else if (Model.ProfileUserId == User.Identity.GetUserId())
-                        {
-                            <div class="hidden-sm hidden-md hidden-lg" style="margin-top: 10px; margin-left: auto; margin-right: auto; width: 260px">
-                                <div id="upload-header-group-mobile">
-                                    @using (Html.BeginForm("changebackgroundimage", "profile", FormMethod.Post, new { @id = "upload-header-form-mobile", enctype = "multipart/form-data" }))
-                                    {
-                                        @Html.HiddenFor(m => m.ProfileUserId)
-                                        <span class="btn btn-default btn-xs btn-file" style="display: inline-block;">
-                                            <i id="upload-header-spinner-mobile" class="hidden fa fa-cog fa-spin fa-lg fa-fw"></i>
-                                            <i id="upload-header-camera-mobile" class="fa fa-camera fa-lg fa-fw"></i> Change banner
-                                            <input id="upload-header-mobile" name="upload-header-mobile" type="file" accept="image/jpeg,image/gif,image/bmp,image/png" />
-                                        </span>
-                                    }
-                                </div>
+                        </div>
+                    }
+                    else if (Model.ProfileUserId == User.Identity.GetUserId() && User.Identity.IsAuthenticated)
+                    {
+                        <div class="hidden-sm hidden-md hidden-lg" style="margin-top: 10px; margin-left: auto; margin-right: auto; width: 260px">
+                            <div id="upload-header-group-mobile">
+                                @using (Html.BeginForm("changebackgroundimage", "profile", FormMethod.Post, new { @id = "upload-header-form-mobile", enctype = "multipart/form-data" }))
+                                {
+                                    @Html.HiddenFor(m => m.ProfileUserId)
+                                    <span class="btn btn-default btn-xs btn-file" style="display: inline-block;">
+                                        <i id="upload-header-spinner-mobile" class="hidden fa fa-cog fa-spin fa-lg fa-fw"></i>
+                                        <i id="upload-header-camera-mobile" class="fa fa-camera fa-lg fa-fw"></i> Change banner
+                                        <input id="upload-header-mobile" name="upload-header-mobile" type="file" accept="image/jpeg,image/gif,image/bmp,image/png" />
+                                    </span>
+                                }
                             </div>
-                        }
+                        </div>
                     }
                 </div>
             </div>
@@ -254,7 +280,7 @@ else
     <div class="col-xs-4">
         <a href="@("https://www.facebook.com/sharer/sharer.php?u=" + Url.Encode(Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme)))"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
-            class="btn btn-block btn-facebook" title="Share on Facebook">
+           class="btn btn-block btn-facebook" title="Share on Facebook">
             <i class="fa fa-facebook fa-lg fa-fw"></i>
             <span class="hidden-xs">Share on Facebook</span>
         </a>
@@ -262,7 +288,7 @@ else
     <div class="col-xs-4">
         <a href="@("https://plus.google.com/share?url=" + Url.Encode(Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme)))"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
-            class="btn btn-block btn-google-plus" title="Share on Google+">
+           class="btn btn-block btn-google-plus" title="Share on Google+">
             <i class="fa fa-google-plus fa-lg fa-fw"></i>
             <span class="hidden-xs">Share on Google+</span>
         </a>
@@ -488,6 +514,22 @@ else
     </div>
 }
 @section Modals {
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div class="modal" id="modalSignUpIncentiveFollow" tabindex="-1" role="dialog" aria-labelledby="modalSignUpIncentiveLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modalSignUpIncentiveLabel">Sign up now to follow this user</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        @Html.Partial("_ModalSignUpIncentivePartial")
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
     @if (Model.ActiveTab == "about")
     {
         <div class="modal" id="modalWhatImLookingFor" tabindex="-1" role="dialog" aria-labelledby="modalWhatImLookingForLabel" aria-hidden="true">
@@ -639,57 +681,75 @@ else
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="modalReviewLabel">Send gifts to <strong>@Model.UserName</strong></h4>
+                    <h4 class="modal-title" id="modalReviewLabel">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <span>Send gifts to <strong>@Model.UserName</strong></span>
+                        }
+                        else
+                        {
+                            <span>Sign up now to send gifts to this user</span>
+                        }
+                    </h4>
                 </div>
-                @if (Model.ViewerInventoryItems != null && Model.ViewerInventoryItems.Count > 0)
+                @if (User.Identity.IsAuthenticated)
                 {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <div class="row">
-                                @foreach (var item in Model.ViewerInventoryItems)
-                                {
-                                    <div id="@String.Format("gift-image-wrapper-{0}", item.GiftId)" class="col-xs-3 col-md-2 text-center">
-                                        <a id="@item.InventoryItemId" data-gift-name="@item.GiftName" data-gift-id="@item.GiftId" href="#" onclick="onSelectGiftClick(event, this)">
-                                            <img src="@item.GiftIconFilePath">
-                                        </a>
-                                        <p id="@String.Format("gift-count-{0}", item.InventoryItemId)" class="bg-info">@item.ItemCount</p>
-                                    </div>
-                                }
+                    if (Model.ViewerInventoryItems != null && Model.ViewerInventoryItems.Count > 0)
+                    {
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="row">
+                                    @foreach (var item in Model.ViewerInventoryItems)
+                                    {
+                                        <div id="@String.Format("gift-image-wrapper-{0}", item.GiftId)" class="col-xs-3 col-md-2 text-center">
+                                            <a id="@item.InventoryItemId" data-gift-name="@item.GiftName" data-gift-id="@item.GiftId" href="#" onclick="onSelectGiftClick(event, this)">
+                                                <img src="@item.GiftIconFilePath">
+                                            </a>
+                                            <p id="@String.Format("gift-count-{0}", item.InventoryItemId)" class="bg-info">@item.ItemCount</p>
+                                        </div>
+                                    }
+                                </div>
                             </div>
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                    <i class="fa fa-close"></i> Close
+                                </button>
+                                <button id="button-gift-send" type="button" class="btn btn-primary" onclick="onSendGift(event, this)">
+                                    <i class="fa fa-send"></i> Send
+                                </button>
+                            </div>
+                            <div class="clearfix"></div>
+                            <br />
+                            <div id="gift-error" class="alert alert-danger" role="alert">
+                                <p id="gift-error-text">Something happened which prevented your gift from being sent.</p>
+                            </div>
+                            <div id="gift-success" class="alert alert-success" role="alert">
+                                <p>Gift sent successfully.</p>
+                            </div>
+                            <table id="gift-send-log" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Gifts successfully sent so far:</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            @Html.HiddenFor(m => m.SendGift.GiftId)
+                            @Html.HiddenFor(m => m.SendGift.InventoryItemId)
+                            <input type="hidden" id="selected-gift-name" />
                         </div>
-                        <div class="pull-right">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">
-                                <i class="fa fa-close"></i> Close
-                            </button>
-                            <button id="button-gift-send" type="button" class="btn btn-primary" onclick="onSendGift(event, this)">
-                                <i class="fa fa-send"></i> Send
-                            </button>
+                    }
+                    else
+                    {
+                        <div class="modal-body">
+                            <p>You don't have any items to send. Go get some and come back!</p>
                         </div>
-                        <div class="clearfix"></div>
-                        <br />
-                        <div id="gift-error" class="alert alert-danger" role="alert">
-                            <p id="gift-error-text">Something happened which prevented your gift from being sent.</p>
-                        </div>
-                        <div id="gift-success" class="alert alert-success" role="alert">
-                            <p>Gift sent successfully.</p>
-                        </div>
-                        <table id="gift-send-log" class="table">
-                            <thead>
-                                <tr>
-                                    <th>Gifts successfully sent so far:</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                        @Html.HiddenFor(m => m.SendGift.GiftId)
-                        @Html.HiddenFor(m => m.SendGift.InventoryItemId)
-                        <input type="hidden" id="selected-gift-name" />
-                    </div>
+                    }
                 }
                 else
                 {
                     <div class="modal-body">
-                        <p>You don't have any items to send. Go get some and come back!</p>
+                        @Html.Partial("_ModalSignUpIncentivePartial")
                     </div>
                 }
             </div>
@@ -700,33 +760,51 @@ else
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="modalReviewLabel">New review for <strong>@Model.UserName</strong></h4>
+                    <h4 class="modal-title" id="modalReviewLabel">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <span>New review for <strong>@Model.UserName</strong></span>
+                        }
+                        else
+                        {
+                            <span>Sign up now to review this user</span>
+                        }
+                    </h4>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <small>Click to select a rating:</small>
-                        <div id="star" style="display: inline-block"></div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <small>Click to select a rating:</small>
+                            <div id="star" style="display: inline-block"></div>
+                        </div>
+                        <div class="form-group">
+                            <small>Your review:</small>
+                            @Html.TextAreaFor(m => m.WriteReview.ReviewContent, new { @class = "form-control", rows = 5 })
+                        </div>
+                        <div id="review-error" class="alert alert-danger" role="alert">
+                            <p id="review-error-text">Something happened which prevented your review from being submitted.</p>
+                        </div>
+                        <div id="review-success" class="alert alert-success" role="alert">
+                            <p>Review submitted successfully. @Html.ActionLink("View reviews", "index", "profile", new { id = Model.ProfileId, tab = "reviews" }, new { @class = "alert-link" }) for <strong>@Model.UserName</strong>.</p>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <small>Your review:</small>
-                        @Html.TextAreaFor(m => m.WriteReview.ReviewContent, new { @class = "form-control", rows = 5 })
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <i class="fa fa-close"></i> Close
+                        </button>
+                        <button id="button-review-write" type="button" class="btn btn-primary" onclick="onWriteReview(event, this)">
+                            <i class="fa fa-send"></i> Send
+                        </button>
                     </div>
-                    <div id="review-error" class="alert alert-danger" role="alert">
-                        <p id="review-error-text">Something happened which prevented your review from being submitted.</p>
+                    @Html.HiddenFor(m => m.WriteReview.RatingValue)
+                }
+                else
+                {
+                    <div class="modal-body">
+                        @Html.Partial("_ModalSignUpIncentivePartial")
                     </div>
-                    <div id="review-success" class="alert alert-success" role="alert">
-                        <p>Review submitted successfully. @Html.ActionLink("View reviews", "index", "profile", new { id = Model.ProfileId, tab = "reviews" }, new { @class = "alert-link" }) for <strong>@Model.UserName</strong>.</p>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        <i class="fa fa-close"></i> Close
-                    </button>
-                    <button id="button-review-write" type="button" class="btn btn-primary" onclick="onWriteReview(event, this)">
-                        <i class="fa fa-send"></i> Send
-                    </button>
-                </div>
-                @Html.HiddenFor(m => m.WriteReview.RatingValue)
+                }
             </div>
         </div>
     </div>
@@ -735,36 +813,52 @@ else
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="modalMessageLabel">Send messages to <strong>@Model.UserName</strong></h4>
+                    <h4 class="modal-title" id="modalMessageLabel">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <span>Send messages to <strong>@Model.UserName</strong></span>
+                        }
+                        else
+                        {
+                            <span>Sign up now to message this user</span>
+                        }
+                    </h4>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        @Html.TextAreaFor(m => m.SendMessage.MessageBody, new { @class = "form-control", rows = 5 })
-                    </div>
-                    <div id="message-error" class="alert alert-danger" role="alert">
-                        <p id="message-error-text">Something happened which prevented your message from being sent.</p>
-                    </div>
-                    <div class="pull-right">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                            <i class="fa fa-close"></i> Close
-                        </button>
-                        <button id="button-message-send" type="button" onclick="onSendMessage(event, this)" class="btn btn-primary">
-                            <i class="fa fa-send"></i> Send
-                        </button>
-                    </div>
-                    <div class="clearfix"></div>
-                    <br />
-                    <div id="message-success" class="alert alert-success" role="alert">
-                        <p>Message sent successfully. @Html.ActionLink("View conversation", "conversation", "message", new { id = @Model.ProfileUserId }, new { @class = "alert-link" }) with <strong>@Model.UserName</strong>.</p>
-                    </div>
-                    <table id="message-send-log" class="table wrap-long-lines-table">
-                        <thead>
-                            <tr>
-                                <th>Messages successfully sent so far:</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="form-group">
+                            @Html.TextAreaFor(m => m.SendMessage.MessageBody, new { @class = "form-control", rows = 5 })
+                        </div>
+                        <div id="message-error" class="alert alert-danger" role="alert">
+                            <p id="message-error-text">Something happened which prevented your message from being sent.</p>
+                        </div>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                <i class="fa fa-close"></i> Close
+                            </button>
+                            <button id="button-message-send" type="button" onclick="onSendMessage(event, this)" class="btn btn-primary">
+                                <i class="fa fa-send"></i> Send
+                            </button>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+                        <div id="message-success" class="alert alert-success" role="alert">
+                            <p>Message sent successfully. @Html.ActionLink("View conversation", "conversation", "message", new { id = @Model.ProfileUserId }, new { @class = "alert-link" }) with <strong>@Model.UserName</strong>.</p>
+                        </div>
+                        <table id="message-send-log" class="table wrap-long-lines-table">
+                            <thead>
+                                <tr>
+                                    <th>Messages successfully sent so far:</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        @Html.Partial("_ModalSignUpIncentivePartial")
+                    }
                 </div>
             </div>
         </div>

@@ -746,3 +746,11 @@ input[readonly] {
 .nav-tabs {
     margin-bottom: 15px;
 }
+.radio label::before {
+  width: 20px;
+  height: 20px;
+}
+
+.radio label {
+    font-size: 14px;
+}

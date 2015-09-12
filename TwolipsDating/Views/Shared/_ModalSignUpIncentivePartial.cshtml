@@ -1,0 +1,17 @@
+﻿@using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Url.Action("index", "trivia") }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="col-sm-6">
+        @Html.Partial("_SocialLoginButtonPartial", "Facebook")
+        @Html.Partial("_SocialLoginButtonPartial", "Google")
+        @Html.Partial("_SocialLoginButtonPartial", "Twitter")
+        @Html.Partial("_SocialLoginButtonPartial", "Email")
+    </div>
+    <div class="col-sm-6 text-center">
+        <h4>Already have an account?</h4>
+        <a href="@Url.Action("login", "account")" class="btn btn-primary">
+            <i class="fa fa-sign-in fa-lg fa-fw"></i> Login now!
+        </a>
+    </div>
+    <div class="clearfix"></div>
+}

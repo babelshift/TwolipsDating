@@ -1,0 +1,31 @@
+﻿@model string
+
+@if (!String.IsNullOrEmpty(Model))
+{
+    var social = Model.ToLower();
+
+    if (social == "facebook")
+    {
+        <button type="submit" class="btn btn-block btn-facebook" id="Facebook" name="provider" value="Facebook" title="Join with Facebook">
+            <i class="fa fa-facebook fa-lg fa-fw"></i> Join with Facebook
+        </button>
+    }
+    else if (social == "twitter")
+    {
+        <button type="submit" class="btn btn-block btn-twitter" id="Twitter" name="provider" value="Twitter" title="Join with Twitter">
+            <i class="fa fa-twitter fa-lg fa-fw"></i> Join with Twitter
+        </button>
+    }
+    else if (social == "google")
+    {
+        <button type="submit" class="btn btn-block btn-google-plus" id="Google" name="provider" value="Google" title="Join with Google+">
+            <i class="fa fa-google-plus fa-lg fa-fw"></i> Join with Google+
+        </button>
+    }
+    else if (social == "email")
+    {
+        <button type="submit" class="btn btn-block btn-success" title="Join with Email">
+            <i class="fa fa-envelope fa-lg fa-fw"></i> Join with Email
+        </button>
+    }
+}
