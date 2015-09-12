@@ -6,7 +6,6 @@
 @if (!HttpContext.Current.IsDebuggingEnabled)
 {
     <div class="ad">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
         <!-- TriviaDashboard - Middle - 1 -->
         <ins class="adsbygoogle"
              style="display:block"
@@ -64,6 +63,7 @@ else
                 </ul>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="daily">
+                        @Html.Partial("_SignUpIncentivePartial")
                         @foreach (var daysAgo in Model.DailyQuizzes.Keys)
                         {
                             var quizList = Model.DailyQuizzes[daysAgo];
@@ -86,7 +86,7 @@ else
                             {
                                 <div class="row" style="margin-bottom: 25px">
                                     <div class="col-xs-4">
-                                        <a href="#">
+                                        <a href="@Url.Action("quiz", new { id = quiz.Id })">
                                             <img class="pull-left img-responsive" src="@quiz.ThumbnailImagePath" alt="@quiz.Name">
                                         </a>
                                     </div>
@@ -123,7 +123,7 @@ else
                         {
                             <div class="row" style="margin-bottom: 25px">
                                 <div class="col-xs-4">
-                                    <a href="#">
+                                    <a href="@Url.Action("quiz", new { id = quiz.Id })">
                                         <img class="pull-left img-responsive" src="@quiz.ThumbnailImagePath" alt="@quiz.Name">
                                     </a>
                                 </div>
@@ -159,7 +159,7 @@ else
                         {
                             <div class="row" style="margin-bottom: 25px">
                                 <div class="col-xs-4">
-                                    <a href="#">
+                                    <a href="@Url.Action("quiz", new { id = quiz.Id })">
                                         <img class="pull-left img-responsive" src="@quiz.ThumbnailImagePath" alt="@quiz.Name">
                                     </a>
                                 </div>
@@ -210,11 +210,28 @@ else
             </div>
         </div>
     </div>
-    <div class="col-md-4 col-sm-6">
+    @if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="col-md-4 col-sm-6">
+            <div class="ad">
+                <!-- Trivia Dashboard - Right 1 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1823005717277864"
+                     data-ad-slot="3552777032"
+                     data-ad-format="auto"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+    }
+    else
+    {
         <div class="text-center" style="margin: 5px auto;">
             <img src="http://placehold.it/350x250" />
         </div>
-    </div>
+    }
     <div class="col-md-4 col-sm-6">
         @if (Model.RecentlyCompletedQuizzes != null && Model.RecentlyCompletedQuizzes.Count > 0)
         {
@@ -257,18 +274,38 @@ else
                     <a class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.Id })">@quiz.Name</a>
                 }
                 @*<a class="list-group-item" href="#" style="font-size: 14px">
-                    <span class="badge">14</span>
-                    World of Warcraft (Scout)
-                </a>*@
+                        <span class="badge">14</span>
+                        World of Warcraft (Scout)
+                    </a>*@
             </div>
             <div class="panel-footer text-center">
                 <a href="#"><small>See more quizzes</small></a>
             </div>
         </div>
     </div>
-    <div class="col-md-4 col-sm-6">
+    @if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="col-md-4 col-sm-6">
+            <div class="ad">
+                <!-- Trivia Dashboard - Right 2 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1823005717277864"
+                     data-ad-slot="5029510239"
+                     data-ad-format="auto"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+    }
+    else
+    {
         <div class="text-center" style="margin: 5px auto;">
             <img src="http://placehold.it/350x250" />
         </div>
-    </div>
+    }
 </div>
+@section Scripts {
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+}

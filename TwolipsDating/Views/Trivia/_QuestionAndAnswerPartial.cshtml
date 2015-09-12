@@ -3,13 +3,7 @@
 @if (Model != null && !String.IsNullOrEmpty(Model.Content))
 {
     <div class="panel-body">
-        @if (!User.Identity.IsAuthenticated)
-        {
-            <div id="alert-box" class="alert alert-info">
-                <h5>You can answer this question by <a href="@Url.Action("login", "account")" class="alert-link">logging in</a>.</h5>
-            </div>
-        }
-        else
+        @if(User.Identity.IsAuthenticated)
         {
             if (Model.QuestionTypeId == (int)TwolipsDating.Models.QuestionTypeValues.Timed)
             {
@@ -82,10 +76,7 @@
             }
             @Html.HiddenFor(m => m.QuestionId)
         }
-        else
-        {
-            <a href="@Url.Action("login", "account")" class="btn btn-primary">Log in to answer this question</a>
-        }
+        @Html.Partial("_SignUpIncentivePartial")
     </div>
 }
 else

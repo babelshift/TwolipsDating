@@ -246,33 +246,24 @@ else
 <div class="row" style="margin-bottom: 10px">
     <div class="col-xs-4">
         <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("Here's a {0} year old {1} from {2} @twolipsdating", Model.Age, Model.Gender, Model.Location)) + "&url=" + Url.Encode(Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme)))"
-           style="width: 100%;" class="btn btn-twitter" title="Share on Twitter">
-            <span class="fa-stack">
-                <i class="fa fa-circle fa-stack-2x"></i>
-                <i class="fa fa-twitter fa-stack-1x fa-inverse-twitter"></i>
-            </span>
+           class="btn btn-block btn-twitter" title="Share on Twitter">
+            <i class="fa fa-twitter fa-lg fa-fw"></i>
             <span class="hidden-xs">Share on Twitter</span>
         </a>
     </div>
     <div class="col-xs-4">
         <a href="@("https://www.facebook.com/sharer/sharer.php?u=" + Url.Encode(Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme)))"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
-           style="width: 100%;" class="btn btn-facebook" title="Share on Facebook">
-            <span class="fa-stack">
-                <i class="fa fa-circle fa-stack-2x"></i>
-                <i class="fa fa-facebook fa-stack-1x fa-inverse-facebook"></i>
-            </span>
+            class="btn btn-block btn-facebook" title="Share on Facebook">
+            <i class="fa fa-facebook fa-lg fa-fw"></i>
             <span class="hidden-xs">Share on Facebook</span>
         </a>
     </div>
     <div class="col-xs-4">
         <a href="@("https://plus.google.com/share?url=" + Url.Encode(Url.Action("index", "profile", new { id = Model.ProfileId }, Request.Url.Scheme)))"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
-           style="width: 100%;" class="btn btn-google-plus" title="Share on Google+">
-            <span class="fa-stack">
-                <i class="fa fa-circle fa-stack-2x"></i>
-                <i class="fa fa-google-plus fa-stack-1x fa-inverse-google-plus"></i>
-            </span>
+            class="btn btn-block btn-google-plus" title="Share on Google+">
+            <i class="fa fa-google-plus fa-lg fa-fw"></i>
             <span class="hidden-xs">Share on Google+</span>
         </a>
     </div>
@@ -333,14 +324,6 @@ else
 </div>
 <div class="row">
     <div class="col-md-3 col-lg-3">
-        @if (!User.Identity.IsAuthenticated)
-        {
-            <div class="panel panel-warning hidden-md hidden-lg">
-                <div class="panel-body text-center">
-                    <a class="btn btn-warning" href="@Url.Action("login", "account")">Login to contact this user</a>
-                </div>
-            </div>
-        }
         <div class="panel panel-default hidden-xs hidden-sm">
             <div class="list-group" style="font-size: 16px">
                 <a href="@Url.Action("index", new { tab = "about" })" title="About this person" class="list-group-item @(Model.ActiveTab == "about" ? "active" : "overflow-ellipsis")">
@@ -435,15 +418,11 @@ else
             </div>*@
     </div>
     <div class="col-md-9 col-lg-9">
-        @if (User.Identity.IsAuthenticated)
+        @if (!User.Identity.IsAuthenticated)
         {
-
-        }
-        else
-        {
-            <div class="panel panel-warning hidden-xs hidden-sm">
+            <div class="panel panel-warning">
                 <div class="panel-body text-center">
-                    <a class="btn btn-warning" href="@Url.Action("login", "account")">Login to contact this user</a>
+                    <a class="btn btn-warning" href="@Url.Action("login", "account")">Login to contact this person</a>
                 </div>
             </div>
         }

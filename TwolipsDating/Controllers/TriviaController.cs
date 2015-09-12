@@ -48,7 +48,7 @@ namespace TwolipsDating.Controllers
         /// Returns a view to display the trivia dashboard
         /// </summary>
         /// <returns></returns>
-        [RequireProfileIfAuthenticated]
+        [AllowAnonymous, RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
         public async Task<ActionResult> Index()
         {
             await SetNotificationsAsync();

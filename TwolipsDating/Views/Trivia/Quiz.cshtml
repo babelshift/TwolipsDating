@@ -64,33 +64,24 @@
         <div style="margin-bottom: 5px">
             <div class="col-xs-4">
                 <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(Model.QuizDescription + " #trivia") + "&url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
-                   style="width: 100%;" class="btn btn-twitter" title="Share on Twitter">
-                    <span class="fa-stack">
-                        <i class="fa fa-circle fa-stack-2x"></i>
-                        <i class="fa fa-twitter fa-stack-1x fa-inverse-twitter"></i>
-                    </span>
+                   class="btn btn-block btn-twitter" title="Share on Twitter">
+                    <i class="fa fa-twitter fa-lg fa-fw"></i>
                     <span class="hidden-xs">Share on Twitter</span>
                 </a>
             </div>
             <div class="col-xs-4">
                 <a href="@("https://www.facebook.com/sharer/sharer.php?u=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
                    onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
-                   style="width: 100%;" class="btn btn-facebook" title="Share on Facebook">
-                    <span class="fa-stack">
-                        <i class="fa fa-circle fa-stack-2x"></i>
-                        <i class="fa fa-facebook fa-stack-1x fa-inverse-facebook"></i>
-                    </span>
+                   class="btn btn-block btn-facebook" title="Share on Facebook">
+                    <i class="fa fa-facebook fa-lg fa-fw"></i>
                     <span class="hidden-xs">Share on Facebook</span>
                 </a>
             </div>
             <div class="col-xs-4">
                 <a href="@("https://plus.google.com/share?url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
                    onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
-                   style="width: 100%;" class="btn btn-google-plus" title="Share on Google+">
-                    <span class="fa-stack">
-                        <i class="fa fa-circle fa-stack-2x"></i>
-                        <i class="fa fa-google-plus fa-stack-1x fa-inverse-google-plus"></i>
-                    </span>
+                   class="btn btn-block btn-google-plus" title="Share on Google+">
+                    <i class="fa fa-google-plus fa-lg fa-fw"></i>
                     <span class="hidden-xs">Share on Google+</span>
                 </a>
             </div>
@@ -104,7 +95,7 @@
                     <h4 style="margin-top: 0">@Model.QuizDescription</h4>
                     if (Model.Tags != null && Model.Tags.Count > 0)
                     {
-                        <i class="glyphicon glyphicon-tags"></i>
+                        <i class="fa fa-tags fa-lg fa-fw"></i>
                         @:&nbsp;
                         <div class="tags" style="display: inline-block">
                             @foreach (var tag in Model.Tags)
@@ -118,10 +109,11 @@
 
                     if (!Model.IsAlreadyCompleted)
                     {
-                        <br />
-                        <i class="fa fa-money"></i>
-                        @:&nbsp;
-                        @Html.Partial("_QuizRatingBarPartial", Model.AveragePoints)
+                        <div style="margin-bottom: 10px">
+                            <i class="fa fa-money fa-lg fa-fw"></i>
+                            &nbsp;
+                            @Html.Partial("_QuizRatingBarPartial", Model.AveragePoints)
+                        </div>
                     }
 
                     using (Html.BeginForm("quiz", "trivia", FormMethod.Post, new { role = "form" }))
@@ -141,12 +133,7 @@
                                 <hr />
                             }
                         }
-                        else
-                        {
-                            <div id="alert-box" class="alert alert-info">
-                                <h5>You can complete this quiz by <a href="@Url.Action("login", "account")" class="alert-link">logging in</a>.</h5>
-                            </div>
-                        }
+                        @Html.Partial("_SignUpIncentivePartial")
 
                         for (int i = 0; i < Model.Questions.Count; i++)
                         {
@@ -210,10 +197,7 @@
                         {
                             <button id="button-submit" type="submit" class="btn btn-sm btn-primary">Complete Quiz</button>
                         }
-                        else if (!User.Identity.IsAuthenticated)
-                        {
-                            <a href="@Url.Action("login", "account")" class="btn btn-primary">Log in to complete this quiz</a>
-                        }
+                        @Html.Partial("_SignUpIncentivePartial")
                         @Html.HiddenFor(m => m.QuizId)
                         @Html.HiddenFor(m => m.SEOName)
                     }

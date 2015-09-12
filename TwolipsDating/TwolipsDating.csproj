@@ -1026,6 +1026,7 @@
     <Content Include="Views\Account\ConfirmEmailWarning.cshtml" />
     <Content Include="Views\Shared\_FeedItemNewFollowerPartial.cshtml" />
     <Content Include="Views\Shared\_FooterPartial.cshtml" />
+    <Content Include="Views\Shared\_SignUpIncentivePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
