@@ -62,7 +62,7 @@ else
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="daily">
+                    <div role="tabpanel" class="tab-pane active daily-quizzes" id="daily">
                         @Html.Partial("_SignUpIncentivePartial")
                         @foreach (var daysAgo in Model.DailyQuizzes.Keys)
                         {
@@ -71,27 +71,27 @@ else
 
                             if (daysAgo == 0)
                             {
-                                <h3 style="margin-top: 35px">Today's Quizzes <small>@dayAgo.ToString("MMMM dd")</small></h3>
+                                <h3>Today's Quizzes <small>@dayAgo.ToString("MMMM dd")</small></h3>
                             }
                             else if (daysAgo == 1)
                             {
-                                <h3 style="margin-top: 35px">Yesterday's Quizzes <small>@dayAgo.ToString("MMMM dd")</small></h3>
+                                <h3>Yesterday's Quizzes <small>@dayAgo.ToString("MMMM dd")</small></h3>
                             }
                             else if (daysAgo >= 2)
                             {
-                                <h3 style="margin-top: 35px">@String.Format("{0}'s Quizzes", dayAgo.DayOfWeek.ToString()) <small>@dayAgo.ToString("MMMM d")</small></h3>
+                                <h3>@String.Format("{0}'s Quizzes", dayAgo.DayOfWeek.ToString()) <small>@dayAgo.ToString("MMMM d")</small></h3>
                             }
                             <hr />
                             foreach (var quiz in quizList)
                             {
-                                <div class="row" style="margin-bottom: 25px">
+                                <div class="row quiz-item">
                                     <div class="col-xs-4">
                                         <a href="@Url.Action("quiz", new { id = quiz.Id })">
                                             <img class="pull-left img-responsive" src="@quiz.ThumbnailImagePath" alt="@quiz.Name">
                                         </a>
                                     </div>
                                     <div class="col-xs-8">
-                                        <h4 style="margin-top: 0; margin-bottom: 5px; font-weight: 400">
+                                        <h4 class="quiz-title">
                                             <a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a>
                                         </h4>
                                         <p>
@@ -112,7 +112,7 @@ else
                                                 }
                                             }
                                         </p>
-                                        <p style="font-weight: 300">@quiz.Description</p>
+                                        <p class="quiz-description">@quiz.Description</p>
                                     </div>
                                 </div>
                             }
@@ -202,7 +202,17 @@ else
             <div class="list-group">
                 @foreach (var quiz in Model.TrendingQuizzes)
                 {
-                    <a class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })"><i class="text-danger fa fa-fire fa-lg fa-fw"></i> @quiz.QuizName</a>
+                    <a style="font-size: 13px" class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })">
+                        @if (quiz.PercentageOfTrending > 50)
+                        {
+                            <i class="text-danger fa fa-fire fa-lg fa-fw"></i>
+                        }
+                        else
+                        {
+                            <i class="text-warning fa fa-fire fa-lg fa-fw"></i>
+                        }
+                        @quiz.QuizName
+                    </a>
                 }
             </div>
         </div>
@@ -268,12 +278,11 @@ else
             <div class="list-group">
                 @foreach (var quiz in Model.PopularQuizzes)
                 {
-                    <a class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.Id })">@quiz.Name</a>
+                    <a style="font-size: 13px" class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })">
+                        <span class="badge">@quiz.CompletedCount</span>
+                        @quiz.QuizName
+                    </a>
                 }
-                @*<a class="list-group-item" href="#" style="font-size: 14px">
-                        <span class="badge">14</span>
-                        World of Warcraft (Scout)
-                    </a>*@
             </div>
         </div>
     </div>

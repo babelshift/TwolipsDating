@@ -5,11 +5,10 @@ using System.Web;
 
 namespace TwolipsDating.ViewModels
 {
-    public class TrendingQuizViewModel
+    public class MostPopularQuizViewModel
     {
         public int QuizId { get; set; }
         public string QuizName { get; set; }
         public int CompletedCount { get; set; }
-        public int PercentageOfTrending { get; set; }
     }
 }

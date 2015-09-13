@@ -107,27 +107,48 @@ namespace TwolipsDating.Business
                                     {
                                         QuizId = g.Key.QuizId,
                                         QuizName = g.Key.Name,
-                                        DateCompleted = g.Max(x => x.DateCompleted)
+                                        DateCompleted = g.Max(x => x.DateCompleted),
+                                        CompletedCount = g.Count()
                                     })
                                    .OrderByDescending(x => x.DateCompleted)
                                    .Select(x => new TrendingQuizViewModel()
                                    {
                                        QuizId = x.QuizId,
-                                       QuizName = x.QuizName
+                                       QuizName = x.QuizName,
+                                       CompletedCount = x.CompletedCount
                                    }).Take(10);
 
             var result = await completedQuizzes.ToListAsync();
+
+            int totalTrendingQuizzes = 0;
+
+            foreach (var quiz in result)
+            {
+                totalTrendingQuizzes += quiz.CompletedCount;
+            }
+
+            foreach (var quiz in result)
+            {
+                quiz.PercentageOfTrending = (int)Math.Round(((double)quiz.CompletedCount / (double)totalTrendingQuizzes) * 100);
+            }
+
             return result.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<Quiz>> GetPopularQuizzesAsync()
+        public async Task<IReadOnlyCollection<MostPopularQuizViewModel>> GetPopularQuizzesAsync()
         {
-            var q = (from quiz in db.Quizzes
+            var quizzes = (from quiz in db.Quizzes
                      where quiz.IsActive
+                     where quiz.CompletedByUsers.Count() > 0
                      orderby quiz.CompletedByUsers.Count() descending
-                     select quiz).Take(10);
+                     select new MostPopularQuizViewModel()
+                     {
+                         QuizId = quiz.Id,
+                         QuizName = quiz.Name,
+                         CompletedCount = quiz.CompletedByUsers.Count()
+                     }).Take(10);
 
-            var result = await q.ToListAsync();
+            var result = await quizzes.ToListAsync();
             return result.AsReadOnly();
         }
 

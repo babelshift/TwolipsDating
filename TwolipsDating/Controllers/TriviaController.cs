@@ -65,7 +65,7 @@ namespace TwolipsDating.Controllers
             viewModel.NewQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(newQuizzes);
             viewModel.DailyQuizzes = dailyQuizzes.ToDictionary(x => x.Key, x => Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(x.Value));
             viewModel.TrendingQuizzes = trendingQuizzes;
-            viewModel.PopularQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(popularQuizzes);
+            viewModel.PopularQuizzes = popularQuizzes;
             viewModel.UnfinishedQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(unfinishedQuizzes);
 
             // alters the viewmodel's list of quizzes to indicate if the quiz has already been completed by the currently logged in user

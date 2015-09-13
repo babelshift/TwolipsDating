@@ -464,6 +464,7 @@
     <Compile Include="ViewModels\GiftReceivedFeedViewModel.cs" />
     <Compile Include="ViewModels\LanguageViewModel.cs" />
     <Compile Include="ViewModels\ManageNotificationsViewModel.cs" />
+    <Compile Include="ViewModels\MostPopularQuizViewModel.cs" />
     <Compile Include="ViewModels\QuizSearchResultViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartViewModel.cs" />

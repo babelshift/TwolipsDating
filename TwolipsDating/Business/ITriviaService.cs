@@ -29,7 +29,7 @@ namespace TwolipsDating.Business
         Task<ReadOnlyDictionary<int, IReadOnlyCollection<Quiz>>> GetDailyQuizzesAsync(int daysAgo);
 
         Task<IReadOnlyCollection<TrendingQuizViewModel>> GetTrendingQuizzesAsync();
-        Task<IReadOnlyCollection<Quiz>> GetPopularQuizzesAsync();
+        Task<IReadOnlyCollection<MostPopularQuizViewModel>> GetPopularQuizzesAsync();
         Task<IReadOnlyCollection<Quiz>> GetUnfinishedQuizzesAsync(string userId);
     }
 }
