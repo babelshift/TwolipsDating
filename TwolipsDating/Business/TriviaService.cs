@@ -100,6 +100,7 @@ namespace TwolipsDating.Business
 
         public async Task<IReadOnlyCollection<TrendingQuizViewModel>> GetTrendingQuizzesAsync()
         {
+            // we have to group on the max date completed so that we can order by that date after the group by is complete
             var completedQuizzes = (from completedQuiz in db.CompletedQuizzes
                                     group completedQuiz by new { completedQuiz.QuizId, completedQuiz.Quiz.Name } into g
                                     select new

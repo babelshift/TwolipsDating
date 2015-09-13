@@ -205,9 +205,6 @@ else
                     <a class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })"><i class="text-danger fa fa-fire fa-lg fa-fw"></i> @quiz.QuizName</a>
                 }
             </div>
-            <div class="panel-footer text-center">
-                <a href="#"><small>See more quizzes</small></a>
-            </div>
         </div>
     </div>
     @if (!HttpContext.Current.IsDebuggingEnabled)
@@ -258,7 +255,7 @@ else
                     }
                 </div>
                 <div class="panel-footer text-center">
-                    <a href="#"><small>Find more people</small></a>
+                    <a href="@Url.Action("index", "search")"><small>Find more people</small></a>
                 </div>
             </div>
         }
@@ -277,9 +274,6 @@ else
                         <span class="badge">14</span>
                         World of Warcraft (Scout)
                     </a>*@
-            </div>
-            <div class="panel-footer text-center">
-                <a href="#"><small>See more quizzes</small></a>
             </div>
         </div>
     </div>
