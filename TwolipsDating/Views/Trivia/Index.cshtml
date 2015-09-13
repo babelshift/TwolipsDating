@@ -202,7 +202,7 @@ else
             <div class="list-group">
                 @foreach (var quiz in Model.TrendingQuizzes)
                 {
-                    <a class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.Id })"><i class="text-danger fa fa-fire fa-lg fa-fw"></i> @quiz.Name</a>
+                    <a class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })"><i class="text-danger fa fa-fire fa-lg fa-fw"></i> @quiz.QuizName</a>
                 }
             </div>
             <div class="panel-footer text-center">

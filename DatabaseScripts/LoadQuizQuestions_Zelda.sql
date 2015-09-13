@@ -67,7 +67,7 @@ delete from @answers;
 insert into @answers(Content, IsCorrect) values('Top and Bottom', 0);
 insert into @answers(Content, IsCorrect) values('Good and Evil', 0);
 insert into @answers(Content, IsCorrect) values('Dark and Light', 1);
-insert into @answers(Content, IsCorrect) values('Smart and Stupid', 1);
+insert into @answers(Content, IsCorrect) values('Smart and Stupid', 0);
 exec dbo.InsertQuizQuestion 'What is the name of the two opposing worlds/dimensions in A Link to the Past?', 3, 10, @answers;
 
 delete from @answers;

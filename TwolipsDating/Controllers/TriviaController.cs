@@ -64,7 +64,7 @@ namespace TwolipsDating.Controllers
             TriviaMenuViewModel viewModel = new TriviaMenuViewModel();
             viewModel.NewQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(newQuizzes);
             viewModel.DailyQuizzes = dailyQuizzes.ToDictionary(x => x.Key, x => Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(x.Value));
-            viewModel.TrendingQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(trendingQuizzes);
+            viewModel.TrendingQuizzes = trendingQuizzes;
             viewModel.PopularQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(popularQuizzes);
             viewModel.UnfinishedQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(unfinishedQuizzes);
 

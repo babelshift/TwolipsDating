@@ -98,13 +98,24 @@ namespace TwolipsDating.Business
             return new ReadOnlyDictionary<int, IReadOnlyCollection<Quiz>>(randomQuizzesResult);
         }
 
-        public async Task<IReadOnlyCollection<Quiz>> GetTrendingQuizzesAsync()
+        public async Task<IReadOnlyCollection<TrendingQuizViewModel>> GetTrendingQuizzesAsync()
         {
-            var quizzes = (from completedQuiz in db.CompletedQuizzes
-                           orderby completedQuiz.DateCompleted descending
-                           select completedQuiz.Quiz).Distinct().Take(10);
+            var completedQuizzes = (from completedQuiz in db.CompletedQuizzes
+                                    group completedQuiz by new { completedQuiz.QuizId, completedQuiz.Quiz.Name } into g
+                                    select new
+                                    {
+                                        QuizId = g.Key.QuizId,
+                                        QuizName = g.Key.Name,
+                                        DateCompleted = g.Max(x => x.DateCompleted)
+                                    })
+                                   .OrderByDescending(x => x.DateCompleted)
+                                   .Select(x => new TrendingQuizViewModel()
+                                   {
+                                       QuizId = x.QuizId,
+                                       QuizName = x.QuizName
+                                   }).Take(10);
 
-            var result = await quizzes.ToListAsync();
+            var result = await completedQuizzes.ToListAsync();
             return result.AsReadOnly();
         }
 

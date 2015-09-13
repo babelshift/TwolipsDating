@@ -424,6 +424,7 @@
     <Compile Include="Migrations\201509121933539_AddLifetimePoints.Designer.cs">
       <DependentUpon>201509121933539_AddLifetimePoints.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\CompletedQuizComparer.cs" />
     <Compile Include="Models\EmailNotifications.cs" />
     <Compile Include="Models\Language.cs" />
     <Compile Include="Models\LookingForLocation.cs" />
@@ -779,6 +780,7 @@
     <Compile Include="ViewModels\TagSuggestionReceivedFeedViewModel.cs" />
     <Compile Include="ViewModels\TagViewModel.cs" />
     <Compile Include="ViewModels\TitleViewModel.cs" />
+    <Compile Include="ViewModels\TrendingQuizViewModel.cs" />
     <Compile Include="ViewModels\TriviaMenuViewModel.cs" />
     <Compile Include="ViewModels\UploadedImageViewModel.cs" />
     <Compile Include="ViewModels\UploadedImageFeedViewModel.cs" />
