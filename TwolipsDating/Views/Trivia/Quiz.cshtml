@@ -23,10 +23,10 @@
                         new { @class = "form-control", data_placeholder = "What's the problem?" })
                     </div>
                     <input type="hidden" id="selected-question-id" />
-                    <div id="violation-error" class="alert alert-danger" role="alert">
+                    <div id="violation-error" class="alert alert-danger hidden" role="alert">
                         <p id="violation-error-text">Something happened which prevented your violation from being submitted.</p>
                     </div>
-                    <div id="violation-success" class="alert alert-success" role="alert">
+                    <div id="violation-success" class="alert alert-success hidden" role="alert">
                         <p>Thanks for the report!</p>
                     </div>
                 </div>
@@ -170,12 +170,12 @@
                                             if (answer.IsCorrect)
                                             {
                                                 radioStyle = "radio-success";
-                                                <span class="text-success"><i class="glyphicon glyphicon-ok"></i></span>
+                                                <span class="text-success"><i class="fa fa-check fa-lg fa-fw"></i></span>
                                             }
                                             else
                                             {
                                                 radioStyle = "radio-danger";
-                                                <span class="text-danger"><i class="glyphicon glyphicon-remove"></i></span>
+                                                <span class="text-danger"><i class="fa fa-remove fa-lg fa-fw"></i></span>
                                             }
                                         }
                                         <div class="radio @radioStyle" style="display: inline-block">

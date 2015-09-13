@@ -1,11 +1,8 @@
 ﻿$(document).ready(function () {
-    $('#violation-error').hide();
-    $('#violation-success').hide();
-
     $('#modalQuestionViolation').on('hide.bs.modal', function (event) {
-        $('#violation-error').hide();
-        $('#violation-success').hide();
-        $('#button-violation-submit').show();
+        $('#violation-error').addClass('hidden');
+        $('#violation-success').addClass('hidden');
+        $('#button-violation-submit').removeClass('hidden');
     });
 
     $('#modalQuestionViolation').on('show.bs.modal', function (event) {
@@ -29,10 +26,10 @@ function onAddQuestionViolation(e, obj) {
 
     postJson('/violation/addQuestionViolation', json, function (data) {
         if (data.success) {
-            $('#violation-success').show();
-            $('#button-violation-submit').hide();
+            $('#violation-success').removeClass('hidden');
+            $('#button-violation-submit').addClass('hidden');
         } else {
-            $('#violation-error').show();
+            $('#violation-error').removeClass('hidden');
             $('#violation-error-text').text(data.error);
         }
     });

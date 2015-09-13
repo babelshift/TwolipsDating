@@ -44,7 +44,7 @@ namespace TwolipsDating
             bundles.Add(new ScriptBundle("~/bundles/trivia/quiz").Include(
                 "~/Scripts/jquery.validate*",
                 "~/Scripts/jquery.unobtrusive-ajax.js",
-                "~/Scripts/Trivia/index.js"));
+                "~/Scripts/Trivia/quiz.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/tags/index").Include(
                 "~/Scripts/Tags/index.js"));

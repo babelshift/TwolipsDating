@@ -403,7 +403,7 @@ namespace TwolipsDating.Controllers
                 QuizId = id,
                 IsAlreadyCompleted = isAlreadyCompleted,
                 QuizDescription = quiz.Description,
-                UsersCompletedQuiz = await GetUsersCompletedQuizAsync(id),
+                UsersCompletedQuiz = await TriviaService.GetUsersCompletedQuizAsync(id),
                 Tags = await GetTagsForQuizAsync(id),
                 QuestionViolation = await GetQuestionViolationViewModelAsync(),
                 AveragePoints = questionListViewModel != null && questionListViewModel.Count > 0
@@ -456,17 +456,6 @@ namespace TwolipsDating.Controllers
             int count = await TriviaService.SetQuizAsCompleted(currentUserId, viewModel.QuizId, numberOfCorrectAnswers);
 
             return RedirectToAction("quiz", new { id = viewModel.QuizId });
-        }
-
-        /// <summary>
-        /// Returns a collection of users who have completed a quiz.
-        /// </summary>
-        /// <param name="quizId"></param>
-        /// <returns></returns>
-        private async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int quizId)
-        {
-            var usersCompletedQuiz = await TriviaService.GetUsersCompletedQuizAsync(quizId);
-            return usersCompletedQuiz;
         }
 
         /// <summary>
