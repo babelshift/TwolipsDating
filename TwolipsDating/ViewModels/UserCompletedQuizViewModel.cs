@@ -16,5 +16,10 @@ namespace TwolipsDating.ViewModels
         public int TotalAnswerCount { get; set; }
         public int UserScorePercent { get { return (int)Math.Round(((double)CorrectAnswerCount / (double)TotalAnswerCount) * 100); } }
         public bool IsFavoritedByCurrentUser { get; set; }
+        public DateTime Birthday { get; set; }
+        public int Age { get; set; }
+        public string CityName { get; set; }
+        public string StateName { get; set; }
+        public string Location { get; set; }
     }
 }

@@ -151,39 +151,39 @@ else
             </div>
             @if (Model.UsersToFollow != null && Model.UsersToFollow.Count > 0)
             {
-                <div class="panel panel-default">
+                <div class="panel panel-primary">
                     <div class="panel-heading">
                         <div class="panel-title text-center">
-                            <i class="fa fa-users"></i> People to Follow
+                            <i class="fa fa-users"></i> You might also like...
                         </div>
                     </div>
-                    <div class="panel-body">
+                    <ul class="list-group">
                         @foreach (var userProfile in Model.UsersToFollow)
                         {
-                            <div id="@String.Format("user-to-follow-{0}", userProfile.ProfileId)" class="user-to-follow">
+                            <li id="@String.Format("user-to-follow-{0}", userProfile.ProfileId)" class="list-group-item user-to-follow">
                                 <div style="margin-left: 55px;">
                                     <a href="@Url.Action("index", "profile", new{ id = userProfile.ProfileId })">
                                         <img src="@userProfile.ProfileImagePath">
                                     </a>
                                     <span class="user-to-follow-name">
-                                        <strong>@userProfile.UserName</strong>
+                                        @userProfile.UserName
                                     </span>
-                                    <small class="user-to-follow-location">
+                                    <span class="user-to-follow-details">
                                         <i class="fa fa-user fa-fw"></i> @userProfile.Age years old
                                         <br />
                                         @if (!String.IsNullOrEmpty(userProfile.Location))
                                         {
                                             <i class="fa fa-map-marker fa-fw"></i> @userProfile.Location
                                         }
-                                    </small>
+                                    </span>
                                 </div>
-                                <button id="@String.Format("button-toggle-favorite-{0}", userProfile.ProfileId)" style="position: absolute; right: 0; top: 6px;" class="btn btn-default btn-sm custom-tooltip follow-user"
+                                <button id="@String.Format("button-toggle-favorite-{0}", userProfile.ProfileId)" class="btn btn-default btn-sm custom-tooltip user-to-follow-button"
                                         data-profile-id="@userProfile.ProfileId" data-user-id="@userProfile.ProfileUserId">
                                     <i id="@String.Format("icon-toggle-favorite-{0}", userProfile.ProfileId)" class="fa fa-user-plus fa-lg"></i> Follow
                                 </button>
-                            </div>
+                            </li>
                         }
-                    </div>
+                    </ul>
                     <div class="panel-footer text-center">
                         <a href="@Url.Action("index", "search")"><small>Find more people</small></a>
                     </div>

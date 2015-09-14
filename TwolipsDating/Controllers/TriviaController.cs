@@ -72,7 +72,7 @@ namespace TwolipsDating.Controllers
             await SetQuizzesCompletedByCurrentUser(currentUserId, viewModel);
 
             //viewModel.UserStats = await ProfileService.GetUserStatsAsync(currentUserId);
-            viewModel.RecentlyCompletedQuizzes = await GetUsersCompletedQuizzesAsync();
+            viewModel.RecentlyCompletedQuizzes = await TriviaService.GetUsersCompletedQuizzesAsync(currentUserId);
 
             return View(viewModel);
         }
@@ -94,15 +94,6 @@ namespace TwolipsDating.Controllers
                     quiz.IsComplete = true;
                 }
             }
-        }
-
-        /// <summary>
-        /// Returns a collection of quizzes that have been completed by various users
-        /// </summary>
-        /// <returns></returns>
-        private async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizzesAsync()
-        {
-            return await TriviaService.GetUsersCompletedQuizzesAsync();
         }
 
         #endregion

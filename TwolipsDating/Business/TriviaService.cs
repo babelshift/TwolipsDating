@@ -552,7 +552,10 @@ namespace TwolipsDating.Business
 		                select count(*)
 		                from dbo.QuizQuestions qq2
 		                where qq2.Quiz_Id = q.Id
-	                ) TotalAnswerCount
+	                ) TotalAnswerCount,
+                    p.Birthday,
+					gc.Name CityName,
+					gs.Abbreviation StateName
                 from
 	                dbo.CompletedQuizs cq
 	                inner join dbo.AspNetUsers u on u.Id = cq.UserId
@@ -562,7 +565,9 @@ namespace TwolipsDating.Business
 	                inner join dbo.QuizQuestions qq on qq.Quiz_Id = q.Id
 	                inner join dbo.AnsweredQuestions aq on aq.UserId = cq.UserId and aq.QuestionId = qq.Question_Id
 	                inner join dbo.Questions qu on qu.Id = aq.QuestionId
-                    {0}
+                    left join dbo.FavoriteProfiles fp on fp.ProfileId = p.Id and fp.UserId = '{0}'
+					inner join dbo.GeoCities gc on gc.Id = p.GeoCityId
+					inner join dbo.GeoStates gs on gs.Id = gc.GeoStateId
                 where
 	                aq.AnswerId = qu.CorrectAnswerId
                     and u.IsActive = 1
@@ -574,10 +579,13 @@ namespace TwolipsDating.Business
 	                cq.DateCompleted,
 	                ui.FileName,
 	                p.Id,
-                    fp.UserId
+                    fp.UserId,
+					p.Birthday,
+					gc.Name,
+					gs.Abbreviation
                 order by
                     cq.DateCompleted desc"
-                , !String.IsNullOrEmpty(currentUserId) ? String.Format("left join dbo.FavoriteProfiles fp on fp.ProfileId = p.Id and fp.UserId = '{0}'", currentUserId) : String.Empty
+                , !String.IsNullOrEmpty(currentUserId) ? currentUserId : String.Empty
                 , quizId.HasValue ? "and q.Id = @quizId" : String.Empty);
 
             dynamic parameters = new ExpandoObject();
@@ -597,14 +605,16 @@ namespace TwolipsDating.Business
             foreach (var viewModel in results)
             {
                 viewModel.ProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(viewModel.ProfileImagePath);
+                viewModel.Age = DateTimeExtensions.GetAge(viewModel.Birthday);
+                viewModel.Location = CityExtensions.ToFullLocationString(viewModel.CityName, viewModel.StateName);
             }
 
             return results.ToList().AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizzesAsync()
+        public async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizzesAsync(string currentUserId)
         {
-            return await GetUsersCompletedQuizAsync();
+            return await GetUsersCompletedQuizAsync(null, currentUserId);
         }
 
         public async Task<IReadOnlyCollection<Tag>> GetTagsForQuestionAsync(int questionId)

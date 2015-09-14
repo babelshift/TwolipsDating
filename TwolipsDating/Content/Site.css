@@ -407,7 +407,6 @@ input[readonly] {
 
 .user-to-follow {
     position: relative;
-    margin-bottom: 15px;
     line-height: 16px;
 }
 
@@ -415,9 +414,9 @@ input[readonly] {
         width: 50px;
         height: 50px;
         position: absolute;
-        left: 0;
-        top: 0;
-        border-radius: 5px;
+        left: 10px;
+        top: 10px;
+        border-radius: 25px;
     }
 
     .user-to-follow .user-to-follow-name {
@@ -427,10 +426,19 @@ input[readonly] {
         overflow: hidden;
         text-overflow: ellipsis;
         color: #555;
+        font-size: 14px;
+        font-weight: 500;
     }
 
-    .user-to-follow .user-to-follow-location {
+    .user-to-follow .user-to-follow-details {
         color: #777;
+        font-size: 12px;
+    }
+
+    .user-to-follow .user-to-follow-button {
+        position: absolute;
+        right: 10px;
+        top: 15px;
     }
 
 .share-buttons a:hover {
