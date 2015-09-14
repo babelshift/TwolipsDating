@@ -107,14 +107,11 @@
                         </div>
                     }
 
-                    if (!Model.IsAlreadyCompleted)
-                    {
-                        <div style="margin-bottom: 10px">
-                            <i class="fa fa-money fa-lg fa-fw"></i>
-                            &nbsp;
-                            @Html.Partial("_QuizRatingBarPartial", Model.AveragePoints)
-                        </div>
-                    }
+                    <div style="margin-bottom: 10px">
+                        <i class="fa fa-money fa-lg fa-fw"></i>
+                        &nbsp;
+                        @Html.Partial("_QuizRatingBarPartial", Model.AveragePoints)
+                    </div>
 
                     using (Html.BeginForm("quiz", "trivia", FormMethod.Post, new { role = "form" }))
                     {
@@ -221,6 +218,28 @@
                 }
             </div>
         </div>
+        @if (Model.SimilarQuizzes != null && Model.SimilarQuizzes.Count > 0)
+        {
+            <div class="panel panel-primary" style="margin-bottom: 0">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="fa fa-star fa-lg fa-fw"></i> You might also like...
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    @foreach (var quiz in Model.SimilarQuizzes)
+                    {
+                        <div class="col-xs-6 col-sm-3">
+                            <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })">
+                                <img src="@quiz.ThumbnailImagePath" width="128" height="64" />
+                            </a>
+                            <br />
+                            <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })">@quiz.Name</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
         @Html.Partial("_SignUpIncentivePartial")
     </div>
 

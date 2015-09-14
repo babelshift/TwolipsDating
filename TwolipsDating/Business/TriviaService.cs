@@ -28,6 +28,20 @@ namespace TwolipsDating.Business
             return service;
         }
 
+        public async Task<IReadOnlyCollection<Quiz>> GetSimilarQuizzes(int quizId)
+        {
+            Debug.Assert(quizId > 0);
+
+            var thisQuiz = db.Quizzes.Find(quizId);
+            int quizCategoryId = thisQuiz.QuizCategoryId;
+            var quizzesInCategory = (from quiz in db.Quizzes
+                                     where quiz.QuizCategoryId == quizCategoryId
+                                     where quiz.Id != quizId
+                                     orderby Guid.NewGuid()
+                                     select quiz).Take(4);
+            return (await quizzesInCategory.ToListAsync()).AsReadOnly();
+        }
+
         public async Task<Quiz> GetQuizAsync(int quizId)
         {
             Debug.Assert(quizId > 0);
@@ -138,15 +152,15 @@ namespace TwolipsDating.Business
         public async Task<IReadOnlyCollection<MostPopularQuizViewModel>> GetPopularQuizzesAsync()
         {
             var quizzes = (from quiz in db.Quizzes
-                     where quiz.IsActive
-                     where quiz.CompletedByUsers.Count() > 0
-                     orderby quiz.CompletedByUsers.Count() descending
-                     select new MostPopularQuizViewModel()
-                     {
-                         QuizId = quiz.Id,
-                         QuizName = quiz.Name,
-                         CompletedCount = quiz.CompletedByUsers.Count()
-                     }).Take(10);
+                           where quiz.IsActive
+                           where quiz.CompletedByUsers.Count() > 0
+                           orderby quiz.CompletedByUsers.Count() descending
+                           select new MostPopularQuizViewModel()
+                           {
+                               QuizId = quiz.Id,
+                               QuizName = quiz.Name,
+                               CompletedCount = quiz.CompletedByUsers.Count()
+                           }).Take(10);
 
             var result = await quizzes.ToListAsync();
             return result.AsReadOnly();

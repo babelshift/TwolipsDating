@@ -396,6 +396,15 @@ namespace TwolipsDating.Controllers
                 questionListViewModel = Mapper.Map<ICollection<Question>, List<QuestionViewModel>>(quiz.Questions);
             }
 
+            var usersCompletedQuiz = await TriviaService.GetUsersCompletedQuizAsync(id);
+            var tagsForQuiz = await GetTagsForQuizAsync(id);
+            var questionViolationViewModel = await GetQuestionViolationViewModelAsync();
+            int averagePoints = questionListViewModel != null && questionListViewModel.Count > 0
+                    ? (int)Math.Round(questionListViewModel.Average(q => q.Points))
+                    : 0;
+            int userPercentScore = (int)Math.Round(((double)correctAnswerCount / (double)questionListViewModel.Count) * 100);
+            var similarQuizzes = await TriviaService.GetSimilarQuizzes(id);
+
             QuizViewModel viewModel = new QuizViewModel()
             {
                 Questions = questionListViewModel,
@@ -403,14 +412,13 @@ namespace TwolipsDating.Controllers
                 QuizId = id,
                 IsAlreadyCompleted = isAlreadyCompleted,
                 QuizDescription = quiz.Description,
-                UsersCompletedQuiz = await TriviaService.GetUsersCompletedQuizAsync(id),
-                Tags = await GetTagsForQuizAsync(id),
-                QuestionViolation = await GetQuestionViolationViewModelAsync(),
-                AveragePoints = questionListViewModel != null && questionListViewModel.Count > 0
-                    ? (int)Math.Round(questionListViewModel.Average(q => q.Points))
-                    : 0,
+                UsersCompletedQuiz = usersCompletedQuiz,
+                Tags = tagsForQuiz,
+                QuestionViolation = questionViolationViewModel,
+                AveragePoints = averagePoints,
                 ImageUrl = quiz.GetImagePath(),
-                UserScorePercent = (int)Math.Round(((double)correctAnswerCount / (double)questionListViewModel.Count) * 100)
+                UserScorePercent = userPercentScore,
+                SimilarQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(similarQuizzes)
             };
 
             return View(viewModel);

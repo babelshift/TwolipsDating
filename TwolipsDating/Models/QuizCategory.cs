@@ -17,7 +17,8 @@ namespace TwolipsDating.Models
         Movies = 7,
         Creative = 8,
         Literature = 9,
-        Television = 10
+        Television = 10,
+        Sports = 11
     }
 
     public class QuizCategory

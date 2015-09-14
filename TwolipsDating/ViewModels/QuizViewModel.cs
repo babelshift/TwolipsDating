@@ -15,6 +15,7 @@ namespace TwolipsDating.ViewModels
         public string SEOName { get; set; }
 
         public IReadOnlyCollection<UserCompletedQuizViewModel> UsersCompletedQuiz { get; set; }
+        public IReadOnlyCollection<QuizOverviewViewModel> SimilarQuizzes { get; set; }
 
         public QuestionViolationViewModel QuestionViolation { get; set; }
 
