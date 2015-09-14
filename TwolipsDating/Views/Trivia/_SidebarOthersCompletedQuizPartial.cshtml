@@ -1,9 +1,10 @@
 ﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.UserCompletedQuizViewModel>
+@using Microsoft.AspNet.Identity;
 
 <div class="panel panel-default">
     <div class="panel-heading">
         <h4 class="panel-title">
-            <i class="fa fa-users"></i> Recently Completed
+            <i class="fa fa-users"></i> Also completed by...
         </h4>
     </div>
     @if (Model != null && Model.Count > 0)
@@ -29,19 +30,31 @@
                         </span>
                     </div>
 
-                    @if (user.IsFavoritedByCurrentUser)
+                    @if (user.UserId != User.Identity.GetUserId())
                     {
-                        <button id="@String.Format("button-toggle-favorite-{0}", user.ProfileId)" class="btn btn-success btn-sm custom-tooltip user-to-follow-button"
-                                data-profile-id="@user.ProfileId" data-user-id="@user.UserId">
-                            <i id="@String.Format("icon-toggle-favorite-{0}", user.ProfileId)" class="fa fa-check fa-lg"></i> Following
-                        </button>
-                    }
-                    else
-                    {
-                        <button id="@String.Format("button-toggle-favorite-{0}", user.ProfileId)" class="btn btn-default btn-sm custom-tooltip user-to-follow-button"
-                                data-profile-id="@user.ProfileId" data-user-id="@user.UserId">
-                            <i id="@String.Format("icon-toggle-favorite-{0}", user.ProfileId)" class="fa fa-user-plus fa-lg"></i> Follow
-                        </button>
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            if (user.IsFavoritedByCurrentUser)
+                            {
+                                <button id="@String.Format("button-toggle-favorite-{0}", user.ProfileId)" class="btn btn-success btn-sm user-to-follow-button"
+                                        data-profile-id="@user.ProfileId" data-user-id="@user.UserId">
+                                    <i id="@String.Format("icon-toggle-favorite-{0}", user.ProfileId)" class="fa fa-check fa-lg"></i> Following
+                                </button>
+                            }
+                            else
+                            {
+                                <button id="@String.Format("button-toggle-favorite-{0}", user.ProfileId)" class="btn btn-default btn-sm user-to-follow-button"
+                                        data-profile-id="@user.ProfileId" data-user-id="@user.UserId">
+                                    <i id="@String.Format("icon-toggle-favorite-{0}", user.ProfileId)" class="fa fa-user-plus fa-lg"></i> Follow
+                                </button>
+                            }
+                        }
+                        else
+                        {
+                            <button class="btn btn-default btn-sm user-to-follow-button" data-toggle="modal" data-target="#modalSignUpIncentiveFollow" data-keyboard="true">
+                                <i class="fa fa-user-plus fa-lg"></i> Follow
+                            </button>
+                        }
                     }
                 </li>
             }

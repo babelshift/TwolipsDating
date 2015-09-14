@@ -153,7 +153,7 @@ else
             {
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <div class="panel-title text-center">
+                        <div class="panel-title">
                             <i class="fa fa-users"></i> You might also like...
                         </div>
                     </div>
@@ -177,7 +177,7 @@ else
                                         }
                                     </span>
                                 </div>
-                                <button id="@String.Format("button-toggle-favorite-{0}", userProfile.ProfileId)" class="btn btn-default btn-sm custom-tooltip user-to-follow-button"
+                                <button id="@String.Format("button-toggle-favorite-{0}", userProfile.ProfileId)" class="btn btn-default btn-sm custom-tooltip followify user-to-follow-button"
                                         data-profile-id="@userProfile.ProfileId" data-user-id="@userProfile.ProfileUserId">
                                     <i id="@String.Format("icon-toggle-favorite-{0}", userProfile.ProfileId)" class="fa fa-user-plus fa-lg"></i> Follow
                                 </button>

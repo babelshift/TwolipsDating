@@ -12,7 +12,7 @@
         modal.find('#selected-question-id').val(questionId);
     });
 
-    $('.user-to-follow-button').followify({ fadeOut: false });
+    $('.followify').followify({ fadeOut: false });
 });
 
 function onAddQuestionViolation(e, obj) {
