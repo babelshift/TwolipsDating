@@ -4,6 +4,8 @@
     });
 
     setupQuestionViolation();
+
+    $('.followify').followify({ fadeOut: false });
 });
 
 function setupQuestionViolation() {

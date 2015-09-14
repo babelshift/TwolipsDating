@@ -60,5 +60,7 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task<ToggleServiceResult> ToggleIgnoredUserAsync(string sourceUserId, string targetUserId);
         IUserService UserService { set; }
         System.Threading.Tasks.Task<int> WriteReviewAsync(string authorUserId, string targetUserId, string content, int ratingValue, string authorProfileUrlRoot);
+
+        System.Threading.Tasks.Task<bool> IsProfileFavoritedByUserAsync(int profileId, string currentUserId);
     }
 }

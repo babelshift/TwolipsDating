@@ -443,7 +443,7 @@ namespace TwolipsDating.Controllers
                     question.SelectedAnswerId.Value,
                     (int)QuestionTypeValues.Quiz);
 
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
                     if (question.SelectedAnswerId.Value == result.CorrectAnswerId)
                     {
@@ -491,6 +491,11 @@ namespace TwolipsDating.Controllers
                 viewModel.QuestionTypeId = questionTypeId;
                 viewModel.UsersAnsweredCorrectly = await GetUsersAnsweredCorrectlyAsync(randomQuestion.Id);
                 viewModel.Tags = await GetTagsForQuestionAsync(randomQuestion.Id);
+
+                foreach (var user in viewModel.UsersAnsweredCorrectly)
+                {
+                    user.IsFavoritedByCurrentUser = await ProfileService.IsProfileFavoritedByUserAsync(user.ProfileId, currentUserId);
+                }
             }
 
             return viewModel;

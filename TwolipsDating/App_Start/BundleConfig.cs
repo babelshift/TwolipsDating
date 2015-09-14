@@ -36,9 +36,11 @@ namespace TwolipsDating
                 "~/Scripts/Manage/index.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/trivia/timed").Include(
+                "~/Scripts/Shared/followify.js",
                 "~/Scripts/Trivia/timed.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/trivia/random").Include(
+                "~/Scripts/Shared/followify.js",
                 "~/Scripts/Trivia/random.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/trivia/quiz").Include(

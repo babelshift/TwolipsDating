@@ -1,25 +1,66 @@
 ﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.UserAnsweredQuestionCorrectlyViewModel>
+@using Microsoft.AspNet.Identity;
 
 <div class="panel panel-default">
     <div class="panel-heading">
         <h4 class="panel-title">
-            <i class="fa fa-users"></i> Answered correctly
+            <i class="fa fa-users"></i> Answered correctly by...
         </h4>
     </div>
     @if (Model != null && Model.Count > 0)
     {
-        <div class="list-group">
+        <ul class="list-group">
             @foreach (var user in Model)
             {
-                <a href="@Url.Action("index", "profile", new { id = user.ProfileId })" class="list-group-item" style="padding: 5px 10px;">
-                    <span class="badge" style="margin-top: 15px">@user.TimeAgo</span>
-                    @Html.Partial("_ProfileImagePartial", user.ProfileImagePath)
-                    <p style="display: inline-block; vertical-align: top; margin-top: 11px; font-size: 16px">
-                        @user.UserName
-                    </p>
-                </a>
+                <li id="@String.Format("user-to-follow-{0}", user.ProfileId)" class="list-group-item user-to-follow">
+                    <div style="margin-left: 55px;">
+                        <a href="@Url.Action("index", "profile", new{ id = user.ProfileId })">
+                            <img src="@user.ProfileImagePath">
+                        </a>
+                        <span class="user-to-follow-name">
+                            @user.UserName
+                        </span>
+                        <span class="user-to-follow-details">
+                            <i class="fa fa-user fa-fw"></i> @user.Age years old
+                            <br />
+                            @if (!String.IsNullOrEmpty(user.Location))
+                            {
+                                <i class="fa fa-map-marker fa-fw"></i> @user.Location
+                            }
+                        </span>
+                    </div>
+
+                    @if (user.UserId != User.Identity.GetUserId())
+                    {
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            if (user.IsFavoritedByCurrentUser)
+                            {
+                                <button id="@String.Format("button-toggle-favorite-{0}", user.ProfileId)" class="btn btn-success btn-sm followify user-to-follow-button"
+                                        data-profile-id="@user.ProfileId" data-user-id="@user.UserId">
+                                    <i id="@String.Format("icon-toggle-favorite-{0}", user.ProfileId)" class="fa fa-check fa-lg"></i>
+                                    <span id="@String.Format("user-to-follow-button-text-{0}", user.ProfileId)">Following</span>
+                                </button>
+                            }
+                            else
+                            {
+                                <button id="@String.Format("button-toggle-favorite-{0}", user.ProfileId)" class="btn btn-default btn-sm followify user-to-follow-button"
+                                        data-profile-id="@user.ProfileId" data-user-id="@user.UserId">
+                                    <i id="@String.Format("icon-toggle-favorite-{0}", user.ProfileId)" class="fa fa-user-plus fa-lg"></i>
+                                    <span id="@String.Format("user-to-follow-button-text-{0}", user.ProfileId)">Follow</span>
+                                </button>
+                            }
+                        }
+                        else
+                        {
+                            <button class="btn btn-default btn-sm user-to-follow-button" data-toggle="modal" data-target="#modalSignUpIncentiveFollow" data-keyboard="true">
+                                <i class="fa fa-user-plus fa-lg"></i> Follow
+                            </button>
+                        }
+                    }
+                </li>
             }
-        </div>
+        </ul>
     }
     else
     {

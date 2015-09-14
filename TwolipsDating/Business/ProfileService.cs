@@ -1628,5 +1628,19 @@ namespace TwolipsDating.Business
             var results = await languages.ToListAsync();
             return results.AsReadOnly();
         }
+
+        public async Task<bool> IsProfileFavoritedByUserAsync(int profileId, string currentUserId)
+        {
+            Debug.Assert(profileId > 0);
+
+            if(String.IsNullOrEmpty(currentUserId))
+            {
+                return false;
+            }
+
+            var favoritedProfile = await db.FavoriteProfiles.FindAsync(currentUserId, profileId);
+
+            return favoritedProfile != null;
+        }
     }
 }

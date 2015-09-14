@@ -38,11 +38,13 @@
             $('#button-toggle-favorite-' + profileId).addClass("btn-success");
             $('#icon-toggle-favorite-' + profileId).removeClass('fa-user-plus');
             $('#icon-toggle-favorite-' + profileId).addClass('fa-check');
+            $('#user-to-follow-button-text-' + profileId).html('Following');
         } else {
             $('#button-toggle-favorite-' + profileId).removeClass("btn-success");
             $('#button-toggle-favorite-' + profileId).addClass("btn-default");
             $('#icon-toggle-favorite-' + profileId).removeClass('fa-check');
             $('#icon-toggle-favorite-' + profileId).addClass('fa-user-plus');
+            $('#user-to-follow-button-text-' + profileId).html('Follow');
         }
     }
 }(jQuery));

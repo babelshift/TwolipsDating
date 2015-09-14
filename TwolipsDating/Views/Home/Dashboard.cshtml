@@ -179,7 +179,8 @@ else
                                 </div>
                                 <button id="@String.Format("button-toggle-favorite-{0}", userProfile.ProfileId)" class="btn btn-default btn-sm custom-tooltip followify user-to-follow-button"
                                         data-profile-id="@userProfile.ProfileId" data-user-id="@userProfile.ProfileUserId">
-                                    <i id="@String.Format("icon-toggle-favorite-{0}", userProfile.ProfileId)" class="fa fa-user-plus fa-lg"></i> Follow
+                                    <i id="@String.Format("icon-toggle-favorite-{0}", userProfile.ProfileId)" class="fa fa-user-plus fa-lg"></i>
+                                    <span id="@String.Format("user-to-follow-button-text-{0}", userProfile.ProfileId)">Follow</span>
                                 </button>
                             </li>
                         }
