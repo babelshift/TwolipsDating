@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using TwolipsDating.Models;
@@ -531,7 +532,7 @@ namespace TwolipsDating.Business
             return await usersAnsweredCorrectly.ToListAsync();
         }
 
-        public async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int? quizId = null)
+        public async Task<IReadOnlyCollection<UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int? quizId = null, string currentUserId = null)
         {
             string sql = String.Format(@"
                 select top 10
@@ -541,6 +542,11 @@ namespace TwolipsDating.Business
 	                cq.DateCompleted,
 	                ui.FileName ProfileImagePath,
 	                p.Id ProfileId,
+					""IsFavoritedByCurrentUser"" = 
+						CASE
+							WHEN fp.UserId is null THEN 0
+							ELSE 1
+						END,
 	                count(*) CorrectAnswerCount,
 	                (
 		                select count(*)
@@ -556,31 +562,37 @@ namespace TwolipsDating.Business
 	                inner join dbo.QuizQuestions qq on qq.Quiz_Id = q.Id
 	                inner join dbo.AnsweredQuestions aq on aq.UserId = cq.UserId and aq.QuestionId = qq.Question_Id
 	                inner join dbo.Questions qu on qu.Id = aq.QuestionId
+                    {0}
                 where
 	                aq.AnswerId = qu.CorrectAnswerId
                     and u.IsActive = 1
-                    {0}
+                    {1}
                 group by
 	                q.Id,
 	                q.Name,
 	                u.UserName,
 	                cq.DateCompleted,
 	                ui.FileName,
-	                p.Id
+	                p.Id,
+                    fp.UserId
                 order by
                     cq.DateCompleted desc"
+                , !String.IsNullOrEmpty(currentUserId) ? String.Format("left join dbo.FavoriteProfiles fp on fp.ProfileId = p.Id and fp.UserId = '{0}'", currentUserId) : String.Empty
                 , quizId.HasValue ? "and q.Id = @quizId" : String.Empty);
 
-            IEnumerable<UserCompletedQuizViewModel> results = null;
+            dynamic parameters = new ExpandoObject();
 
-            if (quizId.HasValue)
+            if(quizId.HasValue)
             {
-                results = await QueryAsync<UserCompletedQuizViewModel>(sql, new { quizId = quizId });
+                parameters.quizId = quizId.Value;
             }
-            else
+
+            if (!String.IsNullOrEmpty(currentUserId))
             {
-                results = await QueryAsync<UserCompletedQuizViewModel>(sql, new { });
+                parameters.currentUserId = currentUserId;
             }
+            
+            var results = await QueryAsync<UserCompletedQuizViewModel>(sql, (object)parameters);
 
             foreach (var viewModel in results)
             {

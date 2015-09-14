@@ -177,39 +177,5 @@ $(document).ready(function () {
         onSubmitAnswer(e, this);
     });
 
-    $('.follow-user').on('click', function (e) {
-        e.preventDefault();
-
-        var profileUserId = $(this).attr('data-user-id');
-        var profileId = $(this).attr('data-profile-id');
-
-        var jsonObject = {
-            "profileUserId": profileUserId,
-            "profileId": profileId
-        };
-
-        var json = JSON.stringify(jsonObject);
-
-        postJson('/profile/toggleFavoriteProfile', json, function (data) {
-            if (data.success) {
-                toggleFavoriteProfileIcon(profileId, data.isFavorite);
-
-                $('#user-to-follow-' + profileId).fadeOut('normal', function () {
-                    $(this).remove();
-                });
-            } else {
-                alert(data.error);
-            }
-        });
-    });
+    $('.follow-user').followify();
 });
-
-function toggleFavoriteProfileIcon(profileId, isFavorite) {
-    if (isFavorite) {
-        $('#button-toggle-favorite-' + profileId).removeClass("btn-default");
-        $('#button-toggle-favorite-' + profileId).addClass("btn-success");
-    } else {
-        $('#button-toggle-favorite-' + profileId).removeClass("btn-success");
-        $('#button-toggle-favorite-' + profileId).addClass("btn-default");
-    }
-}

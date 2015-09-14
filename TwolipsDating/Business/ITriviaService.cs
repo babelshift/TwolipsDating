@@ -20,7 +20,7 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Tag>> GetTagsForQuestionAsync(int questionId);
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.TagViewModel>> GetTagsForQuizAsync(int quizId);
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.AnsweredQuestion>> GetUsersAnsweredCorrectlyAsync(int questionId);
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int? quizId = null);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int? quizId = null, string currentUserId = null);
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.UserCompletedQuizViewModel>> GetUsersCompletedQuizzesAsync();
         System.Threading.Tasks.Task<int> GetUsersQuestionPointsForTypeAsync(string userId, int questionTypeId);
         System.Threading.Tasks.Task<bool> IsQuizAlreadyCompletedAsync(string userId, int quizId);

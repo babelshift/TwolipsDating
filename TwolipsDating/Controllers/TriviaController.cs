@@ -396,7 +396,7 @@ namespace TwolipsDating.Controllers
                 questionListViewModel = Mapper.Map<ICollection<Question>, List<QuestionViewModel>>(quiz.Questions);
             }
 
-            var usersCompletedQuiz = await TriviaService.GetUsersCompletedQuizAsync(id);
+            var usersCompletedQuiz = await TriviaService.GetUsersCompletedQuizAsync(id, currentUserId);
             var tagsForQuiz = await GetTagsForQuizAsync(id);
             var questionViolationViewModel = await GetQuestionViolationViewModelAsync();
             int averagePoints = questionListViewModel != null && questionListViewModel.Count > 0

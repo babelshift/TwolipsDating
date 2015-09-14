@@ -44,6 +44,7 @@ namespace TwolipsDating
             bundles.Add(new ScriptBundle("~/bundles/trivia/quiz").Include(
                 "~/Scripts/jquery.validate*",
                 "~/Scripts/jquery.unobtrusive-ajax.js",
+                "~/Scripts/Shared/followify.js",
                 "~/Scripts/Trivia/quiz.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/tags/index").Include(
@@ -67,6 +68,7 @@ namespace TwolipsDating
 
             bundles.Add(new ScriptBundle("~/bundles/home/dashboard").Include(
                     "~/Scripts/bootstrap-image-gallery.js",
+                    "~/Scripts/Shared/followify.js",
                     "~/Scripts/Home/dashboard.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/profile/index").Include(

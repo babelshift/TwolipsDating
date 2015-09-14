@@ -241,7 +241,8 @@ namespace TwolipsDating
                 .ForMember(dest => dest.QuizName, opts => opts.MapFrom(source => source.Quiz.Name))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateCompleted.GetTimeAgo()))
                 .ForMember(dest => dest.ProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileThumbnailImagePath()))
-                .ForMember(dest => dest.ProfileId, opts => opts.MapFrom(source => source.User.Profile.Id));
+                .ForMember(dest => dest.ProfileId, opts => opts.MapFrom(source => source.User.Profile.Id))
+                .ForMember(dest => dest.UserId, opts => opts.MapFrom(source => source.User.Id));
 
             Mapper.CreateMap<ShoppingCart, ShoppingCartViewModel>()
                 .ForMember(dest => dest.Items, opts => opts.MapFrom(source => source.Items.ToList().AsReadOnly()));

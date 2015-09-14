@@ -8,22 +8,37 @@
     </div>
     @if (Model != null && Model.Count > 0)
     {
-        <div class="list-group">
+        <ul class="list-group">
             @foreach (var user in Model)
             {
-                <a href="@Url.Action("index", "profile", new { id = user.ProfileId })" class="list-group-item" style="padding: 5px 10px">
-                    <span class="badge" style="margin-top: 17px">@user.TimeAgo</span>
-                    @Html.Partial("_ProfileImagePartial", user.ProfileImagePath)
-                    <div class="profile-info-wrapper">
-                        <span class="name-and-location">
-                            @user.UserName
-                        </span>
-                        <br />
-                        <span style="color: #999">Score: @String.Format("{0}%", user.UserScorePercent)</span>
-                    </div>
-                </a>
+                <li id="@String.Format("user-to-follow-{0}", user.ProfileId)" class="list-group-item link-no-underline user-to-follow">
+                    <a href="@Url.Action("index", "profile", new { id = user.ProfileId })">
+                        @Html.Partial("_ProfileImagePartial", user.ProfileImagePath)
+                        <div class="profile-info-wrapper">
+                            <span class="name-and-location">
+                                @user.UserName
+                            </span>
+                            <br />
+                            <span style="color: #999">Score: @String.Format("{0}%", user.UserScorePercent)</span>
+                        </div>
+                    </a>
+                    @if (user.IsFavoritedByCurrentUser)
+                    {
+                        <button id="@String.Format("button-toggle-favorite-{0}", user.ProfileId)" class="btn btn-success btn-sm custom-tooltip follow-user pull-right"
+                                data-profile-id="@user.ProfileId" data-user-id="@user.UserId" style="margin-top: 7px">
+                            <i id="@String.Format("icon-toggle-favorite-{0}", user.ProfileId)" class="fa fa-check fa-lg"></i> Following
+                        </button>
+                    }
+                    else
+                    {
+                        <button id="@String.Format("button-toggle-favorite-{0}", user.ProfileId)" class="btn btn-default btn-sm custom-tooltip follow-user pull-right"
+                                data-profile-id="@user.ProfileId" data-user-id="@user.UserId" style="margin-top: 7px">
+                            <i id="@String.Format("icon-toggle-favorite-{0}", user.ProfileId)" class="fa fa-user-plus fa-lg"></i> Follow
+                        </button>
+                    }
+                </li>
             }
-        </div>
+        </ul>
     }
     else
     {

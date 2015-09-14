@@ -11,6 +11,8 @@
         var modal = $(this);
         modal.find('#selected-question-id').val(questionId);
     });
+
+    $('.follow-user').followify({ fadeOut: false });
 });
 
 function onAddQuestionViolation(e, obj) {
