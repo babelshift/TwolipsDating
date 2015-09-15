@@ -155,39 +155,53 @@ else
                         }
                     </div>
                     <div role="tabpanel" class="tab-pane" id="unfinished">
-                        @foreach (var quiz in Model.UnfinishedQuizzes)
+                        @if (User.Identity.IsAuthenticated)
                         {
-                            <div class="row" style="margin-bottom: 25px">
-                                <div class="col-xs-4">
-                                    <a href="@Url.Action("quiz", new { id = quiz.Id })">
-                                        <img class="pull-left img-responsive" src="@quiz.ThumbnailImagePath" alt="@quiz.Name">
-                                    </a>
-                                </div>
-                                <div class="col-xs-8">
-                                    <h4 style="margin-top: 0; margin-bottom: 5px; font-weight: 400">
-                                        <a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a>
-                                    </h4>
-                                    <p>
-                                        <a class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>
-                                        @if (quiz.IsComplete)
-                                        {
-                                            <span class="label label-success">COMPLETED</span>
-                                        }
-                                        else
-                                        {
-                                            if (quiz.AveragePoints > 0)
-                                            {
-                                                @Html.Partial("_QuizRatingBarPartial", quiz.AveragePoints)
-                                            }
-                                            else
-                                            {
-                                                <span class="label label-danger">NOT RATED</span>
-                                            }
-                                        }
-                                    </p>
-                                    <p style="font-weight: 300">@quiz.Description</p>
-                                </div>
-                            </div>
+                            if (Model.UnfinishedQuizzes != null && Model.UnfinishedQuizzes.Count > 0)
+                            {
+                                foreach (var quiz in Model.UnfinishedQuizzes)
+                                {
+                                    <div class="row" style="margin-bottom: 25px">
+                                        <div class="col-xs-4">
+                                            <a href="@Url.Action("quiz", new { id = quiz.Id })">
+                                                <img class="pull-left img-responsive" src="@quiz.ThumbnailImagePath" alt="@quiz.Name">
+                                            </a>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <h4 style="margin-top: 0; margin-bottom: 5px; font-weight: 400">
+                                                <a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a>
+                                            </h4>
+                                            <p>
+                                                <a class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>
+                                                @if (quiz.IsComplete)
+                                                {
+                                                    <span class="label label-success">COMPLETED</span>
+                                                }
+                                                else
+                                                {
+                                                    if (quiz.AveragePoints > 0)
+                                                    {
+                                                        @Html.Partial("_QuizRatingBarPartial", quiz.AveragePoints)
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="label label-danger">NOT RATED</span>
+                                                    }
+                                                }
+                                            </p>
+                                            <p style="font-weight: 300">@quiz.Description</p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <h4>You have finished every quiz we have!</h4>
+                            }
+                        }
+                        else
+                        {
+                            @Html.Partial("_SignUpIncentivePartial")
                         }
                     </div>
                 </div>

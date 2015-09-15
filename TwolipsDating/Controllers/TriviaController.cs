@@ -59,14 +59,19 @@ namespace TwolipsDating.Controllers
             var dailyQuizzes = await TriviaService.GetDailyQuizzesAsync(5);
             var trendingQuizzes = await TriviaService.GetTrendingQuizzesAsync();
             var popularQuizzes = await TriviaService.GetPopularQuizzesAsync();
-            var unfinishedQuizzes = await TriviaService.GetUnfinishedQuizzesAsync(User.Identity.GetUserId());
 
             TriviaMenuViewModel viewModel = new TriviaMenuViewModel();
             viewModel.NewQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(newQuizzes);
             viewModel.DailyQuizzes = dailyQuizzes.ToDictionary(x => x.Key, x => Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(x.Value));
             viewModel.TrendingQuizzes = trendingQuizzes;
             viewModel.PopularQuizzes = popularQuizzes;
-            viewModel.UnfinishedQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(unfinishedQuizzes);
+
+            // unauthenticated users don't have any quizzes to track
+            if(User.Identity.IsAuthenticated)
+            {
+                var unfinishedQuizzes = await TriviaService.GetUnfinishedQuizzesAsync(User.Identity.GetUserId());
+                viewModel.UnfinishedQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(unfinishedQuizzes);
+            }
 
             // alters the viewmodel's list of quizzes to indicate if the quiz has already been completed by the currently logged in user
             await SetQuizzesCompletedByCurrentUser(currentUserId, viewModel);

@@ -108,6 +108,9 @@ else
             <div class="panel panel-default">
                 @if (Model.RandomQuestion != null)
                 {
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><i class="fa fa-bullseye fa-lg fa-fw"></i> Improve your matches</h4>
+                    </div>
                     <div class="panel-body">
                         <h5 style="margin-top: 0;" id="random-question-content">@Model.RandomQuestion.Content</h5>
                         <div class="text-center">
