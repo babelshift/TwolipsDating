@@ -764,6 +764,8 @@ namespace TwolipsDating.Controllers
             viewModel.CompletedAchievementCount = await MilestoneService.GetCompletedAchievementCount(profile.ApplicationUser.Id);
             viewModel.PossibleAchievementCount = await MilestoneService.GetPossibleAchievementCount();
 
+            viewModel.SimilarUsers = await ProfileService.GetSimilarProfilesAsync(viewModel.ProfileId);
+
             return View(viewModel);
         }
 

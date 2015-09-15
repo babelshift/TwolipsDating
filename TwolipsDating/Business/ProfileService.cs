@@ -1633,7 +1633,7 @@ namespace TwolipsDating.Business
         {
             Debug.Assert(profileId > 0);
 
-            if(String.IsNullOrEmpty(currentUserId))
+            if (String.IsNullOrEmpty(currentUserId))
             {
                 return false;
             }
@@ -1641,6 +1641,61 @@ namespace TwolipsDating.Business
             var favoritedProfile = await db.FavoriteProfiles.FindAsync(currentUserId, profileId);
 
             return favoritedProfile != null;
+        }
+
+        public async Task<IReadOnlyCollection<SimilarUserViewModel>> GetSimilarProfilesAsync(int profileId)
+        {
+            Debug.Assert(profileId > 0);
+
+            string sql = @"
+select top 6
+t.profileid ProfileId,
+ui.filename ProfileThumbnailImagePath
+from (
+	-- all profiles with tag counts that are within the range of comparing user tag count
+	select 
+	tagid, 
+	profileid
+	from dbo.tagawards ta1
+	where tagid in (
+		-- all awarded tags that current user has
+		select tagid
+		from dbo.tagawards ta2
+		where profileid = @profileId
+		group by tagid
+	)
+	and profileid <> @profileId
+	group by tagid, profileid
+	-- exclude where current user tag count is outside range of comparing user tag count
+	having (
+		select count(tagid)
+		from dbo.tagawards ta2
+		where profileid = @profileId
+		and ta2.tagid = ta1.tagid
+		group by tagid
+	) > count(tagid) - @rangeMin
+	-- exclude where current user tag count is outside range of comparing user tag count
+	and (
+		select count(tagid)
+		from dbo.tagawards ta2
+		where profileid = @profileId
+		and ta2.tagid = ta1.tagid
+		group by tagid
+	) < count(tagid) + @rangeMax
+) t
+inner join dbo.profiles p on t.profileid = p.id
+left join dbo.userimages ui on ui.id = p.userimageid
+group by t.profileid, ui.filename
+order by count(t.profileid) desc";
+
+            var results = await QueryAsync<SimilarUserViewModel>(sql, new { profileId, rangeMin = 2, rangeMax = 2 });
+
+            foreach(var result in results)
+            {
+                result.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.ProfileThumbnailImagePath);
+            }
+
+            return results.ToList().AsReadOnly();
         }
     }
 }

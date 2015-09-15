@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using TwolipsDating.ViewModels;
 namespace TwolipsDating.Business
 {
     public interface IProfileService : IBaseService
@@ -62,5 +65,6 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task<int> WriteReviewAsync(string authorUserId, string targetUserId, string content, int ratingValue, string authorProfileUrlRoot);
 
         System.Threading.Tasks.Task<bool> IsProfileFavoritedByUserAsync(int profileId, string currentUserId);
+        Task<IReadOnlyCollection<SimilarUserViewModel>> GetSimilarProfilesAsync(int profileId);
     }
 }

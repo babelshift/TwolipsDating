@@ -468,6 +468,7 @@
     <Compile Include="ViewModels\QuizSearchResultViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
+    <Compile Include="ViewModels\SimilarUserViewModel.cs" />
     <Compile Include="ViewModels\SpotlightSaleViewModel.cs" />
     <Compile Include="ViewModels\StoreItemViewModel.cs" />
     <Compile Include="Controllers\TriviaController.cs" />

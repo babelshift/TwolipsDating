@@ -283,6 +283,7 @@ input[readonly] {
     color: #fff;
     background-color: #333;
     border-bottom: 1px solid #ddd;
+    border-radius: 0;
 }
 
 .popover.bottom > .arrow:after {
@@ -310,6 +311,8 @@ input[readonly] {
     .popover-content .custom-popover-content {
         padding: 10px;
     }
+
+
 
 .ad {
     margin-bottom: 10px;

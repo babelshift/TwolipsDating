@@ -4,7 +4,7 @@
 <div class="panel panel-default">
     <div class="panel-body">
         @*<a class="btn btn-default btn-block hidden-sm hidden-md hidden-lg" href="#"><i class="fa fa-pencil"></i> Edit</a>*@
-        <div class="col-md-8">
+        <div class="col-sm-8">
             <h3 style="margin-top: 5px; font-weight: 400">
                 Who I am
                 @if (User.Identity.GetUserId() == Model.ProfileUserId)
@@ -45,79 +45,102 @@
             </div>
             <p id="summary-of-going">@(!String.IsNullOrEmpty(Model.SummaryOfGoing) ? Model.SummaryOfGoing : "This user hasn't entered where they're going yet.")</p>
         </div>
-        <div class="col-md-4">
-            <div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
-                <h4 style="margin-top: 5px; font-weight: 400">
-                    What I'm looking for
-                    @if (User.Identity.GetUserId() == Model.ProfileUserId)
-                    {
-                        <a data-toggle="modal" data-target="#modalWhatImLookingFor" data-keyboard="true" href="#"><small><i class="fa fa-pencil"></i></small></a>
-                    }
-                </h4>
-                <table class="table">
-                    <tr>
-                        <td class="col-md-6" style="color: #777">Type</td>
-                        <td class="col-md-6">@(!String.IsNullOrEmpty(Model.LookingForType) ? Model.LookingForType : "Unknown")</td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-6" style="color: #777">Ages</td>
-                        <td class="col-md-6">
-                            @if (Model.LookingForAgeMin.HasValue && Model.LookingForAgeMax.HasValue)
-                            {
-                                <span>@String.Format("{0}-{1}", Model.LookingForAgeMin.Value, Model.LookingForAgeMax.Value)</span>
-                            }
-                            else if (Model.LookingForAgeMin.HasValue && !Model.LookingForAgeMax.HasValue)
-                            {
-                                <span>@String.Format("{0}-Any", Model.LookingForAgeMin.Value)</span>
-                            }
-                            else if (!Model.LookingForAgeMin.HasValue && Model.LookingForAgeMax.HasValue)
-                            {
-                                <span>@String.Format("Any-{0}", Model.LookingForAgeMin.Value)</span>
-                            }
-                            else if (!Model.LookingForAgeMin.HasValue && !Model.LookingForAgeMax.HasValue)
-                            {
-                                @:Any
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4 style="margin-top: 5px; font-weight: 400">
+                        What I'm looking for
+                        @if (User.Identity.GetUserId() == Model.ProfileUserId)
+                        {
+                            <a data-toggle="modal" data-target="#modalWhatImLookingFor" data-keyboard="true" href="#"><small><i class="fa fa-pencil"></i></small></a>
                         }
-                        </td>
+                    </h4>
+                    <table class="table">
+                        <tr>
+                            <td class="col-md-6" style="color: #777">Type</td>
+                            <td class="col-md-6">@(!String.IsNullOrEmpty(Model.LookingForType) ? Model.LookingForType : "Unknown")</td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-6" style="color: #777">Ages</td>
+                            <td class="col-md-6">
+                                @if (Model.LookingForAgeMin.HasValue && Model.LookingForAgeMax.HasValue)
+                                {
+                                    <span>@String.Format("{0}-{1}", Model.LookingForAgeMin.Value, Model.LookingForAgeMax.Value)</span>
+                                }
+                                else if (Model.LookingForAgeMin.HasValue && !Model.LookingForAgeMax.HasValue)
+                                {
+                                    <span>@String.Format("{0}-Any", Model.LookingForAgeMin.Value)</span>
+                                }
+                                else if (!Model.LookingForAgeMin.HasValue && Model.LookingForAgeMax.HasValue)
+                                {
+                                    <span>@String.Format("Any-{0}", Model.LookingForAgeMin.Value)</span>
+                                }
+                                else if (!Model.LookingForAgeMin.HasValue && !Model.LookingForAgeMax.HasValue)
+                                {
+                                    @:Any
+                        }
+                            </td>
 
-                    </tr>
-                    <tr>
-                        <td class="col-md-6" style="color: #777">Location</td>
-                        <td class="col-md-6">@(!String.IsNullOrEmpty(Model.LookingForLocation) ? Model.LookingForLocation : "Unknown")</td>
-                    </tr>
-                </table>
+                        </tr>
+                        <tr>
+                            <td class="col-md-6" style="color: #777">Location</td>
+                            <td class="col-md-6">@(!String.IsNullOrEmpty(Model.LookingForLocation) ? Model.LookingForLocation : "Unknown")</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
-                <h4 style="font-weight: 400">
-                    My details
-                    @if (User.Identity.GetUserId() == Model.ProfileUserId)
-                    {
-                        <a data-toggle="modal" data-target="#modalMyDetails" data-keyboard="true" href="#"><small><i class="fa fa-pencil"></i></small></a>
-                    }
-                </h4>
-                <table class="table">
-                    <tr>
-                        <td class="col-md-6" style="color: #777">Last online</td>
-                        <td class="col-md-6">@Model.LastLoginTimeAgo</td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-6" style="color: #777">Status</td>
-                        <td class="col-md-6">@(!String.IsNullOrEmpty(Model.RelationshipStatus) ? Model.RelationshipStatus : "Unknown")</td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-6" style="color: #777">Languages</td>
-                        <td class="col-md-6">
-                            @if (Model.Languages != null && Model.Languages.Count > 0)
-                            {
-                                @String.Join(", ", Model.Languages)
-                            }
-                            else
-                            {
-                                @:Unknown
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4 style="font-weight: 400">
+                        My details
+                        @if (User.Identity.GetUserId() == Model.ProfileUserId)
+                        {
+                            <a data-toggle="modal" data-target="#modalMyDetails" data-keyboard="true" href="#"><small><i class="fa fa-pencil"></i></small></a>
                         }
-                        </td>
-                    </tr>
-                </table>
+                    </h4>
+                    <table class="table">
+                        <tr>
+                            <td class="col-md-6" style="color: #777">Last online</td>
+                            <td class="col-md-6">@Model.LastLoginTimeAgo</td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-6" style="color: #777">Status</td>
+                            <td class="col-md-6">@(!String.IsNullOrEmpty(Model.RelationshipStatus) ? Model.RelationshipStatus : "Unknown")</td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-6" style="color: #777">Languages</td>
+                            <td class="col-md-6">
+                                @if (Model.Languages != null && Model.Languages.Count > 0)
+                                {
+                                    @String.Join(", ", Model.Languages)
+                                }
+                                else
+                                {
+                                    @:Unknown
+                        }
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4 style="font-weight: 400; margin-bottom: 0">
+                        Similar People
+                    </h4>
+                    <hr style="margin: 5px 0" />
+                    <div class="similar-people text-center">
+                        @foreach (var profile in Model.SimilarUsers)
+                        {
+                            <div class="col-xs-3 col-sm-4">
+                                <a href="@Url.Action("index", "profile", new { id = profile.ProfileId})">
+                                    @Html.Partial("_ProfileImagePartial", profile.ProfileThumbnailImagePath)
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
     </div>
