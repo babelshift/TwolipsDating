@@ -232,120 +232,130 @@ else
             </div>
         </div>
     </div>
-    <div class="col-md-4 col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading text-center">
-                <h4 class="panel-title"><i class="fa fa-line-chart fa-lg fa-fw"></i> Trending Now</h4>
-            </div>
-            <div class="list-group">
-                @foreach (var quiz in Model.TrendingQuizzes)
-                {
-                    <a style="font-size: 13px" class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })">
-                        @if (quiz.PercentageOfTrending > 50)
-                        {
-                            <i class="text-danger fa fa-fire fa-lg fa-fw"></i>
-                        }
-                        else
-                        {
-                            <i class="text-warning fa fa-fire fa-lg fa-fw"></i>
-                        }
-                        @quiz.QuizName
-                    </a>
-                }
-            </div>
-        </div>
-    </div>
-    @if (!HttpContext.Current.IsDebuggingEnabled)
-    {
-        <div class="col-md-4 col-sm-6">
-            <div class="ad">
-                <!-- Trivia Dashboard - Right 1 -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1823005717277864"
-                     data-ad-slot="3552777032"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="text-center" style="margin: 5px auto;">
-            <img src="http://placehold.it/350x250" />
-        </div>
-    }
-    <div class="col-md-4 col-sm-6">
-        @if (Model.RecentlyCompletedQuizzes != null && Model.RecentlyCompletedQuizzes.Count > 0)
-        {
-            <div class="panel panel-default recently-completed-quizzes">
+    <div class="col-md-4">
+        <div class="col-sm-6 col-md-12">
+            <div class="panel panel-default">
                 <div class="panel-heading text-center">
-                    <h4 class="panel-title"><i class="fa fa-feed fa-lg fa-fw"></i> Recent Activity</h4>
+                    <h4 class="panel-title"><i class="fa fa-line-chart fa-lg fa-fw"></i> Trending Now</h4>
                 </div>
                 <div class="list-group">
-                    @foreach (var quiz in Model.RecentlyCompletedQuizzes)
+                    @foreach (var quiz in Model.TrendingQuizzes)
                     {
-                        <a href="@Url.Action("index", "profile", new { id = quiz.ProfileId })" class="list-group-item" style="padding: 5px 10px">
-                            <span class="badge" style="margin-top: 17px">@quiz.TimeAgo</span>
-                            @Html.Partial("_ProfileImagePartial", quiz.ProfileImagePath)
-                            <div class="profile-info-wrapper">
-                                <span class="name-and-location">
-                                    @quiz.UserName
-                                </span>
-                                <br />
-                                <span style="color: #999">@quiz.QuizName</span>
-                                <br />
-                                <span style="color: #999">Score: @String.Format("{0}%", @quiz.UserScorePercent)</span>
-                            </div>
+                    <a style="font-size: 13px" class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })">
+                        @if (quiz.PercentageOfTrending > 50)
+                            {
+                            <i class="text-danger fa fa-fire fa-lg fa-fw"></i>
+                            }
+                            else
+                            {
+                            <i class="text-warning fa fa-fire fa-lg fa-fw"></i>
+                            }
+                        @quiz.QuizName
+                    </a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-12">
+            @if (!HttpContext.Current.IsDebuggingEnabled)
+            {
+                <div class="col-md-4 col-sm-6">
+                    <div class="ad">
+                        <!-- Trivia Dashboard - Right 1 -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-1823005717277864"
+                             data-ad-slot="3552777032"
+                             data-ad-format="auto"></ins>
+                        <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="text-center" style="margin: 5px auto;">
+                    <img src="http://placehold.it/350x250" />
+                </div>
+            }
+        </div>
+
+        <div class="col-sm-6 col-md-12">
+            @if (Model.RecentlyCompletedQuizzes != null && Model.RecentlyCompletedQuizzes.Count > 0)
+            {
+                <div class="panel panel-default recently-completed-quizzes">
+                    <div class="panel-heading text-center">
+                        <h4 class="panel-title"><i class="fa fa-feed fa-lg fa-fw"></i> Recent Activity</h4>
+                    </div>
+                    <div class="list-group">
+                        @foreach (var quiz in Model.RecentlyCompletedQuizzes)
+                        {
+                            <a href="@Url.Action("index", "profile", new { id = quiz.ProfileId })" class="list-group-item" style="padding: 5px 10px">
+                                <span class="badge" style="margin-top: 17px">@quiz.TimeAgo</span>
+                                @Html.Partial("_ProfileImagePartial", quiz.ProfileImagePath)
+                                <div class="profile-info-wrapper">
+                                    <span class="name-and-location">
+                                        @quiz.UserName
+                                    </span>
+                                    <br />
+                                    <span style="color: #999">@quiz.QuizName</span>
+                                    <br />
+                                    <span style="color: #999">Score: @String.Format("{0}%", @quiz.UserScorePercent)</span>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                    <div class="panel-footer text-center">
+                        <a href="@Url.Action("index", "search")"><small>Find more people</small></a>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-sm-6 col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading text-center">
+                    <h4 class="panel-title"><i class="fa fa-bolt fa-lg fa-fw"></i> Most Popular</h4>
+                </div>
+                <div class="list-group">
+                    @foreach (var quiz in Model.PopularQuizzes)
+                    {
+                        <a style="font-size: 13px" class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })">
+                            <span class="badge">@quiz.CompletedCount</span>
+                            @quiz.QuizName
                         </a>
                     }
                 </div>
-                <div class="panel-footer text-center">
-                    <a href="@Url.Action("index", "search")"><small>Find more people</small></a>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-12">
+            @if (!HttpContext.Current.IsDebuggingEnabled)
+            {
+                <div class="col-md-4 col-sm-6">
+                    <div class="ad">
+                        <!-- Trivia Dashboard - Right 2 -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-1823005717277864"
+                             data-ad-slot="5029510239"
+                             data-ad-format="auto"></ins>
+                        <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
                 </div>
-            </div>
-        }
-    </div>
-    <div class="col-md-4 col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading text-center">
-                <h4 class="panel-title"><i class="fa fa-bolt fa-lg fa-fw"></i> Most Popular</h4>
-            </div>
-            <div class="list-group">
-                @foreach (var quiz in Model.PopularQuizzes)
-                {
-                    <a style="font-size: 13px" class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })">
-                        <span class="badge">@quiz.CompletedCount</span>
-                        @quiz.QuizName
-                    </a>
-                }
-            </div>
+            }
+            else
+            {
+                <div class="text-center" style="margin: 5px auto;">
+                    <img src="http://placehold.it/350x250" />
+                </div>
+            }
         </div>
     </div>
-    @if (!HttpContext.Current.IsDebuggingEnabled)
-    {
-        <div class="col-md-4 col-sm-6">
-            <div class="ad">
-                <!-- Trivia Dashboard - Right 2 -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1823005717277864"
-                     data-ad-slot="5029510239"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="text-center" style="margin: 5px auto;">
-            <img src="http://placehold.it/350x250" />
-        </div>
-    }
 </div>
 @section Scripts {
     @if (!HttpContext.Current.IsDebuggingEnabled)
