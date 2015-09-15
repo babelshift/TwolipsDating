@@ -772,21 +772,21 @@ input[readonly] {
         height: 14px;
     }
 
-.daily-quizzes h3 {
+.quiz-list h3 {
     margin-top: 35px;
 }
 
-.daily-quizzes .quiz-item {
+.quiz-list  .quiz-item {
     margin-bottom: 25px;
 }
 
-.daily-quizzes .quiz-title {
+.quiz-list  .quiz-title {
     margin-top: 0;
     margin-bottom: 5px;
     font-weight: 400;
 }
 
-.daily-quizzes .quiz-description {
+.quiz-list  .quiz-description {
     font-weight: 300;
 }
 
@@ -794,4 +794,8 @@ input[readonly] {
 .link-no-underline a:visited,
 .link-no-underline a:active {
     text-decoration: none;
+}
+
+.quiz-categories .dropdown-menu > li > a {
+    padding: 7px 15px;
 }

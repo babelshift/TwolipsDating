@@ -10,6 +10,17 @@ namespace TwolipsDating.Utilities
     {
         private static readonly string cdn = ConfigurationManager.AppSettings["cdnUrl"];
         private const string placeholderFileName = "PlaceholderQuiz.jpg";
+        
+        internal static string GetSEOName(this QuizCategory quizCategory)
+        {
+            if (String.IsNullOrEmpty(quizCategory.Name))
+            {
+                return String.Empty;
+            }
+
+            string root = String.Format("{0}", quizCategory.Name);
+            return Regex.Replace(root.ToLower().Replace(@"'", String.Empty), @"[^\w]+", "-");
+        }
 
         internal static string GetSEOName(this Quiz quiz)
         {

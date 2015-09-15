@@ -206,18 +206,18 @@ namespace TwolipsDating.Migrations
                 new Milestone() { Id = (int)MilestoneValues.PointsObtained4, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 1000 });
 
             context.QuizCategories.AddOrUpdate(m => m.Id,
-                new QuizCategory() { Id = (int)QuizCategoryValues.Uncategorized, Name = "Uncategorized" },
-                new QuizCategory() { Id = (int)QuizCategoryValues.Business, Name = "Business" },
-                new QuizCategory() { Id = (int)QuizCategoryValues.Creative, Name = "Creative" },
-                new QuizCategory() { Id = (int)QuizCategoryValues.Food, Name = "Food" },
-                new QuizCategory() { Id = (int)QuizCategoryValues.History, Name = "History" },
-                new QuizCategory() { Id = (int)QuizCategoryValues.Literature, Name = "Literature" },
-                new QuizCategory() { Id = (int)QuizCategoryValues.Movies, Name = "Movies" },
-                new QuizCategory() { Id = (int)QuizCategoryValues.Science, Name = "Science" },
-                new QuizCategory() { Id = (int)QuizCategoryValues.Technical, Name = "Technical" },
-                new QuizCategory() { Id = (int)QuizCategoryValues.Television, Name = "Television" },
-                new QuizCategory() { Id = (int)QuizCategoryValues.VideoGames, Name = "Video Games" },
-                new QuizCategory() { Id = (int)QuizCategoryValues.Sports, Name = "Sports" }
+                new QuizCategory() { Id = (int)QuizCategoryValues.Uncategorized, Name = "Uncategorized", FontAwesomeIconName = "fa-question" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Business, Name = "Business", FontAwesomeIconName = "fa-building" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Creative, Name = "Creative", FontAwesomeIconName = "fa-magic" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Food, Name = "Food", FontAwesomeIconName = "fa-cutlery" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.History, Name = "History", FontAwesomeIconName = "fa-book" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Literature, Name = "Literature", FontAwesomeIconName = "fa-language" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Movies, Name = "Movies", FontAwesomeIconName = "fa-film" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Science, Name = "Science", FontAwesomeIconName = "fa-flask" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Technical, Name = "Technical", FontAwesomeIconName = "fa-laptop" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Television, Name = "Television", FontAwesomeIconName = "fa-tv" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.VideoGames, Name = "Video Games", FontAwesomeIconName = "fa-gamepad" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Sports, Name = "Sports", FontAwesomeIconName = "fa-futbol-o" }
             );
 
             context.Quizzes.AddOrUpdate(m => m.Id,

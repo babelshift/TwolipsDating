@@ -55,19 +55,20 @@ namespace TwolipsDating.Controllers
 
             var currentUserId = User.Identity.GetUserId();
 
-            var newQuizzes = await TriviaService.GetNewQuizzesAsync();
-            var dailyQuizzes = await TriviaService.GetDailyQuizzesAsync(5);
-            var trendingQuizzes = await TriviaService.GetTrendingQuizzesAsync();
-            var popularQuizzes = await TriviaService.GetPopularQuizzesAsync();
+            TriviaDashboardViewModel viewModel = new TriviaDashboardViewModel();
 
-            TriviaMenuViewModel viewModel = new TriviaMenuViewModel();
+            var newQuizzes = await TriviaService.GetNewQuizzesAsync();
             viewModel.NewQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(newQuizzes);
+
+            var dailyQuizzes = await TriviaService.GetDailyQuizzesAsync(5);
             viewModel.DailyQuizzes = dailyQuizzes.ToDictionary(x => x.Key, x => Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(x.Value));
-            viewModel.TrendingQuizzes = trendingQuizzes;
-            viewModel.PopularQuizzes = popularQuizzes;
+
+            viewModel.TrendingQuizzes = await GetTrendingQuizzesAsync();
+
+            viewModel.PopularQuizzes = await GetPopularQuizzesAsync();
 
             // unauthenticated users don't have any quizzes to track
-            if(User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
                 var unfinishedQuizzes = await TriviaService.GetUnfinishedQuizzesAsync(User.Identity.GetUserId());
                 viewModel.UnfinishedQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(unfinishedQuizzes);
@@ -76,10 +77,24 @@ namespace TwolipsDating.Controllers
             // alters the viewmodel's list of quizzes to indicate if the quiz has already been completed by the currently logged in user
             await SetQuizzesCompletedByCurrentUser(currentUserId, viewModel);
 
-            //viewModel.UserStats = await ProfileService.GetUserStatsAsync(currentUserId);
             viewModel.RecentlyCompletedQuizzes = await TriviaService.GetUsersCompletedQuizzesAsync(currentUserId);
 
+            var quizCategories = await TriviaService.GetQuizCategoriesAsync();
+            viewModel.QuizCategories = Mapper.Map<IReadOnlyCollection<QuizCategory>, IReadOnlyCollection<QuizCategoryViewModel>>(quizCategories);
+
             return View(viewModel);
+        }
+
+        private async Task<IReadOnlyCollection<MostPopularQuizViewModel>> GetPopularQuizzesAsync()
+        {
+            var popularQuizzes = await TriviaService.GetPopularQuizzesAsync();
+            return popularQuizzes;
+        }
+
+        private async Task<IReadOnlyCollection<TrendingQuizViewModel>> GetTrendingQuizzesAsync()
+        {
+            var trendingQuizzes = await TriviaService.GetTrendingQuizzesAsync();
+            return trendingQuizzes;
         }
 
         /// <summary>
@@ -88,7 +103,7 @@ namespace TwolipsDating.Controllers
         /// <param name="currentUserId"></param>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        private async Task SetQuizzesCompletedByCurrentUser(string currentUserId, TriviaMenuViewModel viewModel)
+        private async Task SetQuizzesCompletedByCurrentUser(string currentUserId, TriviaDashboardViewModel viewModel)
         {
             var completedQuizzes = await TriviaService.GetCompletedQuizzesForUserAsync(currentUserId);
 
@@ -99,6 +114,44 @@ namespace TwolipsDating.Controllers
                     quiz.IsComplete = true;
                 }
             }
+        }
+
+        [AllowAnonymous, RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
+        public async Task<ActionResult> Category(int id, string seoName)
+        {
+            var quizCategory = await TriviaService.GetQuizCategoryAsync(id);
+            if (quizCategory == null)
+            {
+                return new HttpNotFoundResult();
+            }
+
+            string expectedSeoName = quizCategory.GetSEOName();
+            if (seoName != expectedSeoName)
+            {
+                return RedirectToAction("category", new { id = id, seoName = expectedSeoName });
+            }
+
+            await SetNotificationsAsync();
+            var currentUserId = User.Identity.GetUserId();
+
+            TriviaCategoryViewModel viewModel = new TriviaCategoryViewModel();
+
+            var quizzesInCategory = await TriviaService.GetQuizzesInCategoryAsync(id);
+            viewModel.Quizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(quizzesInCategory);
+
+            var quizCategories = await TriviaService.GetQuizCategoriesAsync();
+            viewModel.QuizCategories = Mapper.Map<IReadOnlyCollection<QuizCategory>, IReadOnlyCollection<QuizCategoryViewModel>>(quizCategories);
+
+            viewModel.TrendingQuizzes = await GetTrendingQuizzesAsync();
+            viewModel.PopularQuizzes = await GetPopularQuizzesAsync();
+
+            viewModel.RecentlyCompletedQuizzes = await TriviaService.GetUsersCompletedQuizzesAsync(currentUserId);
+
+            viewModel.ActiveQuizCategoryId = quizCategory.Id;
+            viewModel.ActiveQuizCategoryName = quizCategory.Name;
+            viewModel.ActiveQuizCategoryIcon = quizCategory.FontAwesomeIconName;
+
+            return View(viewModel);
         }
 
         #endregion
@@ -332,7 +385,7 @@ namespace TwolipsDating.Controllers
             var quiz = await TriviaService.GetQuizAsync(id);
             if (quiz == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+                return new HttpNotFoundResult();
             }
 
             string expectedSeoName = quiz.GetSEOName();

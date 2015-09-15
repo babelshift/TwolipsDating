@@ -1,4 +1,4 @@
-﻿@model TwolipsDating.ViewModels.TriviaMenuViewModel
+﻿@model TwolipsDating.ViewModels.TriviaDashboardViewModel
 @{
     ViewBag.Title = "Trivia and quizzes";
     ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
@@ -27,6 +27,31 @@ else
     <div class="col-md-8">
         <div class="panel panel-default">
             <div class="panel-body">
+                <ul class="nav nav-pills quiz-categories">
+                    <li role="presentation" class="active"><a href="@Url.Action("index", "trivia")"><i class="fa fa-rocket fa-lg fa-fw"></i> <span class="hidden-xs">Featured</span></a></li>
+                    <li role="presentation" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-sitemap fa-lg fa-fw"></i> <span class="hidden-xs">Categories</span> <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            @foreach (var category in Model.QuizCategories)
+                            {
+                                <li role="presentation">
+                                    <a href="@Url.Action("category", "trivia", new { id = category.QuizCategoryId })">
+                                        <i class="fa @category.QuizIcon fa-lg fa-fw"></i>
+                                        @category.QuizName
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                    <li role="presentation"><a href="@Url.Action("top", "trivia")"><i class="fa fa-star fa-lg fa-fw"></i> <span class="hidden-xs">Top Players</span></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @Html.Partial("_SignUpIncentivePartial")
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active">
                         <a href="#daily" aria-controls="daily" role="tab" data-toggle="tab">
@@ -62,8 +87,7 @@ else
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active daily-quizzes" id="daily">
-                        @Html.Partial("_SignUpIncentivePartial")
+                    <div role="tabpanel" class="tab-pane active quiz-list" id="daily">
                         @foreach (var daysAgo in Model.DailyQuizzes.Keys)
                         {
                             var quizList = Model.DailyQuizzes[daysAgo];
@@ -201,7 +225,7 @@ else
                         }
                         else
                         {
-                            @Html.Partial("_SignUpIncentivePartial")
+                            <h4>You can track your unfinished quiz progress by <a href="@Url.Action("registe", "account")">signing up</a>.</h4>
                         }
                     </div>
                 </div>
@@ -324,5 +348,8 @@ else
     }
 </div>
 @section Scripts {
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    @if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    }
 }

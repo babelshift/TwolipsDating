@@ -263,6 +263,11 @@ namespace TwolipsDating
                 .ForMember(dest => dest.ItemTypeId, opts => opts.MapFrom(source => source.StoreItem.ItemTypeId))
                 .ForMember(dest => dest.DateSaleEnds, opts => opts.MapFrom(source => source.DateEnd))
                 .ForMember(dest => dest.Discount, opts => opts.MapFrom(source => source.Discount));
+
+            Mapper.CreateMap<QuizCategory, QuizCategoryViewModel>()
+                .ForMember(dest => dest.QuizCategoryId, opts => opts.MapFrom(source => source.Id))
+                .ForMember(dest => dest.QuizIcon, opts => opts.MapFrom(source => source.FontAwesomeIconName))
+                .ForMember(dest => dest.QuizName, opts => opts.MapFrom(source => source.Name));
         }
     }
 }

@@ -137,6 +137,14 @@ namespace TwolipsDating.Models
             modelBuilder.Entity<QuizCategory>()
                 .Property(c => c.Name)
                 .HasMaxLength(50);
+
+            modelBuilder.Entity<QuizCategory>()
+                .Property(c => c.FontAwesomeIconName)
+                .IsRequired();
+
+            modelBuilder.Entity<QuizCategory>()
+                .Property(c => c.FontAwesomeIconName)
+                .HasMaxLength(50);
         }
 
         private void SetupLanguages(DbModelBuilder modelBuilder)

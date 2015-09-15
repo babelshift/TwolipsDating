@@ -657,5 +657,28 @@ namespace TwolipsDating.Business
 
             return await questionsAnsweredCorrectly.CountAsync();
         }
+
+        public async Task<IReadOnlyCollection<Quiz>> GetQuizzesInCategoryAsync(int id)
+        {
+            var quizzes = from category in db.QuizCategories
+                          where category.Id == id
+                          from quiz in category.Quizzes
+                          select quiz;
+
+            return (await quizzes.ToListAsync()).AsReadOnly();
+        }
+
+        public async Task<QuizCategory> GetQuizCategoryAsync(int id)
+        {
+            return await db.QuizCategories.FindAsync(id);
+        }
+
+        public async Task<IReadOnlyCollection<QuizCategory>> GetQuizCategoriesAsync()
+        {
+            var categories = from category in db.QuizCategories
+                             select category;
+
+            return (await categories.ToListAsync()).AsReadOnly();
+        }
     }
 }

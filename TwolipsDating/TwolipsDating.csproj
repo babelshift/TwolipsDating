@@ -424,6 +424,18 @@
     <Compile Include="Migrations\201509121933539_AddLifetimePoints.Designer.cs">
       <DependentUpon>201509121933539_AddLifetimePoints.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509151429174_AddIconToCategory.cs" />
+    <Compile Include="Migrations\201509151429174_AddIconToCategory.Designer.cs">
+      <DependentUpon>201509151429174_AddIconToCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509151431315_AddIconToCategoryPart1.cs" />
+    <Compile Include="Migrations\201509151431315_AddIconToCategoryPart1.Designer.cs">
+      <DependentUpon>201509151431315_AddIconToCategoryPart1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509151436035_AddIconToCategoryPart2.cs" />
+    <Compile Include="Migrations\201509151436035_AddIconToCategoryPart2.Designer.cs">
+      <DependentUpon>201509151436035_AddIconToCategoryPart2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\CompletedQuizComparer.cs" />
     <Compile Include="Models\EmailNotifications.cs" />
     <Compile Include="Models\Language.cs" />
@@ -465,6 +477,7 @@
     <Compile Include="ViewModels\LanguageViewModel.cs" />
     <Compile Include="ViewModels\ManageNotificationsViewModel.cs" />
     <Compile Include="ViewModels\MostPopularQuizViewModel.cs" />
+    <Compile Include="ViewModels\QuizCategoryViewModel.cs" />
     <Compile Include="ViewModels\QuizSearchResultViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
@@ -783,7 +796,8 @@
     <Compile Include="ViewModels\TagViewModel.cs" />
     <Compile Include="ViewModels\TitleViewModel.cs" />
     <Compile Include="ViewModels\TrendingQuizViewModel.cs" />
-    <Compile Include="ViewModels\TriviaMenuViewModel.cs" />
+    <Compile Include="ViewModels\TriviaCategoryViewModel.cs" />
+    <Compile Include="ViewModels\TriviaDashboardViewModel.cs" />
     <Compile Include="ViewModels\UploadedImageViewModel.cs" />
     <Compile Include="ViewModels\UploadedImageFeedViewModel.cs" />
     <Compile Include="ViewModels\UploadImageViewModel.cs" />
@@ -1042,6 +1056,7 @@
     <Content Include="Views\Shared\_SignUpIncentivePartial.cshtml" />
     <Content Include="Views\Shared\_SocialLoginButtonPartial.cshtml" />
     <Content Include="Views\Shared\_ModalSignUpIncentivePartial.cshtml" />
+    <Content Include="Views\Trivia\Category.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1280,6 +1295,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509121933539_AddLifetimePoints.resx">
       <DependentUpon>201509121933539_AddLifetimePoints.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509151429174_AddIconToCategory.resx">
+      <DependentUpon>201509151429174_AddIconToCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509151431315_AddIconToCategoryPart1.resx">
+      <DependentUpon>201509151431315_AddIconToCategoryPart1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509151436035_AddIconToCategoryPart2.resx">
+      <DependentUpon>201509151436035_AddIconToCategoryPart2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

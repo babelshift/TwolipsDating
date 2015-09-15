@@ -25,6 +25,7 @@ namespace TwolipsDating.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string FontAwesomeIconName { get; set; }
 
         public virtual ICollection<Quiz> Quizzes { get; set; }
     }
