@@ -444,6 +444,36 @@ input[readonly] {
         top: 15px;
     }
 
+.top-player {
+    position: relative;
+    line-height: 16px;
+}
+
+    .top-player img {
+        width: 65px;
+        height: 65px;
+        position: absolute;
+        top: 2px;
+        left: 0;
+        border-radius: 33px;
+    }
+
+    .top-player .top-player-name {
+        display: block;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #555;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .top-player .top-player-details {
+        color: #777;
+        font-size: 12px;
+    }
+
 .share-buttons a:hover {
     text-decoration: none;
 }
@@ -776,17 +806,17 @@ input[readonly] {
     margin-top: 35px;
 }
 
-.quiz-list  .quiz-item {
+.quiz-list .quiz-item {
     margin-bottom: 25px;
 }
 
-.quiz-list  .quiz-title {
+.quiz-list .quiz-title {
     margin-top: 0;
     margin-bottom: 5px;
     font-weight: 400;
 }
 
-.quiz-list  .quiz-description {
+.quiz-list .quiz-description {
     font-weight: 300;
 }
 

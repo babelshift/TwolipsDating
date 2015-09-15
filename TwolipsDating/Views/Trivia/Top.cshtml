@@ -1,11 +1,10 @@
-﻿@model TwolipsDating.ViewModels.TriviaCategoryViewModel
+﻿@model TwolipsDating.ViewModels.TriviaTopPlayersViewModel
 @{
-    ViewBag.Title = "Quizzes in category '" + Model.ActiveQuizCategoryName + "'";
+    ViewBag.Title = "Top performing people";
     ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
 }
 @if (!HttpContext.Current.IsDebuggingEnabled)
 {
-
 }
 else
 {
@@ -18,36 +17,24 @@ else
         <div class="panel panel-default">
             <div class="panel-body">
                 <ul class="nav nav-pills quiz-categories">
-                    <li role="presentation"><a href="@Url.Action("index", "trivia")"><i class="fa fa-rocket fa-lg fa-fw"></i> <span class="hidden-xs">Featured</span></a></li>
-                    <li role="presentation" class="dropdown active">
+                    <li role="presentation"><a href="@Url.Action("index", "trivia", new { id = (int?)null })"><i class="fa fa-rocket fa-lg fa-fw"></i> <span class="hidden-xs">Featured</span></a></li>
+                    <li role="presentation" class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-sitemap fa-lg fa-fw"></i> <span class="hidden-xs">Categories</span> <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             @foreach (var category in Model.QuizCategories)
                             {
-                                if (category.QuizCategoryId == Model.ActiveQuizCategoryId)
-                                {
-                                    <li role="presentation" class="active">
-                                        <a href="@Url.Action("category", "trivia", new { id = category.QuizCategoryId })">
-                                            <i class="fa @category.QuizIcon fa-lg fa-fw"></i>
-                                            @category.QuizName
-                                        </a>
-                                    </li>
-                                }
-                                else
-                                {
-                                    <li role="presentation">
-                                        <a href="@Url.Action("category", "trivia", new { id = category.QuizCategoryId })">
-                                            <i class="fa @category.QuizIcon fa-lg fa-fw"></i>
-                                            @category.QuizName
-                                        </a>
-                                    </li>
-                                }
+                                <li role="presentation">
+                                    <a href="@Url.Action("category", "trivia", new { id = category.QuizCategoryId })">
+                                        <i class="fa @category.QuizIcon fa-lg fa-fw"></i>
+                                        @category.QuizName
+                                    </a>
+                                </li>
                             }
                         </ul>
                     </li>
-                    <li role="presentation"><a href="@Url.Action("top", "trivia")"><i class="fa fa-star fa-lg fa-fw"></i> <span class="hidden-xs">Top Players</span></a></li>
+                    <li role="presentation" class="active"><a href="@Url.Action("top", "trivia")"><i class="fa fa-star fa-lg fa-fw"></i> <span class="hidden-xs">Top Players</span></a></li>
                     <li class="dropdown" role="presentation">
                         <a href="#" aria-controls="dropdowncontents" data-toggle="dropdown">
                             <i class="fa fa-question-circle fa-lg"></i> <span class="hidden-xs">Questions</span> <span class="caret"></span>
@@ -71,44 +58,30 @@ else
         <div class="panel panel-default">
             <div class="panel-body">
                 @Html.Partial("_SignUpIncentivePartial")
-                <div class="quiz-list">
-                    <h3><i class="fa @Model.ActiveQuizCategoryIcon fa-lg fa-fw"></i> @Model.ActiveQuizCategoryName Quizzes</h3>
-                    <hr />
-                    @foreach (var quiz in Model.Quizzes)
-                    {
-                        <div class="row quiz-item">
-                            <div class="col-xs-4">
-                                <a href="@Url.Action("quiz", new { id = quiz.Id })">
-                                    <img class="pull-left img-responsive" src="@quiz.ThumbnailImagePath" alt="@quiz.Name">
+                <h3>Top Performing Players</h3>
+                <hr />
+                @foreach (var player in Model.Players)
+                {
+                    <div class="col-xs-6 col-sm-3 col-md-4" style="margin-bottom: 15px;">
+                        <div class="top-player">
+                            <div style="margin-left: 70px;">
+                                <a href="@Url.Action("index", "profile", new{id = player.ProfileId})">
+                                    <img src="@player.ProfileThumbnailImagePath">
                                 </a>
-                            </div>
-                            <div class="col-xs-8">
-                                <h4 class="quiz-title">
-                                    <a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a>
-                                </h4>
-                                <p>
-                                    <a class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>
-                                    @if (quiz.IsComplete)
-                                    {
-                                        <span class="label label-success">COMPLETED</span>
-                                    }
-                                    else
-                                    {
-                                        if (quiz.AveragePoints > 0)
-                                        {
-                                            @Html.Partial("_QuizRatingBarPartial", quiz.AveragePoints)
-                                        }
-                                        else
-                                        {
-                                            <span class="label label-danger">NOT RATED</span>
-                                        }
-                                    }
-                                </p>
-                                <p class="quiz-description">@quiz.Description</p>
+                                <span class="top-player-name">
+                                    <a href="@Url.Action("index", "profile", new{id = player.ProfileId})">@player.UserName</a>
+                                </span>
+                                <span class="top-player-details">
+                                    <i class="fa fa-user fa-fw"></i> @player.Age years old
+                                    <br />
+                                    <i class="fa fa-map-marker fa-fw"></i> @player.Location
+                                    <br />
+                                    <i class="fa fa-money fa-fw"></i> @player.LifeTimePoints points
+                                </span>
                             </div>
                         </div>
-                    }
-                </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -137,7 +110,6 @@ else
     </div>
     @if (!HttpContext.Current.IsDebuggingEnabled)
     {
-
     }
     else
     {
@@ -194,7 +166,6 @@ else
     </div>
     @if (!HttpContext.Current.IsDebuggingEnabled)
     {
-
     }
     else
     {

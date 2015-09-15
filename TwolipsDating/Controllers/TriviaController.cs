@@ -154,6 +154,28 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
+        [AllowAnonymous, RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
+        public async Task<ActionResult> Top()
+        {
+            await SetNotificationsAsync();
+            var currentUserId = User.Identity.GetUserId();
+
+            TriviaTopPlayersViewModel viewModel = new TriviaTopPlayersViewModel();
+
+            var topPlayers = await TriviaService.GetTopPlayersAsync();
+            viewModel.Players = Mapper.Map<IReadOnlyCollection<Models.Profile>, IReadOnlyCollection<ProfileViewModel>>(topPlayers);
+
+            var quizCategories = await TriviaService.GetQuizCategoriesAsync();
+            viewModel.QuizCategories = Mapper.Map<IReadOnlyCollection<QuizCategory>, IReadOnlyCollection<QuizCategoryViewModel>>(quizCategories);
+
+            viewModel.TrendingQuizzes = await GetTrendingQuizzesAsync();
+            viewModel.PopularQuizzes = await GetPopularQuizzesAsync();
+
+            viewModel.RecentlyCompletedQuizzes = await TriviaService.GetUsersCompletedQuizzesAsync(currentUserId);
+
+            return View(viewModel);
+        }
+
         #endregion
 
         #region Random Question
@@ -194,7 +216,7 @@ namespace TwolipsDating.Controllers
         /// Returns a view containing a random question. Redirects to the user's create profile if no profile exists for the user.
         /// </summary>
         /// <returns></returns>
-        [AllowAnonymous, RequireProfileIfAuthenticated]
+        [AllowAnonymous, RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
         public async Task<ActionResult> Random()
         {
             QuestionViewModel viewModel = new QuestionViewModel();
@@ -211,6 +233,9 @@ namespace TwolipsDating.Controllers
                 viewModel.Tags = new List<TagViewModel>();
                 viewModel.UsersAnsweredCorrectly = new List<UserAnsweredQuestionCorrectlyViewModel>();
             }
+
+            var quizCategories = await TriviaService.GetQuizCategoriesAsync();
+            viewModel.QuizCategories = Mapper.Map<IReadOnlyCollection<QuizCategory>, IReadOnlyCollection<QuizCategoryViewModel>>(quizCategories);
 
             return View(viewModel);
         }
@@ -261,8 +286,7 @@ namespace TwolipsDating.Controllers
         /// Returns a view containing a timed random question. Redirects to the user's create profile if no profile exists for the user.
         /// </summary>
         /// <returns></returns>
-        [RequireProfileIfAuthenticated]
-        [AllowAnonymous]
+        [AllowAnonymous, RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
         public async Task<ActionResult> Timed()
         {
             QuestionViewModel viewModel = new QuestionViewModel();
@@ -279,6 +303,9 @@ namespace TwolipsDating.Controllers
                 viewModel.Tags = new List<TagViewModel>();
                 viewModel.UsersAnsweredCorrectly = new List<UserAnsweredQuestionCorrectlyViewModel>();
             }
+
+            var quizCategories = await TriviaService.GetQuizCategoriesAsync();
+            viewModel.QuizCategories = Mapper.Map<IReadOnlyCollection<QuizCategory>, IReadOnlyCollection<QuizCategoryViewModel>>(quizCategories);
 
             return View(viewModel);
         }

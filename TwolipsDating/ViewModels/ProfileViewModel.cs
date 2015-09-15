@@ -81,6 +81,8 @@ namespace TwolipsDating.ViewModels
         public int BannerPositionX { get; set; }
         public int BannerPositionY { get; set; }
 
+        public int LifeTimePoints { get; set; }
+
         #endregion Profile view stuff
 
         #region Report review stuff

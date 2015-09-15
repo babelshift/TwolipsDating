@@ -680,5 +680,16 @@ namespace TwolipsDating.Business
 
             return (await categories.ToListAsync()).AsReadOnly();
         }
+
+        public async Task<IReadOnlyCollection<Profile>> GetTopPlayersAsync()
+        {
+            var profiles = from user in db.Users
+                           orderby user.LifetimePoints descending
+                           where user.IsActive
+                           where user.Profile != null
+                           select user.Profile;
+
+            return (await profiles.ToListAsync()).AsReadOnly();
+        }
     }
 }

@@ -28,7 +28,7 @@ else
         <div class="panel panel-default">
             <div class="panel-body">
                 <ul class="nav nav-pills quiz-categories">
-                    <li role="presentation" class="active"><a href="@Url.Action("index", "trivia")"><i class="fa fa-rocket fa-lg fa-fw"></i> <span class="hidden-xs">Featured</span></a></li>
+                    <li role="presentation" class="active"><a href="@Url.Action("index", "trivia", new { id = (int?)null })"><i class="fa fa-rocket fa-lg fa-fw"></i> <span class="hidden-xs">Featured</span></a></li>
                     <li role="presentation" class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-sitemap fa-lg fa-fw"></i> <span class="hidden-xs">Categories</span> <span class="caret"></span>
@@ -46,6 +46,23 @@ else
                         </ul>
                     </li>
                     <li role="presentation"><a href="@Url.Action("top", "trivia")"><i class="fa fa-star fa-lg fa-fw"></i> <span class="hidden-xs">Top Players</span></a></li>
+                    <li class="dropdown" role="presentation">
+                        <a href="#" aria-controls="dropdowncontents" data-toggle="dropdown">
+                            <i class="fa fa-question-circle fa-lg"></i> <span class="hidden-xs">Questions</span> <span class="caret"></span>
+                        </a>
+                        <ul id="dropdowncontents" class="dropdown-menu">
+                            <li>
+                                <a href="@Url.Action("random", "trivia")">
+                                    <i class="fa fa-random fa-lg fa-fw"></i> Random
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("timed", "trivia")">
+                                    <i class="fa fa-clock-o fa-lg fa-fw"></i> Timed
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -65,25 +82,8 @@ else
                     </li>
                     <li role="presentation">
                         <a href="#unfinished" aria-controls="unfinished" role="tab" data-toggle="tab">
-                            <i class="fa fa-file-text-o fa-lg"></i> <span class="hidden-xs">Unfinished</span>
+                            <i class="fa fa-file-text-o fa-lg"></i> <span class="hidden-xs">Unplayed</span>
                         </a>
-                    </li>
-                    <li class="dropdown" role="presentation">
-                        <a href="#" aria-controls="dropdowncontents" data-toggle="dropdown">
-                            <i class="fa fa-question-circle fa-lg"></i> <span class="hidden-xs">Questions</span> <span class="caret"></span>
-                        </a>
-                        <ul id="dropdowncontents" class="dropdown-menu">
-                            <li>
-                                <a href="@Url.Action("random", "trivia")">
-                                    <i class="fa fa-random fa-lg fa-fw"></i> Random
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("timed", "trivia")">
-                                    <i class="fa fa-clock-o fa-lg fa-fw"></i> Timed
-                                </a>
-                            </li>
-                        </ul>
                     </li>
                 </ul>
                 <div class="tab-content">

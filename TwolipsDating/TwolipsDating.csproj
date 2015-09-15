@@ -795,6 +795,7 @@
     <Compile Include="ViewModels\TagSuggestionReceivedFeedViewModel.cs" />
     <Compile Include="ViewModels\TagViewModel.cs" />
     <Compile Include="ViewModels\TitleViewModel.cs" />
+    <Compile Include="ViewModels\TriviaTopPlayersViewModel.cs" />
     <Compile Include="ViewModels\TrendingQuizViewModel.cs" />
     <Compile Include="ViewModels\TriviaCategoryViewModel.cs" />
     <Compile Include="ViewModels\TriviaDashboardViewModel.cs" />
@@ -1057,6 +1058,7 @@
     <Content Include="Views\Shared\_SocialLoginButtonPartial.cshtml" />
     <Content Include="Views\Shared\_ModalSignUpIncentivePartial.cshtml" />
     <Content Include="Views\Trivia\Category.cshtml" />
+    <Content Include="Views\Trivia\Top.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
