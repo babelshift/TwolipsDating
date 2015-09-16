@@ -375,7 +375,15 @@ namespace TwolipsDating.Controllers
 
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("resetpassword", "account", new { userId = user.Id, code = code }, Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset your Twolips Dating password", callbackUrl);
+
+                string emailBody = @"
+<div style=""text-align: center"">
+<p>Hey there. You recently requested a password reset.</p>
+<a href=""" + callbackUrl + @""">Click Here to Reset Your Password</a>
+</div>
+";
+
+                await UserManager.SendEmailAsync(user.Id, "Reset your Twolips Dating password", emailBody);
 
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
@@ -421,13 +429,15 @@ namespace TwolipsDating.Controllers
             var user = await UserManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
+                ViewBag.SuccessReset = true;
                 // Don't reveal that the user does not exist
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
+                return RedirectToAction("login", "account");
             }
             var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
             if (result.Succeeded)
             {
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
+                ViewBag.SuccessReset = true;
+                return RedirectToAction("login", "account");
             }
             AddErrors(result);
             return View();

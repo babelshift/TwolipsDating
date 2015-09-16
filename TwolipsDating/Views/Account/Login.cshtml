@@ -7,6 +7,13 @@
 
 <div class="row">
     <div class="col-sm-6 col-lg-4 col-sm-offset-3 col-lg-offset-4">
+        @if (ViewBag.SuccessReset != null && ViewBag.SuccessReset == true)
+        {
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                Your password has been changed. Please login below.
+            </div>
+        }
         <section id="loginForm">
             <div class="panel panel-default">
                 <div class="panel-body">
