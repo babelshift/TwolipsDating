@@ -7,155 +7,193 @@
     ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
 }
 
-@if (Model.IsCurrentUserEmailConfirmed)
-{
-    <div class="row">
-        @if (Model.ConversationMessages != null && Model.ConversationMessages.Count > 0)
-        {
-            <div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        @foreach (var conversation in Model.Conversations)
-                        {
-                            <div class="conversation-item">
-                                <a href="@Url.Action("conversation", "message", new { id = conversation.TargetUserId })">
-                                    @if (conversation.TargetUserId == Model.TargetUserId)
-                                    {
-                                        <div class="well well-sm overflow-ellipsis" style="border-color: #008CBA; background-color: #efefef; line-height: 15px">
-                                            <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
-                                                <img class="circular-image" src="@conversation.TargetProfileImagePath" />
-                                            </div>
-                                            <strong>@conversation.TargetName</strong>
-                                            <br />
-                                            <small style="color: #555">@conversation.TimeAgo</small>
-                                            <br />
-                                            <small>@conversation.MostRecentMessageBody</small>
-                                        </div>
-                                    }
-                                    else if (conversation.MostRecentMessageSenderUserId != Model.CurrentUserId
-                                    && conversation.MostRecentMessageStatusId == (int)TwolipsDating.Models.MessageStatusValue.Unread)
-                                    {
-                                        <div class="well well-sm overflow-ellipsis" style="border-color: #008cba; background-color: #efefef; line-height: 15px">
-                                            <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
-                                                <img class="circular-image" src="@conversation.TargetProfileImagePath" />
-                                            </div>
-                                            <strong>@conversation.TargetName</strong>
-                                            <br />
-                                            <small style="color: #555">@conversation.TimeAgo</small><i class="pull-right glyphicon glyphicon-envelope"></i>
-                                            <br />
-                                            <small>@conversation.MostRecentMessageBody</small>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="well well-sm overflow-ellipsis">
-                                            <div class="circular-image-wrapper pull-left" style="margin-right: 7px; line-height: 15px">
-                                                <img class="circular-image" src="@conversation.TargetProfileImagePath" />
-                                            </div>
-                                            <strong>@conversation.TargetName</strong>
-                                            <br />
-                                            <small style="color: #555">@conversation.TimeAgo</small>
-                                            <br />
-                                            <small>@conversation.MostRecentMessageBody</small>
-                                        </div>
-                                    }
-                                </a>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-8">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="conversation-header">
-                            <div class="circular-image-wrapper">
-                                <img class="circular-image" src="@Model.TargetProfileImagePath" />
-                            </div>
-                            <h4 style="margin-left: 3px; display: inline-block; vertical-align: top; margin-top: 6px; line-height: 20px">
-                                <strong style="margin-left: 6px">@Html.ActionLink(Model.TargetUserName, "index", "profile", new { id = Model.TargetProfileId }, null)</strong>
-                                <br />
-                                <small>
-                                    <i class="fa fa-user fa-fw fa-lg"></i>
-                                    @Model.TargetUserAge &bull; @Model.TargetUserGender
-                                </small>
-                                <br />
-                                <small>
-                                    <i class="fa fa-map-marker fa-fw fa-lg"></i>
-                                    @Model.TargetUserLocation
-                                </small>
-                            </h4>
-                        </div>
-                        @using (Html.BeginForm("send", "message", FormMethod.Post, new { role = "form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            @Html.ValidationSummary()
-
-                            <div class="form-group">
-                                @Html.TextAreaFor(m => m.NewMessage, new { @class = "form-control" })
-                            </div>
-                            @Html.HiddenFor(m => m.TargetApplicationUserId)
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary btn-xs pull-right">
-                                    <i class="fa fa-send fa-lg"></i> Send
-                                </button>
-                            </div>
-                        }
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        @for (int i = 0; i < Model.ConversationMessages.Count; i++)
-                        {
-                            var message = Model.ConversationMessages[i];
-                            <div class="conversation-item" style="word-wrap: break-word">
-                                <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
-                                    <img class=" circular-image" src="@message.TargetProfileImagePath" />
-                                </div>
-                                <p>@message.MostRecentMessageBody</p>
-                                <small class="conversation-item-time-ago">@message.TimeAgo</small>
-                            </div>
-                            if (i < Model.ConversationMessages.Count - 1)
-                            {
-                                <hr />
-                            }
-                        }
-                    </div>
-                </div>
-                @if (Model.ConversationMessages.PageCount > 1)
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @foreach (var conversation in Model.Conversations)
                 {
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            @Html.PagedListPager(Model.ConversationMessages, page => Url.Action("conversation", new { id = Model.TargetApplicationUserId, page = page }))
-                        </div>
+                    <div class="conversation-summary-item">
+                        <a href="@Url.Action("conversation", "message", new { id = conversation.TargetUserId })">
+                            @if (conversation.TargetUserId == Model.TargetUserId)
+                            {
+                                <div class="well well-sm overflow-ellipsis" style="border-color: #006181; background-color: #008CBA; line-height: 15px; color: #eee">
+                                    <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
+                                        <img class="circular-image" src="@conversation.TargetProfileImagePath" />
+                                    </div>
+                                    <strong>@conversation.TargetName</strong>
+                                    <br />
+                                    <small>@conversation.TimeAgo</small>
+                                    <br />
+                                    <small>@conversation.MostRecentMessageBody</small>
+                                </div>
+                            }
+                            else if (conversation.MostRecentMessageSenderUserId != Model.CurrentUserId
+                            && conversation.MostRecentMessageStatusId == (int)TwolipsDating.Models.MessageStatusValue.Unread)
+                            {
+                                <div class="well well-sm overflow-ellipsis" style="border-color: #008cba; background-color: #efefef; line-height: 15px">
+                                    <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
+                                        <img class="circular-image" src="@conversation.TargetProfileImagePath" />
+                                    </div>
+                                    <strong>@conversation.TargetName</strong>
+                                    <br />
+                                    <small style="color: #555">@conversation.TimeAgo</small><i class="pull-right glyphicon glyphicon-envelope"></i>
+                                    <br />
+                                    <small>@conversation.MostRecentMessageBody</small>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="well well-sm overflow-ellipsis" style="line-height: 15px">
+                                    <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
+                                        <img class="circular-image" src="@conversation.TargetProfileImagePath" />
+                                    </div>
+                                    <strong>@conversation.TargetName</strong>
+                                    <br />
+                                    <small>@conversation.TimeAgo</small>
+                                    <br />
+                                    <small>@conversation.MostRecentMessageBody</small>
+                                </div>
+                            }
+                        </a>
                     </div>
                 }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        @if (String.IsNullOrEmpty(Model.TargetUserId))
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="input-group">
+                        <span class="input-group-addon">To</span>
+                        <input id="search-user-name" type="text" class="form-control" placeholder="Type someone's name">
+                        <span class="input-group-btn">
+                            <button id="search" class="btn btn-default" type="button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div><!-- /input-group -->
+                </div>
+            </div>
+            <div id="search-result-panel" class="panel panel-default hidden">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><i class="fa fa-users fa-lg fa-fw"></i> People</h4>
+                </div>
+                <div class="list-group users-to-message" id="search-result-list">
+                </div>
+            </div>
+            <div id="new-message-panel" class="panel panel-default hidden">
+                <div class="panel-body">
+                    @using (Html.BeginForm("send", "message", FormMethod.Post, new { role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary()
+
+                        <div class="form-group">
+                            @Html.TextAreaFor(m => m.NewMessage, new { @class = "form-control", placeholder = "Write a new message..." })
+                        </div>
+                        @Html.HiddenFor(m => m.TargetApplicationUserId)
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-xs pull-right">
+                                <i class="fa fa-send fa-lg fa-fw"></i> Send
+                            </button>
+                        </div>
+                    }
+                </div>
             </div>
         }
         else
         {
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <h4>You don't have any recent conversations. Go find someone new and message them!</h4>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-}
-else
-{
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h4>Before you can participate in message conversations, you need to confirm your email address.</h4>
+                    <div class="conversation-header">
+                        <div class="circular-image-wrapper">
+                            <img class="circular-image" src="@Model.TargetProfileImagePath" />
+                        </div>
+                        <h4 style="margin-left: 3px; display: inline-block; vertical-align: top; margin-top: 0; line-height: 20px">
+                            <strong style="margin-left: 6px">@Html.ActionLink(Model.TargetUserName, "index", "profile", new { id = Model.TargetProfileId }, null)</strong>
+                            <br />
+                            <small>
+                                <i class="fa fa-user fa-fw fa-lg"></i>
+                                @Model.TargetUserAge &bull; @Model.TargetUserGender
+                            </small>
+                            <br />
+                            <small>
+                                <i class="fa fa-map-marker fa-fw fa-lg"></i>
+                                @Model.TargetUserLocation
+                            </small>
+                        </h4>
+                        <div class="btn-group pull-right" role="group" aria-label="...">
+                            <button class="btn btn-default btn-xs pull-right"><i class="fa fa-microphone-slash fa-lg fa-fw"></i> Ignore</button>
+                            @if (Model.IsCurrentUserFollowingTarget)
+                            {
+                                <button id="@String.Format("button-toggle-favorite-{0}", Model.TargetProfileId)" class="btn btn-success btn-xs followify pull-right"
+                                        data-profile-id="@Model.TargetProfileId" data-user-id="@Model.TargetUserId">
+                                    <i id="@String.Format("icon-toggle-favorite-{0}", Model.TargetProfileId)" class="fa fa-check fa-lg fa-fw"></i>
+                                    <span id="@String.Format("user-to-follow-button-text-{0}", Model.TargetProfileId)">Following</span>
+                                </button>
+                            }
+                            else
+                            {
+                                <button id="@String.Format("button-toggle-favorite-{0}", Model.TargetProfileId)" class="btn btn-default btn-xs followify pull-right"
+                                        data-profile-id="@Model.TargetProfileId" data-user-id="@Model.TargetUserId">
+                                    <i id="@String.Format("icon-toggle-favorite-{0}", Model.TargetProfileId)" class="fa fa-user-plus fa-lg fa-fw"></i>
+                                    <span id="@String.Format("user-to-follow-button-text-{0}", Model.TargetProfileId)">Follow</span>
+                                </button>
+                            }
+                            <a href="@Url.Action("conversation", "message", new { id = String.Empty })" class="btn btn-default btn-xs pull-right">
+                                <i class="fa fa-plus fa-lg fa-fw"></i> New Message
+                            </a>
+                        </div>
+                    </div>
+                    @using (Html.BeginForm("send", "message", FormMethod.Post, new { role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary()
+
+                        <div class="form-group">
+                            @Html.TextAreaFor(m => m.NewMessage, new { @class = "form-control", placeholder = "Write a reply..." })
+                        </div>
+                        @Html.HiddenFor(m => m.TargetApplicationUserId)
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-xs pull-right">
+                                <i class="fa fa-reply fa-lg fa-fw"></i> Send Reply
+                            </button>
+                        </div>
+                    }
                 </div>
             </div>
-        </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @for (int i = 0; i < Model.ConversationMessages.Count; i++)
+                    {
+                        var message = Model.ConversationMessages[i];
+                        <div class="conversation-item" style="word-wrap: break-word">
+                            <a href="@Url.Action("index", "profile", new { id = message.TargetProfileId })">
+                                <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
+                                    <img class="circular-image" src="@message.TargetProfileImagePath" />
+                                </div>
+                                @message.TargetName
+                            </a>
+                            <small class="pull-right conversation-item-time-ago">@message.TimeAgo</small>
+                            <p>@message.MostRecentMessageBody</p>
+                        </div>
+                    }
+                </div>
+            </div>
+            if (Model.ConversationMessages.PageCount > 1)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @Html.PagedListPager(Model.ConversationMessages, page => Url.Action("conversation", new { id = Model.TargetApplicationUserId, page = page }))
+                    </div>
+                </div>
+            }
+        }
     </div>
-}
+</div>
 @section Scripts {
     @Scripts.Render("~/bundles/message/conversation")
 }

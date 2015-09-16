@@ -21,6 +21,8 @@ namespace TwolipsDating
                     "~/Scripts/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/message/conversation").Include(
+                "~/Scripts/Shared/followify.js",
+                "~/Scripts/Message/conversation.js",
                 "~/Scripts/jquery.validate*",
                 "~/Scripts/jquery.unobtrusive-ajax.js"));
 

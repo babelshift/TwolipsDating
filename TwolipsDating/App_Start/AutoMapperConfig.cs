@@ -17,6 +17,14 @@ namespace TwolipsDating
 
             Mapper.CreateMap<EmailNotifications, ManageNotificationsViewModel>();
 
+            Mapper.CreateMap<TwolipsDating.Models.Profile, UserToMessageViewModel>()
+                .ForMember(dest => dest.UserId, opts => opts.MapFrom(source => source.ApplicationUser.Id))
+                .ForMember(dest => dest.UserName, opts => opts.MapFrom(source => source.ApplicationUser.UserName))
+                .ForMember(dest => dest.Location, opts => opts.MapFrom(source => source.GeoCity.ToFullLocationString()))
+                .ForMember(dest => dest.Age, opts => opts.MapFrom(source => source.Birthday.GetAge()))
+                .ForMember(dest => dest.ProfileThumbnailImagePath, opts => opts.MapFrom(source => source.GetProfileThumbnailImagePath()))
+                .ForMember(dest => dest.Gender, opts => opts.MapFrom(source => source.Gender.Name));
+
             Mapper.CreateMap<TwolipsDating.Models.Profile, ProfileViewModel>()
                 .ForMember(dest => dest.UserName, opts => opts.MapFrom(source => source.ApplicationUser.UserName))
                 .ForMember(dest => dest.Age, opts => opts.MapFrom(source => source.Birthday.GetAge()))
@@ -147,6 +155,8 @@ namespace TwolipsDating
 
             Mapper.CreateMap<Message, ConversationItemViewModel>()
                 .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateSent))
+                .ForMember(dest => dest.TargetProfileId, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.Id))
+                .ForMember(dest => dest.TargetName, opts => opts.MapFrom(source => source.SenderApplicationUser.UserName))
                 .ForMember(dest => dest.TargetProfileImagePath, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.MostRecentMessageBody, opts => opts.MapFrom(source => source.Body))
                 .ForMember(dest => dest.MostRecentMessageStatusId, opts => opts.MapFrom(source => source.MessageStatusId))

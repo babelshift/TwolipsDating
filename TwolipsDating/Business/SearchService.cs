@@ -35,6 +35,18 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
+        public async Task<IReadOnlyCollection<Profile>> GetProfilesByUserNameAsync(string userName, string currentUserId)
+        {
+
+            var results = await (from profiles in db.Profiles
+                                 where profiles.ApplicationUser.UserName.Contains(userName)
+                                 where profiles.ApplicationUser.IsActive
+                                 where profiles.ApplicationUser.Id != currentUserId
+                                 select profiles).ToListAsync();
+
+            return results.AsReadOnly();
+        }
+
         public async Task<IReadOnlyCollection<Profile>> GetProfilesByTagNameAsync(string userName)
         {
             var results = await (from profiles in db.Profiles

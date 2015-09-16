@@ -46,7 +46,6 @@ namespace TwolipsDating.Controllers
             // setup the essentials in the viewmodel
             viewModel.TargetApplicationUserId = id;
             viewModel.CurrentUserId = currentUserId;
-            viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
             // there are no recent conversations, return the view with an empty set
             if (viewModel.Conversations.Count == 0)
@@ -54,10 +53,15 @@ namespace TwolipsDating.Controllers
                 return View(viewModel);
             }
 
-            // if no id value was provided for the conversation, look up the first one
-            if (String.IsNullOrEmpty(id))
+            //// if no id value was provided for the conversation, look up the first one
+            //if (String.IsNullOrEmpty(id))
+            //{
+            //    id = viewModel.Conversations[0].TargetUserId;
+            //}
+
+            if(String.IsNullOrEmpty(id))
             {
-                id = viewModel.Conversations[0].TargetUserId;
+                return View(viewModel);
             }
 
             // lookup the profile we are accessing and the messages between the current user and that profile
@@ -66,8 +70,10 @@ namespace TwolipsDating.Controllers
             // there is no profile for the user that we are looking up
             if (profileForOtherUser == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+                return new HttpNotFoundResult();
             }
+
+            viewModel.IsCurrentUserFollowingTarget = profileForOtherUser.FavoritedBy.Any(x => x.UserId == currentUserId);
 
             // look up conversations between the current user and the selected id
             var messagesBetweenUsers = await ProfileService.GetMessagesBetweenUsersAsync(currentUserId, id);
@@ -174,6 +180,21 @@ namespace TwolipsDating.Controllers
             }
 
             return conversationItem;
+        }
+
+        public async Task<JsonResult> SearchPeopleToMessage(string userName)
+        {
+            if(String.IsNullOrEmpty(userName))
+            {
+                return Json(new { });
+            }
+
+            string currentUserId = User.Identity.GetUserId();
+
+            var people = await SearchService.GetProfilesByUserNameAsync(userName, currentUserId);
+            var viewModel = Mapper.Map<IReadOnlyCollection<Models.Profile>, IReadOnlyCollection<UserToMessageViewModel>>(people);
+
+            return Json(new { result = viewModel });
         }
 
         #endregion Conversations

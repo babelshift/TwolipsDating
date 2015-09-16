@@ -167,27 +167,29 @@ input[type="checkbox"].input-validation-error {
     margin-bottom: 4px;
 }
 
-.conversation-item .well-sm {
-    padding-bottom: 15px;
+.conversation-item,
+.conversation-summary-item {
+    margin-bottom: 15px;
 }
 
-.conversation-item .circular-image-wrapper {
-    width: 50px;
-    height: 50px;
+    .conversation-item .circular-image-wrapper,
+    .conversation-summary-item .circular-image-wrapper {
+        width: 50px;
+        height: 50px;
+    }
+
+    .conversation-summary-item a {
+        text-decoration: none;
+        color: #555;
+    }
+
+.conversation-item {
+    min-height: 50px;
 }
 
 .conversation-item-time-ago {
     color: #999;
 }
-
-.conversation-item a {
-    color: #222;
-    text-decoration: none;
-}
-
-    .conversation-item a:hover {
-        color: #222;
-    }
 
 .conversation-header .circular-image-wrapper {
     width: 76px;
@@ -830,3 +832,45 @@ input[readonly] {
 .quiz-categories .dropdown-menu > li > a {
     padding: 7px 15px;
 }
+
+.user-to-message {
+    padding-left: 50px;
+}
+
+.users-to-message .list-group {
+    margin-bottom: 0;
+}
+
+.users-to-message {
+    line-height: 16px;
+}
+
+    .users-to-message .list-group-item {
+        position: relative;
+    }
+
+    .users-to-message img {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        border-radius: 25px;
+        vertical-align: bottom;
+    }
+
+    .users-to-message .user-to-message-name {
+        display: block;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #555;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .users-to-message .user-to-message-details {
+        color: #777;
+        font-size: 12px;
+    }

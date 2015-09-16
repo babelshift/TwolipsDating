@@ -807,6 +807,7 @@
     <Compile Include="ViewModels\UserImageViewModel.cs" />
     <Compile Include="ViewModels\UserPointsViewModel.cs" />
     <Compile Include="ViewModels\UserStatsViewModel.cs" />
+    <Compile Include="ViewModels\UserToMessageViewModel.cs" />
     <Compile Include="ViewModels\WriteReviewViewModel.cs" />
     <Compile Include="ViewModels\WriteReviewViolationViewModel.cs" />
   </ItemGroup>
@@ -939,6 +940,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\Manage\index.js" />
+    <Content Include="Scripts\Message\conversation.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\Profile\create.js" />
     <Content Include="Scripts\Profile\index.js" />

@@ -659,7 +659,7 @@ namespace TwolipsDating.Business
                 bool success = false;
 
                 var senderUser = db.Users.Find(senderUserId);
-                if (senderUser.LifetimePoints > 25)
+                if (senderUser.LifetimePoints >= 25)
                 {
                     try
                     {

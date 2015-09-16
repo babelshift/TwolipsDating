@@ -9,7 +9,7 @@ namespace TwolipsDating.ViewModels
         public IReadOnlyList<ConversationItemViewModel> Conversations { get; set; }
 
         public string CurrentUserId { get; set; }
-        public bool IsCurrentUserEmailConfirmed { get; set; }
+        public bool IsCurrentUserFollowingTarget { get; set; }
         public int TargetProfileId { get; set; }
         public string TargetUserName { get; set; }
         public string TargetProfileImagePath { get; set; }
