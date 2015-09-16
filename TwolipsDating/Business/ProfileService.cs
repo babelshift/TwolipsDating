@@ -1657,6 +1657,8 @@ from (
 	tagid, 
 	profileid
 	from dbo.tagawards ta1
+	inner join dbo.Profiles p on ta1.ProfileId = p.Id
+	inner join dbo.AspNetUsers u on u.Id = p.ApplicationUser_Id
 	where tagid in (
 		-- all awarded tags that current user has
 		select tagid
@@ -1665,6 +1667,7 @@ from (
 		group by tagid
 	)
 	and profileid <> @profileId
+	and u.IsActive = 1
 	group by tagid, profileid
 	-- exclude where current user tag count is outside range of comparing user tag count
 	having (
