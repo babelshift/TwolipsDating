@@ -8,6 +8,8 @@ namespace TwolipsDating.Utilities
 {
     public static class StoreItemExtensions
     {
+        private static readonly string cdn = ConfigurationManager.AppSettings["cdnUrl"];
+
         public static double? GetDiscountIfAvailable(this StoreItem storeItem)
         {
             var sale = storeItem.StoreSales.FirstOrDefault(f => DateTime.Now >= f.DateStart && DateTime.Now <= f.DateEnd);

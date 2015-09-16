@@ -27,6 +27,7 @@ namespace TwolipsDating
                 .ForMember(dest => dest.ProfileImagePath, opts => opts.MapFrom(source => source.GetProfileImagePath()))
                 .ForMember(dest => dest.ProfileThumbnailImagePath, opts => opts.MapFrom(source => source.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.SelectedTitle, opts => opts.MapFrom(source => source.SelectedTitle != null ? source.SelectedTitle.Name : String.Empty))
+                .ForMember(dest => dest.SelectedTitleImage, opts => opts.MapFrom(source => source.SelectedTitle != null ? source.SelectedTitle.GetIconPath() : String.Empty))
                 .ForMember(dest => dest.SummaryOfSelf, opts => opts.MapFrom(source => source.SummaryOfSelf))
                 .ForMember(dest => dest.SummaryOfDoing, opts => opts.MapFrom(source => source.SummaryOfDoing))
                 .ForMember(dest => dest.SummaryOfGoing, opts => opts.MapFrom(source => source.SummaryOfGoing))
