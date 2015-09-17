@@ -5,7 +5,7 @@ set LifetimePoints = isnull((
 		from dbo.StoreTransactionLogs stl
 		where stl.UserId = dbo.AspNetUsers.id
 		group by UserId
-), 0)
+), 0);
 
 update dbo.AspNetUsers
-set LifetimePoints = LifetimePoints + CurrentPoints
+set LifetimePoints = LifetimePoints + CurrentPoints;

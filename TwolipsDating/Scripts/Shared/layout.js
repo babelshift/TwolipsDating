@@ -175,4 +175,11 @@ $(document).ready(function () {
                 }
             });
     });
+
+    $('#modalReferAFriend').on('show.bs.modal', function (e) {
+        get('/account/referralcode', function (data) {
+            $('#referral-code').val(data.code);
+            $('#referral-link').val(data.link);
+        });
+    });
 });

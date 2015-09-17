@@ -288,6 +288,7 @@
     <Compile Include="Business\ITriviaService.cs" />
     <Compile Include="Business\IUserService.cs" />
     <Compile Include="Business\IViolationService.cs" />
+    <Compile Include="Business\ReferralCodeServiceResult.cs" />
     <Compile Include="Business\ToggleServiceResult.cs" />
     <Compile Include="Business\UploadedImageServiceResult.cs" />
     <Compile Include="Business\AnsweredQuestionServiceResult.cs" />
@@ -436,12 +437,17 @@
     <Compile Include="Migrations\201509151436035_AddIconToCategoryPart2.Designer.cs">
       <DependentUpon>201509151436035_AddIconToCategoryPart2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509171833182_AddReferrals.cs" />
+    <Compile Include="Migrations\201509171833182_AddReferrals.Designer.cs">
+      <DependentUpon>201509171833182_AddReferrals.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\CompletedQuizComparer.cs" />
     <Compile Include="Models\EmailNotifications.cs" />
     <Compile Include="Models\Language.cs" />
     <Compile Include="Models\LookingForLocation.cs" />
     <Compile Include="Models\LookingForType.cs" />
     <Compile Include="Models\QuizCategory.cs" />
+    <Compile Include="Models\Referral.cs" />
     <Compile Include="Models\RelationshipStatus.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
@@ -1308,6 +1314,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509151436035_AddIconToCategoryPart2.resx">
       <DependentUpon>201509151436035_AddIconToCategoryPart2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509171833182_AddReferrals.resx">
+      <DependentUpon>201509171833182_AddReferrals.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -21,28 +21,19 @@
                         </div>
                         <div class="form-group text-center">
                             <div style="margin-bottom: 10px;">
-                                <button style="width: 100%;" type="submit" class="btn btn-twitter" id="Twitter" name="provider" value="Twitter" title="Sign up with Twitter">
-                                    <span class="fa-stack">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-twitter fa-stack-1x fa-inverse-twitter"></i>
-                                    </span>
+                                <button type="submit" class="btn btn-twitter btn-block" id="Twitter" name="provider" value="Twitter" title="Sign up with Twitter">
+                                    <i class="fa fa-twitter fa-lg fa-fw"></i>
                                     Twitter
                                 </button>
                             </div>
                             <div style="margin-bottom: 10px;">
-                                <button style="width: 100%;" type="submit" class="btn btn-facebook" id="Facebook" name="provider" value="Facebook" title="Sign up with Facebook">
-                                    <span class="fa-stack">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-facebook fa-stack-1x fa-inverse-facebook"></i>
-                                    </span>
+                                <button type="submit" class="btn btn-facebook btn-block" id="Facebook" name="provider" value="Facebook" title="Sign up with Facebook">
+                                    <i class="fa fa-facebook fa-lg fa-fw"></i>
                                     Facebook
                                 </button>
                             </div>
-                            <button style="width: 100%;" type="submit" class="btn btn-google-plus" id="Google" name="provider" value="Google" title="Sign up with Google+">
-                                <span class="fa-stack">
-                                    <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-google-plus fa-stack-1x fa-inverse-google-plus"></i>
-                                </span>
+                            <button type="submit" class="btn btn-google-plus btn-block" id="Google" name="provider" value="Google" title="Sign up with Google+">
+                                <i class="fa fa-google-plus fa-lg fa-fw"></i>
                                 Google+
                             </button>
                             <small>We don't post anything without your permission.</small>
@@ -73,6 +64,12 @@
                             <div class="input-group">
                                 <div class="input-group-addon"><i class="fa fa-lg fa-envelope fa-fw"></i></div>
                                 @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Enter your email address" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-lg fa-certificate fa-fw"></i></div>
+                                @Html.TextBoxFor(m => m.ReferralCode, new { @class = "form-control", @placeholder = "(optional referral code)" })
                             </div>
                         </div>
                         <div class="form-group">

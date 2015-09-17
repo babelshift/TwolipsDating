@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -295,6 +296,84 @@ namespace TwolipsDating.Business
                 where id = @userId";
 
             int count = await ExecuteAsync(sql, new { dateNow = DateTime.Now, userId });
+        }
+
+        public async Task<ReferralCodeServiceResult> GenerateReferralCodeForUserAsync(string userId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            var code = GuidEncoder.Encode(Guid.NewGuid().ToString());
+
+            bool success = false;
+
+            try
+            {
+                db.Referrals.Add(new Referral()
+                    {
+                        Code = code,
+                        UserId = userId,
+                        IsRedeemed = false
+                    });
+
+                success = (await db.SaveChangesAsync()) > 0;
+            }
+            catch (DbUpdateException ex)
+            {
+                Log.Error("UserService.GenerateReferralCodeForUserAsync", ex, new { userId, code });
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.ReferralCodeNotGenerated);
+            }
+
+            return success ? ReferralCodeServiceResult.Success(code) : ReferralCodeServiceResult.Failed(ErrorMessages.ReferralCodeNotGenerated);
+        }
+
+        public async Task RewardReferralAsync(ApplicationUser userWhoReceivedReferral, string referralCode)
+        {
+            Debug.Assert(userWhoReceivedReferral != null);
+            Debug.Assert(!String.IsNullOrEmpty(referralCode));
+
+            var referral = await db.Referrals.FindAsync(referralCode);
+            var userWhoSentReferral = referral.ApplicationUser;
+
+            // reward the users somehow
+            // points
+            // title
+            // achievement
+
+            userWhoReceivedReferral.IncreasePoints(100);
+
+            // only reward the referral user if they are still active
+            if (userWhoSentReferral.IsActive)
+            {
+                userWhoSentReferral.IncreasePoints(100);
+            }
+
+            referral.IsRedeemed = true;
+
+            await db.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsReferralCodeValidAsync(string referralCode)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(referralCode));
+
+            var referral = await db.Referrals.FindAsync(referralCode);
+
+            bool success = false;
+
+            if (referral == null)
+            {
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.ReferralCodeDoesNotExist);
+            }
+            else if (referral.IsRedeemed)
+            {
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.ReferralCodeAlreadyRedeemed);
+            }
+            else
+            {
+                success = true;
+            }
+
+            return success;
         }
     }
 }

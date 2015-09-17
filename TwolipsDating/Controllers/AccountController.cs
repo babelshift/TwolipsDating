@@ -200,12 +200,17 @@ namespace TwolipsDating.Controllers
         //
         // GET: /Account/Register
         [AllowAnonymous]
-        public ActionResult Register()
+        public ActionResult Register(string id)
         {
-            return View();
+            RegisterViewModel viewModel = new RegisterViewModel()
+            {
+                ReferralCode = id
+            };
+
+            return View(viewModel);
         }
 
-        internal async Task<IdentityResult> RegisterAccount(string userName, string password, string email)
+        internal async Task<IdentityResult> RegisterAccount(string userName, string password, string email, string referralCode)
         {
             var user = new ApplicationUser
             {
@@ -220,6 +225,12 @@ namespace TwolipsDating.Controllers
 
             if (result.Succeeded)
             {
+                // if user entered a code, check it
+                if(!String.IsNullOrEmpty(referralCode))
+                {
+                    await UserService.RewardReferralAsync(user, referralCode);
+                }
+
                 // subscribe new users to all email notifications
                 await SetupDefaultEmailNotifications(user);
 
@@ -245,7 +256,12 @@ namespace TwolipsDating.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await RegisterAccount(model.UserName, model.Password, model.Email);
+                if(!(await IsReferralCodeValid(model)))
+                {
+                    return View(model);
+                }
+
+                var result = await RegisterAccount(model.UserName, model.Password, model.Email, model.ReferralCode);
 
                 if (result.Succeeded)
                 {
@@ -259,6 +275,16 @@ namespace TwolipsDating.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        private async Task<bool> IsReferralCodeValid(RegisterViewModel model)
+        {
+            if (!String.IsNullOrEmpty(model.ReferralCode))
+            {
+                return (await UserService.IsReferralCodeValidAsync(model.ReferralCode));
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -650,7 +676,7 @@ namespace TwolipsDating.Controllers
             return View();
         }
 
-        [RequireProfileIfAuthenticated]
+        [RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
         public async Task<ActionResult> Points(int? page)
         {
             await SetNotificationsAsync();
@@ -706,6 +732,26 @@ namespace TwolipsDating.Controllers
         //        });
         //    }
         //}
+
+        [RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
+        public async Task<JsonResult> ReferralCode()
+        {
+            var currentUserId = User.Identity.GetUserId();
+
+            var result = await UserService.GenerateReferralCodeForUserAsync(currentUserId);
+
+            if(result.Succeeded)
+            {
+                var code = result.Code;
+                var link = Url.ActionWithFullUrl(Request, "register", "account", new { code = code });
+
+                return Json(new { success = true, code, link }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
         protected override void Dispose(bool disposing)
         {

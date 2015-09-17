@@ -223,6 +223,33 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to That referral code has already been redeemed..
+        /// </summary>
+        internal static string ReferralCodeAlreadyRedeemed {
+            get {
+                return ResourceManager.GetString("ReferralCodeAlreadyRedeemed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to That referral code does not exist..
+        /// </summary>
+        internal static string ReferralCodeDoesNotExist {
+            get {
+                return ResourceManager.GetString("ReferralCodeDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not generate a referral code at this time..
+        /// </summary>
+        internal static string ReferralCodeNotGenerated {
+            get {
+                return ResourceManager.GetString("ReferralCodeNotGenerated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Something prevented your review from being saved. If this continues, contact support..
         /// </summary>
         internal static string ReviewNotSaved {

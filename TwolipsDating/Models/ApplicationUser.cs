@@ -49,6 +49,7 @@ namespace TwolipsDating.Models
         public virtual ICollection<StoreTransactionLog> StoreTransactions { get; set; }
         public virtual ICollection<UserTitle> ObtainedTitles { get; set; }
         public virtual ICollection<ProfileViewLog> ProfilesVisited { get; set; }
+        public virtual ICollection<Referral> ReferralsSent { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

@@ -225,4 +225,13 @@
   <data name="NeedPointsToMessage" xml:space="preserve">
     <value>You need to earn at least 25 points to message someone. Go play some trivia and come back!</value>
   </data>
+  <data name="ReferralCodeNotGenerated" xml:space="preserve">
+    <value>Could not generate a referral code at this time.</value>
+  </data>
+  <data name="ReferralCodeAlreadyRedeemed" xml:space="preserve">
+    <value>That referral code has already been redeemed.</value>
+  </data>
+  <data name="ReferralCodeDoesNotExist" xml:space="preserve">
+    <value>That referral code does not exist.</value>
+  </data>
 </root>

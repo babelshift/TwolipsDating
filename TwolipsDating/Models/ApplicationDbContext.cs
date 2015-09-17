@@ -59,6 +59,7 @@ namespace TwolipsDating.Models
         public virtual DbSet<RelationshipStatus> RelationshipStatuses { get; set; }
         public virtual DbSet<Language> Languages { get; set; }
         public virtual DbSet<QuizCategory> QuizCategories { get; set; }
+        public virtual DbSet<Referral> Referrals { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -119,6 +120,18 @@ namespace TwolipsDating.Models
             SetupRelationshipStatuses(modelBuilder);
             SetupLanguages(modelBuilder);
             SetupQuizCategories(modelBuilder);
+            SetupReferrals(modelBuilder);
+        }
+
+        private void SetupReferrals(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Referral>()
+                .HasKey(c => c.Code);
+
+            modelBuilder.Entity<Referral>()
+                .HasRequired(v => v.ApplicationUser)
+                .WithMany(v => v.ReferralsSent)
+                .HasForeignKey(v => v.UserId);
         }
 
         private void SetupQuizCategories(DbModelBuilder modelBuilder)

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using TwolipsDating.Models;
 namespace TwolipsDating.Business
 {
     public interface IUserService : IBaseService
@@ -18,5 +20,10 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task SendReviewEmailNotificationAsync(string senderProfileImagePath, string senderUserName, string reviewText, string senderProfileUrl, string receiverUserId, string receiverUserName, string receiverEmail);
         System.Threading.Tasks.Task SetUserLastLoginByEmailAsync(string email);
         System.Threading.Tasks.Task SetUserLastLoginByIdAsync(string userId);
+        Task<ReferralCodeServiceResult> GenerateReferralCodeForUserAsync(string userId);
+
+        Task RewardReferralAsync(ApplicationUser user, string referralCode);
+
+        Task<bool> IsReferralCodeValidAsync(string referralCode);
     }
 }

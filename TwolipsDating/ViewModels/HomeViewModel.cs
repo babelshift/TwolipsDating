@@ -22,5 +22,7 @@ namespace TwolipsDating.ViewModels
         [Required]
         [Display(Name = "Email address")]
         public string Email { get; set; }
+
+        public string ReferralCode { get; set; }
     }
 }
