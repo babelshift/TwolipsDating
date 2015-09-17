@@ -157,6 +157,7 @@
                                 @String.Format("{0}. {1}", i + 1, question.Content)
                                 <div class="clearfix"></div>
                             }
+                            @Html.Partial("_QuestionRatingBarPartial", question.Points)
                             <div style="margin-top: 5px;">
                                 @foreach (var answer in question.Answers)
                                 {
