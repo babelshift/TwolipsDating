@@ -73,7 +73,7 @@ else
                 <hr />
                 @foreach (var player in Model.Players)
                 {
-                    <div class="col-xs-6 col-sm-3 col-md-4" style="margin-bottom: 15px;">
+                    <div class="col-xs-6 col-sm-3 col-md-4" style="margin-bottom: 15px; min-height: 100px;">
                         <div class="top-player">
                             <div style="margin-left: 70px;">
                                 <a href="@Url.Action("index", "profile", new{id = player.ProfileId})">
@@ -83,7 +83,7 @@ else
                                     <a href="@Url.Action("index", "profile", new{id = player.ProfileId})">@player.UserName</a>
                                 </span>
                                 <span class="top-player-details">
-                                    <i class="fa fa-user fa-fw"></i> @player.Age years old
+                                    <i class="fa fa-user fa-fw"></i> @player.Age years
                                     <br />
                                     <i class="fa fa-map-marker fa-fw"></i> @player.Location
                                     <br />

@@ -114,6 +114,17 @@ namespace TwolipsDating.Controllers
                     quiz.IsComplete = true;
                 }
             }
+
+            foreach (var quizCollection in viewModel.DailyQuizzes.Values)
+            {
+                foreach (var quiz in quizCollection)
+                {
+                    if (completedQuizzes.Any(q => q.Key == quiz.Id))
+                    {
+                        quiz.IsComplete = true;
+                    }
+                }
+            }
         }
 
         [AllowAnonymous, RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
