@@ -232,6 +232,6 @@
     <value>That referral code has already been redeemed.</value>
   </data>
   <data name="ReferralCodeDoesNotExist" xml:space="preserve">
-    <value>That referral code does not exist.</value>
+    <value>That referral code does not exist or has expired.</value>
   </data>
 </root>

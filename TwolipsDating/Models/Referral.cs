@@ -10,6 +10,7 @@ namespace TwolipsDating.Models
         public string UserId { get; set; }
         public string Code { get; set; }
         public bool IsRedeemed { get; set; }
+        public DateTime DateCreated { get; set; }
 
         public virtual ApplicationUser ApplicationUser { get; set; }
     }

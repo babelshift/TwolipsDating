@@ -232,7 +232,7 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to That referral code does not exist..
+        ///   Looks up a localized string similar to That referral code does not exist or has expired..
         /// </summary>
         internal static string ReferralCodeDoesNotExist {
             get {

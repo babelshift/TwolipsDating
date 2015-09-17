@@ -743,7 +743,7 @@ namespace TwolipsDating.Controllers
             if(result.Succeeded)
             {
                 var code = result.Code;
-                var link = Url.ActionWithFullUrl(Request, "register", "account", new { code = code });
+                var link = Url.ActionWithFullUrl(Request, "register", "account", new { id = code });
 
                 return Json(new { success = true, code, link }, JsonRequestBehavior.AllowGet);
             }

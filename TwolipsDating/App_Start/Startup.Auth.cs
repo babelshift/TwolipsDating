@@ -53,8 +53,11 @@ namespace TwolipsDating
 
                             // each time the user's identity is validated, we want to refresh the last time they were logged in
                             // this is used to display how active the user is to other people in the community
-                            var userService = context.OwinContext.Get<UserService>();
-                            await userService.SetUserLastLoginByIdAsync(context.Identity.GetUserId());
+                            if (context.Identity != null)
+                            {
+                                var userService = context.OwinContext.Get<UserService>();
+                                await userService.SetUserLastLoginByIdAsync(context.Identity.GetUserId());
+                            }
                         }
                 }
             });

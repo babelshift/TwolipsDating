@@ -441,6 +441,10 @@
     <Compile Include="Migrations\201509171833182_AddReferrals.Designer.cs">
       <DependentUpon>201509171833182_AddReferrals.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509172036412_AddDateToReferral.cs" />
+    <Compile Include="Migrations\201509172036412_AddDateToReferral.Designer.cs">
+      <DependentUpon>201509172036412_AddDateToReferral.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\CompletedQuizComparer.cs" />
     <Compile Include="Models\EmailNotifications.cs" />
     <Compile Include="Models\Language.cs" />
@@ -1318,6 +1322,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509171833182_AddReferrals.resx">
       <DependentUpon>201509171833182_AddReferrals.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509172036412_AddDateToReferral.resx">
+      <DependentUpon>201509172036412_AddDateToReferral.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

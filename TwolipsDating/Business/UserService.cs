@@ -312,7 +312,8 @@ namespace TwolipsDating.Business
                     {
                         Code = code,
                         UserId = userId,
-                        IsRedeemed = false
+                        IsRedeemed = false,
+                        DateCreated = DateTime.Now
                     });
 
                 success = (await db.SaveChangesAsync()) > 0;
