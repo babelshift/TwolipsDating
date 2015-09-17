@@ -27,7 +27,7 @@ namespace TwolipsDating.Tests.Controllers
         {
             AccountController controller = new AccountController();
 
-            var result = controller.Register() as ViewResult;
+            var result = controller.Register(String.Empty) as ViewResult;
             Assert.IsNotNull(result);
             Assert.AreEqual(result.ViewName, String.Empty);
         }

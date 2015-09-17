@@ -458,6 +458,7 @@
     <Compile Include="Models\UserTitle.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\ApplicationUserExtensions.cs" />
     <Compile Include="Utilities\CalendarHelper.cs" />
     <Compile Include="Utilities\DictionaryHelper.cs" />
     <Compile Include="Utilities\ModelStateTransfer.cs" />

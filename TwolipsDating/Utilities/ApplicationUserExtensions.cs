@@ -12,8 +12,8 @@ namespace TwolipsDating.Utilities
         {
             if (user != null)
             {
-                userWhoSentReferral.CurrentPoints += points;
-                userWhoSentReferral.LifetimePoints += points;
+                user.CurrentPoints += points;
+                user.LifetimePoints += points;
             }
         }
     }
