@@ -20,5 +20,7 @@ namespace TwolipsDating.ViewModels
         public QuestionViolationViewModel QuestionViolation { get; set; }
 
         public IReadOnlyCollection<TagViewModel> Tags { get; set; }
+
+        public IReadOnlyCollection<QuizCategoryViewModel> QuizCategories { get; set; }
     }
 }

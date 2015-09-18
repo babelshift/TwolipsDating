@@ -1708,7 +1708,6 @@ order by count(t.profileid) desc";
             var followers = from favoriteProfile in db.FavoriteProfiles
                             where favoriteProfile.ProfileId == profileId
                             where favoriteProfile.User.IsActive
-                            where favoriteProfile.User.Id != userId
                             select new FollowerViewModel()
                             {
                                 BannerImagePath = favoriteProfile.User.Profile.BannerImage.FileName,
@@ -1740,7 +1739,6 @@ order by count(t.profileid) desc";
             var followers = from favoriteProfile in db.FavoriteProfiles
                             where favoriteProfile.User.Profile.Id == profileId
                             where favoriteProfile.Profile.ApplicationUser.IsActive
-                            where favoriteProfile.Profile.ApplicationUser.Id != userId
                             select new FollowerViewModel()
                             {
                                 BannerImagePath = favoriteProfile.Profile.BannerImage.FileName,

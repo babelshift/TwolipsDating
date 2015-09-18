@@ -491,7 +491,7 @@ namespace TwolipsDating.Controllers
                     : 0;
             int userPercentScore = (int)Math.Round(((double)correctAnswerCount / (double)questionListViewModel.Count) * 100);
             var similarQuizzes = await TriviaService.GetSimilarQuizzes(id);
-
+            var quizCategories = await TriviaService.GetQuizCategoriesAsync();
             QuizViewModel viewModel = new QuizViewModel()
             {
                 Questions = questionListViewModel,
@@ -505,7 +505,8 @@ namespace TwolipsDating.Controllers
                 AveragePoints = averagePoints,
                 ImageUrl = quiz.GetImagePath(),
                 UserScorePercent = userPercentScore,
-                SimilarQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(similarQuizzes)
+                SimilarQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(similarQuizzes),
+                QuizCategories = Mapper.Map<IReadOnlyCollection<QuizCategory>, IReadOnlyCollection<QuizCategoryViewModel>>(quizCategories)
             };
 
             return View(viewModel);
