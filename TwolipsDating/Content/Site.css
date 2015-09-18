@@ -875,6 +875,24 @@ input[readonly] {
         font-size: 12px;
     }
 
-    .profile-follow-stats a:hover {
-        text-decoration: none;
-    }
+.profile-follow-stats a:hover {
+    text-decoration: none;
+}
+
+.profile-self-text-header,
+.profile-self-text-header-top {
+    font-weight: normal;
+}
+
+.profile-self-text-header {
+    margin-top: 30px;
+}
+
+.profile-self-text-header-top {
+    margin-top: 0;
+}
+
+.profile-self-text {
+    color: #333;
+    font-weight: 300;
+}

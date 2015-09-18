@@ -232,9 +232,9 @@ namespace TwolipsDating.Controllers
                 ViewBag.MessageNotificationCount = await NotificationService.GetMessageNotificationCountAsync(currentUserId);
                 ViewBag.PointsCount = currentUser.CurrentPoints;
 
-                var announcements = await NotificationService.GetAnnouncementNotificationsAsync();
-                ViewBag.Announcements = announcements;
-                ViewBag.AnnouncementNotificationCount = announcements.Count;
+                //var announcements = await NotificationService.GetAnnouncementNotificationsAsync();
+                //ViewBag.Announcements = announcements;
+                //ViewBag.AnnouncementNotificationCount = announcements.Count;
 
                 var gifts = await ProfileService.GetUnreviewedGiftTransactionsAsync(currentUserId);
                 var giftsViewModels = Mapper.Map<IReadOnlyCollection<GiftTransactionLog>, IReadOnlyCollection<GiftTransactionViewModel>>(gifts);
