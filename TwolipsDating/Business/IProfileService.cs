@@ -66,5 +66,13 @@ namespace TwolipsDating.Business
 
         System.Threading.Tasks.Task<bool> IsProfileFavoritedByUserAsync(int profileId, string currentUserId);
         Task<IReadOnlyCollection<SimilarUserViewModel>> GetSimilarProfilesAsync(int profileId);
+
+        Task<IReadOnlyCollection<FollowerViewModel>> GetFollowersAsync(int profileId, string userId);
+        Task<IReadOnlyCollection<FollowerViewModel>> GetFollowingAsync(int profileId, string userId);
+
+        Task<int> GetFollowerCountAsync(int profileId);
+
+        Task<int> GetFollowingCountAsync(int profileId);
+
     }
 }

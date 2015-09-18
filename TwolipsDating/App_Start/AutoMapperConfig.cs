@@ -17,6 +17,14 @@ namespace TwolipsDating
 
             Mapper.CreateMap<EmailNotifications, ManageNotificationsViewModel>();
 
+            Mapper.CreateMap<TwolipsDating.Models.Profile, FollowerViewModel>()
+                .ForMember(dest => dest.BannerImagePath, opts => opts.MapFrom(source => source.BannerImage.GetPath()))
+                .ForMember(dest => dest.BannerPositionX, opts => opts.MapFrom(source => source.BannerPositionX))
+                .ForMember(dest => dest.BannerPositionY, opts => opts.MapFrom(source => source.BannerPositionY))
+                .ForMember(dest => dest.ProfileThumbnailImagePath, opts => opts.MapFrom(source => source.GetProfileThumbnailImagePath()))
+                .ForMember(dest => dest.UserName, opts => opts.MapFrom(source => source.ApplicationUser.UserName))
+                .ForMember(dest => dest.UserSummaryOfSelf, opts => opts.MapFrom(source => source.SummaryOfSelf));
+
             Mapper.CreateMap<TwolipsDating.Models.Profile, UserToMessageViewModel>()
                 .ForMember(dest => dest.UserId, opts => opts.MapFrom(source => source.ApplicationUser.Id))
                 .ForMember(dest => dest.UserName, opts => opts.MapFrom(source => source.ApplicationUser.UserName))

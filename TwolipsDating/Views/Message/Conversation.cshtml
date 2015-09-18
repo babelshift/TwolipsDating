@@ -79,7 +79,7 @@
             </div>
             <div id="search-result-panel" class="panel panel-default hidden">
                 <div class="panel-heading">
-                    <h4 class="panel-title"><i class="fa fa-users fa-lg fa-fw"></i> People</h4>
+                    <h4 class="panel-title"><i class="fa fa-users fa-lg fa-fw"></i> Select a Person to Message</h4>
                 </div>
                 <div class="list-group users-to-message" id="search-result-list">
                 </div>
@@ -129,10 +129,10 @@
                             <button class="btn btn-default btn-xs pull-right"><i class="fa fa-microphone-slash fa-lg fa-fw"></i> Ignore</button>
                             @if (Model.IsCurrentUserFollowingTarget)
                             {
-                                <button id="@String.Format("button-toggle-favorite-{0}", Model.TargetProfileId)" class="btn btn-success btn-xs followify pull-right"
+                                <button class="btn btn-success btn-xs followify pull-right"
                                         data-profile-id="@Model.TargetProfileId" data-user-id="@Model.TargetUserId">
-                                    <i id="@String.Format("icon-toggle-favorite-{0}", Model.TargetProfileId)" class="fa fa-check fa-lg fa-fw"></i>
-                                    <span id="@String.Format("user-to-follow-button-text-{0}", Model.TargetProfileId)">Following</span>
+                                    <i class="fa fa-check fa-lg fa-fw"></i>
+                                    <span>Following</span>
                                 </button>
                             }
                             else

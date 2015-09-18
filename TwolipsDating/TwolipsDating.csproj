@@ -483,6 +483,7 @@
     <Compile Include="ViewModels\AchievementStatusViewModel.cs" />
     <Compile Include="ViewModels\CompletedQuizFeedViewModel.cs" />
     <Compile Include="ViewModels\FollowerFeedViewModel.cs" />
+    <Compile Include="ViewModels\FollowerViewModel.cs" />
     <Compile Include="ViewModels\GiftReceivedFeedItemViewModel.cs" />
     <Compile Include="ViewModels\GiftReceivedFeedViewModel.cs" />
     <Compile Include="ViewModels\LanguageViewModel.cs" />
@@ -1072,6 +1073,7 @@
     <Content Include="Views\Shared\_ModalSignUpIncentivePartial.cshtml" />
     <Content Include="Views\Trivia\Category.cshtml" />
     <Content Include="Views\Trivia\Top.cshtml" />
+    <Content Include="Views\Profile\_FollowersPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

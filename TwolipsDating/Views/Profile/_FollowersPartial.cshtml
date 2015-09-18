@@ -1,0 +1,41 @@
+﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.FollowerViewModel>
+
+<div class="row">
+    @foreach (var follower in Model)
+    {
+        <div class="col-sm-4 follower-modal-column">
+            <div style="@(!String.IsNullOrEmpty(follower.BannerImagePath) ? "background: url(" + follower.BannerImagePath + " ) no-repeat; background-size: cover; background-position: " + String.Format("{0}px {1}px", follower.BannerPositionX, follower.BannerPositionY) : "background-color: #8FC6D8"); height: 100px; border-radius: 3px">
+            </div>
+            <a href="@Url.Action("index", "profile", new { id = follower.ProfileId })">
+                <div class="circular-image-wrapper follower-modal-thumbnail">
+                    <img class="circular-image" src="@follower.ProfileThumbnailImagePath" />
+                </div>
+            </a>
+            @if (follower.IsFavoritedByCurrentUser)
+            {
+                <a href="#" class="btn btn-success followify follower-modal-follow-button"
+                   data-profile-id="@follower.ProfileId" data-user-id="@follower.UserId">
+                    <i class="fa fa-check"></i> <span>Following</span>
+                </a>
+            }
+            else
+            {
+                <a href="#" class="btn btn-default followify follower-modal-follow-button"
+                   data-profile-id="@follower.ProfileId" data-user-id="@follower.UserId">
+                    <i class="fa fa-user-plus"></i> <span>Follow</span>
+                </a>
+            }
+            <div class="follower-modal-user-details">
+                <h4><a href="@Url.Action("index", "profile", new { id = follower.ProfileId })">@follower.UserName</a></h4>
+                @if (!String.IsNullOrEmpty(follower.UserSummaryOfSelf))
+                {
+                    <p>@follower.UserSummaryOfSelf</p>
+                }
+                else
+                {
+                    <p style="">This person hasn't entered a summary yet.</p>
+                }
+            </div>
+        </div>
+    }
+</div>

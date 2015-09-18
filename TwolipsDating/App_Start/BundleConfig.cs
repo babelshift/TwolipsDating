@@ -83,6 +83,7 @@ namespace TwolipsDating
                     "~/Scripts/chosen.jquery.js",
                     "~/Scripts/jquery.form.min.js",
                     "~/Scripts/draggable_background.js",
+                    "~/Scripts/Shared/followify.js",
                     "~/Scripts/Profile/index.js"));
 
             #endregion

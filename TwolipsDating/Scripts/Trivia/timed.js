@@ -15,7 +15,7 @@
         onSubmitAnswer(e, this);
     });
 
-    $('.followify').followify({ fadeOut: false });
+    $('.followify').followify();
 
     setupQuestionViolation();
 });

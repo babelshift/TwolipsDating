@@ -35,6 +35,8 @@ $(document).ready(function () {
     setupProfileDetailsEditControls();
 
     setupEditBanner();
+
+    $('.followify').followify();
 });
 
 $(window).load(function () {

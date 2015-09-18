@@ -87,6 +87,9 @@ namespace TwolipsDating.ViewModels
         public int FollowerCount { get; set; }
         public int FollowingCount { get; set; }
 
+        public IReadOnlyCollection<FollowerViewModel> Followers { get; set; }
+        public IReadOnlyCollection<FollowerViewModel> Following { get; set; }
+
         #endregion Profile view stuff
 
         #region Report review stuff

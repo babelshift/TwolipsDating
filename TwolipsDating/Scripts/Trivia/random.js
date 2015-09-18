@@ -5,7 +5,7 @@
 
     setupQuestionViolation();
 
-    $('.followify').followify({ fadeOut: false });
+    $('.followify').followify();
 });
 
 function setupQuestionViolation() {

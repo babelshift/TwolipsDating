@@ -18,6 +18,11 @@ namespace TwolipsDating
     {
         public Task SendAsync(IdentityMessage message)
         {
+            if(message.Destination == "disabled@disabled.com")
+            {
+                return Task.FromResult(0);
+            }
+
             SendGridMessage sgMessage = new SendGridMessage();
             sgMessage.From = new MailAddress("noreply@twolipsdating.com", "Twolips Dating team");
             sgMessage.AddTo(message.Destination);

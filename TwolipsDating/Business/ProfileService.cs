@@ -1700,5 +1700,79 @@ order by count(t.profileid) desc";
 
             return results.ToList().AsReadOnly();
         }
+
+        public async Task<IReadOnlyCollection<FollowerViewModel>> GetFollowersAsync(int profileId, string userId)
+        {
+            Debug.Assert(profileId > 0);
+
+            var followers = from favoriteProfile in db.FavoriteProfiles
+                            where favoriteProfile.ProfileId == profileId
+                            where favoriteProfile.User.IsActive
+                            where favoriteProfile.User.Id != userId
+                            select new FollowerViewModel()
+                            {
+                                BannerImagePath = favoriteProfile.User.Profile.BannerImage.FileName,
+                                BannerPositionX = favoriteProfile.User.Profile.BannerPositionX,
+                                BannerPositionY = favoriteProfile.User.Profile.BannerPositionY,
+                                ProfileThumbnailImagePath = favoriteProfile.User.Profile.UserImage.FileName,
+                                UserName = favoriteProfile.User.Profile.ApplicationUser.UserName,
+                                UserSummaryOfSelf = favoriteProfile.User.Profile.SummaryOfSelf,
+                                IsFavoritedByCurrentUser = favoriteProfile.User.Profile.FavoritedBy.Any(x => x.UserId == userId),
+                                ProfileId = favoriteProfile.User.Profile.Id,
+                                UserId = favoriteProfile.User.Id
+                            };
+
+            var result = await followers.ToListAsync();
+
+            foreach(var follower in result)
+            {
+                follower.BannerImagePath = UserImageExtensions.GetPath(follower.BannerImagePath);
+                follower.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(follower.ProfileThumbnailImagePath);
+            }
+
+            return result.AsReadOnly();
+        }
+
+        public async Task<IReadOnlyCollection<FollowerViewModel>> GetFollowingAsync(int profileId, string userId)
+        {
+            Debug.Assert(profileId > 0);
+
+            var followers = from favoriteProfile in db.FavoriteProfiles
+                            where favoriteProfile.User.Profile.Id == profileId
+                            where favoriteProfile.Profile.ApplicationUser.IsActive
+                            where favoriteProfile.Profile.ApplicationUser.Id != userId
+                            select new FollowerViewModel()
+                            {
+                                BannerImagePath = favoriteProfile.Profile.BannerImage.FileName,
+                                BannerPositionX = favoriteProfile.Profile.BannerPositionX,
+                                BannerPositionY = favoriteProfile.Profile.BannerPositionY,
+                                ProfileThumbnailImagePath = favoriteProfile.Profile.UserImage.FileName,
+                                UserName = favoriteProfile.Profile.ApplicationUser.UserName,
+                                UserSummaryOfSelf = favoriteProfile.Profile.SummaryOfSelf,
+                                IsFavoritedByCurrentUser = favoriteProfile.Profile.FavoritedBy.Any(x => x.UserId == userId),
+                                ProfileId = favoriteProfile.Profile.Id,
+                                UserId = favoriteProfile.Profile.ApplicationUser.Id
+                            };
+
+            var result = await followers.ToListAsync();
+
+            foreach (var follower in result)
+            {
+                follower.BannerImagePath = UserImageExtensions.GetPath(follower.BannerImagePath);
+                follower.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(follower.ProfileThumbnailImagePath);
+            }
+
+            return result.AsReadOnly();
+        }
+
+        public async Task<int> GetFollowerCountAsync(int profileId)
+        {
+            return await db.FavoriteProfiles.CountAsync(x => x.ProfileId == profileId && x.User.IsActive);
+        }
+
+        public async Task<int> GetFollowingCountAsync(int profileId)
+        {
+            return await db.FavoriteProfiles.CountAsync(x => x.User.Profile.Id == profileId && x.Profile.ApplicationUser.IsActive);
+        }
     }
 }

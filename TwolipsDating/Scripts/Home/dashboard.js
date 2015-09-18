@@ -177,5 +177,5 @@ $(document).ready(function () {
         onSubmitAnswer(e, this);
     });
 
-    $('.followify').followify();
+    $('.followify').followify({ fadeOut: true });
 });

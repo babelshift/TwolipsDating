@@ -764,8 +764,11 @@ namespace TwolipsDating.Controllers
             viewModel.PossibleAchievementCount = await MilestoneService.GetPossibleAchievementCount();
             viewModel.SimilarUsers = await ProfileService.GetSimilarProfilesAsync(viewModel.ProfileId);
 
-            viewModel.FollowerCount = profile.FavoritedBy.Count;
-            viewModel.FollowingCount = profile.ApplicationUser.FavoriteProfiles.Count;
+            viewModel.Followers = await ProfileService.GetFollowersAsync(profile.Id, currentUserId);
+            viewModel.Following = await ProfileService.GetFollowingAsync(profile.Id, currentUserId);
+
+            viewModel.FollowerCount = viewModel.Followers.Count;
+            viewModel.FollowingCount = viewModel.Following.Count;
 
             return View(viewModel);
         }

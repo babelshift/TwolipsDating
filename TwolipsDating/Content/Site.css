@@ -316,9 +316,11 @@ input[readonly] {
 
 
 
-.ad {
+.ad, .ad-top {
     margin-bottom: 10px;
 }
+
+
 
 .recently-completed-quizzes .profile-info-wrapper {
     margin-top: 0;
@@ -518,13 +520,6 @@ input[readonly] {
                 margin-left: 1px;
             }
 
-
-@media (max-width: 767px) {
-    .text-center-xs {
-        text-align: center;
-    }
-}
-
 .profile-banner .circular-image-wrapper {
     width: 128px;
     height: 128px;
@@ -662,9 +657,20 @@ input[readonly] {
 }
 
 @media (max-width: 768px) {
-
     [class*="col-"]:not(:last-child) {
         margin-bottom: 5px;
+    }
+    
+    .text-center-xs {
+        text-align: center;
+    }
+}
+
+@media (min-width: 768px) {
+    .ad-banner-sm {
+        margin: 0 auto;
+        width: 733px;
+        height: 95px;
     }
 }
 
@@ -895,4 +901,28 @@ input[readonly] {
 .profile-self-text {
     color: #333;
     font-weight: 300;
+}
+
+.follower-modal-column {
+    position: relative; height: 250px; overflow: hidden;
+}
+
+.follower-modal-thumbnail {
+    position: absolute; top: 75px; left: 15px; width: 75px; height: 75px; border: 3px solid #fff;
+}
+
+.follower-modal-follow-button {
+    position: absolute; top: 105px; right: 5px;
+}
+
+.follower-modal-user-details {
+    margin: 55px 0 0 15px;
+}
+
+.follower-modal-user-details h4 {
+    font-weight: normal;
+}
+
+.follower-modal-user-details p {
+    color: #555; font-weight: 300;
 }

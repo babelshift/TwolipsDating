@@ -1,14 +1,16 @@
 ﻿(function ($) {
     $.fn.followify = function (options) {
         var settings = $.extend({
-            fadeOut: true
+            fadeOut: false
         }, options);
 
         return this.on('click', function (e) {
             e.preventDefault();
 
-            var profileUserId = $(this).attr('data-user-id');
-            var profileId = $(this).attr('data-profile-id');
+            var button = $(this);
+
+            var profileUserId = button.attr('data-user-id');
+            var profileId = button.attr('data-profile-id');
 
             var jsonObject = {
                 "profileUserId": profileUserId,
@@ -19,7 +21,19 @@
 
             postJson('/profile/toggleFavoriteProfile', json, function (data) {
                 if (data.success) {
-                    toggleIcon(profileId, data.isFavorite);
+                    if (data.isFavorite) {
+                        button.removeClass('btn-default');
+                        button.addClass('btn-success');
+                        button.find('i:first').removeClass('fa-user-plus');
+                        button.find('i:first').addClass('fa-check');
+                        button.find('span:first').html('Following');
+                    } else {
+                        button.removeClass("btn-success");
+                        button.addClass("btn-default");
+                        button.find('i:first').removeClass('fa-check');
+                        button.find('i:first').addClass('fa-user-plus');
+                        button.find('span:first').html('Follow');
+                    }
 
                     if (settings.fadeOut) {
                         $('#user-to-follow-' + profileId).fadeOut('normal', function () {
@@ -31,20 +45,5 @@
                 }
             });
         });
-    }
-    var toggleIcon = function (profileId, isFavorite) {
-        if (isFavorite) {
-            $('#button-toggle-favorite-' + profileId).removeClass("btn-default");
-            $('#button-toggle-favorite-' + profileId).addClass("btn-success");
-            $('#icon-toggle-favorite-' + profileId).removeClass('fa-user-plus');
-            $('#icon-toggle-favorite-' + profileId).addClass('fa-check');
-            $('#user-to-follow-button-text-' + profileId).html('Following');
-        } else {
-            $('#button-toggle-favorite-' + profileId).removeClass("btn-success");
-            $('#button-toggle-favorite-' + profileId).addClass("btn-default");
-            $('#icon-toggle-favorite-' + profileId).removeClass('fa-check');
-            $('#icon-toggle-favorite-' + profileId).addClass('fa-user-plus');
-            $('#user-to-follow-button-text-' + profileId).html('Follow');
-        }
     }
 }(jQuery));
