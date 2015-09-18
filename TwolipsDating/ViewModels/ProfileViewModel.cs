@@ -84,6 +84,9 @@ namespace TwolipsDating.ViewModels
 
         public int LifeTimePoints { get; set; }
 
+        public int FollowerCount { get; set; }
+        public int FollowingCount { get; set; }
+
         #endregion Profile view stuff
 
         #region Report review stuff

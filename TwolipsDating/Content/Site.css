@@ -553,10 +553,6 @@ input[readonly] {
         font-size: 16px;
     }
 
-    .profile-banner-info .user-title {
-        font-size: 20px;
-    }
-
 .chosen-container-multi .chosen-choices {
     border-radius: 0 !important;
 }
@@ -877,4 +873,8 @@ input[readonly] {
     .users-to-message .user-to-message-details {
         color: #777;
         font-size: 12px;
+    }
+
+    .profile-follow-stats a:hover {
+        text-decoration: none;
     }

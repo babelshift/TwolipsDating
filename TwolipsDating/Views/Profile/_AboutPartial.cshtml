@@ -123,25 +123,27 @@
                     </table>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="col-xs-12">
-                    <h4 style="font-weight: 400; margin-bottom: 0">
-                        Similar People
-                    </h4>
-                    <hr style="margin: 5px 0" />
-                    <div class="similar-people text-center">
-                        @foreach (var profile in Model.SimilarUsers)
-                        {
-                            <div class="col-xs-3 col-sm-4">
-                                <a href="@Url.Action("index", "profile", new { id = profile.ProfileId})">
-                                    @Html.Partial("_ProfileImagePartial", profile.ProfileThumbnailImagePath)
-                                </a>
-                            </div>
-                        }
+            @if (Model.SimilarUsers != null && Model.SimilarUsers.Count > 0)
+            {
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h4 style="font-weight: 400; margin-bottom: 0">
+                            Similar People
+                        </h4>
+                        <hr style="margin: 5px 0" />
+                        <div class="similar-people text-center">
+                            @foreach (var profile in Model.SimilarUsers)
+                            {
+                                <div class="col-xs-3 col-sm-4">
+                                    <a href="@Url.Action("index", "profile", new { id = profile.ProfileId})">
+                                        @Html.Partial("_ProfileImagePartial", profile.ProfileThumbnailImagePath)
+                                    </a>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
 </div>
