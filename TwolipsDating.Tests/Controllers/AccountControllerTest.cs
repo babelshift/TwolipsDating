@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TwolipsDating;
-using TwolipsDating.Controllers;
-using System.Threading.Tasks;
-using Moq;
-using TwolipsDating.Models;
-using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
-using System.Web;
-using Microsoft.Owin;
-using TwolipsDating.Business;
-using System.Web.Routing;
-using System.Security.Principal;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
+using System.Collections.Generic;
+using System.Security.Principal;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
+using TwolipsDating.Business;
+using TwolipsDating.Controllers;
+using TwolipsDating.Models;
 
 namespace TwolipsDating.Tests.Controllers
 {
@@ -76,10 +72,9 @@ namespace TwolipsDating.Tests.Controllers
             return mockContext;
         }
 
-        #endregion
+        #endregion Setup
 
         #region Register
-
 
         [TestMethod]
         public void GET_Register_ReturnsView()
@@ -173,7 +168,6 @@ namespace TwolipsDating.Tests.Controllers
             user.SetupGet(x => x.CurrentPoints).Returns(0);
             userManager.Setup(x => x.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(user.Object);
 
-
             notificationService.Setup(x => x.GetAnnouncementNotificationsAsync()).ReturnsAsync(new List<Announcement>().AsReadOnly());
             profileService.Setup(x => x.GetUnreviewedGiftTransactionsAsync(It.IsAny<String>())).ReturnsAsync(new List<GiftTransactionLog>().AsReadOnly());
 
@@ -190,11 +184,9 @@ namespace TwolipsDating.Tests.Controllers
             Assert.AreEqual(result.ViewName, "ConfirmEmailSent");
         }
 
-
-        #endregion
+        #endregion Register
 
         #region Login
-
 
         [TestMethod]
         public void GET_Login_ReturnsView()
@@ -259,6 +251,6 @@ namespace TwolipsDating.Tests.Controllers
             Assert.AreEqual(result.RouteValues["controller"].ToString().ToLower(), "home");
         }
 
-        #endregion
+        #endregion Login
     }
 }

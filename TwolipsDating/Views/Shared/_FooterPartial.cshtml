@@ -44,25 +44,33 @@
     <div class="clearfix"></div>
     <div class="footer-bottom text-center-xs">
         <div class="container">
-            <h4 style="display: inline-block">
-                <small>&copy; @DateTime.Now.Year</small>
-            </h4>
-            <h4 style="display: inline-block">
-                <a href="@Url.Action("index", "home")"><img src="~/Content/twolipsicon-white-180x180.png" width="32" height="32" /></a>
-                <span class="hidden-xs">twolips dating</span>
-                <small>@Html.CurrentVersion()</small>
-            </h4>
-            <div style="margin-top: 10px" class="pull-right">
-                @Html.ActionLink("About", "index", "about")
-                <p style="display: inline-block;">&bull;</p>
-                <a href="http://blog.twolipsdating.com">Blog</a>
-                <p style="display: inline-block;">&bull;</p>
-                <a href="mailto:info@twolipsdating.com">Contact</a>
-                <p style="display: inline-block;">&bull;</p>
-                @Html.ActionLink("Privacy policy", "privacy", "about")
-                <p style="display: inline-block;">&bull;</p>
-                @Html.ActionLink("Terms of service", "terms", "about")
+            <div class="row">
+                <div class="col-sm-6">
+                    <h4 style="display: inline-block">
+                        <small>&copy; @DateTime.Now.Year</small>
+                    </h4>
+                    <h4 style="display: inline-block">
+                        <a href="@Url.Action("index", "home")"><img src="~/Content/twolipsicon-white-180x180.png" width="32" height="32" /></a>
+                        <span class="hidden-xs">twolips dating</span>
+                        <small>@Html.CurrentVersion()</small>
+                    </h4>
+                </div>
+                <div class="col-sm-6">
+                    <div style="margin-top: 10px" class="text-right text-center-xs">
+                        @Html.ActionLink("About", "index", "about")
+                        <p style="display: inline-block;">&bull;</p>
+                        <a href="http://blog.twolipsdating.com">Blog</a>
+                        <p style="display: inline-block;">&bull;</p>
+                        <a href="mailto:info@twolipsdating.com">Contact</a>
+                        <p style="display: inline-block;">&bull;</p>
+                        @Html.ActionLink("Privacy policy", "privacy", "about")
+                        <p style="display: inline-block;">&bull;</p>
+                        @Html.ActionLink("Terms of Service", "terms", "about")
+                    </div>
+                </div>
             </div>
+            
+            
         </div>
     </div>
 </footer>
