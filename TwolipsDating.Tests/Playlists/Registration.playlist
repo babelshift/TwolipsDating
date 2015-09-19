@@ -1,0 +1,5 @@
+<Playlist Version="1.0">
+<Add Test="TwolipsDating.Tests.Controllers.AccountControllerTest.GET_Register_ReturnsView" />
+<Add Test="TwolipsDating.Tests.Controllers.AccountControllerTest.POST_Register_Success_RedirectTo_ConfirmEmailSent" />
+<Add Test="TwolipsDating.Tests.Controllers.AccountControllerTest.POST_ConfirmEmail_Success_RedirectTo_ConfirmEmail" />
+</Playlist>

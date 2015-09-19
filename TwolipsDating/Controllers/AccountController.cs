@@ -337,7 +337,7 @@ namespace TwolipsDating.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
-            if (userId == null || code == null)
+            if (String.IsNullOrEmpty(userId) || String.IsNullOrEmpty(code))
             {
                 return View("Error");
             }
@@ -360,20 +360,18 @@ namespace TwolipsDating.Controllers
         private async Task SendWelcomeEmailAsync(string userId)
         {
             var user = await UserManager.FindByIdAsync(userId);
-            IdentityMessage message = new IdentityMessage();
-            message.Destination = user.Email;
-            message.Subject = EmailTextHelper.WelcomeEmail.Subject;
-            message.Body = EmailTextHelper.WelcomeEmail.GetBody();
-            await UserManager.EmailService.SendAsync(message);
+            string destination = user.Email;
+            string subject = EmailTextHelper.WelcomeEmail.Subject;
+            string body = EmailTextHelper.WelcomeEmail.GetBody();
+            await UserManager.SendEmailAsync(destination, subject, body);
         }
 
         private async Task SendAdminEmailAfterConfirmationAsync(string userId)
         {
-            IdentityMessage message = new IdentityMessage();
-            message.Destination = "admin@twolipsdating.com";
-            message.Subject = "A user has confirmed their e-mail address";
-            message.Body = String.Format("UserId = {0}", userId);
-            await UserManager.EmailService.SendAsync(message);
+            string destination = "admin@twolipsdating.com";
+            string subject = "A user has confirmed their e-mail address";
+            string body = String.Format("UserId = {0}", userId);
+            await UserManager.SendEmailAsync(destination, subject, body);
         }
 
         //

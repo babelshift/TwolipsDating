@@ -20,18 +20,18 @@ namespace TwolipsDating.Tests.Business
             service = new SearchService(db, new EmailService());
         }
 
-        [TestMethod]
-        public async Task Search_User_Justin_Not_Null()
-        {
-            var results = await service.GetProfilesByUserNameAsync("justin");
-            Assert.IsNotNull(results);
-        }
+        //[TestMethod]
+        //public async Task Search_User_Justin_Not_Null()
+        //{
+        //    var results = await service.GetProfilesByUserNameAsync("justin");
+        //    Assert.IsNotNull(results);
+        //}
 
-        [TestMethod]
-        public async Task Search_User_Justin_Exists()
-        {
-            var results = await service.GetProfilesByUserNameAsync("justin");
-            Assert.AreEqual(results.Count, 1);
-        }
+        //[TestMethod]
+        //public async Task Search_User_Justin_Exists()
+        //{
+        //    var results = await service.GetProfilesByUserNameAsync("justin");
+        //    Assert.AreEqual(results.Count, 1);
+        //}
     }
 }
