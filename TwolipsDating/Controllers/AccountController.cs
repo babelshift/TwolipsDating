@@ -256,7 +256,8 @@ namespace TwolipsDating.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(!(await IsReferralCodeValid(model)))
+                // only check for a referral code if there is one
+                if(!String.IsNullOrEmpty(model.ReferralCode) && !(await IsReferralCodeValid(model)))
                 {
                     return View(model);
                 }

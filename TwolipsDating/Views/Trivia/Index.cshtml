@@ -5,7 +5,7 @@
 }
 @if (!HttpContext.Current.IsDebuggingEnabled)
 {
-    <div class="ad">
+    <div class="ad-banner-sm">
         <!-- TriviaDashboard - Middle - 1 -->
         <ins class="adsbygoogle"
              style="display:block"
@@ -119,7 +119,7 @@ else
                                             <a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a>
                                         </h4>
                                         <p>
-                                            <a class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>
+                                            <a href="@Url.Action("category", "trivia", new { id = @quiz.QuizCategoryId })" class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>
                                             @if (quiz.IsComplete)
                                             {
                                                 <span class="label label-success">COMPLETED</span>
@@ -156,7 +156,7 @@ else
                                         <a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a>
                                     </h4>
                                     <p>
-                                        <a class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>
+                                        <a href="@Url.Action("category", "trivia", new { id = @quiz.QuizCategoryId })" class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>
                                         @if (quiz.IsComplete)
                                         {
                                             <span class="label label-success">COMPLETED</span>
@@ -196,7 +196,7 @@ else
                                                 <a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a>
                                             </h4>
                                             <p>
-                                                <a class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>
+                                                <a href="@Url.Action("category", "trivia", new { id = @quiz.QuizCategoryId })" class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>
                                                 @if (quiz.IsComplete)
                                                 {
                                                     <span class="label label-success">COMPLETED</span>
@@ -241,17 +241,17 @@ else
                 <div class="list-group">
                     @foreach (var quiz in Model.TrendingQuizzes)
                     {
-                    <a style="font-size: 13px" class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })">
-                        @if (quiz.PercentageOfTrending > 50)
+                        <a style="font-size: 13px" class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })">
+                            @if (quiz.PercentageOfTrending > 50)
                             {
-                            <i class="text-danger fa fa-fire fa-lg fa-fw"></i>
+                                <i class="text-danger fa fa-fire fa-lg fa-fw"></i>
                             }
                             else
                             {
-                            <i class="text-warning fa fa-fire fa-lg fa-fw"></i>
+                                <i class="text-warning fa fa-fire fa-lg fa-fw"></i>
                             }
-                        @quiz.QuizName
-                    </a>
+                            @quiz.QuizName
+                        </a>
                     }
                 </div>
             </div>
