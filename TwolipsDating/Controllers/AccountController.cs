@@ -360,18 +360,18 @@ namespace TwolipsDating.Controllers
         private async Task SendWelcomeEmailAsync(string userId)
         {
             var user = await UserManager.FindByIdAsync(userId);
-            string destination = user.Email;
             string subject = EmailTextHelper.WelcomeEmail.Subject;
             string body = EmailTextHelper.WelcomeEmail.GetBody();
-            await UserManager.SendEmailAsync(destination, subject, body);
+            await UserManager.SendEmailAsync(userId, subject, body);
         }
 
         private async Task SendAdminEmailAfterConfirmationAsync(string userId)
         {
-            string destination = "admin@twolipsdating.com";
-            string subject = "A user has confirmed their e-mail address";
-            string body = String.Format("UserId = {0}", userId);
-            await UserManager.SendEmailAsync(destination, subject, body);
+            IdentityMessage message = new IdentityMessage();
+            message.Destination = "admin@twolipsdating.com";
+            message.Subject = "A user has confirmed their e-mail address";
+            message.Body = String.Format("UserId = {0}", userId);
+            await UserManager.EmailService.SendAsync(message);
         }
 
         //
