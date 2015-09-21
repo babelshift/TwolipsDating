@@ -958,6 +958,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\Profile\create.js" />
     <Content Include="Scripts\Profile\index.js" />
+    <Content Include="Scripts\Profile\quick.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
@@ -1076,6 +1077,7 @@
     <Content Include="Views\Trivia\Category.cshtml" />
     <Content Include="Views\Trivia\Top.cshtml" />
     <Content Include="Views\Profile\_FollowersPartial.cshtml" />
+    <Content Include="Views\Profile\Quick.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

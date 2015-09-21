@@ -74,5 +74,6 @@ namespace TwolipsDating.Business
 
         Task<int> GetFollowingCountAsync(int profileId);
 
+        Task<Models.Profile> GetRandomProfileAsync(string currentUserId);
     }
 }

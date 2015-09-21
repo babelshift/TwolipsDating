@@ -1772,5 +1772,17 @@ order by count(t.profileid) desc";
         {
             return await db.FavoriteProfiles.CountAsync(x => x.User.Profile.Id == profileId && x.Profile.ApplicationUser.IsActive);
         }
+
+        public async Task<Models.Profile> GetRandomProfileAsync(string userId)
+        {
+            var profile = await (from profiles in db.Profiles
+                                 where profiles.ApplicationUser.Id != userId
+                                 orderby Guid.NewGuid()
+                                 select profiles)
+                                 .Take(1)
+                                 .FirstOrDefaultAsync();
+
+            return profile;
+        }
     }
 }

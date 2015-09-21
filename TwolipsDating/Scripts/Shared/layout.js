@@ -1,4 +1,13 @@
-﻿function setupPopoverWithContent(elementName, contentFunction) {
+﻿function htmlEscape(str) {
+    return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+}
+
+function setupPopoverWithContent(elementName, contentFunction) {
     // loop through all share review links and turn them into valid popovers with share buttons
     $(elementName).each(function () {
         var popover = $(this).popover({

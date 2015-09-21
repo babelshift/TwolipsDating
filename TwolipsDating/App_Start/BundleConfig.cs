@@ -78,6 +78,10 @@ namespace TwolipsDating
             bundles.Add(new ScriptBundle("~/bundles/shared/layout").Include(
                     "~/Scripts/Shared/layout.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/profile/quick").Include(
+                    "~/Scripts/Shared/followify.js",
+                    "~/Scripts/Profile/quick.js"));
+
             #endregion
 
             #region CSS

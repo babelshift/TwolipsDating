@@ -3,22 +3,21 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using PagedList;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity.Infrastructure;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Helpers;
 using System.Web.Mvc;
 using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
-using PagedList;
-using System.Collections.ObjectModel;
 
 namespace TwolipsDating.Controllers
 {
@@ -1008,7 +1007,6 @@ namespace TwolipsDating.Controllers
             }
         }
 
-
         /// <summary>
         /// If the profile doesn't exist when the user wants to view their own profile, use a special view model which only allows for the creation of a profile.
         /// </summary>
@@ -1085,7 +1083,7 @@ namespace TwolipsDating.Controllers
                 countryName,
                 currentUserId, birthday);
 
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 return RedirectToIndex();
             }
@@ -1162,10 +1160,9 @@ namespace TwolipsDating.Controllers
             viewModel.Achievements = achievements;
 
             return View(viewModel);
-
         }
 
-        #endregion
+        #endregion Achievements
 
         #region Self Summary Stuff
 
@@ -1281,6 +1278,23 @@ namespace TwolipsDating.Controllers
             return RedirectToIndex(new { id = viewModel.ProfileId, tab = viewModel.ActiveTab });
         }
 
-        #endregion
+        #endregion Self Summary Stuff
+
+        [AllowAnonymous, RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
+        public async Task<ActionResult> Quick()
+        {
+            await SetNotificationsAsync();
+
+            var currentUserId = User.Identity.GetUserId();
+
+            var profile = await ProfileService.GetRandomProfileAsync(currentUserId);
+            var viewModel = Mapper.Map<Models.Profile, ProfileViewModel>(profile);
+
+            var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);
+            viewModel.UploadImage = new UploadImageViewModel();
+            viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
+
+            return View(viewModel);
+        }
     }
 }

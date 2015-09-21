@@ -92,10 +92,8 @@
                         <ul class="dropdown-menu">
                             <li><a href="@Url.Action("index", "tags")"><i class="fa fa-tags fa-lg fa-fw"></i>&nbsp;&nbsp;Tags</a></li>
                             <li><a href="@Url.Action("index", "search")"><i class="fa fa-search fa-lg fa-fw"></i>&nbsp;&nbsp;Search</a></li>
-                            <li><a href="@Url.Action("conversation", "message")"><i class="fa fa-envelope fa-lg fa-fw"></i>&nbsp;&nbsp;Messages</a></li>
                             <li><a href="@Url.Action("index", "trivia")"><i class="fa fa-mortar-board fa-lg fa-fw"></i>&nbsp;&nbsp;Trivia</a></li>
                             <li><a href="@Url.Action("index", "store")"><i class="fa fa-shopping-cart fa-lg fa-fw"></i>&nbsp;&nbsp;Store</a></li>
-                            <li><a href="@Url.Action("points", "account")"><i class="fa fa-money fa-lg fa-fw"></i>&nbsp;&nbsp;Points</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -124,7 +122,7 @@
                         {
                             <li style="background: @(ViewBag.GiftNotificationCount > 0 ? "#e55f00" : String.Empty)">
                                 <a id="popover-gifts" href="#" title="Received Gifts" data-placement="bottom" data-container="body" data-animation="false">
-                                    <i class="fa fa-gift fa-lg"></i>&nbsp;&nbsp;<span id="span-gift-notification-count">@ViewBag.GiftNotificationCount</span>&nbsp;<span class="caret"></span>
+                                    <i class="fa fa-bell fa-lg"></i>&nbsp;&nbsp;<span id="span-gift-notification-count">@ViewBag.GiftNotificationCount</span>&nbsp;<span class="caret"></span>
                                 </a>
                                 <input id="gift-notification-count" type="hidden" value="@ViewBag.GiftNotificationCount" />
                             </li>
