@@ -10,6 +10,7 @@ using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
 using PagedList;
+using System.Configuration;
 
 namespace TwolipsDating.Controllers
 {
@@ -73,7 +74,8 @@ namespace TwolipsDating.Controllers
                 HomeViewModel viewModel = new HomeViewModel();
                 Random r = new Random();
                 int i = r.Next(1, 10);
-                viewModel.BackgroundImage = String.Format("LandingPage{0}.jpg", i);
+                string cdn = ConfigurationManager.AppSettings["cdnUrl"];
+                viewModel.BackgroundImage = String.Format("{0}/LandingPage{1}.jpg", cdn, i);
                 return View(String.Empty, "~/Views/Shared/_LayoutSplash.cshtml", viewModel);
             }
         }

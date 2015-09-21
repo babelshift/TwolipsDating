@@ -11,8 +11,14 @@ body {
 
 .body-splash {
     background: url('../../Content/congruent_pentagon_gray.png');
-    height: 100%;
     padding-bottom: 0;
+    width: 100%;
+}
+
+@media (min-width: 992px) {
+    .body-splash {
+        height: 100%;
+    }
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -103,13 +109,13 @@ input[type="checkbox"].input-validation-error {
     text-decoration: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .landing {
         margin-top: 50px;
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
     .landing {
         position: absolute;
         top: 50%;
