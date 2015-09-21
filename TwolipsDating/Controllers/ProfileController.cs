@@ -1294,6 +1294,8 @@ namespace TwolipsDating.Controllers
             viewModel.UploadImage = new UploadImageViewModel();
             viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
 
+            viewModel.IsFavoritedByCurrentUser = await ProfileService.IsProfileFavoritedByUserAsync(profile.Id, currentUserId);
+
             return View(viewModel);
         }
     }

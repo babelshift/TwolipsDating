@@ -1777,6 +1777,7 @@ order by count(t.profileid) desc";
         {
             var profile = await (from profiles in db.Profiles
                                  where profiles.ApplicationUser.Id != userId
+                                 where profiles.ApplicationUser.IsActive
                                  orderby Guid.NewGuid()
                                  select profiles)
                                  .Take(1)

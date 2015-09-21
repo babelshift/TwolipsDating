@@ -78,10 +78,29 @@
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
                     <i class="fa fa-send"></i> Message
                 </button>
-                <button type="button" class="btn btn-primary followify" title="Add to favorites"
-                        data-profile-id="@Model.ProfileId" data-user-id="@Model.ProfileUserId">
-                    <i class="button-toggle-favorite-icon fa fa-user-plus"></i> <span class="button-toggle-favorite-text">Follow</span>
-                </button>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (Model.IsFavoritedByCurrentUser)
+                    {
+                        <button type="button" class="btn btn-success followify"
+                                data-profile-id="@Model.ProfileId" data-user-id="@Model.ProfileUserId">
+                            <i class="button-toggle-favorite-icon fa fa-user-plus"></i> <span class="button-toggle-favorite-text">Following</span>
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary followify"
+                                data-profile-id="@Model.ProfileId" data-user-id="@Model.ProfileUserId">
+                            <i class="button-toggle-favorite-icon fa fa-user-plus"></i> <span class="button-toggle-favorite-text">Follow</span>
+                        </button>
+                    }
+                }
+                else
+                {
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalSignUpIncentiveFollow" data-keyboard="true">
+                        <i class="fa fa-user-plus"></i> Follow
+                    </button>
+                }
                 <a href="@Url.Action("quick", "profile")" class="btn btn-default">
                     Next
                     <i class="fa fa-chevron-right"></i>
@@ -90,41 +109,48 @@
         </div>
     </div>
 </div>
-@if (Model.UploadImage.UserImages.Count > 0)
-{
-    <div class="row">
-        <div class="col-xs-12 text-center">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    @if (Model.UploadImage.UserImages != null && Model.UploadImage.UserImages.Count > 0)
+<div class="row">
+    <div class="col-xs-12 text-center">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @if (Model.UploadImage.UserImages != null && Model.UploadImage.UserImages.Count > 0)
+                {
+                    foreach (var userImage in Model.UploadImage.UserImages)
                     {
-                        foreach (var userImage in Model.UploadImage.UserImages)
-                        {
-                            <div id="@String.Format("{0}-image-div", userImage.Id)" class="col-xs-4 col-sm-2 text-center">
-                                <a class="thumbnail" href="@userImage.Path" data-gallery>
-                                    <img src="@userImage.ThumbnailPath" />
-                                </a>
-                            </div>
-                        }
+                        <div id="@String.Format("{0}-image-div", userImage.Id)" class="col-xs-4 col-sm-2 text-center">
+                            <a class="thumbnail" href="@userImage.Path" data-gallery>
+                                <img src="@userImage.ThumbnailPath" />
+                            </a>
+                        </div>
                     }
-                    else
-                    {
-                        if (Model.UploadImage.CurrentUserId == Model.ProfileUserId)
-                        {
-                            <h4>You haven't uploaded any images. Just upload something, anything!</h4>
-                        }
-                        else
-                        {
-                            <h4>This user hasn't uploaded any images yet. Send him or her a funny picture.</h4>
-                        }
-                    }
-                </div>
+                }
+                else
+                {
+                    <h4>This person hasn't uploaded any pictures. Message them to encourage them to upload some.</h4>
+                }
             </div>
         </div>
     </div>
-}
+</div>
 
 @section Modals {
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div class="modal" id="modalSignUpIncentiveFollow" tabindex="-1" role="dialog" aria-labelledby="modalSignUpIncentiveLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modalSignUpIncentiveLabel">Sign up now to follow this user</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        @Html.Partial("_ModalSignUpIncentivePartial")
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
     <div class="modal fade" id="modalMessage" tabindex="-1" role="dialog" aria-labelledby="modalMessageLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -223,7 +249,7 @@
     {
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     }
-    
+
     @Scripts.Render("~/bundles/profile/quick")
 }
 @section Styles {
