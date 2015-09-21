@@ -1,7 +1,7 @@
 ﻿@using TwolipsDating.Utilities
 
 <!DOCTYPE html>
-<html>
+<html style="height: 100%">
 <head prefix="og: http://ogp.me/ns#">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,7 +37,7 @@
     @Styles.Render("~/Content/css")
 </head>
 <!-- Background pattern from subtlepatterns.com -->
-<body style="background: url('../../Content/congruent_pentagon_gray.png')">
+<body class="body-splash">
     <!-- Google Tag Manager -->
     <noscript>
         <iframe src="//www.googletagmanager.com/ns.html?id=GTM-K5MZD9"
@@ -53,28 +53,10 @@
             '//www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', 'GTM-K5MZD9');</script>
     <!-- End Google Tag Manager -->
-    <div class="navbar navbar-inverse" role="navigation" style="margin-bottom: 0">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" style="padding-top: 7px;" href="@Url.Action("index", "home")">
-                    <img alt="twolips dating" src="~/Content/twolipsicon-white-180x180.png" width="32" height="32" />
-                </a>
-                <a href="@Url.Action("index", "home")" class="navbar-brand">
-                    twolips dating
-                </a>
-            </div>
-            <div class="navbar-collapse collapse">
-                @Html.Partial("_LoginPartial")
-            </div>
-        </div>
-    </div>
     @RenderBody()
-    @Html.Partial("_FooterPartial")
+    <div class="footer-splash">
+        @Html.Partial("_FooterPartial")
+    </div>
     <script type="application/ld+json">
         {
         "@@context": "https://twolipsdating.com",

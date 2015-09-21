@@ -64,7 +64,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" style="padding-top: 7px;" href="@Url.Action("index", "home")">
-                    <img alt="twolips dating" src="~/Content/twolipsicon-white-180x180.png" width="32" height="32" />
+                    <img alt="twolips dating" src="~/Content/twolipsicon-white-32x32.png" />
                 </a>
             </div>
             <div class="navbar-collapse collapse">
@@ -232,7 +232,9 @@
         </div>
         @RenderBody()
     </div>
-    @Html.Partial("_FooterPartial")
+    <div class="footer">
+        @Html.Partial("_FooterPartial")
+    </div>
     @RenderSection("modals", required: false)
     <div class="modal fade" id="modalReferAFriend" tabindex="-1" role="dialog" aria-labelledby="modalReferAFriendLabel" aria-hidden="true">
         <div class="modal-dialog">

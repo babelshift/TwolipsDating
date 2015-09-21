@@ -24,5 +24,7 @@ namespace TwolipsDating.ViewModels
         public string Email { get; set; }
 
         public string ReferralCode { get; set; }
+
+        public string BackgroundImage { get; set; }
     }
 }

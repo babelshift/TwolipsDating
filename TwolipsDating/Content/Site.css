@@ -1,11 +1,18 @@
 ﻿html {
+    -ms-overflow-style: scrollbar;
     position: relative;
     min-height: 100%;
 }
 
 body {
-    padding-bottom: 200px;
+    padding-bottom: 245px;
     background-color: #E9EAED;
+}
+
+.body-splash {
+    background: url('../../Content/congruent_pentagon_gray.png');
+    height: 100%;
+    padding-bottom: 0;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -87,11 +94,51 @@ input[type="checkbox"].input-validation-error {
         text-decoration: underline;
     }
 
-.footer p, .footer h4, .footer h5 {
+.landing h2 {
+    margin-top: 0;
+}
+
+.landing h4 a {
+    font-weight: normal;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .landing {
+        margin-top: 50px;
+    }
+}
+
+@media (min-width: 768px) {
+    .landing {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -moz-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+}
+
+.full-screen-bg-tint {
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.full-screen-bg {
+    height: 100%;
+}
+
+.footer p, .footer h4, .footer h5,
+.footer-splash p, .footer-splash h4, .footer-splash h5 {
     color: #fff;
 }
 
-.footer hr {
+.footer hr,
+.footer-splash hr {
     border-top: 1px dotted #292929;
     color: #fff;
     background-color: #fff;
@@ -114,7 +161,8 @@ input[type="checkbox"].input-validation-error {
         text-decoration: none !important;
     }
 
-.footer p a {
+.footer p a,
+.footer-splash p a {
     color: #c44d40;
 }
 
@@ -126,7 +174,8 @@ input[type="checkbox"].input-validation-error {
     margin-right: 3px;
 }
 
-.footer a:hover {
+.footer a:hover,
+.footer-splash a:hover {
     text-decoration: underline;
 }
 
@@ -137,6 +186,10 @@ input[type="checkbox"].input-validation-error {
 .footer {
     position: absolute;
     bottom: 0;
+    width: 100%;
+}
+
+.footer-splash {
     width: 100%;
 }
 
@@ -157,10 +210,6 @@ input[type="checkbox"].input-validation-error {
 
 .navbar {
     margin-bottom: 10px;
-}
-
-.navbar-right {
-    margin-right: 0;
 }
 
 .tags a {
@@ -660,7 +709,7 @@ input[readonly] {
     [class*="col-"]:not(:last-child) {
         margin-bottom: 5px;
     }
-    
+
     .text-center-xs {
         text-align: center;
     }
@@ -904,25 +953,65 @@ input[readonly] {
 }
 
 .follower-modal-column {
-    position: relative; height: 250px; overflow: hidden;
+    position: relative;
+    height: 250px;
+    overflow: hidden;
 }
 
 .follower-modal-thumbnail {
-    position: absolute; top: 75px; left: 15px; width: 75px; height: 75px; border: 3px solid #fff;
+    position: absolute;
+    top: 75px;
+    left: 15px;
+    width: 75px;
+    height: 75px;
+    border: 3px solid #fff;
 }
 
 .follower-modal-follow-button {
-    position: absolute; top: 105px; right: 5px;
+    position: absolute;
+    top: 105px;
+    right: 5px;
 }
 
 .follower-modal-user-details {
     margin: 55px 0 0 15px;
 }
 
-.follower-modal-user-details h4 {
-    font-weight: normal;
+    .follower-modal-user-details h4 {
+        font-weight: normal;
+    }
+
+    .follower-modal-user-details p {
+        color: #555;
+        font-weight: 300;
+    }
+
+.transparent {
+    background-color: transparent;
+    background: transparent;
+    border-color: transparent;
 }
 
-.follower-modal-user-details p {
-    color: #555; font-weight: 300;
-}
+    .transparent li a:hover,
+    .transparent li a:active,
+    .transparent li a:focus {
+        background-color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    .transparent .navbar-header {
+        float: left !important;
+    }
+
+    .transparent .navbar-nav > li,
+    .transparent .navbar-nav {
+        float: left !important;
+        margin: 0;
+    }
+
+        .transparent .navbar-nav.navbar-right:last-child {
+            margin-right: -15px !important;
+        }
+
+    .transparent .navbar-right {
+        float: right !important;
+    }

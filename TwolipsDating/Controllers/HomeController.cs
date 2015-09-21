@@ -71,6 +71,9 @@ namespace TwolipsDating.Controllers
             else
             {
                 HomeViewModel viewModel = new HomeViewModel();
+                Random r = new Random();
+                int i = r.Next(1, 10);
+                viewModel.BackgroundImage = String.Format("LandingPage{0}.jpg", i);
                 return View(String.Empty, "~/Views/Shared/_LayoutSplash.cshtml", viewModel);
             }
         }
