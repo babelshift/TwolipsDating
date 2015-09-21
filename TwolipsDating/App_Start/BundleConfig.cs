@@ -23,16 +23,11 @@ namespace TwolipsDating
             bundles.Add(new ScriptBundle("~/bundles/message/conversation").Include(
                 "~/Scripts/Shared/followify.js",
                 "~/Scripts/Message/conversation.js",
-                "~/Scripts/jquery.validate*",
-                "~/Scripts/jquery.unobtrusive-ajax.js"));
+                "~/Scripts/jquery.validate*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/manage/settings").Include(
-                "~/Scripts/jquery.validate*",
-                "~/Scripts/jquery.unobtrusive-ajax.js"));
+            bundles.Add(new ScriptBundle("~/bundles/manage/settings").Include());
 
             bundles.Add(new ScriptBundle("~/bundles/manage/index").Include(
-                "~/Scripts/jquery.validate*",
-                "~/Scripts/jquery.unobtrusive-ajax.js",
                 "~/Scripts/chosen.jquery.js",
                 "~/Scripts/jquery-ui.js",
                 "~/Scripts/Manage/index.js"));
@@ -46,8 +41,6 @@ namespace TwolipsDating
                 "~/Scripts/Trivia/random.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/trivia/quiz").Include(
-                "~/Scripts/jquery.validate*",
-                "~/Scripts/jquery.unobtrusive-ajax.js",
                 "~/Scripts/Shared/followify.js",
                 "~/Scripts/Trivia/quiz.js"));
 
@@ -64,8 +57,6 @@ namespace TwolipsDating
                 "~/Scripts/chosen.jquery.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/profile/create").Include(
-                    "~/Scripts/jquery.validate*",
-                    "~/Scripts/jquery.unobtrusive-ajax.js",
                     "~/Scripts/chosen.jquery.js",
                     "~/Scripts/jquery-ui.js",
                     "~/Scripts/Profile/create.js"));
@@ -76,8 +67,6 @@ namespace TwolipsDating
                     "~/Scripts/Home/dashboard.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/profile/index").Include(
-                    "~/Scripts/jquery.validate*",
-                    "~/Scripts/jquery.unobtrusive-ajax.js",
                     "~/Scripts/bootstrap-image-gallery.js",
                     "~/Scripts/jquery.raty.js",
                     "~/Scripts/chosen.jquery.js",
@@ -85,6 +74,9 @@ namespace TwolipsDating
                     "~/Scripts/draggable_background.js",
                     "~/Scripts/Shared/followify.js",
                     "~/Scripts/Profile/index.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/shared/layout").Include(
+                    "~/Scripts/Shared/layout.js"));
 
             #endregion
 
