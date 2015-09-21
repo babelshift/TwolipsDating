@@ -1,48 +1,14 @@
 ﻿@model int
 
-<div class="text-center trivia-dashboard-rating-bar">
-    @if (Model == 1)
-    {
-        <span title="Extremely easy - 1 point" class="custom-tooltip badge marker-1 current">1</span>
-    }
-    else
-    {
-        <span title="Extremely easy - 1 point" class="custom-tooltip badge marker-1">1</span>
-    }
-
-    @if (Model == 2)
-    {
-        <span title="Easy - 2 points" class="custom-tooltip badge marker-2 current">2</span>
-    }
-    else
-    {
-        <span title="Easy - 2 points" class="custom-tooltip badge marker-2">2</span>
-    }
-
-    @if (Model == 3)
-    {
-        <span title="Average - 3 points" class="custom-tooltip badge marker-3 current">3</span>
-    }
-    else
-    {
-        <span title="Average - 3 points" class="custom-tooltip badge marker-3">3</span>
-    }
-
-    @if (Model == 4)
-    {
-        <span title="Difficult - 4 points" class="custom-tooltip badge marker-4 current">4</span>
-    }
-    else
-    {
-        <span title="Difficult - 4 points" class="custom-tooltip badge marker-4">4</span>
-    }
-
-    @if (Model == 5)
-    {
-        <span title="Extremely difficult - 5 points" class="custom-tooltip badge marker-5 current">5</span>
-    }
-    else
-    {
-        <span title="Extremely difficult - 5 points" class="custom-tooltip badge marker-5">5</span>
-    }
+<div class="trivia-dashboard-rating-bar">
+    <span id="marker-very-easy" class="label marker-1 @(Model != 1 ? "hidden" : String.Empty)">VERY EASY</span>
+    <span id="point-very-easy" title="Extremely easy - 10 bonus points" class="custom-tooltip label label-default @(Model != 1 ? "hidden" : String.Empty)">1 POINT</span>
+    <span id="marker-easy" class="label marker-2 @(Model != 2 ? "hidden" : String.Empty)">EASY</span>
+    <span id="point-easy" title="Easy - 15 bonus points" class="custom-tooltip label label-default @(Model != 2 ? "hidden" : String.Empty)">2 POINTS</span>
+    <span id="marker-average" class="label marker-3 @(Model != 3 ? "hidden" : String.Empty)">AVERAGE</span>
+    <span id="point-average" title="Average - 20 bonus points" class="custom-tooltip label label-default @(Model != 3 ? "hidden" : String.Empty)">3 POINTS</span>
+    <span id="marker-hard" class="label marker-4 @(Model != 4 ? "hidden" : String.Empty)">HARD</span>
+    <span id="point-hard" title="Difficult - 25 bonus points" class="custom-tooltip label label-default @(Model != 4 ? "hidden" : String.Empty)">4 POINTS</span>
+    <span id="marker-very-hard" class="label marker-5 @(Model != 5 ? "hidden" : String.Empty)">VERY HARD</span>
+    <span id="point-very-hard" title="Extremely difficult - 30 bonus points" class="custom-tooltip label label-default @(Model != 5 ? "hidden" : String.Empty)">5 POINTS</span>
 </div>

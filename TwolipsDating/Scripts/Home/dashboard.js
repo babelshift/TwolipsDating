@@ -1,4 +1,4 @@
-﻿function onNextQuestion(e, obj) {
+﻿function onNextQuestion(e) {
 
     // get a random question
     get('/trivia/randomJson', function (data) {
@@ -9,21 +9,32 @@
             $('#RandomQuestion_QuestionId').val(data.QuestionId);
 
             // show the new difficulty rating
-            $('.marker-1').removeClass('current');
-            $('.marker-2').removeClass('current');
-            $('.marker-3').removeClass('current');
-            $('.marker-4').removeClass('current');
-            $('.marker-5').removeClass('current');
+            $('#marker-very-easy').addClass('hidden');
+            $('#marker-easy').addClass('hidden');
+            $('#marker-average').addClass('hidden');
+            $('#marker-hard').addClass('hidden');
+            $('#marker-very-hard').addClass('hidden');
+            $('#point-very-easy').addClass('hidden');
+            $('#point-easy').addClass('hidden');
+            $('#point-average').addClass('hidden');
+            $('#point-hard').addClass('hidden');
+            $('#point-very-hard').addClass('hidden');
+
             if (data.Points == 1) {
-                $('.marker-1').addClass('current');
+                $('#marker-very-easy').removeClass('hidden');
+                $('#point-very-easy').removeClass('hidden');
             } else if (data.Points == 2) {
-                $('.marker-2').addClass('current');
+                $('#marker-easy').removeClass('hidden');
+                $('#point-easy').removeClass('hidden');
             } else if (data.Points == 3) {
-                $('.marker-3').addClass('current');
+                $('#marker-average').removeClass('hidden');
+                $('#point-average').removeClass('hidden');
             } else if (data.Points == 4) {
-                $('.marker-4').addClass('current');
+                $('#marker-hard').removeClass('hidden');
+                $('#point-hard').removeClass('hidden');
             } else if (data.Points == 5) {
-                $('.marker-5').addClass('current');
+                $('#marker-very-hard').removeClass('hidden');
+                $('#point-very-hard').removeClass('hidden');
             }
 
             // show the new answers
@@ -31,8 +42,8 @@
             data.Answers.forEach(function (item) {
                 answersHtml += '<a href="#" id="answer-' + item.AnswerId + '" class="answer-link list-group-item" data-answer-id="' + item.AnswerId + '">'
                 + item.Content
-                + '<span id="icon-correct-' + item.AnswerId + '" class="icon-correct pull-right hidden"><i class="glyphicon glyphicon-ok"></i></span>'
-                + '<span id="icon-incorrect-' + item.AnswerId + '" class="icon-incorrect pull-right hidden"><i class="glyphicon glyphicon-remove"></i></span>'
+                + '<span id="icon-correct-' + item.AnswerId + '" class="icon-correct pull-right hidden"><i class="fa fa-check"></i></span>'
+                + '<span id="icon-incorrect-' + item.AnswerId + '" class="icon-incorrect pull-right hidden"><i class="fa fa-remove"></i></span>'
                 + '</a>';
             });
             $('#answers').html(answersHtml);
@@ -178,4 +189,8 @@ $(document).ready(function () {
     });
 
     $('.followify').followify({ fadeOut: true });
+
+    $('#button-skip').on('click', function (e) {
+        onNextQuestion(e);
+    });
 });
