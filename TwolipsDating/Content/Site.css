@@ -1021,3 +1021,39 @@ input[readonly] {
     .transparent .navbar-right {
         float: right !important;
     }
+
+.search-result-panel {
+    height: 200px;
+    margin-bottom: 20px;
+}
+
+.search-result-thumbnail {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    width: 125px;
+    height: 125px;
+    border: 3px solid #fff;
+    -moz-transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
+    -o-transform: translate(-50%, 0);
+    -webkit-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+
+.search-result-buttons {
+    margin: 50px 0 0 0;
+}
+
+.search-result-user-details {
+}
+
+    .search-result-user-details h4 {
+        font-weight: normal;
+        margin-bottom: 0;
+    }
+
+    .search-result-user-details p {
+        color: #555;
+        font-weight: 300;
+    }

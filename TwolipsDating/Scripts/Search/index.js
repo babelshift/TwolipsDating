@@ -2,6 +2,20 @@
     setupMessageSend();
 
     $('.followify').followify();
+
+    $('#select-search').chosen();
+
+    $('#modalMessage').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var userName = button.data('user-name');
+        var userId = button.data('user-id');
+
+        $('#ProfileUserId').val(userId);
+
+        var modal = $(this);
+        modal.find('.modal-title-user-name').html(userName);
+        modal.find('#link-view-conversation').prop('href', '/message/conversation/' + userId);
+    });
 });
 
 function setupMessageSend() {
@@ -23,7 +37,7 @@ function setupMessageSend() {
 
 function onSendMessage(e, obj) {
     var profileUserId = $('#ProfileUserId').val();
-    var messageBody = $('#SendMessage_MessageBody').val();
+    var messageBody = $('#modal-message-body').val();
 
     if (messageBody != null && messageBody.length > 0) {
 
@@ -38,7 +52,7 @@ function onSendMessage(e, obj) {
             if (data.success) {
                 $('#message-send-log').show();
                 $('#message-success').show();
-                $('#SendMessage_MessageBody').val('');
+                $('#modal-message-body').val('');
                 $("#message-send-log tr:last").after("<tr><td>" + htmlEscape(messageBody) + "</td></tr>");
             } else {
                 $('#message-error').show();

@@ -491,6 +491,7 @@
     <Compile Include="ViewModels\MostPopularQuizViewModel.cs" />
     <Compile Include="ViewModels\QuizCategoryViewModel.cs" />
     <Compile Include="ViewModels\QuizSearchResultViewModel.cs" />
+    <Compile Include="ViewModels\SearchResultProfileViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartItemViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
     <Compile Include="ViewModels\SimilarUserViewModel.cs" />
@@ -963,6 +964,7 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\Search\index.js" />
     <Content Include="Scripts\Shared\followify.js" />
     <Content Include="Scripts\Shared\layout.js" />
     <Content Include="Scripts\Store\cart.js" />

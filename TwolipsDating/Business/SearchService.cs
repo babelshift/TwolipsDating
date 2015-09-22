@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TwolipsDating.Models;
+using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
@@ -37,7 +38,6 @@ namespace TwolipsDating.Business
 
         public async Task<IReadOnlyCollection<Profile>> GetProfilesByUserNameAsync(string userName, string currentUserId)
         {
-
             var results = await (from profiles in db.Profiles
                                  where profiles.ApplicationUser.UserName.Contains(userName)
                                  where profiles.ApplicationUser.IsActive
@@ -113,6 +113,34 @@ namespace TwolipsDating.Business
             var results = await QueryAsync<QuizSearchResultViewModel>(sql, new { tagList = tag });
 
             return results.ToList().AsReadOnly();
+        }
+
+        public async Task<IReadOnlyCollection<SearchResultProfileViewModel>> GetProfilesAsync(string userId)
+        {
+            var profiles = from profile in db.Profiles
+                           where profile.ApplicationUser.IsActive
+                           select new SearchResultProfileViewModel()
+                           {
+                               BannerImagePath = profile.BannerImage.FileName,
+                               BannerPositionX = profile.BannerPositionX,
+                               BannerPositionY = profile.BannerPositionY,
+                               ProfileThumbnailImagePath = profile.UserImage.FileName,
+                               UserName = profile.ApplicationUser.UserName,
+                               UserSummaryOfSelf = profile.SummaryOfSelf,
+                               IsFavoritedByCurrentUser = profile.FavoritedBy.Any(x => x.UserId == userId),
+                               ProfileId = profile.Id,
+                               UserId = profile.ApplicationUser.Id
+                           };
+
+            var result = await profiles.ToListAsync();
+
+            foreach (var profile in result)
+            {
+                profile.BannerImagePath = UserImageExtensions.GetPath(profile.BannerImagePath);
+                profile.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(profile.ProfileThumbnailImagePath);
+            }
+
+            return result.AsReadOnly();
         }
     }
 }

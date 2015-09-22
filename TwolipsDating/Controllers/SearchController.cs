@@ -32,9 +32,14 @@ namespace TwolipsDating.Controllers
 
             if (tags != null && tags.Length > 0)
             {
-                var results = await SearchService.GetProfilesByTagNamesAsync(tags);
+                //var results = await SearchService.GetProfilesByTagNamesAsync(tags);
 
-                await SetupViewModel(tags, currentUserId, viewModel, results, page);
+                //await SetupViewModel(tags, currentUserId, viewModel, results, page);
+            }
+            else
+            {
+                var results = await SearchService.GetProfilesAsync(currentUserId);
+                viewModel.SearchResults = results.ToPagedList(page ?? 1, 20);
             }
 
             return View(viewModel);
@@ -53,30 +58,30 @@ namespace TwolipsDating.Controllers
             return d;
         }
 
-        private async Task SetupViewModel(string[] tags, string currentUserId, SearchResultViewModel viewModel, IReadOnlyCollection<Models.Profile> results, int? page)
-        {
-            var searchResults = Mapper.Map<IReadOnlyCollection<TwolipsDating.Models.Profile>, IReadOnlyCollection<ProfileViewModel>>(results);
+        //private async Task SetupViewModel(string[] tags, string currentUserId, SearchResultViewModel viewModel, IReadOnlyCollection<Models.Profile> results, int? page)
+        //{
+        //    var searchResults = Mapper.Map<IReadOnlyCollection<TwolipsDating.Models.Profile>, IReadOnlyCollection<ProfileViewModel>>(results);
 
-            // TODO: optimize this by eager loading?
-            foreach (var profileViewModel in searchResults)
-            {
-                var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profileViewModel.ProfileUserId);
-                profileViewModel.AverageRatingValue = reviews.AverageRating();
-                profileViewModel.ReviewCount = reviews.Count;
+        //    // TODO: optimize this by eager loading?
+        //    foreach (var profileViewModel in searchResults)
+        //    {
+        //        var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profileViewModel.ProfileUserId);
+        //        profileViewModel.AverageRatingValue = reviews.AverageRating();
+        //        profileViewModel.ReviewCount = reviews.Count;
 
-                // tag suggestions and awards
-                // this will break for anonymous users
-                profileViewModel.SuggestedTags = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profileViewModel.ProfileId);
-            }
+        //        // tag suggestions and awards
+        //        // this will break for anonymous users
+        //        profileViewModel.SuggestedTags = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profileViewModel.ProfileId);
+        //    }
 
-            viewModel.SearchResults = searchResults.ToPagedList(page ?? 1, 20);
+        //    viewModel.SearchResults = searchResults.ToPagedList(page ?? 1, 20);
 
-            viewModel.Tags = new List<string>();
-            foreach(var tag in tags)
-            {
-                viewModel.Tags.Add(tag);
-            }
-        }
+        //    viewModel.Tags = new List<string>();
+        //    foreach(var tag in tags)
+        //    {
+        //        viewModel.Tags.Add(tag);
+        //    }
+        //}
 
         [AllowAnonymous]
         public async Task<ActionResult> Quiz(string tag)

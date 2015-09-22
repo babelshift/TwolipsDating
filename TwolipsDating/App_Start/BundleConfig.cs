@@ -54,6 +54,8 @@ namespace TwolipsDating
                 "~/Scripts/Store/cart.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/search/index").Include(
+                "~/Scripts/Shared/followify.js",
+                "~/Scripts/Search/index.js",
                 "~/Scripts/chosen.jquery.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/profile/create").Include(

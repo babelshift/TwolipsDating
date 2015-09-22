@@ -1,32 +1,17 @@
 ﻿@model TwolipsDating.ViewModels.SearchResultViewModel
 @using PagedList.Mvc;
+@using Microsoft.AspNet.Identity;
+
 @{
     ViewBag.Title = "Search for profiles";
     ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
 }
 
-<div class="row">
-    <div class="col-md-6 col-md-offset-3">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                @using (Html.BeginForm("index", "search", FormMethod.Get, new { role = "search" }))
-                {
-                    <div class="input-group">
-                        @Html.ListBoxFor(m => m.Tags,
-                        new SelectList(Model.SearchTags, "Key", "Value"),
-                        new { id = "select-search", multiple = "multiple", @class = "form-control", data_placeholder = "Search for users by selecting some tags" })
-                        <span class="input-group-btn">
-                            <button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-                        </span>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-</div>
+<input type="hidden" id="ProfileUserId" />
+
 @if (!HttpContext.Current.IsDebuggingEnabled)
 {
-    <div class="ad">
+    <div class="ad-banner-sm">
         <!-- Search - Header - 1 -->
         <ins class="adsbygoogle"
              style="display:block"
@@ -47,108 +32,151 @@ else
 @if (Model.SearchResults != null && Model.SearchResults.Count > 0)
 {
     <div class="row">
-        <div class="col-md-8">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <h2 style="margin-top: 0">@Model.SearchResults.Count results</h2>
-                    <div class="search-result">
-                        <hr />
-                        @{ int k = 0; }
-                        @foreach (var profile in Model.SearchResults)
-                        {
-                            <div class="circular-image-wrapper">
-                                <img class="circular-image" src="@profile.ProfileImagePath" />
-                            </div>
-                            <div class="profile-info-wrapper">
-                                <span class="name-and-location">
-                                    <a href="@Url.Action("index", "profile", new { id = profile.ProfileId })">@profile.UserName</a>
-                                    <br />
-                                    @if (!String.IsNullOrEmpty(profile.Location))
-                                    {
-                                        <span>@String.Format("{0}, {1}, {2}", profile.Age, profile.Gender, profile.Location)</span>
-                                    }
-                                    else
-                                    {
-                                        <span>@String.Format("{0}, {1}", profile.Age, profile.Gender)</span>
-                                    }
-                                </span>
-                                <br />
-                                <span class="rating">
-                                    @for (int i = 1; i <= profile.AverageRatingValue; i++)
-                                    {
-                                        <i class="glyphicon glyphicon-star review-rating-color"></i>
-                                    }
-                                    @for (int j = 1; j <= 5 - profile.AverageRatingValue; j++)
-                                    {
-                                        <i class="glyphicon glyphicon-star-empty review-rating-color"></i>
-                                    }
-                                    <span style="color: #999">@profile.ReviewCount reviews</span>
-                                </span>
-                            </div>
-                            if (profile.SuggestedTags.Count > 0)
-                            {
-                                <div class="tags">
-                                    @foreach (var tag in profile.SuggestedTags)
-                                    {
-                                        <a href="@Url.Action("index", "search", new { tags = tag.TagName })" class="btn btn-default btn-xs" title="@String.Format("Search for all profiles tagged with '{0}'", tag.TagName)">
-                                            <span class="badge">@tag.TagCount</span> @tag.TagName
-                                        </a>
-                                    }
-                                </div>
-                            }
-                            if (k < Model.SearchResults.Count - 1)
-                            {
-                                <hr />
-                            }
-                            k++;
-                        }
-                    </div>
-                </div>
-            </div>
-            @if (Model.SearchResults.PageCount > 1)
+        <div class="col-md-6 col-md-offset-3">
+            @using (Html.BeginForm("index", "search", FormMethod.Get, new { role = "search" }))
             {
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        @Html.PagedListPager(Model.SearchResults, page => String.Format("{0}&tags={1}", Url.Action("Index", new { page }), String.Join("&tags=", Model.Tags)))
-                    </div>
+                <div class="input-group">
+                    @Html.ListBoxFor(m => m.Tags,
+                        new SelectList(Model.SearchTags, "Key", "Value"),
+                        new { id = "select-search", multiple = "multiple", @class = "form-control", data_placeholder = "Search for users by selecting some tags" })
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </span>
                 </div>
             }
         </div>
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        Improve your search position
-                    </h4>
+    </div>
+    <div class="row">
+        @foreach (var profile in Model.SearchResults)
+        {
+            if (profile.UserId != User.Identity.GetUserId())
+            {
+                <div class="col-sm-6 col-md-4 text-center">
+                    <div style="@(!String.IsNullOrEmpty(profile.BannerImagePath) ? "background: url(" + profile.BannerImagePath + " ) no-repeat; background-size: cover; background-position: " + String.Format("{0}px {1}px", profile.BannerPositionX, profile.BannerPositionY) : "background-color: #8FC6D8"); height: 100px; border-radius: 5px 5px 0 0">
+                    </div>
+                    <div class="panel panel-default search-result-panel">
+                        <div class="panel-body">
+                            <a href="@Url.Action("index", "profile", new { id = profile.ProfileId })">
+                                <div class="circular-image-wrapper search-result-thumbnail">
+                                    <img class="circular-image" src="@profile.ProfileThumbnailImagePath" />
+                                </div>
+                            </a>
+                            <div class="search-result-buttons">
+                                <a href="#" class="btn btn-default" data-toggle="modal" data-target="#modalMessage"
+                                   data-user-name="@profile.UserName" data-user-id="@profile.UserId">
+                                    <i class="fa fa-send"></i>
+                                    Message
+                                </a>
+                                @if (User.Identity.IsAuthenticated && User.Identity.GetUserId() != profile.UserId)
+                                {
+                                    if (profile.IsFavoritedByCurrentUser)
+                                    {
+                                        <a href="#" class="btn btn-success followify"
+                                           data-profile-id="@profile.ProfileId" data-user-id="@profile.UserId">
+                                            <i class="fa fa-check"></i> <span>Following</span>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-default followify"
+                                           data-profile-id="@profile.ProfileId" data-user-id="@profile.UserId">
+                                            <i class="fa fa-user-plus"></i> <span>Follow</span>
+                                        </a>
+                                    }
+                                }
+                            </div>
+                            <div class="search-result-user-details">
+                                <h4><a href="@Url.Action("index", "profile", new { id = profile.ProfileId })">@profile.UserName</a></h4>
+                                @if (!String.IsNullOrEmpty(profile.UserSummaryOfSelf))
+                                {
+                                    <p>@profile.UserSummaryOfSelf</p>
+                                }
+                                else
+                                {
+                                    <p style="">This person hasn't entered a summary yet.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="panel-body">
-                    <p><i class="glyphicon glyphicon-chevron-right"></i> <a href="@Url.Action("index", "trivia")">Answer trivia</a> questions to gain currency and fame.</p>
-                    <p><i class="glyphicon glyphicon-chevron-right"></i> <a href="@Url.Action("index", "store")">Purchase items</a> for your inventory to display on your profile.</p>
-                    <p><i class="glyphicon glyphicon-chevron-right"></i> Receive and encourage positive reviews from other users.</p>
+            }
+        }
+    </div>
+}
+
+@section Modals {
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div class="modal" id="modalSignUpIncentiveFollow" tabindex="-1" role="dialog" aria-labelledby="modalSignUpIncentiveLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modalSignUpIncentiveLabel">Sign up now to follow this user</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        @Html.Partial("_ModalSignUpIncentivePartial")
+                    </div>
                 </div>
             </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        Trouble finding something?
+        </div>
+    }
+
+    <div class="modal fade" id="modalMessage" tabindex="-1" role="dialog" aria-labelledby="modalMessageLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modalMessageLabel">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <span>Send messages to <strong class="modal-title-user-name"></strong></span>
+                        }
+                        else
+                        {
+                            <span>Sign up now to message this user</span>
+                        }
                     </h4>
                 </div>
-                <div class="panel-body">
-                    <p><i class="glyphicon glyphicon-chevron-right"></i> Try filtering based on tags that interest you.</p>
-                    <p><i class="glyphicon glyphicon-chevron-right"></i> <a href="mailto:info@twolipsdating.com">Send us feedback</a> on how to improve searches.</p>
+                <div class="modal-body">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="form-group">
+                            <textarea id="modal-message-body" class="form-control" rows="5"></textarea>
+                        </div>
+                        <div id="message-error" class="alert alert-danger" role="alert">
+                            <p id="message-error-text">Something happened which prevented your message from being sent.</p>
+                        </div>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                <i class="fa fa-close"></i> Close
+                            </button>
+                            <button id="button-message-send" type="button" class="btn btn-primary">
+                                <i class="fa fa-send"></i> Send
+                            </button>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+                        <div id="message-success" class="alert alert-success" role="alert">
+                            <p>
+                                Message sent successfully.
+                                <a id="link-view-conversation" href="#" class="alert-link">View conversation</a>
+                                with <strong class="modal-title-user-name"></strong>.
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.Partial("_ModalSignUpIncentivePartial")
+                    }
                 </div>
             </div>
         </div>
     </div>
 }
+
 @section Scripts {
     @Scripts.Render("~/bundles/search/index")
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#select-search').chosen();
-        });
-    </script>
 
     @if (!HttpContext.Current.IsDebuggingEnabled)
     {
