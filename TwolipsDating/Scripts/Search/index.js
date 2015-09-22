@@ -53,7 +53,6 @@ function onSendMessage(e, obj) {
                 $('#message-send-log').show();
                 $('#message-success').show();
                 $('#modal-message-body').val('');
-                $("#message-send-log tr:last").after("<tr><td>" + htmlEscape(messageBody) + "</td></tr>");
             } else {
                 $('#message-error').show();
                 $('#message-error-text').text(data.error);

@@ -60,17 +60,34 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<Profile>> GetProfilesByTagNamesAsync(string[] tags)
+        public async Task<IReadOnlyCollection<SearchResultProfileViewModel>> GetProfilesByTagNamesAsync(string[] tags, string userId)
         {
-            var results = await (from profiles in db.Profiles
-                                 join tagSuggestions in db.TagSuggestions on profiles.Id equals tagSuggestions.ProfileId
-                                 where tags.Contains(tagSuggestions.Tag.Name)
-                                 where profiles.ApplicationUser.IsActive
-                                 select profiles)
-                                 .Distinct()
-                                 .ToListAsync();
+            var profiles = await (from profile in db.Profiles
+                            join tagSuggestions in db.TagSuggestions on profile.Id equals tagSuggestions.ProfileId
+                            where tags.Contains(tagSuggestions.Tag.Name)
+                            where profile.ApplicationUser.IsActive
+                            select new SearchResultProfileViewModel()
+                            {
+                                BannerImagePath = profile.BannerImage.FileName,
+                                BannerPositionX = profile.BannerPositionX,
+                                BannerPositionY = profile.BannerPositionY,
+                                ProfileThumbnailImagePath = profile.UserImage.FileName,
+                                UserName = profile.ApplicationUser.UserName,
+                                UserSummaryOfSelf = profile.SummaryOfSelf,
+                                IsFavoritedByCurrentUser = profile.FavoritedBy.Any(x => x.UserId == userId),
+                                ProfileId = profile.Id,
+                                UserId = profile.ApplicationUser.Id
+                            })
+                           .Distinct()
+                           .ToListAsync();
 
-            return results.AsReadOnly();
+            foreach (var profile in profiles)
+            {
+                profile.BannerImagePath = UserImageExtensions.GetPath(profile.BannerImagePath);
+                profile.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(profile.ProfileThumbnailImagePath);
+            }
+
+            return profiles.AsReadOnly();
         }
 
         public async Task<IReadOnlyCollection<QuizSearchResultViewModel>> GetQuizzesByTagsAsync(string tag)
@@ -115,7 +132,7 @@ namespace TwolipsDating.Business
             return results.ToList().AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<SearchResultProfileViewModel>> GetProfilesAsync(string userId)
+        public async Task<IReadOnlyCollection<SearchResultProfileViewModel>> GetAllProfilesAsync(string userId)
         {
             var profiles = from profile in db.Profiles
                            where profile.ApplicationUser.IsActive

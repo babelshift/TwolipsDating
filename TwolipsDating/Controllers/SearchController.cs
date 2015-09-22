@@ -32,13 +32,18 @@ namespace TwolipsDating.Controllers
 
             if (tags != null && tags.Length > 0)
             {
-                //var results = await SearchService.GetProfilesByTagNamesAsync(tags);
+                var results = await SearchService.GetProfilesByTagNamesAsync(tags, currentUserId);
+                viewModel.SearchResults = results.ToPagedList(page ?? 1, 20);
 
-                //await SetupViewModel(tags, currentUserId, viewModel, results, page);
+                viewModel.Tags = new List<string>();
+                foreach (var tag in tags)
+                {
+                    viewModel.Tags.Add(tag);
+                }
             }
             else
             {
-                var results = await SearchService.GetProfilesAsync(currentUserId);
+                var results = await SearchService.GetAllProfilesAsync(currentUserId);
                 viewModel.SearchResults = results.ToPagedList(page ?? 1, 20);
             }
 

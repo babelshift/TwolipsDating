@@ -7,7 +7,7 @@ namespace TwolipsDating.Business
     {
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Profile>> GetProfilesByTagNameAsync(string userName);
 
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Profile>> GetProfilesByTagNamesAsync(string[] tags);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<SearchResultProfileViewModel>> GetProfilesByTagNamesAsync(string[] tags, string userId);
 
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Profile>> GetProfilesByUserNameAsync(string userName);
 
@@ -15,6 +15,6 @@ namespace TwolipsDating.Business
 
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.QuizSearchResultViewModel>> GetQuizzesByTagsAsync(string tag);
 
-        System.Threading.Tasks.Task<IReadOnlyCollection<SearchResultProfileViewModel>> GetProfilesAsync(string userId);
+        System.Threading.Tasks.Task<IReadOnlyCollection<SearchResultProfileViewModel>> GetAllProfilesAsync(string userId);
     }
 }
