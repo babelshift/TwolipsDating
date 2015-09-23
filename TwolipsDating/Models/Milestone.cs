@@ -53,6 +53,8 @@ namespace TwolipsDating.Models
         [Index("UX_AmountAndType", 2, IsUnique = true)]      // EF 6.1 doesn't support first class unique indexes via Fluent API
         public int MilestoneTypeId { get; set; }
 
+        public string IconFileName { get; set; }
+
         public virtual MilestoneType MilestoneType { get; set; }
 
         public virtual ICollection<MilestoneAchievement> MilestonesAchieved { get; set; }

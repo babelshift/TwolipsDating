@@ -445,6 +445,10 @@
     <Compile Include="Migrations\201509172036412_AddDateToReferral.Designer.cs">
       <DependentUpon>201509172036412_AddDateToReferral.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509232150570_AddIconsToMilestones.cs" />
+    <Compile Include="Migrations\201509232150570_AddIconsToMilestones.Designer.cs">
+      <DependentUpon>201509232150570_AddIconsToMilestones.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\CompletedQuizComparer.cs" />
     <Compile Include="Models\EmailNotifications.cs" />
     <Compile Include="Models\Language.cs" />
@@ -848,7 +852,6 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\cancel-off.png" />
     <Content Include="Content\cancel-on.png" />
-    <Content Include="Content\Candy.png" />
     <Content Include="Content\CellPhoneImage1.png" />
     <Content Include="Content\chosen-sprite%402x.png" />
     <Content Include="Content\chosen-sprite.png" />
@@ -856,7 +859,6 @@
     <Content Include="Content\chosen1.css" />
     <Content Include="Content\congruent_pentagon_gray.png" />
     <Content Include="Content\CrazyCatLover.png" />
-    <Content Include="Content\DogBone.png" />
     <Content Include="Content\ElGuapo.png" />
     <Content Include="Content\EmailConfirmedStar.png" />
     <Content Include="Content\ErrorGeneric.png" />
@@ -895,7 +897,6 @@
     <Content Include="Content\President.png" />
     <Content Include="Content\ProfileRotated.jpg" />
     <Content Include="Content\PsychoDentist.png" />
-    <Content Include="Content\RedRose.png" />
     <Content Include="Content\RobotCop2.png" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\SloganOnlyColor.png" />
@@ -912,7 +913,6 @@
     <Content Include="Content\twolipsicon-white-32x32.png" />
     <Content Include="Content\twolipsicon-white.png" />
     <Content Include="Content\twolipsicon.png" />
-    <Content Include="Content\WhiteRose.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -1334,6 +1334,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509172036412_AddDateToReferral.resx">
       <DependentUpon>201509172036412_AddDateToReferral.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509232150570_AddIconsToMilestones.resx">
+      <DependentUpon>201509232150570_AddIconsToMilestones.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

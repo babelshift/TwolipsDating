@@ -578,6 +578,10 @@ namespace TwolipsDating.Models
                 .HasForeignKey(t => t.MilestoneTypeId);
 
             modelBuilder.Entity<Milestone>()
+                .Property(x => x.IconFileName)
+                .HasMaxLength(50);
+
+            modelBuilder.Entity<Milestone>()
                 .Property(v => v.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
         }

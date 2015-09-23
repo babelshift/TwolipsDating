@@ -10,6 +10,7 @@ using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
 using System.Linq;
+using PagedList;
 
 namespace TwolipsDating.Controllers
 {
@@ -43,14 +44,14 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <returns></returns>
         [RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page)
         {
             var currentUserId = User.Identity.GetUserId();
 
             await SetNotificationsAsync();
 
             var storeItems = await StoreService.GetNewStoreItemsAsync();
-            StoreViewModel viewModel = await GetStoreViewModelAsync(storeItems, currentUserId);
+            StoreViewModel viewModel = await GetStoreViewModelAsync(storeItems, currentUserId, page);
 
             return View(viewModel);
         }
@@ -185,11 +186,11 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="storeItems"></param>
         /// <returns></returns>
-        private async Task<StoreViewModel> GetStoreViewModelAsync(IReadOnlyList<StoreItemViewModel> storeItemViewModel, string currentUserId)
+        private async Task<StoreViewModel> GetStoreViewModelAsync(IReadOnlyList<StoreItemViewModel> storeItemViewModel, string currentUserId, int? page)
         {
             StoreViewModel viewModel = new StoreViewModel();
 
-            viewModel.StoreItems = storeItemViewModel;
+            viewModel.StoreItems = storeItemViewModel.ToPagedList(page ?? 1, 24);
 
             var spotlightSale = await StoreService.GetCurrentSpotlightAsync();
             viewModel.Spotlight = Mapper.Map<StoreSale, StoreItemViewModel>(spotlightSale);

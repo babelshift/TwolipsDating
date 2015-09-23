@@ -1,8 +1,9 @@
-﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.StoreItemViewModel>
+﻿@model PagedList.IPagedList<TwolipsDating.ViewModels.StoreItemViewModel>
+@using PagedList.Mvc;
 
 @foreach (var storeItem in Model)
 {
-    <div class="custom-tooltip store-item-wrapper col-lg-3 col-md-4 col-sm-4 col-xs-6 text-center" style="min-height: 200px;"
+    <div class="custom-tooltip store-item-wrapper col-lg-3 col-md-4 col-sm-3 col-xs-6 text-center" style="min-height: 200px;"
          title="@storeItem.ItemDescription" data-placement="auto top" data-animation="false">
         <div class="store-item" style="border: 1px solid transparent; padding: 5px">
             @if (storeItem.Discount.HasValue)
@@ -31,15 +32,19 @@
                         </s>
                     </span>
                     @:&nbsp;
-                    <i class="fa fa-money"></i>
-                    @storeItem.DiscountedPointsCost
+                    <span class="text-success">
+                        <i class="fa fa-money"></i>
+                        @storeItem.DiscountedPointsCost
+                    </span>
                     <br />
                     @:Sales ends in @storeItem.TimeUntilSaleEnds
                 }
                 else
                 {
-                    <i class="fa fa-money"></i>
-                    @storeItem.DiscountedPointsCost
+                    <span class="text-success">
+                        <i class="fa fa-money"></i>
+                        @storeItem.DiscountedPointsCost
+                    </span>
                 }
             </div>
             <div class="store-item-buy hidden">
@@ -52,4 +57,8 @@
             </div>
         </div>
     </div>
+}
+@if (Model.PageCount > 1)
+{
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
 }

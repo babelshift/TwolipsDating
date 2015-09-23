@@ -139,11 +139,11 @@ namespace TwolipsDating.Migrations
 
             context.StoreItems.AddOrUpdate(g => g.Id,
                 new StoreItem() { Id = 1, Name = "Rose (red)", IconFileName = "RedRose.png", Description = "A red rose with curiously missing thorns", PointPrice = 10, ItemTypeId = (int)StoreItemTypeValues.Gift },
-                new StoreItem() { Id = 2, Name = "Rose (white)", IconFileName = "WhiteRose.png", Description = "A white rose with some seriously sharp thorns", PointPrice = 15, ItemTypeId = (int)StoreItemTypeValues.Gift },
-                new StoreItem() { Id = 3, Name = "Dog bone", IconFileName = "DogBone.png", Description = "A tasty dog bone perfect for chewing", PointPrice = 15, ItemTypeId = (int)StoreItemTypeValues.Gift },
-                new StoreItem() { Id = 4, Name = "Candy", IconFileName = "Candy.png", Description = "A delicious piece of candy straight from grandma's candy bowl", PointPrice = 20, ItemTypeId = (int)StoreItemTypeValues.Gift },
-                new StoreItem() { Id = 5, Name = "Lizard Lord", IconFileName = "LizardLord1.png", Description = "King of the lizard creatures.", PointPrice = 100, ItemTypeId = (int)StoreItemTypeValues.Title },
-                new StoreItem() { Id = 6, Name = "Robot Cop", IconFileName = "RobotCop2.png", Description = "A robotic police officer different from the popular copyrighted version.", PointPrice = 100, ItemTypeId = (int)StoreItemTypeValues.Title },
+                new StoreItem() { Id = 2, Name = "Rose (white)", IconFileName = "WhiteRose.png", Description = "A white rose with some seriously sharp thorns", PointPrice = 10, ItemTypeId = (int)StoreItemTypeValues.Gift },
+                new StoreItem() { Id = 3, Name = "Dog bone", IconFileName = "DogBone.png", Description = "A tasty dog bone perfect for chewing", PointPrice = 10, ItemTypeId = (int)StoreItemTypeValues.Gift },
+                new StoreItem() { Id = 4, Name = "Candy", IconFileName = "Candy.png", Description = "A delicious piece of candy straight from grandma's candy bowl", PointPrice = 10, ItemTypeId = (int)StoreItemTypeValues.Gift },
+                new StoreItem() { Id = 5, Name = "Lizard Lord", IconFileName = "LizardLord1.png", Description = "King of the lizard creatures.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
+                new StoreItem() { Id = 6, Name = "Robot Cop", IconFileName = "RobotCop2.png", Description = "A robotic police officer different from the popular copyrighted version.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
                 new StoreItem() { Id = 7, Name = "High Warlord", IconFileName = "HighWarlord2.png", Description = "Played way too much World of Warcraft.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
                 new StoreItem() { Id = 8, Name = "Grand Marshal", IconFileName = "GrandMarshal1.png", Description = "Played way too much World of Warcraft.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
                 new StoreItem() { Id = 9, Name = "General", IconFileName = "General1.png", Description = "Commands a presence on the battlefield.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
@@ -151,7 +151,13 @@ namespace TwolipsDating.Migrations
                 new StoreItem() { Id = 11, Name = "Crazy Cat Lover", IconFileName = "CrazyCatLover.png", Description = "Owns 20 cats and probably doesn't clean up after them.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
                 new StoreItem() { Id = 12, Name = "The President", IconFileName = "President.png", Description = "The most powerful person in the world.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
                 new StoreItem() { Id = 13, Name = "El Guapo", IconFileName = "ElGuapo.png", Description = "Devilishly handsome.", PointPrice = 200, ItemTypeId = (int)StoreItemTypeValues.Title },
-                new StoreItem() { Id = 14, Name = "Banana Bunch", IconFileName = "Bananas.png", Description = "A perfectly sized bunch of bananas full of potassium.", PointPrice = 25, ItemTypeId = (int)StoreItemTypeValues.Gift });
+                new StoreItem() { Id = 14, Name = "Banana Bunch", IconFileName = "Bananas.png", Description = "A perfectly sized bunch of bananas full of potassium.", PointPrice = 10, ItemTypeId = (int)StoreItemTypeValues.Gift },
+                new StoreItem() { Id = 15, Name = "Avocado Half", IconFileName = "Avocado.png", Description = "When a whole avocado is just too much.", PointPrice = 25, ItemTypeId = (int)StoreItemTypeValues.Gift },
+                new StoreItem() { Id = 16, Name = "Bear Trap", IconFileName = "BearTrap.png", Description = "Perfect for catching the ones who might get a little too close.", PointPrice = 25, ItemTypeId = (int)StoreItemTypeValues.Gift },
+                new StoreItem() { Id = 17, Name = "Bell Peppers", IconFileName = "BellPeppers.png", Description = "For when you need a little bit of spice in your life.", PointPrice = 25, ItemTypeId = (int)StoreItemTypeValues.Gift },
+                new StoreItem() { Id = 18, Name = "Star Flower", IconFileName = "Flower.png", Description = "A flower shaped like a star. Not much more to say than that.", PointPrice = 25, ItemTypeId = (int)StoreItemTypeValues.Gift },
+                new StoreItem() { Id = 19, Name = "Rocket Ship", IconFileName = "RocketShip.png", Description = "The quickest form of travel for when you really need to get away.", PointPrice = 50, ItemTypeId = (int)StoreItemTypeValues.Gift },
+                new StoreItem() { Id = 20, Name = "Green Apple", IconFileName = "GreenApple.png", Description = "Shiny, green, delicious. What more could you want?", PointPrice = 25, ItemTypeId = (int)StoreItemTypeValues.Gift });
 
             context.QuestionTypes.AddOrUpdate(q => q.Id,
                 new QuestionType() { Id = (int)QuestionTypeValues.Random, Name = "Random" },
@@ -170,9 +176,9 @@ namespace TwolipsDating.Migrations
                 new MilestoneType() { Id = (int)MilestoneTypeValues.TitlesPurchased, Name = "Titles purchased", Description = "Purchasing unique titles from the store allows you to select and display a title before your user name around the community." });
 
             context.Milestones.AddOrUpdate(m => m.Id,
-                new Milestone() { Id = (int)MilestoneValues.QuestionsAnsweredCorrectly1, MilestoneTypeId = (int)MilestoneTypeValues.QuestionsAnsweredCorrectly, AmountRequired = 25 },
-                new Milestone() { Id = (int)MilestoneValues.QuestionsAnsweredCorrectly2, MilestoneTypeId = (int)MilestoneTypeValues.QuestionsAnsweredCorrectly, AmountRequired = 50 },
-                new Milestone() { Id = (int)MilestoneValues.QuestionsAnsweredCorrectly3, MilestoneTypeId = (int)MilestoneTypeValues.QuestionsAnsweredCorrectly, AmountRequired = 100 },
+                new Milestone() { Id = (int)MilestoneValues.QuestionsAnsweredCorrectly1, MilestoneTypeId = (int)MilestoneTypeValues.QuestionsAnsweredCorrectly, AmountRequired = 25, IconFileName = "Star1.png" },
+                new Milestone() { Id = (int)MilestoneValues.QuestionsAnsweredCorrectly2, MilestoneTypeId = (int)MilestoneTypeValues.QuestionsAnsweredCorrectly, AmountRequired = 50, IconFileName = "Star2.png" },
+                new Milestone() { Id = (int)MilestoneValues.QuestionsAnsweredCorrectly3, MilestoneTypeId = (int)MilestoneTypeValues.QuestionsAnsweredCorrectly, AmountRequired = 100, IconFileName = "Star3.png" },
                 new Milestone() { Id = (int)MilestoneValues.QuestionsAnsweredCorrectly4, MilestoneTypeId = (int)MilestoneTypeValues.QuestionsAnsweredCorrectly, AmountRequired = 200 },
                 new Milestone() { Id = (int)MilestoneValues.QuizzesCompletedSuccessfully1, MilestoneTypeId = (int)MilestoneTypeValues.QuizzesCompletedSuccessfully, AmountRequired = 5 },
                 new Milestone() { Id = (int)MilestoneValues.QuizzesCompletedSuccessfully2, MilestoneTypeId = (int)MilestoneTypeValues.QuizzesCompletedSuccessfully, AmountRequired = 15 },
