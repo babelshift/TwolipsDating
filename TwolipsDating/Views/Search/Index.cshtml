@@ -101,6 +101,23 @@ else
                 </div>
             }
         }
+        @if (Model.SearchResults.PageCount > 1)
+        {
+            <div class="col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @if (Model.Tags != null && Model.Tags.Count > 0)
+                        {
+                            @Html.PagedListPager(Model.SearchResults, page => String.Format("{0}&tags={1}", Url.Action("Index", new { page }), String.Join("&tags=", Model.Tags)))
+                        }
+                        else
+                        {
+                            @Html.PagedListPager(Model.SearchResults, page => Url.Action("Index", new { page }))
+                        }
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 }
 

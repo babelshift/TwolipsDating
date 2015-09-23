@@ -30,10 +30,12 @@ namespace TwolipsDating.Controllers
 
             viewModel.SearchTags = await GetSearchableTags();
 
+            int pageTotal = 18;
+
             if (tags != null && tags.Length > 0)
             {
                 var results = await SearchService.GetProfilesByTagNamesAsync(tags, currentUserId);
-                viewModel.SearchResults = results.ToPagedList(page ?? 1, 20);
+                viewModel.SearchResults = results.ToPagedList(page ?? 1, pageTotal);
 
                 viewModel.Tags = new List<string>();
                 foreach (var tag in tags)
@@ -44,7 +46,7 @@ namespace TwolipsDating.Controllers
             else
             {
                 var results = await SearchService.GetAllProfilesAsync(currentUserId);
-                viewModel.SearchResults = results.ToPagedList(page ?? 1, 20);
+                viewModel.SearchResults = results.ToPagedList(page ?? 1, pageTotal);
             }
 
             return View(viewModel);

@@ -75,7 +75,7 @@
                         <i class="fa fa-chevron-left"></i>
                         Back
                     </button>*@
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
+                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
                     <i class="fa fa-send"></i> Message
                 </button>
                 @if (User.Identity.IsAuthenticated)
@@ -84,7 +84,7 @@
                     {
                         <button type="button" class="btn btn-success followify"
                                 data-profile-id="@Model.ProfileId" data-user-id="@Model.ProfileUserId">
-                            <i class="button-toggle-favorite-icon fa fa-user-plus"></i> <span class="button-toggle-favorite-text">Following</span>
+                            <i class="button-toggle-favorite-icon fa fa-check"></i> <span class="button-toggle-favorite-text">Following</span>
                         </button>
                     }
                     else
