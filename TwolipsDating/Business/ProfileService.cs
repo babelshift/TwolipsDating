@@ -688,6 +688,7 @@ namespace TwolipsDating.Business
                 }
                 else
                 {
+                    ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.NeedPointsToMessage);
                     return success ? ServiceResult.Success : ServiceResult.Failed(ErrorMessages.NeedPointsToMessage);
                 }
 

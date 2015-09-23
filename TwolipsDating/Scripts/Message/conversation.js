@@ -1,6 +1,12 @@
 ﻿$(document).ready(function () {
     $('.followify').followify();
 
+    $('#search-user-name').on('keyup', function (e) {
+        if (e && e.keyCode == 13) {
+            $('#search').click();
+        }
+    });
+
     $('#search').click(function (e) {
         e.preventDefault();
 
