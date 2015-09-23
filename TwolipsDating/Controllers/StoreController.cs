@@ -9,6 +9,7 @@ using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
+using System.Linq;
 
 namespace TwolipsDating.Controllers
 {
@@ -49,9 +50,7 @@ namespace TwolipsDating.Controllers
             await SetNotificationsAsync();
 
             var storeItems = await StoreService.GetNewStoreItemsAsync();
-            StoreViewModel viewModel = await GetStoreViewModelAsync(storeItems);
-
-            viewModel.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
+            StoreViewModel viewModel = await GetStoreViewModelAsync(storeItems, currentUserId);
 
             return View(viewModel);
         }
@@ -186,7 +185,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <param name="storeItems"></param>
         /// <returns></returns>
-        private async Task<StoreViewModel> GetStoreViewModelAsync(IReadOnlyList<StoreItemViewModel> storeItemViewModel)
+        private async Task<StoreViewModel> GetStoreViewModelAsync(IReadOnlyList<StoreItemViewModel> storeItemViewModel, string currentUserId)
         {
             StoreViewModel viewModel = new StoreViewModel();
 
@@ -200,6 +199,11 @@ namespace TwolipsDating.Controllers
 
             viewModel.ShoppingCartItemCount = ShoppingCart.Count;
 
+            var newQuizzes = await TriviaService.GetNewQuizzesAsync(8);
+            viewModel.HighPointsQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(newQuizzes);
+
+            viewModel.RecentBuyers = await StoreService.GetRecentBuyersAsync(currentUserId);
+            
             return viewModel;
         }
 

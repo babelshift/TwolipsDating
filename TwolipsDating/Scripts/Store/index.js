@@ -1,4 +1,6 @@
 ﻿$(document).ready(function () {
+    $('.followify').followify();
+
     $('.store-item-wrapper').on({
         mouseenter: function () {
             $('.store-item', this).attr('style', "border: 1px solid #ddd; box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15); padding: 5px");

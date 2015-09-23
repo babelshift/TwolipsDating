@@ -11,7 +11,7 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<int, TwolipsDating.Models.AnsweredQuestion>> GetAnsweredQuizQuestions(string userId, int quizId);
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<int, TwolipsDating.Models.CompletedQuiz>> GetCompletedQuizzesForUserAsync(string currentUserId);
         System.Threading.Tasks.Task<int> GetCorrectAnswerAsync(int questionId, int answerId);
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Quiz>> GetNewQuizzesAsync();
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Quiz>> GetNewQuizzesAsync(int takeCount = 10);
         System.Threading.Tasks.Task<int> GetQuestionsAnsweredCorrectlyCountAsync(string userId);
         System.Threading.Tasks.Task<TwolipsDating.Models.Quiz> GetQuizAsync(int quizId);
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Question>> GetQuizQuestionsAsync(int quizId);

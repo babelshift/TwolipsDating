@@ -4,9 +4,9 @@
 {
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <div class="panel-title">
-                Sale Spotlight
-            </div>
+            <h4 class="panel-title">
+                <i class="fa fa-bullhorn"></i> Sale Spotlight
+            </h4>
         </div>
         <div class="panel-body text-center">
             <div class="store-item-wrapper" title="@Model.ItemDescription" data-animation="false">
@@ -35,7 +35,7 @@
                         <i class="fa fa-money"></i>
                         @Model.DiscountedPointsCost
                         <br />
-                        Sales ends in @Model.TimeUntilSaleEnds
+                        Sale ends in @Model.TimeUntilSaleEnds
                     </div>
                     <div class="store-item-buy hidden">
                         <h4>@Model.ItemName</h4>
@@ -47,9 +47,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="panel-footer text-center">
-            <small><a href="#">View all sales</a></small>
         </div>
     </div>
 }

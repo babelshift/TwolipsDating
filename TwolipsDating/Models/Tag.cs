@@ -36,7 +36,9 @@ namespace TwolipsDating.Models
         athlete = 29,
         rockstar = 30,
         princess = 31,
-        prince = 32
+        prince = 32,
+        historian = 33,
+        tv_star = 34
     }
 
     public class Tag

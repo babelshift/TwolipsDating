@@ -287,5 +287,57 @@ namespace TwolipsDating.Business
 
             return currentSpotlightSale;
         }
+
+        public async Task<IReadOnlyCollection<RecentBuyerViewModel>> GetRecentBuyersAsync(string userId)
+        {
+            var recentBuyers = await (from purchases in db.StoreTransactions
+                                      where purchases.BuyerUser.IsActive
+                                      group purchases by new
+                                      {
+                                          Birthday = purchases.BuyerUser.Profile.Birthday,
+                                          CityName = purchases.BuyerUser.Profile.GeoCity.Name,
+                                          ProfileId = purchases.BuyerUser.Profile.Id,
+                                          ProfileImagePath = purchases.BuyerUser.Profile.UserImage.FileName,
+                                          StateName = purchases.BuyerUser.Profile.GeoCity.GeoState.Abbreviation,
+                                          UserId = purchases.BuyerUser.Id,
+                                          UserName = purchases.BuyerUser.UserName,
+                                          IsFavoritedByCurrentUser = purchases.BuyerUser.Profile.FavoritedBy.Any(x => x.UserId == userId),
+                                      } into g
+                                      select new
+                                      {
+                                          Birthday = g.Key.Birthday,
+                                          CityName = g.Key.CityName,
+                                          ProfileId = g.Key.ProfileId,
+                                          ProfileImagePath = g.Key.ProfileImagePath,
+                                          StateName = g.Key.StateName,
+                                          UserId = g.Key.UserId,
+                                          UserName = g.Key.UserName,
+                                          IsFavoritedByCurrentUser = g.Key.IsFavoritedByCurrentUser,
+                                          DatePurchased = g.Max(x => x.DateTransactionOccurred)
+                                      })
+                                      .OrderByDescending(x => x.DatePurchased)
+                                      .Select(x => new RecentBuyerViewModel()
+                                      {
+                                          Birthday = x.Birthday,
+                                          CityName = x.CityName,
+                                          ProfileId = x.ProfileId,
+                                          ProfileImagePath = x.ProfileImagePath,
+                                          StateName = x.StateName,
+                                          UserId = x.UserId,
+                                          UserName = x.UserName,
+                                          IsFavoritedByCurrentUser = x.IsFavoritedByCurrentUser
+                                      })
+                                      .Take(10)
+                                      .ToListAsync();
+
+            foreach (var recentBuyer in recentBuyers)
+            {
+                recentBuyer.ProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(recentBuyer.ProfileImagePath);
+                recentBuyer.Age = DateTimeExtensions.GetAge(recentBuyer.Birthday);
+                recentBuyer.Location = CityExtensions.ToFullLocationString(recentBuyer.CityName, recentBuyer.StateName);
+            }
+
+            return recentBuyers.AsReadOnly();
+        }
     }
 }

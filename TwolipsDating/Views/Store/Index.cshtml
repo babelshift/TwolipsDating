@@ -1,29 +1,161 @@
 ﻿@using TwolipsDating.ViewModels
-@model StoreViewModel
+@using Microsoft.AspNet.Identity;
+    @model StoreViewModel
 
-@{
-    ViewBag.Title = "Browse the store";
-    ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
-}
-@Html.Partial("_ItemAddedConfirmationPartial")
-<div class="row">
-    <div class="col-md-3">
-        @if (Model.Spotlight != null)
-        {
-            @Html.Partial("_SaleSpotlightPartial", Model.Spotlight)
-        }
-        @if (Model.GiftSpotlight != null)
-        {
-            @Html.Partial("_GiftSpotlightPartial", Model.GiftSpotlight)
-        }
+    @{
+        ViewBag.Title = "Browse the store";
+        ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
+    }
+    @Html.Partial("_ItemAddedConfirmationPartial")
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <a href="@Url.Action("cart", "store")" class="btn btn-default pull-right">
+                        <i class="glyphicon glyphicon-shopping-cart"></i> View cart (<span id="shopping-cart-count">@Model.ShoppingCartItemCount</span>)
+                    </a>
+                    @*<ul class="nav nav-pills">
+                            <li role="presentation" class="active"><a href="@Url.Action("index", "store")">New</a></li>
+                            <li role="presentation"><a href="@Url.Action("popular", "store")">Popular</a></li>
+                                <li role="presentation"><a href="@Url.Action("sale", "store")">On Sale</a></li>
+                        </ul>*@
+
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @Html.Partial("_StoreItemsPartialView", Model.StoreItems)
+                </div>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="fa fa-trophy"></i> Need more points? Try these quizzes.
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    @foreach (var quiz in Model.HighPointsQuizzes)
+                    {
+                        <div class="col-xs-6 col-sm-3" style="height: 100px">
+                            <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })">
+                                <img src="@quiz.ThumbnailImagePath" width="128" height="64" />
+                            </a>
+                            <br />
+                            <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })">@quiz.Name</a>
+                        </div>
+                    }
+                </div>
+                <div class="panel-footer text-center">
+                    <a href="@Url.Action("index", "trivia")">See more quizzes</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            @if (Model.Spotlight != null)
+            {
+                @Html.Partial("_SaleSpotlightPartial", Model.Spotlight)
+            }
+            @if (Model.GiftSpotlight != null)
+            {
+                @Html.Partial("_GiftSpotlightPartial", Model.GiftSpotlight)
+            }
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="fa fa-users"></i> Recent Shoppers
+                    </h4>
+                </div>
+                @if (Model.RecentBuyers != null && Model.RecentBuyers.Count > 0)
+                {
+                    <ul class="list-group">
+                        @foreach (var user in Model.RecentBuyers)
+                        {
+                            <li id="@String.Format("user-to-follow-{0}", user.ProfileId)" class="list-group-item user-to-follow">
+                                <div style="margin-left: 55px;">
+                                    <a href="@Url.Action("index", "profile", new{ id = user.ProfileId })">
+                                        <img src="@user.ProfileImagePath">
+                                    </a>
+                                    <span class="user-to-follow-name">
+                                        @user.UserName
+                                    </span>
+                                    <span class="user-to-follow-details">
+                                        <i class="fa fa-user fa-fw"></i> @user.Age years old
+                                        <br />
+                                        @if (!String.IsNullOrEmpty(user.Location))
+                                        {
+                                            <i class="fa fa-map-marker fa-fw"></i> @user.Location
+                                        }
+                                    </span>
+                                </div>
+
+                                @if (user.UserId != User.Identity.GetUserId())
+                                {
+                                    if (User.Identity.IsAuthenticated)
+                                    {
+                                        if (user.IsFavoritedByCurrentUser)
+                                        {
+                                            <button class="btn btn-success btn-sm followify user-to-follow-button"
+                                                    data-profile-id="@user.ProfileId" data-user-id="@user.UserId">
+                                                <i class="fa fa-check"></i>
+                                                <span>Following</span>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-default btn-sm followify user-to-follow-button"
+                                                    data-profile-id="@user.ProfileId" data-user-id="@user.UserId">
+                                                <i class="fa fa-user-plus"></i>
+                                                <span>Follow</span>
+                                            </button>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-default btn-sm user-to-follow-button" data-toggle="modal" data-target="#modalSignUpIncentiveFollow" data-keyboard="true">
+                                            <i class="fa fa-user-plus"></i> Follow
+                                        </button>
+                                    }
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="panel-body">
+                        <p>No one has completed this quiz yet!</p>
+                    </div>
+                }
+            </div>
+            @*@if (!HttpContext.Current.IsDebuggingEnabled)
+                {
+                    <div class="ad">
+                        <!-- Store - Sidebar - 1 -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-1823005717277864"
+                             data-ad-slot="2718406231"
+                             data-ad-format="auto"></ins>
+                        <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
+                }
+                else
+                {
+                    <div style="width: 95px; margin: 5px auto;">
+                        <img src="http://placehold.it/150x600" />
+                    </div>
+                }*@
+        </div>
         @if (!HttpContext.Current.IsDebuggingEnabled)
         {
-            <div class="ad">
-                <!-- Store - Sidebar - 1 -->
+            <div class="ad-banner-sm">
+                <!-- Store - Footer - 1 -->
                 <ins class="adsbygoogle"
                      style="display:block"
                      data-ad-client="ca-pub-1823005717277864"
-                     data-ad-slot="2718406231"
+                     data-ad-slot="4806928234"
                      data-ad-format="auto"></ins>
                 <script>
                     (adsbygoogle = window.adsbygoogle || []).push({});
@@ -32,52 +164,17 @@
         }
         else
         {
-            <div style="width: 95px; margin: 5px auto;">
-                <img src="http://placehold.it/150x600" />
+            <div style="width: 610px; margin: 5px auto;">
+                <img src="http://placehold.it/600x90" />
             </div>
         }
     </div>
-    <div class="col-md-9">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <a href="@Url.Action("cart", "store")" class="btn btn-default pull-right">
-                    <i class="glyphicon glyphicon-shopping-cart"></i> View cart (<span id="shopping-cart-count">@Model.ShoppingCartItemCount</span>)
-                </a>
-                <ul class="nav nav-pills">
-                    <li role="presentation" class="active"><a href="@Url.Action("index", "store")">New</a></li>
-                    @*<li role="presentation"><a href="@Url.Action("popular", "store")">Popular</a></li>
-                    <li role="presentation"><a href="@Url.Action("sale", "store")">On Sale</a></li>*@
-                </ul>
-                <hr />
-                @Html.Partial("_StoreItemsPartialView", Model.StoreItems)
-            </div>
-        </div>
-    </div>
-    @if (!HttpContext.Current.IsDebuggingEnabled)
-    {
-        <!-- Store - Footer - 1 -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1823005717277864"
-             data-ad-slot="4806928234"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    }
-    else
-    {
-        <div style="width: 610px; margin: 5px auto;">
-            <img src="http://placehold.it/600x90" />
-        </div>
-    }
-</div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/store/index")
+    @section Scripts {
+        @Scripts.Render("~/bundles/store/index")
 
-    @if (!HttpContext.Current.IsDebuggingEnabled)
-    {
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        @if (!HttpContext.Current.IsDebuggingEnabled)
+        {
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        }
     }
-}

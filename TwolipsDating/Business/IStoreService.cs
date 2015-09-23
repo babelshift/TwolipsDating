@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using TwolipsDating.ViewModels;
 namespace TwolipsDating.Business
 {
     public interface IStoreService : IBaseService
@@ -10,5 +12,7 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<TwolipsDating.ViewModels.StoreItemViewModel>> GetNewStoreItemsAsync();
         System.Threading.Tasks.Task<TwolipsDating.Models.StoreItem> GetStoreItemAsync(int storeItemId);
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<TwolipsDating.Models.StoreItem>> GetStoreItemsAsync();
+
+        System.Threading.Tasks.Task<IReadOnlyCollection<RecentBuyerViewModel>> GetRecentBuyersAsync(string userId);
     }
 }

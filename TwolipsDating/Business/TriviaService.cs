@@ -65,12 +65,12 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<Quiz>> GetNewQuizzesAsync()
+        public async Task<IReadOnlyCollection<Quiz>> GetNewQuizzesAsync(int takeCount = 10)
         {
             var quizzes = (from quiz in db.Quizzes
                            where quiz.IsActive
                            orderby quiz.DateCreated descending
-                           select quiz).Take(10);
+                           select quiz).Take(takeCount);
 
             var results = await quizzes.ToListAsync();
 

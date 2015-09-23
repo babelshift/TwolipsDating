@@ -117,7 +117,9 @@ namespace TwolipsDating.Migrations
                 new Tag() { TagId = (int)TagValues.athlete, Name = "athlete", Description = "May or may not have competed in the Olympics. Regardless, he or she is probably fit." },
                 new Tag() { TagId = (int)TagValues.rockstar, Name = "rockstar", Description = "Anyone unlucky enough to get this tag will forever be stuck with an awful business buzzword." },
                 new Tag() { TagId = (int)TagValues.princess, Name = "princess", Description = "Enjoys colored dresses, slippers, and hairstyles. Also constantly bothered by evil family members." },
-                new Tag() { TagId = (int)TagValues.prince, Name = "prince", Description = "Will become the ruler of his family's kingdom regardless of his credentials." }
+                new Tag() { TagId = (int)TagValues.prince, Name = "prince", Description = "Will become the ruler of his family's kingdom regardless of his credentials." },
+                new Tag() { TagId = (int)TagValues.historian, Name = "historian", Description = "Knows everything there is to know about every empire to have ever existed. Maybe..." },
+                new Tag() { TagId = (int)TagValues.tv_star, Name = "tv_star", Description = "The kind of person who saves blooper reels for the best parties." }
             );
 
             context.ViolationTypes.AddOrUpdate(v => v.Id,
