@@ -24,8 +24,7 @@
             else if (achievementStatus.AchievementStatus == TwolipsDating.ViewModels.AchievementStatusType.Incomplete)
             {
                 <div class="achievement-box-in-progress" style="position: relative;">
-                    <div style="position: absolute; right: 0; width: @(100 - achievementStatus.PercentComplete)%; height: 100%; background-color: rgba(255, 255, 255, 0.6)"></div>
-                    <img src="@achievementStatus.AchievementIconPath" class="img-responsive center-block" />
+                    <img src="@achievementStatus.AchievementIconPath" style="opacity: 0.15" class="img-responsive center-block" />
                 </div>
                 <div class="progress">
                     <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar"

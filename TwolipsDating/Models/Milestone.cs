@@ -44,7 +44,15 @@ namespace TwolipsDating.Models
         QuestionsAnsweredCorrectly6 = 37,
         QuestionsAnsweredCorrectly5 = 38,
         QuizzesCompletedSuccessfully5 = 39,
-        QuizzesCompletedSuccessfully6 = 40
+        QuizzesCompletedSuccessfully6 = 40,
+        ProfileReviewsWritten5 = 41,
+        ProfileReviewsWritten6 = 42,
+        GiftsPurchased5 = 43,
+        GiftsPurchased6 = 44,
+        GiftsSent5 = 45,
+        GiftsSent6 = 46,
+        TagsAwarded5,
+        TagsAwarded6,
     }
 
     public class Milestone
