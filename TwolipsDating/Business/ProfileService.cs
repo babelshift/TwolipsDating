@@ -50,12 +50,12 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<int> GetPointsForUserAsync(string userId)
+        public async Task<int> GetLifetimeForUserAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
             var points = await (from user in db.Users
-                                select user.CurrentPoints).FirstOrDefaultAsync();
+                                select user.LifetimePoints).FirstOrDefaultAsync();
 
             return points;
         }

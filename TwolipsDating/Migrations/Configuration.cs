@@ -223,10 +223,10 @@ namespace TwolipsDating.Migrations
                 new Milestone() { Id = (int)MilestoneValues.TagsAwarded4, MilestoneTypeId = (int)MilestoneTypeValues.TagsAwarded, AmountRequired = 200, IconFileName = "Tag4.png" },
                 new Milestone() { Id = (int)MilestoneValues.TagsAwarded5, MilestoneTypeId = (int)MilestoneTypeValues.TagsAwarded, AmountRequired = 500, IconFileName = "Tag5.png" },
                 new Milestone() { Id = (int)MilestoneValues.TagsAwarded6, MilestoneTypeId = (int)MilestoneTypeValues.TagsAwarded, AmountRequired = 1000, IconFileName = "Tag6.png" },
-                //new Milestone() { Id = (int)MilestoneValues.PointsObtained1, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 100 },
-                //new Milestone() { Id = (int)MilestoneValues.PointsObtained2, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 250 },
-                //new Milestone() { Id = (int)MilestoneValues.PointsObtained3, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 500 },
-                //new Milestone() { Id = (int)MilestoneValues.PointsObtained4, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 1000 },
+                new Milestone() { Id = (int)MilestoneValues.PointsObtained1, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 100, IconFileName = "Points1.png" },
+                new Milestone() { Id = (int)MilestoneValues.PointsObtained2, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 250, IconFileName = "Points2.png" },
+                new Milestone() { Id = (int)MilestoneValues.PointsObtained3, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 500, IconFileName = "Points3.png" },
+                new Milestone() { Id = (int)MilestoneValues.PointsObtained4, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 1000, IconFileName = "Points4.png" },
                 new Milestone() { Id = (int)MilestoneValues.Trekkie, MilestoneTypeId = (int)MilestoneTypeValues.Trekkie, AmountRequired = 1, IconFileName = "StarfleetBadge.png" },
                 new Milestone() { Id = (int)MilestoneValues.RebelAlliance, MilestoneTypeId = (int)MilestoneTypeValues.RebelAlliance, AmountRequired = 1, IconFileName = "RebelAlliance.png" }
                 );

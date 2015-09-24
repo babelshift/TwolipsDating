@@ -90,7 +90,7 @@ namespace TwolipsDating.Business
             // get the number of points obtained
             else if (milestoneTypeId == (int)MilestoneTypeValues.PointsObtained)
             {
-                amount = await ProfileService.GetPointsForUserAsync(userId);
+                amount = await ProfileService.GetLifetimeForUserAsync(userId);
             }
             // get the number of profiles reviewed
             else if (milestoneTypeId == (int)MilestoneTypeValues.ProfileReviewsWritten)
