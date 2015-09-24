@@ -480,7 +480,45 @@ namespace TwolipsDating.Business
 
             await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.QuizzesCompletedSuccessfully);
 
+            if (quizId == (int)QuizValues.StarTrek_TOS)
+            {
+                await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.Trekkie);
+            }
+            else if(quizId == (int)QuizValues.StarWarsCharacters)
+            {
+                await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.RebelAlliance);
+            }
+
             return count;
+        }
+
+        public async Task<double> GetQuizScoreAsync(string userId, int quizId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+            Debug.Assert(quizId > 0);
+
+            var completedQuiz = await (from completedQuizzes in db.CompletedQuizzes
+                                       where completedQuizzes.UserId == userId
+                                       where completedQuizzes.QuizId == quizId
+                                       from answers in completedQuizzes.User.AnsweredQuestions
+                                       from questions in completedQuizzes.Quiz.Questions
+                                       where answers.AnswerId == questions.CorrectAnswerId
+                                       group completedQuizzes by completedQuizzes.Quiz.Questions.Count
+                                           into g
+                                           select new
+                                           {
+                                               CorrectAnswerCount = g.Count(),
+                                               TotalQuestionCount = g.Key
+                                           }).FirstOrDefaultAsync();
+
+            if (completedQuiz != null)
+            {
+                double score = (double)completedQuiz.CorrectAnswerCount / (double)completedQuiz.TotalQuestionCount;
+
+                return score;
+            }
+
+            return 0;
         }
 
         private static void IncreaseUserPoints(ApplicationUser user, int points)
@@ -593,7 +631,7 @@ namespace TwolipsDating.Business
 
             dynamic parameters = new ExpandoObject();
 
-            if(quizId.HasValue)
+            if (quizId.HasValue)
             {
                 parameters.quizId = quizId.Value;
             }
@@ -602,7 +640,7 @@ namespace TwolipsDating.Business
             {
                 parameters.currentUserId = currentUserId;
             }
-            
+
             var results = await QueryAsync<UserCompletedQuizViewModel>(sql, (object)parameters);
 
             foreach (var viewModel in results)

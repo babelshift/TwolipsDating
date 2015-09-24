@@ -4,6 +4,34 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TwolipsDating.Models
 {
+    public enum QuizValues
+    {
+        TechnicalGuru = 1,
+        GamerGod,
+        CreativeGenius,
+        BusinessSense,
+        LanguageLinguist,
+        WorldOfWarcraft_Scout,
+        WorldOfWarcraft_Champion,
+        WorldOfWarcraft_HighWarlord,
+        MoviesAndMonsters,
+        LegendOfZelda,
+        MovieQuotes,
+        HarryPotter,
+        SpacballsTheQuiz,
+        TheGreatFoodTruckQuiz,
+        TheWalkingDead,
+        StarWarsCharacters,
+        MoviesOfThe90s,
+        OceanDepths,
+        SummerOlympics,
+        ExoticAnimals,
+        StarTrek_TOS,
+        FuturamaCharacters,
+        WinterOlympics,
+        WorldWarII_ThePacific,
+    }
+
     public class Quiz
     {
         public int Id { get; set; }

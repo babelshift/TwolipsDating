@@ -112,6 +112,22 @@ namespace TwolipsDating.Business
             {
                 amount = await ProfileService.GetTagAwardCountForUserAsync(userId);
             }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.Trekkie)
+            {
+                double quizScorePercent = await TriviaService.GetQuizScoreAsync(userId, (int)QuizValues.StarTrek_TOS);
+                if (quizScorePercent == 1)
+                {
+                    amount = 1;
+                }
+            }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.RebelAlliance)
+            {
+                double quizScorePercent = await TriviaService.GetQuizScoreAsync(userId, (int)QuizValues.StarWarsCharacters);
+                if (quizScorePercent == 1)
+                {
+                    amount = 1;
+                }
+            }
 
             return amount;
         }
@@ -270,8 +286,26 @@ namespace TwolipsDating.Business
                                where storeTransaction.StoreItem.ItemTypeId == (int)StoreItemTypeValues.Title
                                select storeTransaction).CountAsync();
             }
+            else if(milestoneTypeId == (int)MilestoneTypeValues.Trekkie)
+            {
+                count = await HasUserAchievedSoloMilestone(userId, (int)MilestoneValues.Trekkie);
+            }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.RebelAlliance)
+            {
+                count = await HasUserAchievedSoloMilestone(userId, (int)MilestoneValues.RebelAlliance);
+            }
 
             return count;
+        }
+
+        private async Task<int> HasUserAchievedSoloMilestone(string userId, int milestoneId)
+        {
+            bool achieved = await (from milestoneAchievement in db.MilestoneAchievements
+                                   where milestoneAchievement.UserId == userId
+                                   where milestoneAchievement.MilestoneId == milestoneId
+                                   select milestoneAchievement).AnyAsync();
+
+            return achieved ? 1 : 0;
         }
 
         public async Task<IReadOnlyCollection<AchievementOverviewViewModel>> GetAchievementsAndStatusForUserAsync(string userId)
@@ -324,6 +358,11 @@ namespace TwolipsDating.Business
 
                 previousMilestone = milestone;
             }
+
+            currentAchievementOverView.AchievementStatuses = currentAchievementStatuses;
+            currentAchievementOverView.AchievementTypeName = previousMilestone.MilestoneType.Name;
+            currentAchievementOverView.AchievementDescription = previousMilestone.MilestoneType.Description;
+            achievementOverviews.Add(currentAchievementOverView);
 
             return achievementOverviews.AsReadOnly(); ;
         }

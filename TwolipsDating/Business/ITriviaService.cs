@@ -39,5 +39,7 @@ namespace TwolipsDating.Business
         Task<IReadOnlyCollection<QuizCategory>> GetQuizCategoriesAsync();
 
         Task<IReadOnlyCollection<Models.Profile>> GetTopPlayersAsync();
+
+        Task<double> GetQuizScoreAsync(string userId, int quizId);
     }
 }

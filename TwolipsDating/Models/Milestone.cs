@@ -53,6 +53,8 @@ namespace TwolipsDating.Models
         GiftsSent6 = 46,
         TagsAwarded5,
         TagsAwarded6,
+        Trekkie,
+        RebelAlliance
     }
 
     public class Milestone

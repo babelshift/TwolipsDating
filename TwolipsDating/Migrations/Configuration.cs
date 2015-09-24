@@ -173,7 +173,10 @@ namespace TwolipsDating.Migrations
                 new MilestoneType() { Id = (int)MilestoneTypeValues.ProfileImagesUploaded, Name = "Profile images uploaded", Description = "Upload pictures of yourself and things that you enjoy to customize your profile appearance." },
                 new MilestoneType() { Id = (int)MilestoneTypeValues.ProfileReviewsWritten, Name = "Profile reviews written", Description = "Reviewing your friends and people that you meet can help others know what they're getting into." },
                 new MilestoneType() { Id = (int)MilestoneTypeValues.TagsAwarded, Name = "Tags awarded", Description = "Tags are awarded from questions, quizzes, and achievements to tailor your profile around your knowledge and actions." },
-                new MilestoneType() { Id = (int)MilestoneTypeValues.TitlesPurchased, Name = "Titles purchased", Description = "Purchasing unique titles from the store allows you to select and display a title before your user name around the community." });
+                new MilestoneType() { Id = (int)MilestoneTypeValues.TitlesPurchased, Name = "Titles purchased", Description = "Purchasing unique titles from the store allows you to select and display a title before your user name around the community." },
+                new MilestoneType() { Id = (int)MilestoneTypeValues.Trekkie, Name = "Trekkie", Description = "Score 100% on the Star Trek: The Original Series quiz." },
+                new MilestoneType() { Id = (int)MilestoneTypeValues.RebelAlliance, Name = "Rebel Alliance", Description = "Score 100% on the Star Wars Characters quiz." }
+                );
 
             context.Milestones.AddOrUpdate(m => m.Id,
                 new Milestone() { Id = (int)MilestoneValues.QuestionsAnsweredCorrectly1, MilestoneTypeId = (int)MilestoneTypeValues.QuestionsAnsweredCorrectly, AmountRequired = 25, IconFileName = "Star1.png" },
@@ -220,10 +223,13 @@ namespace TwolipsDating.Migrations
                 new Milestone() { Id = (int)MilestoneValues.TagsAwarded4, MilestoneTypeId = (int)MilestoneTypeValues.TagsAwarded, AmountRequired = 200, IconFileName = "Tag4.png" },
                 new Milestone() { Id = (int)MilestoneValues.TagsAwarded5, MilestoneTypeId = (int)MilestoneTypeValues.TagsAwarded, AmountRequired = 500, IconFileName = "Tag5.png" },
                 new Milestone() { Id = (int)MilestoneValues.TagsAwarded6, MilestoneTypeId = (int)MilestoneTypeValues.TagsAwarded, AmountRequired = 1000, IconFileName = "Tag6.png" },
-                new Milestone() { Id = (int)MilestoneValues.PointsObtained1, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 100 },
-                new Milestone() { Id = (int)MilestoneValues.PointsObtained2, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 250 },
-                new Milestone() { Id = (int)MilestoneValues.PointsObtained3, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 500 },
-                new Milestone() { Id = (int)MilestoneValues.PointsObtained4, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 1000 });
+                //new Milestone() { Id = (int)MilestoneValues.PointsObtained1, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 100 },
+                //new Milestone() { Id = (int)MilestoneValues.PointsObtained2, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 250 },
+                //new Milestone() { Id = (int)MilestoneValues.PointsObtained3, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 500 },
+                //new Milestone() { Id = (int)MilestoneValues.PointsObtained4, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 1000 },
+                new Milestone() { Id = (int)MilestoneValues.Trekkie, MilestoneTypeId = (int)MilestoneTypeValues.Trekkie, AmountRequired = 1, IconFileName = "StarfleetBadge.png" },
+                new Milestone() { Id = (int)MilestoneValues.RebelAlliance, MilestoneTypeId = (int)MilestoneTypeValues.RebelAlliance, AmountRequired = 1, IconFileName = "RebelAlliance.png" }
+                );
 
             context.QuizCategories.AddOrUpdate(m => m.Id,
                 new QuizCategory() { Id = (int)QuizCategoryValues.Uncategorized, Name = "Uncategorized", FontAwesomeIconName = "fa-question" },

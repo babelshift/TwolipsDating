@@ -13,7 +13,9 @@ namespace TwolipsDating.Models
         GiftsPurchased = 6,
         TitlesPurchased = 7,
         TagsAwarded = 8,
-        PointsObtained = 9
+        PointsObtained = 9,
+        Trekkie = 10,
+        RebelAlliance = 11
     }
 
     public class MilestoneType

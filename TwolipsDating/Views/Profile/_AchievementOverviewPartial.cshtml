@@ -1,50 +1,77 @@
 ﻿@model TwolipsDating.ViewModels.AchievementOverviewViewModel
 
-<h4>@Model.AchievementTypeName</h4>
-@*<p class="achievement-group-description">@Model.AchievementDescription</p>*@
-<div class="achievement-container text-center">
-    @foreach (var achievementStatus in Model.AchievementStatuses)
-    {
-        <div class="col-xs-4 col-sm-2 col-md-2">
-            @if (achievementStatus.AchievementStatus == TwolipsDating.ViewModels.AchievementStatusType.Complete)
-            {
-                <div class="achievement-box-complete">
-                    <img src="@achievementStatus.AchievementIconPath" class="img-responsive center-block" />
-                </div>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
-                         aria-valuenow="@achievementStatus.AchievedCount"
-                         aria-valuemin="0"
-                         aria-valuemax="@achievementStatus.RequiredCount"
-                         style="width: @String.Format("{0}%", achievementStatus.PercentComplete)">
-                    </div>
-                </div>
-                <span class="progress-text progress-text-complete">@achievementStatus.AchievedCount of @achievementStatus.RequiredCount</span>
-            }
-            else if (achievementStatus.AchievementStatus == TwolipsDating.ViewModels.AchievementStatusType.Incomplete)
-            {
-                <div class="achievement-box-in-progress" style="position: relative;">
-                    <img src="@achievementStatus.AchievementIconPath" style="opacity: 0.15" class="img-responsive center-block" />
-                </div>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar"
-                         aria-valuenow="@achievementStatus.AchievedCount"
-                         aria-valuemin="0"
-                         aria-valuemax="@achievementStatus.RequiredCount"
-                         style="width: @String.Format("{0}%", achievementStatus.PercentComplete)">
-                    </div>
-                </div>
-                if (achievementStatus.PercentComplete > 0)
+@if (Model.AchievementStatuses.Count == 1 && Model.AchievementStatuses.ElementAt(0).RequiredCount == 1)
+{
+    <div class="achievement-container text-center">
+        @foreach (var achievementStatus in Model.AchievementStatuses)
+        {
+            <div class="col-xs-4 col-sm-2 col-md-2 custom-tooltip" title="@Model.AchievementDescription">
+                @if (achievementStatus.AchievementStatus == TwolipsDating.ViewModels.AchievementStatusType.Complete)
                 {
-                    <span class="progress-text progress-text-in-progress">@achievementStatus.AchievedCount of @achievementStatus.RequiredCount</span>
+                    <div class="achievement-box-complete">
+                        <img src="@achievementStatus.AchievementIconPath" class="img-responsive center-block" />
+                    </div>
+                    <h5 class="text-success"><strong>@Model.AchievementTypeName</strong></h5>
                 }
-                else
+                else if (achievementStatus.AchievementStatus == TwolipsDating.ViewModels.AchievementStatusType.Incomplete)
                 {
-                    <span class="progress-text progress-text-not-in-progress">@achievementStatus.AchievedCount of @achievementStatus.RequiredCount</span>
+                    <div class="achievement-box-in-progress" style="position: relative;">
+                        <img src="@achievementStatus.AchievementIconPath" style="opacity: 0.15" class="img-responsive center-block" />
+                    </div>
+                    <h5 class="text-muted">@Model.AchievementTypeName</h5>
                 }
-            }
-        </div>
-    }
-</div>
-<div class="clearfix"></div>
-<hr />
+            </div>
+        }
+    </div>
+}
+else
+{
+    <h4>@Model.AchievementTypeName</h4>
+    @*<p class="achievement-group-description">@Model.AchievementDescription</p>*@
+    <div class="achievement-container text-center">
+        @foreach (var achievementStatus in Model.AchievementStatuses)
+        {
+            <div class="col-xs-4 col-sm-2 col-md-2">
+                @if (achievementStatus.AchievementStatus == TwolipsDating.ViewModels.AchievementStatusType.Complete)
+                {
+                    <div class="achievement-box-complete">
+                        <img src="@achievementStatus.AchievementIconPath" class="img-responsive center-block" />
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+                             aria-valuenow="@achievementStatus.AchievedCount"
+                             aria-valuemin="0"
+                             aria-valuemax="@achievementStatus.RequiredCount"
+                             style="width: @String.Format("{0}%", achievementStatus.PercentComplete)">
+                        </div>
+                    </div>
+                    <span class="progress-text progress-text-complete"><strong>Completed</strong></span>
+                }
+                else if (achievementStatus.AchievementStatus == TwolipsDating.ViewModels.AchievementStatusType.Incomplete)
+                {
+                    <div class="achievement-box-in-progress" style="position: relative;">
+                        <img src="@achievementStatus.AchievementIconPath" style="opacity: 0.15" class="img-responsive center-block" />
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar"
+                             aria-valuenow="@achievementStatus.AchievedCount"
+                             aria-valuemin="0"
+                             aria-valuemax="@achievementStatus.RequiredCount"
+                             style="width: @String.Format("{0}%", achievementStatus.PercentComplete)">
+                        </div>
+                    </div>
+                    if (achievementStatus.PercentComplete > 0)
+                    {
+                        <span class="progress-text progress-text-in-progress">@achievementStatus.AchievedCount of @achievementStatus.RequiredCount</span>
+                    }
+                    else
+                    {
+                        <span class="progress-text progress-text-not-in-progress">@achievementStatus.AchievedCount of @achievementStatus.RequiredCount</span>
+                    }
+                }
+            </div>
+        }
+    </div>
+    <div class="clearfix"></div>
+    <hr />
+}
