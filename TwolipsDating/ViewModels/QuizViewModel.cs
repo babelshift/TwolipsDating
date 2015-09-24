@@ -10,6 +10,7 @@ namespace TwolipsDating.ViewModels
         public List<QuestionViewModel> Questions { get; set; }
         public bool IsAlreadyCompleted { get; set; }
         public int AveragePoints { get; set; }
+        public string ThumbnailImageUrl { get; set; }
         public string ImageUrl { get; set; }
         public int UserScorePercent { get; set; }
         public string SEOName { get; set; }

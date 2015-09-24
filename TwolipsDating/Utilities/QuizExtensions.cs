@@ -48,12 +48,12 @@ namespace TwolipsDating.Utilities
             return String.Format("{0}/{1}?1", cdn, fileName);
         }
 
-        public static string GetQuizThumbnailImagePath(string fileName)
+        public static string GetThumbnailImagePath(string fileName)
         {
             return GetThumbnailImagePath(fileName);
         }
 
-        private static string GetThumbnailImagePath(string fileName)
+        private static string GetActualThumbnailImagePath(string fileName)
         {
             if (String.IsNullOrEmpty(fileName))
             {
@@ -66,15 +66,15 @@ namespace TwolipsDating.Utilities
             return String.Format("{0}/{1}_{2}{3}?1", cdn, realFileName, "thumb", fileType);
         }
 
-        public static string GetQuizThumbnailImagePath(this Quiz quiz)
+        public static string GetThumbnailImagePath(this Quiz quiz)
         {
             if (quiz != null && quiz.ImageFileName != null)
             {
-                return GetThumbnailImagePath(quiz.ImageFileName);
+                return GetActualThumbnailImagePath(quiz.ImageFileName);
             }
             else
             {
-                return GetThumbnailImagePath(placeholderFileName);
+                return GetActualThumbnailImagePath(placeholderFileName);
             }
         }
     }

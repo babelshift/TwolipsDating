@@ -503,6 +503,7 @@ namespace TwolipsDating.Controllers
                 Tags = tagsForQuiz,
                 QuestionViolation = questionViolationViewModel,
                 AveragePoints = averagePoints,
+                ThumbnailImageUrl = quiz.GetThumbnailImagePath(),
                 ImageUrl = quiz.GetImagePath(),
                 UserScorePercent = userPercentScore,
                 SimilarQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(similarQuizzes),

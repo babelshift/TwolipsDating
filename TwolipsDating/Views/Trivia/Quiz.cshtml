@@ -102,43 +102,48 @@
                 </ul>
             </div>
         </div>
-        <div style="margin-bottom: 5px">
-            <div class="col-xs-4">
-                <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(Model.QuizDescription + " #trivia") + "&url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
-                   class="btn btn-block btn-twitter" title="Share on Twitter">
-                    <i class="fa fa-twitter fa-lg fa-fw"></i>
-                    <span class="hidden-xs">Share on Twitter</span>
-                </a>
-            </div>
-            <div class="col-xs-4">
-                <a href="@("https://www.facebook.com/sharer/sharer.php?u=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
-                   onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
-                   class="btn btn-block btn-facebook" title="Share on Facebook">
-                    <i class="fa fa-facebook fa-lg fa-fw"></i>
-                    <span class="hidden-xs">Share on Facebook</span>
-                </a>
-            </div>
-            <div class="col-xs-4">
-                <a href="@("https://plus.google.com/share?url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
-                   onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
-                   class="btn btn-block btn-google-plus" title="Share on Google+">
-                    <i class="fa fa-google-plus fa-lg fa-fw"></i>
-                    <span class="hidden-xs">Share on Google+</span>
-                </a>
-            </div>
-            <div class="clearfix"></div>
-        </div>
+        @*<div style="margin-bottom: 5px">
+                <div class="col-xs-4">
+                    <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(Model.QuizDescription + " #trivia") + "&url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
+                       class="btn btn-block btn-twitter" title="Share on Twitter">
+                        <i class="fa fa-twitter fa-lg fa-fw"></i>
+                        <span class="hidden-xs">Share on Twitter</span>
+                    </a>
+                </div>
+                <div class="col-xs-4">
+                    <a href="@("https://www.facebook.com/sharer/sharer.php?u=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
+                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
+                       class="btn btn-block btn-facebook" title="Share on Facebook">
+                        <i class="fa fa-facebook fa-lg fa-fw"></i>
+                        <span class="hidden-xs">Share on Facebook</span>
+                    </a>
+                </div>
+                <div class="col-xs-4">
+                    <a href="@("https://plus.google.com/share?url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
+                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
+                       class="btn btn-block btn-google-plus" title="Share on Google+">
+                        <i class="fa fa-google-plus fa-lg fa-fw"></i>
+                        <span class="hidden-xs">Share on Google+</span>
+                    </a>
+                </div>
+                <div class="clearfix"></div>
+            </div>*@
+
         <div class="panel panel-default">
             <div class="panel-body quiz-body">
                 @if (Model.Questions != null && Model.Questions.Count > 0)
                 {
                     <h3 style="margin-top: 0">@Model.QuizName</h3>
-                    <h4 style="margin-top: 0">@Model.QuizDescription</h4>
+                        <div class="col-sm-8">
+                            <h4 style="margin: 0">@Model.QuizDescription</h4>
+                        </div>
+                        <div class="col-sm-4">
+                            <img src="@Model.ThumbnailImageUrl" class="img-responsive" />
+                        </div>
+                    <div class="clearfix"></div>
                     if (Model.Tags != null && Model.Tags.Count > 0)
                     {
-                        <i class="fa fa-tags fa-lg fa-fw"></i>
-                        @:&nbsp;
-                        <div class="tags" style="display: inline-block">
+                        <div class="tags" style="display: inline-block; margin-top: 5px">
                             @foreach (var tag in Model.Tags)
                             {
                                 <a href="@Url.Action("index", "search", new { tags = tag.Name })" class="custom-tooltip btn btn-default btn-xs" title="@tag.Description">
@@ -149,8 +154,6 @@
                     }
 
                     <div style="margin-bottom: 10px">
-                        <i class="fa fa-money fa-lg fa-fw"></i>
-                        &nbsp;
                         @Html.Partial("_QuizRatingBarPartial", Model.AveragePoints)
                     </div>
 
