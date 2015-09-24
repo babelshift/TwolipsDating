@@ -25,5 +25,6 @@ namespace TwolipsDating.ViewModels
             }
         }
         public AchievementStatusType AchievementStatus { get; set; }
+        public string AchievementIconPath { get; set; }
     }
 }

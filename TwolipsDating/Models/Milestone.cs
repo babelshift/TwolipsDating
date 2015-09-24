@@ -41,6 +41,10 @@ namespace TwolipsDating.Models
         PointsObtained2 = 34,
         PointsObtained3 = 35,
         PointsObtained4 = 36,
+        QuestionsAnsweredCorrectly6 = 37,
+        QuestionsAnsweredCorrectly5 = 38,
+        QuizzesCompletedSuccessfully5 = 39,
+        QuizzesCompletedSuccessfully6 = 40
     }
 
     public class Milestone

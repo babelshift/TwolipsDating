@@ -469,6 +469,7 @@
     <Compile Include="Utilities\ApplicationUserExtensions.cs" />
     <Compile Include="Utilities\CalendarHelper.cs" />
     <Compile Include="Utilities\DictionaryHelper.cs" />
+    <Compile Include="Utilities\MilestoneExtensions.cs" />
     <Compile Include="Utilities\ModelStateTransfer.cs" />
     <Compile Include="Utilities\RequireConfirmedEmail.cs" />
     <Compile Include="Utilities\RequireProfile.cs" />

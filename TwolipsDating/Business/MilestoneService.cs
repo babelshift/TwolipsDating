@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TwolipsDating.Models;
 using TwolipsDating.ViewModels;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.Business
 {
@@ -317,7 +318,8 @@ namespace TwolipsDating.Business
                     {
                         RequiredCount = milestone.AmountRequired,
                         AchievedCount = amountAchieved <= milestone.AmountRequired ? amountAchieved : milestone.AmountRequired,
-                        AchievementStatus = (amountAchieved >= milestone.AmountRequired) ? AchievementStatusType.Complete : AchievementStatusType.Incomplete
+                        AchievementStatus = (amountAchieved >= milestone.AmountRequired) ? AchievementStatusType.Complete : AchievementStatusType.Incomplete,
+                        AchievementIconPath = milestone.GetIconPath()
                     });
 
                 previousMilestone = milestone;

@@ -1,7 +1,7 @@
 ﻿@model TwolipsDating.ViewModels.AchievementOverviewViewModel
 
 <h4>@Model.AchievementTypeName</h4>
-<p class="achievement-group-description">@Model.AchievementDescription</p>
+@*<p class="achievement-group-description">@Model.AchievementDescription</p>*@
 <div class="achievement-container text-center">
     @foreach (var achievementStatus in Model.AchievementStatuses)
     {
@@ -9,7 +9,7 @@
             @if (achievementStatus.AchievementStatus == TwolipsDating.ViewModels.AchievementStatusType.Complete)
             {
                 <div class="achievement-box-complete">
-                    <h2 class="status-marker status-marker-complete"><i class="glyphicon glyphicon-ok"></i></h2>
+                    <img src="@achievementStatus.AchievementIconPath" class="img-responsive center-block" />
                 </div>
                 <div class="progress">
                     <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
@@ -23,18 +23,10 @@
             }
             else if (achievementStatus.AchievementStatus == TwolipsDating.ViewModels.AchievementStatusType.Incomplete)
             {
-                if (achievementStatus.PercentComplete > 0)
-                {
-                    <div class="achievement-box-in-progress">
-                        <h2 class="status-marker status-marker-in-progress"><i class="glyphicon glyphicon-minus"></i></h2>
-                    </div>
-                }
-                else
-                {
-                    <div class="achievement-box-not-in-progress">
-                        <h2 class="status-marker status-marker-not-in-progress"><i class="glyphicon glyphicon-remove"></i></h2>
-                    </div>
-                }
+                <div class="achievement-box-in-progress" style="position: relative;">
+                    <div style="position: absolute; right: 0; width: @(100 - achievementStatus.PercentComplete)%; height: 100%; background-color: rgba(255, 255, 255, 0.6)"></div>
+                    <img src="@achievementStatus.AchievementIconPath" class="img-responsive center-block" />
+                </div>
                 <div class="progress">
                     <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar"
                          aria-valuenow="@achievementStatus.AchievedCount"
