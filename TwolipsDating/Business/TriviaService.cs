@@ -478,13 +478,20 @@ namespace TwolipsDating.Business
 
             int count = await db.SaveChangesAsync();
 
+            await HandleMilestonesAsync(userId, quizId);
+
+            return count;
+        }
+
+        private async Task HandleMilestonesAsync(string userId, int quizId)
+        {
             await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.QuizzesCompletedSuccessfully);
 
             if (quizId == (int)QuizValues.StarTrek_TOS)
             {
                 await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.Trekkie);
             }
-            else if(quizId == (int)QuizValues.StarWarsCharacters)
+            else if (quizId == (int)QuizValues.StarWarsCharacters)
             {
                 await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.RebelAlliance);
             }
@@ -492,8 +499,10 @@ namespace TwolipsDating.Business
             {
                 await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.HighWarlord);
             }
-
-            return count;
+            else if (quizId == (int)QuizValues.SummerOlympics || quizId == (int)QuizValues.WinterOlympics)
+            {
+                await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.GoldMedalist);
+            }
         }
 
         public async Task<double> GetQuizScoreAsync(string userId, int quizId)

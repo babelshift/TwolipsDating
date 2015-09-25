@@ -43,13 +43,16 @@
                 <button id="button-cancel-summary-of-going" class="btn btn-default">Cancel</button>
             </div>
             <p id="summary-of-going" class="profile-self-text">@(!String.IsNullOrEmpty(Model.SummaryOfGoing) ? Model.SummaryOfGoing : "This user hasn't entered where they're going yet.")</p>
-            <div class="well" style="margin-top: 30px;">
-                <span class="pull-left" style="color: #555; padding-top: 8px">If they seem interesting, then...</span>
-                <a href="#" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" class="pull-right btn btn-primary">
-                    <i class="fa fa-send fa-fw"></i> Send a message
-                </a>
-                <div class="clearfix"></div>
-            </div>
+            @if (Model.ProfileUserId != User.Identity.GetUserId())
+            {
+                <div class="well" style="margin-top: 30px;">
+                    <span class="pull-left" style="color: #555; padding-top: 8px">If they seem interesting, then...</span>
+                    <a href="#" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" class="pull-right btn btn-primary">
+                        <i class="fa fa-send fa-fw"></i> Send a message
+                    </a>
+                    <div class="clearfix"></div>
+                </div>
+            }
         </div>
         <div class="col-sm-4">
             <div class="col-xs-12">

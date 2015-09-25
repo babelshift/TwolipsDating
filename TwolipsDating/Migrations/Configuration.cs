@@ -119,7 +119,7 @@ namespace TwolipsDating.Migrations
                 new Tag() { TagId = (int)TagValues.princess, Name = "princess", Description = "Enjoys colored dresses, slippers, and hairstyles. Also constantly bothered by evil family members." },
                 new Tag() { TagId = (int)TagValues.prince, Name = "prince", Description = "Will become the ruler of his family's kingdom regardless of his credentials." },
                 new Tag() { TagId = (int)TagValues.historian, Name = "historian", Description = "Knows everything there is to know about every empire to have ever existed. Maybe..." },
-                new Tag() { TagId = (int)TagValues.tv_star, Name = "tv_star", Description = "The kind of person who saves blooper reels for the best parties." }
+                new Tag() { TagId = (int)TagValues.tv_star, Name = "tv-star", Description = "The kind of person who saves blooper reels for the best parties." }
             );
 
             context.ViolationTypes.AddOrUpdate(v => v.Id,
@@ -176,7 +176,8 @@ namespace TwolipsDating.Migrations
                 new MilestoneType() { Id = (int)MilestoneTypeValues.TitlesPurchased, Name = "Titles purchased", Description = "Purchasing unique titles from the store allows you to select and display a title before your user name around the community." },
                 new MilestoneType() { Id = (int)MilestoneTypeValues.Trekkie, Name = "Trekkie", Description = "Complete the Star Trek: The Original Series quiz." },
                 new MilestoneType() { Id = (int)MilestoneTypeValues.RebelAlliance, Name = "Rebel Alliance", Description = "Complete the Star Wars Characters quiz." },
-                new MilestoneType() { Id = (int)MilestoneTypeValues.HighWarlord, Name = "High Warlord", Description = "Complete the World of Warcraft: High Warlord quiz."}
+                new MilestoneType() { Id = (int)MilestoneTypeValues.HighWarlord, Name = "High Warlord", Description = "Complete the World of Warcraft: High Warlord quiz."},
+                new MilestoneType() { Id = (int)MilestoneTypeValues.GoldMedalist, Name = "Gold Medalist", Description = "Complete the Winter Olympics and Summer Olympics quizzes."}
                 );
 
             context.Milestones.AddOrUpdate(m => m.Id,
@@ -230,7 +231,8 @@ namespace TwolipsDating.Migrations
                 new Milestone() { Id = (int)MilestoneValues.PointsObtained4, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 1000, IconFileName = "Points4.png" },
                 new Milestone() { Id = (int)MilestoneValues.Trekkie, MilestoneTypeId = (int)MilestoneTypeValues.Trekkie, AmountRequired = 1, IconFileName = "StarfleetBadge.png" },
                 new Milestone() { Id = (int)MilestoneValues.RebelAlliance, MilestoneTypeId = (int)MilestoneTypeValues.RebelAlliance, AmountRequired = 1, IconFileName = "RebelAlliance.png" },
-                new Milestone() { Id = (int)MilestoneValues.HighWarlord, MilestoneTypeId = (int)MilestoneTypeValues.HighWarlord, AmountRequired = 1, IconFileName = "HighWarlordBadge.png" }
+                new Milestone() { Id = (int)MilestoneValues.HighWarlord, MilestoneTypeId = (int)MilestoneTypeValues.HighWarlord, AmountRequired = 1, IconFileName = "HighWarlordBadge.png" },
+                new Milestone() { Id = (int)MilestoneValues.GoldMedalist, MilestoneTypeId = (int)MilestoneTypeValues.GoldMedalist, AmountRequired = 1, IconFileName = "GoldMedal.png" }
                 );
 
             context.QuizCategories.AddOrUpdate(m => m.Id,

@@ -133,12 +133,13 @@ namespace TwolipsDating.Business
                 bool hasUserCompletedQuiz = await TriviaService.IsQuizCompletedByUserAsync(userId, quizId);
 
                 amount = hasUserCompletedQuiz ? 1 : 0;
+            }
+            else if(milestoneTypeId == (int)MilestoneTypeValues.GoldMedalist)
+            {
+                bool hasUserCompletedQuiz1 = await TriviaService.IsQuizCompletedByUserAsync(userId, (int)QuizValues.SummerOlympics);
+                bool hasUserCompletedQuiz2 = await TriviaService.IsQuizCompletedByUserAsync(userId, (int)QuizValues.WinterOlympics);
 
-                //double quizScorePercent = await TriviaService.GetQuizScoreAsync(userId, quizId);
-                //if (quizScorePercent == 1)
-                //{
-                //    amount = 1;
-                //}
+                amount = (hasUserCompletedQuiz1 && hasUserCompletedQuiz2) ? 1 : 0;
             }
 
             return amount;
@@ -309,6 +310,10 @@ namespace TwolipsDating.Business
             else if (milestoneTypeId == (int)MilestoneTypeValues.HighWarlord)
             {
                 count = await HasUserAchievedSoloMilestone(userId, (int)MilestoneValues.HighWarlord);
+            }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.GoldMedalist)
+            {
+                count = await HasUserAchievedSoloMilestone(userId, (int)MilestoneValues.GoldMedalist);
             }
 
             return count;

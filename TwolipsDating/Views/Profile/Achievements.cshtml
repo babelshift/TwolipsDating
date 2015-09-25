@@ -4,7 +4,7 @@
     ViewBag.Title = "Your achievements";
 }
 
-<div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+<div class="col-xs-12">
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">
@@ -12,6 +12,7 @@
             </div>
         </div>
         <div class="panel-body">
+            @Html.Partial("_SignUpIncentivePartial")
             @foreach (var achievement in Model.Achievements)
             {
                 @Html.Partial("_AchievementOverviewPartial", achievement)

@@ -55,7 +55,8 @@ namespace TwolipsDating.Models
         TagsAwarded6,
         Trekkie,
         RebelAlliance,
-        HighWarlord
+        HighWarlord,
+        GoldMedalist
     }
 
     public class Milestone

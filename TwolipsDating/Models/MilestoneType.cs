@@ -16,7 +16,8 @@ namespace TwolipsDating.Models
         PointsObtained = 9,
         Trekkie = 10,
         RebelAlliance = 11,
-        HighWarlord
+        HighWarlord,
+        GoldMedalist
     }
 
     public class MilestoneType
