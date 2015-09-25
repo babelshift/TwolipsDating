@@ -9,6 +9,6 @@ namespace TwolipsDating.ViewModels
     {
         public string AchievementTypeName { get; set; }
         public string AchievementDescription { get; set; }
-        public IReadOnlyCollection<AchievementStatusViewModel> AchievementStatuses { get; set; }
+        public IList<AchievementStatusViewModel> AchievementStatuses { get; set; }
     }
 }

@@ -24,7 +24,13 @@ namespace TwolipsDating.ViewModels
                 return (int)Math.Round(percent);
             }
         }
-        public AchievementStatusType AchievementStatus { get; set; }
+        public AchievementStatusType AchievementStatus
+        {
+            get
+            {
+                return AchievedCount >= RequiredCount ? AchievementStatusType.Complete : AchievementStatusType.Incomplete;
+            }
+        }
         public string AchievementIconPath { get; set; }
     }
 }
