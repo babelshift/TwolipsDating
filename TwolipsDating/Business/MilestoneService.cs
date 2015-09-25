@@ -141,6 +141,12 @@ namespace TwolipsDating.Business
 
                 amount = (hasUserCompletedQuiz1 && hasUserCompletedQuiz2) ? 1 : 0;
             }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.HighFive)
+            {
+                int daysAgo = 1;
+                int countOfQuizzesCompletedInLastDay = await TriviaService.CountOfQuizzesCompletedAsync(userId, daysAgo);
+                amount = countOfQuizzesCompletedInLastDay >= 5 ? 1 : 0;
+            }
 
             return amount;
         }
@@ -314,6 +320,10 @@ namespace TwolipsDating.Business
             else if (milestoneTypeId == (int)MilestoneTypeValues.GoldMedalist)
             {
                 count = await HasUserAchievedSoloMilestone(userId, (int)MilestoneValues.GoldMedalist);
+            }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.HighFive)
+            {
+                count = await HasUserAchievedSoloMilestone(userId, (int)MilestoneValues.HighFive);
             }
 
             return count;
