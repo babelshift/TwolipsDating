@@ -174,8 +174,9 @@ namespace TwolipsDating.Migrations
                 new MilestoneType() { Id = (int)MilestoneTypeValues.ProfileReviewsWritten, Name = "Profile reviews written", Description = "Reviewing your friends and people that you meet can help others know what they're getting into." },
                 new MilestoneType() { Id = (int)MilestoneTypeValues.TagsAwarded, Name = "Tags awarded", Description = "Tags are awarded from questions, quizzes, and achievements to tailor your profile around your knowledge and actions." },
                 new MilestoneType() { Id = (int)MilestoneTypeValues.TitlesPurchased, Name = "Titles purchased", Description = "Purchasing unique titles from the store allows you to select and display a title before your user name around the community." },
-                new MilestoneType() { Id = (int)MilestoneTypeValues.Trekkie, Name = "Trekkie", Description = "Score 100% on the Star Trek: The Original Series quiz." },
-                new MilestoneType() { Id = (int)MilestoneTypeValues.RebelAlliance, Name = "Rebel Alliance", Description = "Score 100% on the Star Wars Characters quiz." }
+                new MilestoneType() { Id = (int)MilestoneTypeValues.Trekkie, Name = "Trekkie", Description = "Complete the Star Trek: The Original Series quiz." },
+                new MilestoneType() { Id = (int)MilestoneTypeValues.RebelAlliance, Name = "Rebel Alliance", Description = "Complete the Star Wars Characters quiz." },
+                new MilestoneType() { Id = (int)MilestoneTypeValues.HighWarlord, Name = "High Warlord", Description = "Complete the World of Warcraft: High Warlord quiz."}
                 );
 
             context.Milestones.AddOrUpdate(m => m.Id,
@@ -228,7 +229,8 @@ namespace TwolipsDating.Migrations
                 new Milestone() { Id = (int)MilestoneValues.PointsObtained3, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 500, IconFileName = "Points3.png" },
                 new Milestone() { Id = (int)MilestoneValues.PointsObtained4, MilestoneTypeId = (int)MilestoneTypeValues.PointsObtained, AmountRequired = 1000, IconFileName = "Points4.png" },
                 new Milestone() { Id = (int)MilestoneValues.Trekkie, MilestoneTypeId = (int)MilestoneTypeValues.Trekkie, AmountRequired = 1, IconFileName = "StarfleetBadge.png" },
-                new Milestone() { Id = (int)MilestoneValues.RebelAlliance, MilestoneTypeId = (int)MilestoneTypeValues.RebelAlliance, AmountRequired = 1, IconFileName = "RebelAlliance.png" }
+                new Milestone() { Id = (int)MilestoneValues.RebelAlliance, MilestoneTypeId = (int)MilestoneTypeValues.RebelAlliance, AmountRequired = 1, IconFileName = "RebelAlliance.png" },
+                new Milestone() { Id = (int)MilestoneValues.HighWarlord, MilestoneTypeId = (int)MilestoneTypeValues.HighWarlord, AmountRequired = 1, IconFileName = "HighWarlordBadge.png" }
                 );
 
             context.QuizCategories.AddOrUpdate(m => m.Id,

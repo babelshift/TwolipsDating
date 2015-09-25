@@ -23,7 +23,7 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.UserCompletedQuizViewModel>> GetUsersCompletedQuizAsync(int? quizId = null, string currentUserId = null);
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.UserCompletedQuizViewModel>> GetUsersCompletedQuizzesAsync(string currentUserId = null);
         System.Threading.Tasks.Task<int> GetUsersQuestionPointsForTypeAsync(string userId, int questionTypeId);
-        System.Threading.Tasks.Task<bool> IsQuizAlreadyCompletedAsync(string userId, int quizId);
+        System.Threading.Tasks.Task<bool> IsQuizCompletedByUserAsync(string userId, int quizId);
         System.Threading.Tasks.Task<AnsweredQuestionServiceResult> RecordAnsweredQuestionAsync(string userId, int profileId, int questionId, int answerId, int questionTypeId);
         System.Threading.Tasks.Task<int> SetQuizAsCompleted(string userId, int quizId, int numberOfCorrectAnswers);
         Task<ReadOnlyDictionary<int, IReadOnlyCollection<Quiz>>> GetDailyQuizzesAsync(int daysAgo);

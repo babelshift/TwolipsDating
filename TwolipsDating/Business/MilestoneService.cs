@@ -112,21 +112,33 @@ namespace TwolipsDating.Business
             {
                 amount = await ProfileService.GetTagAwardCountForUserAsync(userId);
             }
-            else if (milestoneTypeId == (int)MilestoneTypeValues.Trekkie)
+            else if (milestoneTypeId == (int)MilestoneTypeValues.Trekkie 
+                || milestoneTypeId == (int)MilestoneTypeValues.RebelAlliance
+                || milestoneTypeId == (int)MilestoneTypeValues.HighWarlord)
             {
-                double quizScorePercent = await TriviaService.GetQuizScoreAsync(userId, (int)QuizValues.StarTrek_TOS);
-                if (quizScorePercent == 1)
+                int quizId = 0;
+                if(milestoneTypeId == (int)MilestoneTypeValues.Trekkie)
                 {
-                    amount = 1;
+                    quizId = (int)QuizValues.StarTrek_TOS;
                 }
-            }
-            else if (milestoneTypeId == (int)MilestoneTypeValues.RebelAlliance)
-            {
-                double quizScorePercent = await TriviaService.GetQuizScoreAsync(userId, (int)QuizValues.StarWarsCharacters);
-                if (quizScorePercent == 1)
+                else if(milestoneTypeId == (int)MilestoneTypeValues.RebelAlliance)
                 {
-                    amount = 1;
+                    quizId = (int)QuizValues.StarWarsCharacters;
                 }
+                else if(milestoneTypeId == (int)MilestoneTypeValues.HighWarlord)
+                {
+                    quizId = (int)QuizValues.WorldOfWarcraft_HighWarlord;
+                }
+
+                bool hasUserCompletedQuiz = await TriviaService.IsQuizCompletedByUserAsync(userId, quizId);
+
+                amount = hasUserCompletedQuiz ? 1 : 0;
+
+                //double quizScorePercent = await TriviaService.GetQuizScoreAsync(userId, quizId);
+                //if (quizScorePercent == 1)
+                //{
+                //    amount = 1;
+                //}
             }
 
             return amount;
@@ -293,6 +305,10 @@ namespace TwolipsDating.Business
             else if (milestoneTypeId == (int)MilestoneTypeValues.RebelAlliance)
             {
                 count = await HasUserAchievedSoloMilestone(userId, (int)MilestoneValues.RebelAlliance);
+            }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.HighWarlord)
+            {
+                count = await HasUserAchievedSoloMilestone(userId, (int)MilestoneValues.HighWarlord);
             }
 
             return count;

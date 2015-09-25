@@ -1147,7 +1147,7 @@ namespace TwolipsDating.Controllers
 
         #region Achievements
 
-        [RequireProfileIfAuthenticated]
+        [AllowAnonymous, RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
         public async Task<ActionResult> Achievements()
         {
             await SetNotificationsAsync();

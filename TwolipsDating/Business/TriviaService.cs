@@ -488,6 +488,10 @@ namespace TwolipsDating.Business
             {
                 await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.RebelAlliance);
             }
+            else if (quizId == (int)QuizValues.WorldOfWarcraft_HighWarlord)
+            {
+                await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.HighWarlord);
+            }
 
             return count;
         }
@@ -536,7 +540,7 @@ namespace TwolipsDating.Business
             return points;
         }
 
-        public async Task<bool> IsQuizAlreadyCompletedAsync(string userId, int quizId)
+        public async Task<bool> IsQuizCompletedByUserAsync(string userId, int quizId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(quizId > 0);

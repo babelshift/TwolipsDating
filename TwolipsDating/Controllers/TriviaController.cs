@@ -439,7 +439,7 @@ namespace TwolipsDating.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 // check if the quiz has already been completed by the user
-                isAlreadyCompleted = await TriviaService.IsQuizAlreadyCompletedAsync(currentUserId, quiz.Id);
+                isAlreadyCompleted = await TriviaService.IsQuizCompletedByUserAsync(currentUserId, quiz.Id);
 
                 // if it has already been completed, get answered questions for quiz and user
                 if (isAlreadyCompleted)
