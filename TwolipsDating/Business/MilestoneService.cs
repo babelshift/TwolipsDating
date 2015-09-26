@@ -42,19 +42,19 @@ namespace TwolipsDating.Business
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(milestoneTypeId > 0);
 
-            var milestones = await GetMilestonesByTypeAsync(milestoneTypeId); // all milestones
-            var milestonesAchieved = await GetMilestonesAchievedByUserAsync(userId, milestoneTypeId); // milestones achieved by user
+            var allMilestonesForType = await GetMilestonesByTypeAsync(milestoneTypeId); // all milestones
+            var milestonesAchievedForType = await GetMilestonesAchievedByUserAsync(userId, milestoneTypeId); // milestones achieved by user
 
-            // look up the "amount" of whatever milestone type requirement calls for
-            int amount = await GetRequiredAmountForMilestoneTypeAsync(userId, milestoneTypeId);
+            // look up how much the user has achieved for this milestone
+            int amountAchieved = await GetAchievedAmountForUser(userId, milestoneTypeId);
 
-            foreach (var milestone in milestones)
+            foreach (var milestone in allMilestonesForType)
             {
                 // only bother with this milestone if the user hasn't already achieved it
-                if (!HasUserAchievedMilestone(userId, milestone.Id, milestonesAchieved))
+                if (!HasUserAchievedMilestone(userId, milestone.Id, milestonesAchievedForType))
                 {
                     // if the user has met or exceeded the milestone's requirements, award them the milestone
-                    if (amount >= milestone.AmountRequired)
+                    if (amountAchieved >= milestone.AmountRequired)
                     {
                         AwardMilestoneToUser(userId, milestone.Id);
                     }
@@ -62,7 +62,7 @@ namespace TwolipsDating.Business
             }
         }
 
-        private async Task<int> GetRequiredAmountForMilestoneTypeAsync(string userId, int milestoneTypeId)
+        private async Task<int> GetAchievedAmountForUser(string userId, int milestoneTypeId)
         {
             int amount = 0;
 
@@ -146,6 +146,36 @@ namespace TwolipsDating.Business
                 int daysAgo = 1;
                 int countOfQuizzesCompletedInLastDay = await TriviaService.CountOfQuizzesCompletedAsync(userId, daysAgo);
                 amount = countOfQuizzesCompletedInLastDay >= 5 ? 1 : 0;
+            }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.MultiTalented)
+            {
+                // if the categories "touched" by the user (completed a quiz in that category) are equal to the number of total categories, achievement!
+                int quizCategoryCount = (await TriviaService.GetQuizCategoriesAsync()).Count;
+                int quizCategoriesTouchedByUserCount = await TriviaService.GetQuizCategoriesTouchedByUserCountAsync(userId);
+                amount = quizCategoriesTouchedByUserCount == quizCategoryCount ? 1 : 0;
+            }
+            else if (milestoneTypeId == (int)MilestoneTypeValues.FriendlyExchange)
+            {
+                TimeSpan duration = TimeSpan.FromMinutes(30);
+
+                // has anyone even sent us something in the last 30 minutes?
+                var giftsSentToCurrentUser = await ProfileService.GetGiftsSentToUserAsync(userId, duration);
+
+                // someone sent us something in the last 30 minutes! yay, we're popular
+                if(giftsSentToCurrentUser.Count > 0)
+                {
+                    // these are the user ids of the people who sent us gifts
+                    var userIdsForGiftsSent = giftsSentToCurrentUser.Select(x => x.FromUserId);
+
+                    // now check if we sent any gifts to anyone who sent us a gift in the last 30 minutes
+                    var giftsSentToUsers = await ProfileService.GetGiftsSentToUsersFromUserAsync(userId, userIdsForGiftsSent, duration);
+
+                    // we sent someone a gift that sent us a gift in the last 30 minutes
+                    if (giftsSentToUsers.Count > 1)
+                    {
+                        amount = 1;
+                    }
+                }
             }
 
             return amount;

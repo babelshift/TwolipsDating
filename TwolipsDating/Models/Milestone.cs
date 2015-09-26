@@ -57,7 +57,9 @@ namespace TwolipsDating.Models
         RebelAlliance,
         HighWarlord,
         GoldMedalist,
-        HighFive
+        HighFive,
+        MultiTalented,
+        FriendlyExchange
     }
 
     public class Milestone

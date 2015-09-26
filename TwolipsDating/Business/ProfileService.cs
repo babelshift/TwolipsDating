@@ -1084,6 +1084,7 @@ namespace TwolipsDating.Business
             {
                 // award achievements if necessary
                 await AwardAchievedMilestonesForUserAsync(fromUserId, (int)MilestoneTypeValues.GiftSent);
+                await AwardAchievedMilestonesForUserAsync(fromUserId, (int)MilestoneTypeValues.FriendlyExchange);
 
                 // send out email notification
                 var senderUser = db.Users.Find(fromUserId);
@@ -1694,7 +1695,7 @@ order by count(t.profileid) desc";
 
             var results = await QueryAsync<SimilarUserViewModel>(sql, new { profileId, rangeMin = 2, rangeMax = 2 });
 
-            foreach(var result in results)
+            foreach (var result in results)
             {
                 result.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.ProfileThumbnailImagePath);
             }
@@ -1724,7 +1725,7 @@ order by count(t.profileid) desc";
 
             var result = await followers.ToListAsync();
 
-            foreach(var follower in result)
+            foreach (var follower in result)
             {
                 follower.BannerImagePath = UserImageExtensions.GetPath(follower.BannerImagePath);
                 follower.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(follower.ProfileThumbnailImagePath);
@@ -1785,6 +1786,32 @@ order by count(t.profileid) desc";
                                  .FirstOrDefaultAsync();
 
             return profile;
+        }
+
+        public async Task<IReadOnlyCollection<GiftTransactionLog>> GetGiftsSentToUsersFromUserAsync(string userId, IEnumerable<string> userIds, TimeSpan duration)
+        {
+            DateTime start = DateTime.Now.Subtract(duration);
+
+            var time = await (from giftTransactions in db.GiftTransactions
+                              where giftTransactions.FromUserId == userId
+                              where giftTransactions.DateTransactionOccurred >= start
+                              where userIds.Contains(giftTransactions.ToUserId)
+                              select giftTransactions)
+                              .ToListAsync();
+
+            return time;
+        }
+
+        public async Task<IReadOnlyCollection<GiftTransactionLog>> GetGiftsSentToUserAsync(string userId, TimeSpan duration)
+        {
+            DateTime start = DateTime.Now.Subtract(duration);
+
+            var gifts = await (from giftTransactions in db.GiftTransactions
+                               where giftTransactions.ToUserId == userId
+                               where giftTransactions.DateTransactionOccurred >= start
+                               select giftTransactions).ToListAsync();
+
+            return gifts;
         }
     }
 }

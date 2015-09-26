@@ -18,7 +18,9 @@ namespace TwolipsDating.Models
         RebelAlliance = 11,
         HighWarlord,
         GoldMedalist,
-        HighFive
+        HighFive,
+        MultiTalented,
+        FriendlyExchange
     }
 
     public class MilestoneType

@@ -178,7 +178,9 @@ namespace TwolipsDating.Migrations
                 new MilestoneType() { Id = (int)MilestoneTypeValues.RebelAlliance, Name = "Rebel Alliance", Description = "Complete the Star Wars Characters quiz." },
                 new MilestoneType() { Id = (int)MilestoneTypeValues.HighWarlord, Name = "High Warlord", Description = "Complete the World of Warcraft: High Warlord quiz."},
                 new MilestoneType() { Id = (int)MilestoneTypeValues.GoldMedalist, Name = "Gold Medalist", Description = "Complete the Winter Olympics and Summer Olympics quizzes."},
-                new MilestoneType() { Id = (int)MilestoneTypeValues.HighFive, Name = "High Five", Description = "Complete 5 quizzes in a single day." }
+                new MilestoneType() { Id = (int)MilestoneTypeValues.HighFive, Name = "High Five", Description = "Complete 5 quizzes in a single day."},
+                new MilestoneType() { Id = (int)MilestoneTypeValues.MultiTalented, Name = "Multi Talented", Description = "Complete 1 quiz from each category." },
+                new MilestoneType() { Id = (int)MilestoneTypeValues.FriendlyExchange, Name = "Friendly Exchange", Description = "Send a gift to someone within 30 minutes of them sending you a gift." }
                 );
 
             context.Milestones.AddOrUpdate(m => m.Id,
@@ -234,7 +236,9 @@ namespace TwolipsDating.Migrations
                 new Milestone() { Id = (int)MilestoneValues.RebelAlliance, MilestoneTypeId = (int)MilestoneTypeValues.RebelAlliance, AmountRequired = 1, IconFileName = "RebelAlliance.png" },
                 new Milestone() { Id = (int)MilestoneValues.HighWarlord, MilestoneTypeId = (int)MilestoneTypeValues.HighWarlord, AmountRequired = 1, IconFileName = "HighWarlordBadge.png" },
                 new Milestone() { Id = (int)MilestoneValues.GoldMedalist, MilestoneTypeId = (int)MilestoneTypeValues.GoldMedalist, AmountRequired = 1, IconFileName = "GoldMedal.png" },
-                new Milestone() { Id = (int)MilestoneValues.HighFive, MilestoneTypeId = (int)MilestoneTypeValues.HighFive, AmountRequired = 1, IconFileName = "HighFive.png" }
+                new Milestone() { Id = (int)MilestoneValues.HighFive, MilestoneTypeId = (int)MilestoneTypeValues.HighFive, AmountRequired = 1, IconFileName = "HighFive.png" },
+                new Milestone() { Id = (int)MilestoneValues.MultiTalented, MilestoneTypeId = (int)MilestoneTypeValues.MultiTalented, AmountRequired = 1, IconFileName = "Davinci.png" },
+                new Milestone() { Id = (int)MilestoneValues.FriendlyExchange, MilestoneTypeId = (int)MilestoneTypeValues.FriendlyExchange, AmountRequired = 1, IconFileName = "Exchange.png" }
                 );
 
             context.QuizCategories.AddOrUpdate(m => m.Id,

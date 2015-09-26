@@ -487,6 +487,7 @@ namespace TwolipsDating.Business
         {
             await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.QuizzesCompletedSuccessfully);
             await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.HighFive);
+            await AwardAchievedMilestonesForUserAsync(userId, (int)MilestoneTypeValues.MultiTalented);
 
             if (quizId == (int)QuizValues.StarTrek_TOS)
             {
@@ -760,6 +761,17 @@ namespace TwolipsDating.Business
                                                select completedQuizzes).CountAsync();
 
             return completedQuizzesCount;
+        }
+
+        public async Task<int> GetQuizCategoriesTouchedByUserCountAsync(string userId)
+        {
+            int count = await (from completedQuizzes in db.CompletedQuizzes
+                                                     where completedQuizzes.UserId == userId
+                                                     select completedQuizzes.Quiz.QuizCategoryId)
+                                                     .Distinct()
+                                                     .CountAsync();
+
+            return count;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TwolipsDating.Models;
 using TwolipsDating.ViewModels;
 namespace TwolipsDating.Business
 {
@@ -75,5 +76,9 @@ namespace TwolipsDating.Business
         Task<int> GetFollowingCountAsync(int profileId);
 
         Task<Models.Profile> GetRandomProfileAsync(string currentUserId);
+
+        Task<IReadOnlyCollection<GiftTransactionLog>> GetGiftsSentToUsersFromUserAsync(string userId, IEnumerable<string> userIds, TimeSpan duration);
+
+        Task<IReadOnlyCollection<GiftTransactionLog>> GetGiftsSentToUserAsync(string userId, TimeSpan timeSpan);
     }
 }
