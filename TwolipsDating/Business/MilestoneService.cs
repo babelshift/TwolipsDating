@@ -171,7 +171,7 @@ namespace TwolipsDating.Business
                     var giftsSentToUsers = await ProfileService.GetGiftsSentToUsersFromUserAsync(userId, userIdsForGiftsSent, duration);
 
                     // we sent someone a gift that sent us a gift in the last 30 minutes
-                    if (giftsSentToUsers.Count > 1)
+                    if (giftsSentToUsers.Count > 0)
                     {
                         amount = 1;
                     }

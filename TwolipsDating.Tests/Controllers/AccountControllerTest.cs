@@ -91,6 +91,7 @@ namespace TwolipsDating.Tests.Controllers
         {
             var userStore = new Mock<IUserStore<ApplicationUser>>();
             var userManager = new Mock<ApplicationUserManager>(userStore.Object);
+            var emailService = new Mock<IIdentityMessageService>();
             var authenticationManager = new Mock<IAuthenticationManager>();
             var signInManager = new Mock<ApplicationSignInManager>(userManager.Object, authenticationManager.Object);
             var userService = new Mock<IUserService>();
@@ -104,6 +105,7 @@ namespace TwolipsDating.Tests.Controllers
             var dashboardService = new Mock<IDashboardService>();
 
             var controller = GetMockAccountController(userManager, signInManager, userService, milestoneService, notificationService, profileService, searchService, storeService, triviaService, violationService, dashboardService);
+
 
             // mock up a fake email confirmation send
             userManager.Setup(x => x.ConfirmEmailAsync(It.IsAny<String>(), It.IsAny<String>())).ReturnsAsync(IdentityResult.Success);
