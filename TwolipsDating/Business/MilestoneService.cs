@@ -162,7 +162,7 @@ namespace TwolipsDating.Business
                 var giftsSentToCurrentUser = await ProfileService.GetGiftsSentToUserAsync(userId, duration);
 
                 // someone sent us something in the last 30 minutes! yay, we're popular
-                if(giftsSentToCurrentUser.Count > 0)
+                if (giftsSentToCurrentUser.Count > 0)
                 {
                     // these are the user ids of the people who sent us gifts
                     var userIdsForGiftsSent = giftsSentToCurrentUser.Select(x => x.FromUserId);
@@ -406,8 +406,7 @@ namespace TwolipsDating.Business
 
             // solo milestones are those with only a single requirement such as "complete this quiz" or "complete 5 quizzes in a day"
             // for example, "Rebel Alliance" is a solo achievement with only a single requirement to get the badge
-            var soloMilestoneIds = soloMilestones.Select(x => x.Id).ToList();
-            var soloMilestoneOverviews = await GetSoloAchievementOverviewsAsync(userId, soloMilestoneIds);
+            var soloMilestoneOverviews = await GetSoloAchievementOverviewsAsync(userId, soloMilestones);
 
             // combine both collection and solo milestones together
             achievementOverviews.AddRange(soloMilestoneOverviews);
@@ -415,38 +414,55 @@ namespace TwolipsDating.Business
             return achievementOverviews.AsReadOnly();
         }
 
-        private async Task<IReadOnlyCollection<AchievementOverviewViewModel>> GetSoloAchievementOverviewsAsync(string userId, IEnumerable<int> soloMilestoneIds)
+        private async Task<IReadOnlyCollection<AchievementOverviewViewModel>> GetSoloAchievementOverviewsAsync(string userId, IEnumerable<Milestone> soloMilestones)
         {
-            var completedAchievements = await (from milestones in db.Milestones
-                                               where soloMilestoneIds.Contains(milestones.Id)
-                                               join achievements in db.MilestoneAchievements on milestones.Id equals achievements.MilestoneId into lj
-                                               from achievements in lj.DefaultIfEmpty()
-                                               where achievements.UserId == userId || achievements.UserId == null
-                                               select new AchievementOverviewViewModel()
-                                               {
-                                                   AchievementTypeName = milestones.MilestoneType.Name,
-                                                   AchievementDescription = milestones.MilestoneType.Description,
-                                                   AchievementStatuses = new List<AchievementStatusViewModel>() 
-                                                   { 
-                                                       new AchievementStatusViewModel() 
-                                                       {
-                                                            AchievedCount = achievements.UserId != null ? 1 : 0, // when userid is null that means user hasn't completed the achievement
-                                                            RequiredCount = milestones.AmountRequired,
-                                                            AchievementIconPath = milestones.IconFileName
-                                                       }
-                                                   }
-                                               }).ToListAsync();
+            var soloMilestoneIds = soloMilestones.Select(x => x.Id).ToList();
 
-            foreach (var completedAchievement in completedAchievements)
+            var completedMilestones = await (from achievements in db.MilestoneAchievements
+                                             where achievements.UserId == userId
+                                             where soloMilestoneIds.Contains(achievements.MilestoneId)
+                                             select achievements)
+                                             .ToDictionaryAsync(x => x.MilestoneId, x => x.Milestone);
+
+            List<AchievementOverviewViewModel> achievementOverviews = new List<AchievementOverviewViewModel>();
+
+            foreach (var soloMilestone in soloMilestones)
             {
-                // this will always only be a single item
-                foreach (var achievementStatus in completedAchievement.AchievementStatuses)
+                var achievementOverview = new AchievementOverviewViewModel()
+                {
+                    AchievementTypeName = soloMilestone.MilestoneType.Name,
+                    AchievementDescription = soloMilestone.MilestoneType.Description,
+                    AchievementStatuses = new List<AchievementStatusViewModel>()
+                };
+
+                int achievedCount = 0;
+                Milestone completedMilestone = null;
+                // user has completed this milestone
+                if (completedMilestones.TryGetValue(soloMilestone.Id, out completedMilestone))
+                {
+                    achievedCount = 1;
+                }
+
+                achievementOverview.AchievementStatuses.Add(new AchievementStatusViewModel()
+                {
+                    AchievedCount = achievedCount,
+                    RequiredCount = soloMilestone.AmountRequired,
+                    AchievementIconPath = soloMilestone.IconFileName
+                });
+
+                achievementOverviews.Add(achievementOverview);
+            }
+
+            foreach (var achievementOverview in achievementOverviews)
+            {
+                // this will always only be a single item for solo achievements
+                foreach (var achievementStatus in achievementOverview.AchievementStatuses)
                 {
                     achievementStatus.AchievementIconPath = MilestoneExtensions.GetIconPath(achievementStatus.AchievementIconPath);
                 }
             }
 
-            return completedAchievements.AsReadOnly();
+            return achievementOverviews.AsReadOnly();
         }
 
         private async Task<List<AchievementOverviewViewModel>> GetCollectionAchievementOverviewsAsync(string userId, IList<Milestone> collectionMilestones)
