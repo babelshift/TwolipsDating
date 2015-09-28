@@ -8,29 +8,54 @@
 {
     @Html.ValidationSummary()
     @Html.AntiForgeryToken()
-    
+
     @Html.HiddenFor(x => x.QuizId)
 
     for (int i = 0; i < 10; i++)
     {
-        <p>
-            <label>Question @i</label>
-            @Html.TextBoxFor(x => x.Questions[i].Content, new { @class = "form-control" })
-        </p>
-        <p>
-            <label>Points</label>
-            @Html.TextBoxFor(x => x.Questions[i].Points, new { @class = "form-control" })
-        </p>
-        <ul>
-            @for (int j = 0; j < 4; j++)
-            {
-                <li>
-                    @Html.RadioButtonFor(x => x.Questions[i].CorrectAnswer, j + 1)
-                    Answer @j: @Html.TextBoxFor(x => x.Questions[i].Answers[j].Content, new { @class = "form-control" })
-                </li>
-            }
-        </ul>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    <label>Question @(i + 1)</label>
+                    @Html.TextBoxFor(x => x.Questions[i].Content, new { @class = "form-control" })
+                </p>
+                <p>
+                    <label>Points</label>
+                    @Html.TextBoxFor(x => x.Questions[i].Points, new { @class = "form-control" })
+                </p>
+                <p>
+                    <label>Tags</label>
+                    @Html.ListBoxFor(x => x.Questions[i].SelectedTags,
+                new SelectList(Model.Tags, "Key", "Value"),
+                new { multiple = "multiple", @class = "form-control select-search", data_placeholder = "Question tags" })
+                </p>
+
+                <ul class="list-unstyled">
+                    @for (int j = 0; j < 4; j++)
+                    {
+                        <li>
+                            @Html.RadioButtonFor(x => x.Questions[i].CorrectAnswer, j + 1)
+                            Answer @(j + 1): @Html.TextBoxFor(x => x.Questions[i].Answers[j].Content, new { @class = "form-control" })
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
     }
 
-    <input type="submit" value="OK" />
+    <input type="submit" class="btn btn-primary" value="OK" />
+}
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/chosen.jquery.js")
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.select-search').chosen();
+        });
+    </script>
+}
+@section Styles {
+    @Styles.Render("~/Content/chosen")
 }

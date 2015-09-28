@@ -10,5 +10,7 @@ namespace TwolipsDating.ViewModels
         public int QuizId { get; set; }
 
         public IList<CreateQuestionViewModel> Questions { get; set; }
+
+        public IDictionary<int, string> Tags { get; set; }
     }
 }

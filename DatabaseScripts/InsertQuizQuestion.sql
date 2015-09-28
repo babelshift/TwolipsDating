@@ -4,9 +4,9 @@ create procedure dbo.InsertQuizQuestion
 @content varchar(255),
 @points int,
 @quizId int,
-@answers dbo.AnswerType readonly
+@answers dbo.AnswerType readonly,
+@latestQuestionId int output
 as
-	declare @latestQuestionId int
 	declare @correctAnswerContent varchar(255)
 	declare @correctAnswerId int
 	declare @questionTypeId int

@@ -767,21 +767,24 @@ namespace TwolipsDating.Business
         public async Task<int> GetQuizCategoriesTouchedByUserCountAsync(string userId)
         {
             int count = await (from completedQuizzes in db.CompletedQuizzes
-                                                     where completedQuizzes.UserId == userId
-                                                     select completedQuizzes.Quiz.QuizCategoryId)
+                               where completedQuizzes.UserId == userId
+                               select completedQuizzes.Quiz.QuizCategoryId)
                                                      .Distinct()
                                                      .CountAsync();
 
             return count;
         }
 
-        public async Task<ServiceResult> AddQuestionToQuizAsync(int quizId, string question, int points, IReadOnlyList<string> answers, int correctAnswer)
+        public async Task<ServiceResult> AddQuestionToQuizAsync(int quizId, string questionContent, int points, IReadOnlyList<string> answers, int correctAnswer, IReadOnlyCollection<int> tags)
         {
             Debug.Assert(quizId > 0);
-            Debug.Assert(!String.IsNullOrEmpty(question));
+            Debug.Assert(!String.IsNullOrEmpty(questionContent));
             Debug.Assert(points >= 1 && points <= 5);
             Debug.Assert(answers != null && answers.Count > 0);
             Debug.Assert(correctAnswer >= 1 && correctAnswer <= 4);
+
+            Log.Info(String.Format("QuizId: {0}, Question: {1}, Points: {2}", quizId, questionContent, points));
+            Log.Info(String.Format("Correct Answer: {0}", correctAnswer));
 
             bool success = false;
 
@@ -792,16 +795,14 @@ insert into @answers(Content, IsCorrect) values(@answer1, @answer1Correct);
 insert into @answers(Content, IsCorrect) values(@answer2, @answer2Correct);
 insert into @answers(Content, IsCorrect) values(@answer3, @answer3Correct);
 insert into @answers(Content, IsCorrect) values(@answer4, @answer4Correct);
-exec dbo.InsertQuizQuestion @question, @points, @quizId, @answers;";
-                
+exec dbo.InsertQuizQuestion @question, @points, @quizId, @answers, @latestQuestionId output;";
+
                 Log.Info(sql);
 
                 List<object> parameters = new List<object>();
                 parameters.Add(new SqlParameter("@quizId", quizId));
-                parameters.Add(new SqlParameter("@question", question));
+                parameters.Add(new SqlParameter("@question", questionContent));
                 parameters.Add(new SqlParameter("@points", points));
-
-                Log.Info(String.Format("QuizId: {0}, Question: {1}, Points: {2}", quizId, question, points));
 
                 for (int i = 1; i <= answers.Count; i++)
                 {
@@ -822,19 +823,61 @@ exec dbo.InsertQuizQuestion @question, @points, @quizId, @answers;";
                 parameters.Add(new SqlParameter("@answer3Correct", correctAnswer == 3 ? 1 : 0));
                 parameters.Add(new SqlParameter("@answer4Correct", correctAnswer == 4 ? 1 : 0));
 
-                Log.Info(String.Format("Correct Answer: {0}", correctAnswer));
+                var output = new SqlParameter("@latestQuestionId", System.Data.SqlDbType.Int)
+                {
+                    Direction = System.Data.ParameterDirection.Output
+                };
+                parameters.Add(output);
 
                 int count = await db.Database.ExecuteSqlCommandAsync(sql, parameters.ToArray());
                 success = count > 0;
 
+                if (success)
+                {
+                    var newQuestion = SetupNewQuestion(output);
+
+                    AttachTagsToQuestion(tags, newQuestion);
+
+                    await db.SaveChangesAsync();
+                }
             }
-            catch(DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 Log.Error("AddQuestionToQuizAsync", ex);
-                ValidationDictionary.AddError(Guid.NewGuid().ToString(), String.Format("Failed while inserting quiz question: \"{0}\"", question));
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), String.Format("Failed while inserting quiz question: \"{0}\"", questionContent));
             }
 
             return success ? ServiceResult.Success : ServiceResult.Failed("Failed while inserting quiz question.");
+        }
+
+        private void AttachTagsToQuestion(IReadOnlyCollection<int> tags, Question newQuestion)
+        {
+            foreach (var tagId in tags)
+            {
+                var tag = SetupTagForQuestion(tagId);
+                newQuestion.Tags.Add(tag);
+            }
+        }
+
+        private Tag SetupTagForQuestion(int tagId)
+        {
+            var tag = new Tag()
+            {
+                TagId = tagId
+            };
+            db.Tags.Attach(tag);
+            return tag;
+        }
+
+        private Question SetupNewQuestion(SqlParameter output)
+        {
+            var newQuestion = new Question()
+            {
+                Id = Convert.ToInt32(output.Value),
+                Tags = new List<Tag>()
+            };
+            db.Questions.Attach(newQuestion);
+            return newQuestion;
         }
     }
 }

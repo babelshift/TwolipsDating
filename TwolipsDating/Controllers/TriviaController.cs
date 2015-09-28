@@ -646,11 +646,33 @@ namespace TwolipsDating.Controllers
             AddQuizQuestionsViewModel viewModel = new AddQuizQuestionsViewModel();
             viewModel.QuizId = id;
             viewModel.Questions = new List<CreateQuestionViewModel>();
-            for(int i = 0; i < 10; i++)
+            SetupQuestions(viewModel);
+
+            viewModel.Tags = await GetSearchableTagsAsync();
+
+            return View(viewModel);
+        }
+
+        private async Task<Dictionary<int, string>> GetSearchableTagsAsync()
+        {
+            var allTags = await ProfileService.GetAllTagsAsync();
+            Dictionary<int, string> d = new Dictionary<int, string>();
+
+            foreach (var tag in allTags)
+            {
+                d.Add(tag.TagId, tag.Name);
+            }
+
+            return d;
+        }
+
+        private static void SetupQuestions(AddQuizQuestionsViewModel viewModel)
+        {
+            for (int i = 0; i < 10; i++)
             {
                 CreateQuestionViewModel q = new CreateQuestionViewModel();
                 List<CreateAnswerViewModel> answers = new List<CreateAnswerViewModel>();
-                for(int j = 0; j < 4; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     CreateAnswerViewModel a = new CreateAnswerViewModel();
                     answers.Add(a);
@@ -658,8 +680,6 @@ namespace TwolipsDating.Controllers
                 q.Answers = answers;
                 viewModel.Questions.Add(q);
             }
-
-            return View(viewModel);
         }
 
         [ValidateAntiForgeryToken, HttpPost, Authorize(Users = "justin")]
@@ -670,7 +690,13 @@ namespace TwolipsDating.Controllers
                 foreach(var question in viewModel.Questions)
                 {
                     var answerContents = question.Answers.Select(x => x.Content).ToList();
-                    var result = await TriviaService.AddQuestionToQuizAsync(viewModel.QuizId, question.Content, question.Points, answerContents.AsReadOnly(), question.CorrectAnswer);
+                    var result = await TriviaService.AddQuestionToQuizAsync(
+                        viewModel.QuizId, 
+                        question.Content, 
+                        question.Points, 
+                        answerContents.AsReadOnly(), 
+                        question.CorrectAnswer,
+                        question.SelectedTags.AsReadOnly());
                 }
             }
 
