@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
@@ -790,14 +791,8 @@ namespace TwolipsDating.Business
 
             try
             {
-                string sql = @"declare @answers as dbo.AnswerType;
-insert into @answers(Content, IsCorrect) values(@answer1, @answer1Correct);
-insert into @answers(Content, IsCorrect) values(@answer2, @answer2Correct);
-insert into @answers(Content, IsCorrect) values(@answer3, @answer3Correct);
-insert into @answers(Content, IsCorrect) values(@answer4, @answer4Correct);
-exec dbo.InsertQuizQuestion @question, @points, @quizId, @answers, @latestQuestionId output;";
-
-                Log.Info(sql);
+                StringBuilder sb = new StringBuilder();
+                sb.Append("declare @answers as dbo.AnswerType;");
 
                 List<object> parameters = new List<object>();
                 parameters.Add(new SqlParameter("@quizId", quizId));
@@ -813,21 +808,29 @@ exec dbo.InsertQuizQuestion @question, @points, @quizId, @answers, @latestQuesti
                     {
                         continue;
                     }
+
+                    if (!String.IsNullOrEmpty(content))
+                    {
+                        sb.AppendFormat("insert into @answers(Content, IsCorrect) values(@answer{0}, @answer{0}Correct);", i);
+                        parameters.Add(new SqlParameter(String.Format("@answer{0}Correct", i), correctAnswer == i ? 1 : 0));
+                    }
+
                     parameters.Add(new SqlParameter(String.Format("@answer{0}", i), content));
 
                     Log.Info(String.Format("Answer{0}: {1}", i, content));
                 }
 
-                parameters.Add(new SqlParameter("@answer1Correct", correctAnswer == 1 ? 1 : 0));
-                parameters.Add(new SqlParameter("@answer2Correct", correctAnswer == 2 ? 1 : 0));
-                parameters.Add(new SqlParameter("@answer3Correct", correctAnswer == 3 ? 1 : 0));
-                parameters.Add(new SqlParameter("@answer4Correct", correctAnswer == 4 ? 1 : 0));
+                sb.Append("exec dbo.InsertQuizQuestion @question, @points, @quizId, @answers, @latestQuestionId output;");
 
                 var output = new SqlParameter("@latestQuestionId", System.Data.SqlDbType.Int)
                 {
                     Direction = System.Data.ParameterDirection.Output
                 };
                 parameters.Add(output);
+
+                string sql = sb.ToString();
+
+                Log.Info(sql);
 
                 int count = await db.Database.ExecuteSqlCommandAsync(sql, parameters.ToArray());
                 success = count > 0;
@@ -861,11 +864,15 @@ exec dbo.InsertQuizQuestion @question, @points, @quizId, @answers, @latestQuesti
 
         private Tag SetupTagForQuestion(int tagId)
         {
-            var tag = new Tag()
+            var tag = db.Tags.Local.FirstOrDefault(x => x.TagId == tagId);
+            if (tag == null)
             {
-                TagId = tagId
-            };
-            db.Tags.Attach(tag);
+                tag = new Tag()
+                {
+                    TagId = tagId
+                };
+                db.Tags.Attach(tag);
+            }
             return tag;
         }
 
