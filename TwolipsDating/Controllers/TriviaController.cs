@@ -670,7 +670,7 @@ namespace TwolipsDating.Controllers
                 foreach(var question in viewModel.Questions)
                 {
                     var answerContents = question.Answers.Select(x => x.Content).ToList();
-                    await TriviaService.AddQuestionToQuizAsync(viewModel.QuizId, question.Content, question.Points, answerContents.AsReadOnly(), question.CorrectAnswer);
+                    var result = await TriviaService.AddQuestionToQuizAsync(viewModel.QuizId, question.Content, question.Points, answerContents.AsReadOnly(), question.CorrectAnswer);
                 }
             }
 

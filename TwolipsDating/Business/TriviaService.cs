@@ -775,7 +775,7 @@ namespace TwolipsDating.Business
             return count;
         }
 
-        public async Task<int> AddQuestionToQuizAsync(int quizId, string question, int points, IReadOnlyList<string> answers, int correctAnswer)
+        public async Task<ServiceResult> AddQuestionToQuizAsync(int quizId, string question, int points, IReadOnlyList<string> answers, int correctAnswer)
         {
             Debug.Assert(quizId > 0);
             Debug.Assert(!String.IsNullOrEmpty(question));
@@ -783,33 +783,58 @@ namespace TwolipsDating.Business
             Debug.Assert(answers != null && answers.Count > 0);
             Debug.Assert(correctAnswer >= 1 && correctAnswer <= 4);
 
-            string sql = @"declare @answers as dbo.AnswerType;
+            bool success = false;
+
+            try
+            {
+                string sql = @"declare @answers as dbo.AnswerType;
 insert into @answers(Content, IsCorrect) values(@answer1, @answer1Correct);
 insert into @answers(Content, IsCorrect) values(@answer2, @answer2Correct);
 insert into @answers(Content, IsCorrect) values(@answer3, @answer3Correct);
 insert into @answers(Content, IsCorrect) values(@answer4, @answer4Correct);
 exec dbo.InsertQuizQuestion @question, @points, @quizId, @answers;";
+                
+                Log.Info(sql);
 
-            List<object> parameters = new List<object>();
-            parameters.Add(new SqlParameter("@quizId", quizId));
-            parameters.Add(new SqlParameter("@question", question));
-            parameters.Add(new SqlParameter("@points", points));
-            for(int i = 1; i <= answers.Count; i++)
-            {
-                // don't insert blank answers
-                if(String.IsNullOrEmpty(answers[i - 1]))
+                List<object> parameters = new List<object>();
+                parameters.Add(new SqlParameter("@quizId", quizId));
+                parameters.Add(new SqlParameter("@question", question));
+                parameters.Add(new SqlParameter("@points", points));
+
+                Log.Info(String.Format("QuizId: {0}, Question: {1}, Points: {2}", quizId, question, points));
+
+                for (int i = 1; i <= answers.Count; i++)
                 {
-                    continue;
+                    string content = answers[i - 1];
+
+                    // don't insert blank answers
+                    if (String.IsNullOrEmpty(content))
+                    {
+                        continue;
+                    }
+                    parameters.Add(new SqlParameter(String.Format("@answer{0}", i), content));
+
+                    Log.Info(String.Format("Answer{0}: {1}", i, content));
                 }
-                parameters.Add(new SqlParameter(String.Format("@answer{0}", i), answers[i - 1]));
+
+                parameters.Add(new SqlParameter("@answer1Correct", correctAnswer == 1 ? 1 : 0));
+                parameters.Add(new SqlParameter("@answer2Correct", correctAnswer == 2 ? 1 : 0));
+                parameters.Add(new SqlParameter("@answer3Correct", correctAnswer == 3 ? 1 : 0));
+                parameters.Add(new SqlParameter("@answer4Correct", correctAnswer == 4 ? 1 : 0));
+
+                Log.Info(String.Format("Correct Answer: {0}", correctAnswer));
+
+                int count = await db.Database.ExecuteSqlCommandAsync(sql, parameters.ToArray());
+                success = count > 0;
+
+            }
+            catch(DbUpdateException ex)
+            {
+                Log.Error("AddQuestionToQuizAsync", ex);
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), String.Format("Failed while inserting quiz question: \"{0}\"", question));
             }
 
-            parameters.Add(new SqlParameter("@answer1Correct", correctAnswer == 1 ? 1 : 0));
-            parameters.Add(new SqlParameter("@answer2Correct", correctAnswer == 2 ? 1 : 0));
-            parameters.Add(new SqlParameter("@answer3Correct", correctAnswer == 3 ? 1 : 0));
-            parameters.Add(new SqlParameter("@answer4Correct", correctAnswer == 4 ? 1 : 0));
-
-            return await db.Database.ExecuteSqlCommandAsync(sql, parameters.ToArray());
+            return success ? ServiceResult.Success : ServiceResult.Failed("Failed while inserting quiz question.");
         }
     }
 }

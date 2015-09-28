@@ -25,7 +25,7 @@
             @for (int j = 0; j < 4; j++)
             {
                 <li>
-                    @Html.RadioButtonFor(x => x.Questions[i].CorrectAnswer, 1)
+                    @Html.RadioButtonFor(x => x.Questions[i].CorrectAnswer, j + 1)
                     Answer @j: @Html.TextBoxFor(x => x.Questions[i].Answers[j].Content, new { @class = "form-control" })
                 </li>
             }
