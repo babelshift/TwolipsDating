@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
@@ -772,6 +773,43 @@ namespace TwolipsDating.Business
                                                      .CountAsync();
 
             return count;
+        }
+
+        public async Task<int> AddQuestionToQuizAsync(int quizId, string question, int points, IReadOnlyList<string> answers, int correctAnswer)
+        {
+            Debug.Assert(quizId > 0);
+            Debug.Assert(!String.IsNullOrEmpty(question));
+            Debug.Assert(points >= 1 && points <= 5);
+            Debug.Assert(answers != null && answers.Count > 0);
+            Debug.Assert(correctAnswer >= 1 && correctAnswer <= 4);
+
+            string sql = @"declare @answers as dbo.AnswerType;
+insert into @answers(Content, IsCorrect) values(@answer1, @answer1Correct);
+insert into @answers(Content, IsCorrect) values(@answer2, @answer2Correct);
+insert into @answers(Content, IsCorrect) values(@answer3, @answer3Correct);
+insert into @answers(Content, IsCorrect) values(@answer4, @answer4Correct);
+exec dbo.InsertQuizQuestion @question, @points, @quizId, @answers;";
+
+            List<object> parameters = new List<object>();
+            parameters.Add(new SqlParameter("@quizId", quizId));
+            parameters.Add(new SqlParameter("@question", question));
+            parameters.Add(new SqlParameter("@points", points));
+            for(int i = 1; i <= answers.Count; i++)
+            {
+                // don't insert blank answers
+                if(String.IsNullOrEmpty(answers[i - 1]))
+                {
+                    continue;
+                }
+                parameters.Add(new SqlParameter(String.Format("@answer{0}", i), answers[i - 1]));
+            }
+
+            parameters.Add(new SqlParameter("@answer1Correct", correctAnswer == 1 ? 1 : 0));
+            parameters.Add(new SqlParameter("@answer2Correct", correctAnswer == 2 ? 1 : 0));
+            parameters.Add(new SqlParameter("@answer3Correct", correctAnswer == 3 ? 1 : 0));
+            parameters.Add(new SqlParameter("@answer4Correct", correctAnswer == 4 ? 1 : 0));
+
+            return await db.Database.ExecuteSqlCommandAsync(sql, parameters.ToArray());
         }
     }
 }

@@ -486,7 +486,10 @@
     <Compile Include="ViewModels\AchievementManagerViewModel.cs" />
     <Compile Include="ViewModels\AchievementOverviewViewModel.cs" />
     <Compile Include="ViewModels\AchievementStatusViewModel.cs" />
+    <Compile Include="ViewModels\AddQuizQuestionsViewModel.cs" />
     <Compile Include="ViewModels\CompletedQuizFeedViewModel.cs" />
+    <Compile Include="ViewModels\CreateAnswerViewModel.cs" />
+    <Compile Include="ViewModels\CreateQuestionViewModel.cs" />
     <Compile Include="ViewModels\FollowerFeedViewModel.cs" />
     <Compile Include="ViewModels\FollowerViewModel.cs" />
     <Compile Include="ViewModels\GiftReceivedFeedItemViewModel.cs" />
@@ -1082,6 +1085,7 @@
     <Content Include="Views\Trivia\Top.cshtml" />
     <Content Include="Views\Profile\_FollowersPartial.cshtml" />
     <Content Include="Views\Profile\Quick.cshtml" />
+    <Content Include="Views\Trivia\AddQuizQuestions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

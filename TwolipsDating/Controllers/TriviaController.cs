@@ -639,5 +639,42 @@ namespace TwolipsDating.Controllers
 
             return viewModel;
         }
+
+        [Authorize(Users="justin")]
+        public async Task<ActionResult> AddQuizQuestions(int id)
+        {
+            AddQuizQuestionsViewModel viewModel = new AddQuizQuestionsViewModel();
+            viewModel.QuizId = id;
+            viewModel.Questions = new List<CreateQuestionViewModel>();
+            for(int i = 0; i < 10; i++)
+            {
+                CreateQuestionViewModel q = new CreateQuestionViewModel();
+                List<CreateAnswerViewModel> answers = new List<CreateAnswerViewModel>();
+                for(int j = 0; j < 4; j++)
+                {
+                    CreateAnswerViewModel a = new CreateAnswerViewModel();
+                    answers.Add(a);
+                }
+                q.Answers = answers;
+                viewModel.Questions.Add(q);
+            }
+
+            return View(viewModel);
+        }
+
+        [ValidateAntiForgeryToken, HttpPost, Authorize(Users = "justin")]
+        public async Task<ActionResult> AddQuizQuestions(AddQuizQuestionsViewModel viewModel)
+        {
+            if(ModelState.IsValid)
+            {
+                foreach(var question in viewModel.Questions)
+                {
+                    var answerContents = question.Answers.Select(x => x.Content).ToList();
+                    await TriviaService.AddQuestionToQuizAsync(viewModel.QuizId, question.Content, question.Points, answerContents.AsReadOnly(), question.CorrectAnswer);
+                }
+            }
+
+            return View(viewModel);
+        }
     }
 }

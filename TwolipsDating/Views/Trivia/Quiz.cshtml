@@ -134,28 +134,27 @@
                 @if (Model.Questions != null && Model.Questions.Count > 0)
                 {
                     <h3 style="margin-top: 0">@Model.QuizName</h3>
-                        <div class="col-sm-8">
-                            <h4 style="margin: 0">@Model.QuizDescription</h4>
+                    <div class="col-sm-8">
+                        <h4 style="margin: 0">@Model.QuizDescription</h4>
+                        @if (Model.Tags != null && Model.Tags.Count > 0)
+                        {
+                            <div class="tags" style="display: inline-block; margin-top: 5px">
+                                @foreach (var tag in Model.Tags)
+                                {
+                                    <a href="@Url.Action("index", "search", new { tags = tag.Name })" class="custom-tooltip btn btn-default btn-xs" title="@tag.Description">
+                                        @tag.Name
+                                    </a>
+                                }
+                            </div>
+                        }
+                        <div style="margin-bottom: 10px">
+                            @Html.Partial("_QuizRatingBarPartial", Model.AveragePoints)
                         </div>
-                        <div class="col-sm-4">
-                            <img src="@Model.ThumbnailImageUrl" class="img-responsive" />
-                        </div>
-                    <div class="clearfix"></div>
-                    if (Model.Tags != null && Model.Tags.Count > 0)
-                    {
-                        <div class="tags" style="display: inline-block; margin-top: 5px">
-                            @foreach (var tag in Model.Tags)
-                            {
-                                <a href="@Url.Action("index", "search", new { tags = tag.Name })" class="custom-tooltip btn btn-default btn-xs" title="@tag.Description">
-                                    @tag.Name
-                                </a>
-                            }
-                        </div>
-                    }
-
-                    <div style="margin-bottom: 10px">
-                        @Html.Partial("_QuizRatingBarPartial", Model.AveragePoints)
                     </div>
+                    <div class="col-sm-4">
+                        <img src="@Model.ThumbnailImageUrl" class="img-responsive" />
+                    </div>
+                    <div class="clearfix"></div>
 
                     using (Html.BeginForm("quiz", "trivia", FormMethod.Post, new { role = "form" }))
                     {

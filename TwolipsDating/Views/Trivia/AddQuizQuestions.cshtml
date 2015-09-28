@@ -1,0 +1,36 @@
+﻿@model TwolipsDating.ViewModels.AddQuizQuestionsViewModel
+
+@{
+    ViewBag.Title = "Add Quiz Questions";
+}
+
+@using (Html.BeginForm("addquizquestions", "trivia"))
+{
+    @Html.ValidationSummary()
+    @Html.AntiForgeryToken()
+    
+    @Html.HiddenFor(x => x.QuizId)
+
+    for (int i = 0; i < 10; i++)
+    {
+        <p>
+            <label>Question @i</label>
+            @Html.TextBoxFor(x => x.Questions[i].Content, new { @class = "form-control" })
+        </p>
+        <p>
+            <label>Points</label>
+            @Html.TextBoxFor(x => x.Questions[i].Points, new { @class = "form-control" })
+        </p>
+        <ul>
+            @for (int j = 0; j < 4; j++)
+            {
+                <li>
+                    @Html.RadioButtonFor(x => x.Questions[i].CorrectAnswer, 1)
+                    Answer @j: @Html.TextBoxFor(x => x.Questions[i].Answers[j].Content, new { @class = "form-control" })
+                </li>
+            }
+        </ul>
+    }
+
+    <input type="submit" value="OK" />
+}

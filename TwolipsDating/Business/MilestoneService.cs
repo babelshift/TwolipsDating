@@ -435,13 +435,7 @@ namespace TwolipsDating.Business
                     AchievementStatuses = new List<AchievementStatusViewModel>()
                 };
 
-                int achievedCount = 0;
-                Milestone completedMilestone = null;
-                // user has completed this milestone
-                if (completedMilestones.TryGetValue(soloMilestone.Id, out completedMilestone))
-                {
-                    achievedCount = 1;
-                }
+                int achievedCount = HasUserCompletedAchievement(completedMilestones, soloMilestone);
 
                 achievementOverview.AchievementStatuses.Add(new AchievementStatusViewModel()
                 {
@@ -463,6 +457,18 @@ namespace TwolipsDating.Business
             }
 
             return achievementOverviews.AsReadOnly();
+        }
+
+        private static int HasUserCompletedAchievement(Dictionary<int, Milestone> completedMilestones, Milestone soloMilestone)
+        {
+            int achievedCount = 0;
+            Milestone completedMilestone = null;
+            // user has completed this milestone
+            if (completedMilestones.TryGetValue(soloMilestone.Id, out completedMilestone))
+            {
+                achievedCount = 1;
+            }
+            return achievedCount;
         }
 
         private async Task<List<AchievementOverviewViewModel>> GetCollectionAchievementOverviewsAsync(string userId, IList<Milestone> collectionMilestones)

@@ -45,5 +45,7 @@ namespace TwolipsDating.Business
         Task<int> CountOfQuizzesCompletedAsync(string userId, int daysAgo);
 
         Task<int> GetQuizCategoriesTouchedByUserCountAsync(string userId);
+
+        Task<int> AddQuestionToQuizAsync(int quizId, string question, int points, IReadOnlyList<string> answers, int correctAnswer);
     }
 }
