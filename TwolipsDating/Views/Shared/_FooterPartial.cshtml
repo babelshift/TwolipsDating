@@ -56,16 +56,22 @@
                     </h4>
                 </div>
                 <div class="col-sm-6">
-                    <div style="margin-top: 10px" class="text-right text-center-xs">
+                    <div itemscope itemtype="http://www.schema.org/SiteNavigationElement" style="margin-top: 10px" class="text-right text-center-xs">
                         @Html.ActionLink("About", "index", "about")
                         <p style="display: inline-block;">&bull;</p>
-                        <a href="http://blog.twolipsdating.com">Blog</a>
+                        <span itemprop="name">
+                            <a itemprop="url" href="http://blog.twolipsdating.com">Blog</a>
+                        </span>
                         <p style="display: inline-block;">&bull;</p>
                         <a href="mailto:info@twolipsdating.com">Contact</a>
                         <p style="display: inline-block;">&bull;</p>
-                        @Html.ActionLink("Privacy policy", "privacy", "about")
+                        <span itemprop="name">
+                            @Html.ActionLink("Privacy policy", "privacy", "about", new { itemprop = "url" })
+                        </span>
                         <p style="display: inline-block;">&bull;</p>
-                        @Html.ActionLink("Terms of Service", "terms", "about")
+                        <span itemprop="name">
+                            @Html.ActionLink("Terms of Service", "terms", "about", new { itemprop = "url" })
+                        </span>
                     </div>
                 </div>
             </div>

@@ -859,9 +859,8 @@ namespace TwolipsDating.Business
                 }
 
                 sb.AppendFormat("insert into @answers(Content, IsCorrect) values(@answer{0}, @answer{0}Correct);", i);
-                parameters.Add(new SqlParameter(String.Format("@answer{0}Correct", i), correctAnswer == i ? 1 : 0));
-
                 parameters.Add(new SqlParameter(String.Format("@answer{0}", i), content));
+                parameters.Add(new SqlParameter(String.Format("@answer{0}Correct", i), correctAnswer == i ? 1 : 0));
 
                 Log.Info(String.Format("Answer{0}: {1}", i, content));
             }
