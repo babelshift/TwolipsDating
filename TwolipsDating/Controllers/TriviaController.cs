@@ -700,6 +700,8 @@ namespace TwolipsDating.Controllers
                 }
             }
 
+            viewModel.Tags = await GetSearchableTagsAsync();
+
             return View(viewModel);
         }
     }

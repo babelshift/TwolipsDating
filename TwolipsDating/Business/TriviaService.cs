@@ -599,7 +599,7 @@ namespace TwolipsDating.Business
 	                cq.DateCompleted,
 	                ui.FileName ProfileImagePath,
 	                p.Id ProfileId,
-					""IsFavoritedByCurrentUser"" = 
+					""IsFavoritedByCurrentUser"" =
 						CASE
 							WHEN fp.UserId is null THEN 0
 							ELSE 1
@@ -776,6 +776,8 @@ namespace TwolipsDating.Business
             return count;
         }
 
+        #region Question Creation
+
         public async Task<ServiceResult> AddQuestionToQuizAsync(int quizId, string questionContent, int points, IReadOnlyList<string> answers, int correctAnswer, IReadOnlyCollection<int> tags)
         {
             Debug.Assert(quizId > 0);
@@ -795,38 +797,12 @@ namespace TwolipsDating.Business
                 sb.Append("declare @answers as dbo.AnswerType;");
 
                 List<object> parameters = new List<object>();
-                parameters.Add(new SqlParameter("@quizId", quizId));
-                parameters.Add(new SqlParameter("@question", questionContent));
-                parameters.Add(new SqlParameter("@points", points));
-
-                for (int i = 1; i <= answers.Count; i++)
-                {
-                    string content = answers[i - 1];
-
-                    // don't insert blank answers
-                    if (String.IsNullOrEmpty(content))
-                    {
-                        continue;
-                    }
-
-                    if (!String.IsNullOrEmpty(content))
-                    {
-                        sb.AppendFormat("insert into @answers(Content, IsCorrect) values(@answer{0}, @answer{0}Correct);", i);
-                        parameters.Add(new SqlParameter(String.Format("@answer{0}Correct", i), correctAnswer == i ? 1 : 0));
-                    }
-
-                    parameters.Add(new SqlParameter(String.Format("@answer{0}", i), content));
-
-                    Log.Info(String.Format("Answer{0}: {1}", i, content));
-                }
+                AddBaseParameters(quizId, questionContent, points, parameters);
+                AddAnswerParameters(answers, correctAnswer, sb, parameters);
 
                 sb.Append("exec dbo.InsertQuizQuestion @question, @points, @quizId, @answers, @latestQuestionId output;");
 
-                var output = new SqlParameter("@latestQuestionId", System.Data.SqlDbType.Int)
-                {
-                    Direction = System.Data.ParameterDirection.Output
-                };
-                parameters.Add(output);
+                var output = AddOutputParameters(parameters);
 
                 string sql = sb.ToString();
 
@@ -837,7 +813,7 @@ namespace TwolipsDating.Business
 
                 if (success)
                 {
-                    var newQuestion = SetupNewQuestion(output);
+                    var newQuestion = GetNewQuestion(output);
 
                     AttachTagsToQuestion(tags, newQuestion);
 
@@ -851,6 +827,44 @@ namespace TwolipsDating.Business
             }
 
             return success ? ServiceResult.Success : ServiceResult.Failed("Failed while inserting quiz question.");
+        }
+
+        private static SqlParameter AddOutputParameters(List<object> parameters)
+        {
+            var output = new SqlParameter("@latestQuestionId", System.Data.SqlDbType.Int)
+            {
+                Direction = System.Data.ParameterDirection.Output
+            };
+            parameters.Add(output);
+            return output;
+        }
+
+        private static void AddBaseParameters(int quizId, string questionContent, int points, List<object> parameters)
+        {
+            parameters.Add(new SqlParameter("@quizId", quizId));
+            parameters.Add(new SqlParameter("@question", questionContent));
+            parameters.Add(new SqlParameter("@points", points));
+        }
+
+        private void AddAnswerParameters(IReadOnlyList<string> answers, int correctAnswer, StringBuilder sb, List<object> parameters)
+        {
+            for (int i = 1; i <= answers.Count; i++)
+            {
+                string content = answers[i - 1];
+
+                // don't insert blank answers
+                if (String.IsNullOrEmpty(content))
+                {
+                    continue;
+                }
+
+                sb.AppendFormat("insert into @answers(Content, IsCorrect) values(@answer{0}, @answer{0}Correct);", i);
+                parameters.Add(new SqlParameter(String.Format("@answer{0}Correct", i), correctAnswer == i ? 1 : 0));
+
+                parameters.Add(new SqlParameter(String.Format("@answer{0}", i), content));
+
+                Log.Info(String.Format("Answer{0}: {1}", i, content));
+            }
         }
 
         private void AttachTagsToQuestion(IReadOnlyCollection<int> tags, Question newQuestion)
@@ -876,7 +890,7 @@ namespace TwolipsDating.Business
             return tag;
         }
 
-        private Question SetupNewQuestion(SqlParameter output)
+        private Question GetNewQuestion(SqlParameter output)
         {
             var newQuestion = new Question()
             {
@@ -886,5 +900,7 @@ namespace TwolipsDating.Business
             db.Questions.Attach(newQuestion);
             return newQuestion;
         }
+
+        #endregion Question Creation
     }
 }
