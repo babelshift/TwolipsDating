@@ -1,12 +1,12 @@
 ﻿$(document).ready(function () {
     $('#share-score-fb').on('click', function (e) {
         var shareHref = $(this).data('share-href');
-        var caption = $(this).data('share-caption');
+        var description = $(this).data('share-description');
 
         FB.ui({
             method: 'feed',
             link: shareHref,
-            caption: caption,
+            description: description,
         }, function (response) { });
     });
 

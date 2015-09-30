@@ -1,7 +1,7 @@
 ﻿@model TwolipsDating.ViewModels.QuizViewModel
 
 @{
-    ViewBag.Title = String.Format("A quiz about: {0}", Model.QuizName);
+    ViewBag.Title = String.Format("{0} (quiz)", Model.QuizName);
     ViewBag.Description = Model.QuizDescription;
     ViewBag.ImageUrl = Model.ImageUrl;
 }
@@ -102,33 +102,6 @@
                 </ul>
             </div>
         </div>
-        @*<div style="margin-bottom: 5px">
-                <div class="col-xs-4">
-                    <a href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(Model.QuizDescription + " #trivia") + "&url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
-                       class="btn btn-block btn-twitter" title="Share on Twitter">
-                        <i class="fa fa-twitter fa-lg fa-fw"></i>
-                        <span class="hidden-xs">Share on Twitter</span>
-                    </a>
-                </div>
-                <div class="col-xs-4">
-                    <a href="@("https://www.facebook.com/sharer/sharer.php?u=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
-                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
-                       class="btn btn-block btn-facebook" title="Share on Facebook">
-                        <i class="fa fa-facebook fa-lg fa-fw"></i>
-                        <span class="hidden-xs">Share on Facebook</span>
-                    </a>
-                </div>
-                <div class="col-xs-4">
-                    <a href="@("https://plus.google.com/share?url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))"
-                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
-                       class="btn btn-block btn-google-plus" title="Share on Google+">
-                        <i class="fa fa-google-plus fa-lg fa-fw"></i>
-                        <span class="hidden-xs">Share on Google+</span>
-                    </a>
-                </div>
-                <div class="clearfix"></div>
-            </div>*@
-
         <div class="panel panel-default">
             <div class="panel-body quiz-body">
                 @if (Model.Questions != null && Model.Questions.Count > 0)
@@ -150,11 +123,8 @@
                             }
                             <div style="margin-bottom: 8px">
                                 @Html.Partial("_QuizRatingBarPartial", Model.AveragePoints)
-                            </div>
-                            <div class="social-share">
-                                <div class="g-plusone" data-size="medium" data-annotation="none"></div>
-                                <span style="margin: 0 1px"></span>
-                                <div class="fb-like" data-layout="button" data-action="like" data-show-faces="false"></div>
+                                    <div class="g-plusone" data-size="medium" data-annotation="none"></div>
+                                    <div class="fb-like" data-layout="button" data-action="like" data-show-faces="false"></div>
                             </div>
                         </div>
                         <div class="col-sm-4">
@@ -182,7 +152,7 @@
                                         <br />
                                         <a id="share-score-fb" class="btn btn-facebook btn-xs"
                                            data-share-href="@Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme)"
-                                           data-share-caption="@Url.Encode(String.Format("I scored {0}% on this quiz: {1}: {2}", Model.UserScorePercent, Model.QuizName, Model.QuizDescription))">
+                                           data-share-description="@String.Format("I scored {0}% on this quiz. {2}", Model.UserScorePercent, Model.QuizName, Model.QuizDescription)">
                                             <i class="fa fa-facebook fa-lg fa-fw"></i>
                                         </a>
                                         <a class="btn btn-twitter btn-xs" href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("I scored {0}% on the {1} quiz on @twolipsdating", Model.UserScorePercent, Model.QuizName)) + "&url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))">

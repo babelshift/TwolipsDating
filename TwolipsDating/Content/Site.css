@@ -1062,6 +1062,7 @@ input[readonly] {
         font-weight: 300;
     }
 
-.social-share {
-    line-height: 10px;
+#___plusone_0 {
+    vertical-align: bottom !important;
 }
+
