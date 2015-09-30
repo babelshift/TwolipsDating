@@ -11,5 +11,6 @@ namespace TwolipsDating.ViewModels
         public string QuizName { get; set; }
         public int CompletedCount { get; set; }
         public int PercentageOfTrending { get; set; }
+        public string ThumbnailImagePath { get; set; }
     }
 }

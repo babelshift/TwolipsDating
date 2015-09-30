@@ -220,13 +220,20 @@
                                             }
                                         }
                                         <div class="radio @radioStyle" style="display: inline-block">
-                                            @if (Model.Questions[i].IsAlreadyAnswered || !User.Identity.IsAuthenticated)
+                                            @if (User.Identity.IsAuthenticated)
                                             {
-                                                @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { id = answer.AnswerId, disabled = "disabled" })
+                                                if (Model.Questions[i].IsAlreadyAnswered)
+                                                {
+                                                    @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { id = answer.AnswerId, disabled = "disabled" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { id = answer.AnswerId })
+                                                }
                                             }
                                             else
                                             {
-                                                @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { id = answer.AnswerId })
+                                                @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { id = answer.AnswerId, onclick = "$('#modalSignUpIncentive').modal('show')" })
                                             }
                                             <label for="@answer.AnswerId">@answer.Content</label>
                                         </div>

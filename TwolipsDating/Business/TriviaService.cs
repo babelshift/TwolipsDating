@@ -119,12 +119,19 @@ namespace TwolipsDating.Business
         {
             // we have to group on the max date completed so that we can order by that date after the group by is complete
             var completedQuizzes = (from completedQuiz in db.CompletedQuizzes
-                                    group completedQuiz by new { completedQuiz.QuizId, completedQuiz.Quiz.Name } into g
+                                    group completedQuiz 
+                                    by new 
+                                    { 
+                                        completedQuiz.QuizId, 
+                                        completedQuiz.Quiz.Name,
+                                        completedQuiz.Quiz.ImageFileName
+                                    } into g
                                     select new
                                     {
                                         QuizId = g.Key.QuizId,
                                         QuizName = g.Key.Name,
                                         DateCompleted = g.Max(x => x.DateCompleted),
+                                        ThumbnailImagePath = g.Key.ImageFileName,
                                         CompletedCount = g.Count()
                                     })
                                    .OrderByDescending(x => x.DateCompleted)
@@ -132,22 +139,23 @@ namespace TwolipsDating.Business
                                    {
                                        QuizId = x.QuizId,
                                        QuizName = x.QuizName,
-                                       CompletedCount = x.CompletedCount
+                                       CompletedCount = x.CompletedCount,
+                                       ThumbnailImagePath = x.ThumbnailImagePath
                                    }).Take(10);
 
             var result = await completedQuizzes.ToListAsync();
 
-            int totalTrendingQuizzes = 0;
+            //int totalTrendingQuizzes = 0;
 
             foreach (var quiz in result)
             {
-                totalTrendingQuizzes += quiz.CompletedCount;
+                quiz.ThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(quiz.ThumbnailImagePath);
             }
 
-            foreach (var quiz in result)
-            {
-                quiz.PercentageOfTrending = (int)Math.Round(((double)quiz.CompletedCount / (double)totalTrendingQuizzes) * 100);
-            }
+            //foreach (var quiz in result)
+            //{
+            //    quiz.PercentageOfTrending = (int)Math.Round(((double)quiz.CompletedCount / (double)totalTrendingQuizzes) * 100);
+            //}
 
             return result.AsReadOnly();
         }
@@ -162,10 +170,17 @@ namespace TwolipsDating.Business
                            {
                                QuizId = quiz.Id,
                                QuizName = quiz.Name,
-                               CompletedCount = quiz.CompletedByUsers.Count()
+                               CompletedCount = quiz.CompletedByUsers.Count(),
+                               ThumbnailImagePath = quiz.ImageFileName
                            }).Take(10);
 
             var result = await quizzes.ToListAsync();
+
+            foreach(var quiz in result)
+            {
+                quiz.ThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(quiz.ThumbnailImagePath);
+            }
+
             return result.AsReadOnly();
         }
 

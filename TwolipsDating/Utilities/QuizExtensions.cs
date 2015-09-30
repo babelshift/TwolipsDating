@@ -50,7 +50,7 @@ namespace TwolipsDating.Utilities
 
         public static string GetThumbnailImagePath(string fileName)
         {
-            return GetThumbnailImagePath(fileName);
+            return GetActualThumbnailImagePath(fileName);
         }
 
         private static string GetActualThumbnailImagePath(string fileName)

@@ -51,8 +51,8 @@ else
         {
             if (profile.UserId != User.Identity.GetUserId())
             {
-                <div class="col-sm-6 col-md-4 text-center">
-                    <div style="@(!String.IsNullOrEmpty(profile.BannerImagePath) ? "background: url(" + profile.BannerImagePath + " ) no-repeat; background-size: cover; background-position: " + String.Format("{0}px {1}px", profile.BannerPositionX, profile.BannerPositionY) : "background-color: #8FC6D8"); height: 100px; border-radius: 5px 5px 0 0">
+                <div class="col-sm-6 col-md-4 text-center search-result-column">
+                    <div style="@(!String.IsNullOrEmpty(profile.BannerImagePath) ? "background: url(" + profile.BannerImagePath + " ) no-repeat; background-size: cover; " : "background-color: #8FC6D8"); height: 100px; border-radius: 5px 5px 0 0">
                     </div>
                     <div class="panel panel-default search-result-panel">
                         <div class="panel-body">
@@ -93,7 +93,7 @@ else
                                 }
                                 else
                                 {
-                                    <p style="">This person hasn't entered a summary yet.</p>
+                                    <p>This person is a bit mysterious.</p>
                                 }
                             </div>
                         </div>

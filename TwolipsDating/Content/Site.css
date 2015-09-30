@@ -1022,9 +1022,13 @@ input[readonly] {
         float: right !important;
     }
 
+.search-result-column {
+    height: 310px;
+}
+
 .search-result-panel {
     height: 200px;
-    margin-bottom: 20px;
+    overflow: hidden;
 }
 
 .search-result-thumbnail {
