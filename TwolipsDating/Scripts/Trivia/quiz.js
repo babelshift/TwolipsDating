@@ -1,4 +1,15 @@
 ﻿$(document).ready(function () {
+    $('#share-score-fb').on('click', function (e) {
+        var shareHref = $(this).data('share-href');
+        var caption = $(this).data('share-caption');
+
+        FB.ui({
+            method: 'feed',
+            link: shareHref,
+            caption: caption,
+        }, function (response) { });
+    });
+
     $('#modalQuestionViolation').on('hide.bs.modal', function (event) {
         $('#violation-error').addClass('hidden');
         $('#violation-success').addClass('hidden');

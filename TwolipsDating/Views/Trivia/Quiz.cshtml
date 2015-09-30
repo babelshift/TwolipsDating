@@ -1,7 +1,7 @@
 ﻿@model TwolipsDating.ViewModels.QuizViewModel
 
 @{
-    ViewBag.Title = Model.QuizName;
+    ViewBag.Title = String.Format("A quiz about: {0}", Model.QuizName);
     ViewBag.Description = Model.QuizDescription;
     ViewBag.ImageUrl = Model.ImageUrl;
 }
@@ -134,49 +134,92 @@
                 @if (Model.Questions != null && Model.Questions.Count > 0)
                 {
                     <h3 style="margin-top: 0">@Model.QuizName</h3>
-                    <div class="col-sm-8">
-                        <h4 style="margin: 0">@Model.QuizDescription</h4>
-                        @if (Model.Tags != null && Model.Tags.Count > 0)
-                        {
-                            <div class="tags" style="display: inline-block; margin-top: 5px">
-                                @foreach (var tag in Model.Tags)
-                                {
-                                    <a href="@Url.Action("index", "search", new { tags = tag.Name })" class="custom-tooltip btn btn-default btn-xs" title="@tag.Description">
-                                        @tag.Name
-                                    </a>
-                                }
+                    <div class="row" style="margin: 0 0 10px 0">
+                        <div class="col-sm-8">
+                            <h4 style="margin: 0">@Model.QuizDescription</h4>
+                            @if (Model.Tags != null && Model.Tags.Count > 0)
+                            {
+                                <div class="tags" style="display: inline-block; margin-top: 5px">
+                                    @foreach (var tag in Model.Tags)
+                                    {
+                                        <a href="@Url.Action("index", "search", new { tags = tag.Name })" class="custom-tooltip btn btn-default btn-xs" title="@tag.Description">
+                                            @tag.Name
+                                        </a>
+                                    }
+                                </div>
+                            }
+                            <div style="margin-bottom: 8px">
+                                @Html.Partial("_QuizRatingBarPartial", Model.AveragePoints)
                             </div>
-                        }
-                        <div style="margin-bottom: 10px">
-                            @Html.Partial("_QuizRatingBarPartial", Model.AveragePoints)
+                            <div class="social-share">
+                                <div class="g-plusone" data-size="medium" data-annotation="none"></div>
+                                <span style="margin: 0 1px"></span>
+                                <div class="fb-like" data-layout="button" data-action="like" data-show-faces="false"></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <img src="@Model.ThumbnailImageUrl" class="img-responsive" />
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <img src="@Model.ThumbnailImageUrl" class="img-responsive" />
-                    </div>
-                    <div class="clearfix"></div>
+
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        if (Model.IsAlreadyCompleted)
+                        {
+                            <div class="well well-sm text-center" style="margin-top: 15px">
+                                <h3 style="margin: 0;">You completed this quiz.</h3>
+                                <div class="row" style="margin: 0">
+                                    <div class="col-xs-4">
+                                        <small class="text-muted">% SCORE</small>
+                                        <h4 style="margin-top: 5px"><strong>@String.Format("{0}%", Model.UserScorePercent)</strong></h4>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <small class="text-muted">RAW SCORE</small>
+                                        <h4 style="margin-top: 5px"><strong>@Model.Questions.Where(x => x.CorrectAnswerId == x.SelectedAnswerId).Count() / @Model.Questions.Count</strong></h4>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <small class="text-muted">SHARE SCORE</small>
+                                        <br />
+                                        <a id="share-score-fb" class="btn btn-facebook btn-xs"
+                                           data-share-href="@Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme)"
+                                           data-share-caption="@Url.Encode(String.Format("I scored {0}% on this quiz: {1}: {2}", Model.UserScorePercent, Model.QuizName, Model.QuizDescription))">
+                                            <i class="fa fa-facebook fa-lg fa-fw"></i>
+                                        </a>
+                                        <a class="btn btn-twitter btn-xs" href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("I scored {0}% on the {1} quiz on @twolipsdating", Model.UserScorePercent, Model.QuizName)) + "&url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))">
+                                            <i class=" fa fa-twitter fa-lg fa-fw"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <h5 class="text-muted" style="margin: 0">
+                                    @if (Model.UserScorePercent >= 0 && Model.UserScorePercent < 25)
+                                    {
+                                        @:Wow, well the good news is that you can't get much worse.
+                                    }
+                                    else if (Model.UserScorePercent >= 25 && Model.UserScorePercent < 50)
+                                    {
+                                        @:We know you can do better than that.
+                                    }
+                                    else if (Model.UserScorePercent >= 50 && Model.UserScorePercent < 75)
+                                    {
+                                        @:OK, not great, but at least you're pretty smart.
+                                    }
+                                    else if (Model.UserScorePercent >= 75 && Model.UserScorePercent < 100)
+                                    {
+                                        @:Nice! You were definitely on point with this one.
+                                    }
+                                    else if (Model.UserScorePercent == 100)
+                                    {
+                                        @:Incredible, you managed to get every single answer correct.
+                                    }
+                                </h5>
+                            </div>
+                        }
+                    }
 
                     using (Html.BeginForm("quiz", "trivia", FormMethod.Post, new { role = "form" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true)
-                        if (User.Identity.IsAuthenticated)
-                        {
-                            if (Model.IsAlreadyCompleted)
-                            {
-                                <div id="alert-box" class="alert alert-success">
-                                    <h5>You scored <strong>@String.Format("{0}%", Model.UserScorePercent)</strong>. View your answers below.</h5>
-                                </div>
-                            }
-                            else
-                            {
-                                <hr />
-                            }
-                        }
-                        else
-                        {
-                            <hr />
-                        }
 
                         for (int i = 0; i < Model.Questions.Count; i++)
                         {
@@ -316,12 +359,31 @@
         else
         {
             <div style="width: 610px; margin: 5px auto;">
-                <img src="http://placehold.it/600x90" />
+                <img src="http://placehold.it/300x300" />
             </div>
         }
     </div>
 </div>
 @section Scripts {
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '742385919135029',
+                xfbml: true,
+                version: 'v2.4'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+
     @Scripts.Render("~/bundles/trivia/quiz")
 
     @if (!HttpContext.Current.IsDebuggingEnabled)

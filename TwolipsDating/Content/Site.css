@@ -1061,3 +1061,7 @@ input[readonly] {
         color: #555;
         font-weight: 300;
     }
+
+.social-share {
+    line-height: 10px;
+}
