@@ -70,6 +70,7 @@ namespace TwolipsDating.Controllers
             TriviaService.ValidationDictionary = new ModelStateWrapper(ModelState);
             ViolationService.ValidationDictionary = new ModelStateWrapper(ModelState);
 
+            MilestoneService.UserService = UserService;
             MilestoneService.ProfileService = ProfileService;
             MilestoneService.TriviaService = TriviaService;
 

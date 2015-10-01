@@ -9,5 +9,6 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task<int> GetPossibleAchievementCount();
         IProfileService ProfileService { set; }
         ITriviaService TriviaService { set; }
+        IUserService UserService { get; set; }
     }
 }

@@ -351,6 +351,14 @@ namespace TwolipsDating.Business
             referral.IsRedeemed = true;
 
             await db.SaveChangesAsync();
+
+            await MilestoneService.AwardAchievedMilestonesAsync(userWhoSentReferral.Id, (int)MilestoneTypeValues.ReferralSignUps);
+        }
+
+        public async Task<int> GetReferralsRedeemedCountAsync(string userId)
+        {
+            int count = await db.Referrals.CountAsync(x => x.IsRedeemed && x.UserId == userId);
+            return count;
         }
 
         public async Task<bool> IsReferralCodeValidAsync(string referralCode)

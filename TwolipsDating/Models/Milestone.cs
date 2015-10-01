@@ -59,7 +59,8 @@ namespace TwolipsDating.Models
         GoldMedalist,
         HighFive,
         MultiTalented,
-        FriendlyExchange
+        FriendlyExchange,
+        ReferralSignUps
     }
 
     public class Milestone

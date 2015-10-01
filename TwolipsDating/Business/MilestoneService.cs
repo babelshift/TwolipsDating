@@ -18,6 +18,7 @@ namespace TwolipsDating.Business
     {
         public ITriviaService TriviaService { get; set; }
         public IProfileService ProfileService { get; set; }
+        public IUserService UserService { get; set; }
 
         public MilestoneService(ApplicationDbContext db, IIdentityMessageService emailService)
             : base(db, emailService)
@@ -176,6 +177,11 @@ namespace TwolipsDating.Business
                         amount = 1;
                     }
                 }
+            }
+            else if(milestoneTypeId == (int)MilestoneTypeValues.ReferralSignUps)
+            {
+                int count = await UserService.GetReferralsRedeemedCountAsync(userId);
+                amount = count >= 3 ? 1 : 0;
             }
 
             return amount;

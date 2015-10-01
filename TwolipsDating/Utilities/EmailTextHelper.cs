@@ -173,7 +173,7 @@ namespace TwolipsDating.Utilities
 
         public static class PasswordChangeEmail
         {
-            public const string Subject = "Your twolips password has been changed";
+            public const string Subject = "Your Twolips password has been changed";
 
             private const string Body = @"
 <div style=""text-align: left"">
@@ -194,7 +194,7 @@ namespace TwolipsDating.Utilities
 
         public static class EmailChangedEmail
         {
-            public const string Subject = "Your twolips email has changed";
+            public const string Subject = "Your Twolips email has changed";
 
             private const string Body = @"
 <div style=""text-align: left"">
@@ -215,31 +215,31 @@ namespace TwolipsDating.Utilities
 
         public static class ConfirmationEmail
         {
-            public const string Subject = "Confirm your twolips dating account";
+            public const string Subject = "Please confirm your twolips account";
 
-            private const string Body = @"
+            private const string HtmlBody = @"
 <div style=""text-align: left"">
-    <h3>Congrats! Your account is all setup.</h3>
+    <h3>Hi {0}. Your account is all setup.</h3>
 
     <div style=""font-size: 14px; color: #4b4b4b;"">
 	    <p>Now we just need you to confirm your email address to complete the process.</p>
 
-	    <h3><a href=""{0}"">Click to confirm your account</a></h3>
+	    <h3><a href=""{1}"">Click to confirm your account</a></h3>
     </div>
 </div>";
 
-            public static string GetBody(string callbackUrl)
+            public static string GetBody(string userName, string callbackUrl)
             {
-                return String.Format(Body, callbackUrl);
+                return String.Format(HtmlBody, userName, callbackUrl);
             }
         }
 
         public static class WelcomeEmail
         {
-            public const string Subject = "Welcome to twolips dating";
+            public const string Subject = "Welcome to Twolips";
 
             private const string Body = @"
-<h2>Welcome!</h2>
+<h2>Welcome {0}!</h2>
 <p>Thank you for confirming your email address.</p>
 <div style=""color: #4b4b4b;"">
 	<h3>Get Started</h3>
@@ -269,9 +269,9 @@ namespace TwolipsDating.Utilities
 	</div>
 </div>";
 
-            public static string GetBody()
+            public static string GetBody(string userName)
             {
-                return String.Format(Body);
+                return String.Format(Body, userName);
             }
         }
     }

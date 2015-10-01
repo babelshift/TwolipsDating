@@ -345,11 +345,13 @@ namespace TwolipsDating.Controllers
 
             if (result.Succeeded)
             {
+                var user = await UserManager.FindByIdAsync(userId);
+
                 // send email to admins letting them know someone confirmed their email
-                await SendAdminEmailAfterConfirmationAsync(userId);
+                await SendAdminEmailAfterConfirmationAsync(userId, user.UserName);
 
                 // send email to user with welcome message
-                await SendWelcomeEmailAsync(userId);
+                await SendWelcomeEmailAsync(userId, user.UserName);
             }
 
             await SetNotificationsAsync();
@@ -357,18 +359,18 @@ namespace TwolipsDating.Controllers
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
-        private async Task SendWelcomeEmailAsync(string userId)
+        private async Task SendWelcomeEmailAsync(string userId, string userName)
         {
             //var user = await UserManager.FindByIdAsync(userId);
             string subject = EmailTextHelper.WelcomeEmail.Subject;
-            string body = EmailTextHelper.WelcomeEmail.GetBody();
+            string body = EmailTextHelper.WelcomeEmail.GetBody(userName);
             await UserManager.SendEmailAsync(userId, subject, body);
         }
 
-        private async Task SendAdminEmailAfterConfirmationAsync(string userId)
+        private async Task SendAdminEmailAfterConfirmationAsync(string userId, string userName)
         {
             string subject = "A user has confirmed their e-mail address";
-            string body = String.Format("UserId = {0}", userId);
+            string body = String.Format("UserName = {0}, UserId = {1}", userName, userId);
             await UserManager.SendEmailAsync("bca02ed7-fae2-4f0b-b59a-ee92292d62df", subject, body);
         }
 
@@ -651,7 +653,7 @@ namespace TwolipsDating.Controllers
         {
             string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
             var callbackUrl = Url.Action("confirmemail", "account", new { userId = user.Id, code = code }, Request.Url.Scheme);
-            await UserManager.SendEmailAsync(user.Id, EmailTextHelper.ConfirmationEmail.Subject, EmailTextHelper.ConfirmationEmail.GetBody(callbackUrl));
+            await UserManager.SendEmailAsync(user.Id, EmailTextHelper.ConfirmationEmail.Subject, EmailTextHelper.ConfirmationEmail.GetBody(user.UserName, callbackUrl));
         }
 
         //

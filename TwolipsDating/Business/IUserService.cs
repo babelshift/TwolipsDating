@@ -25,5 +25,7 @@ namespace TwolipsDating.Business
         Task RewardReferralAsync(ApplicationUser user, string referralCode);
 
         Task<bool> IsReferralCodeValidAsync(string referralCode);
+
+        Task<int> GetReferralsRedeemedCountAsync(string userId);
     }
 }

@@ -180,7 +180,8 @@ namespace TwolipsDating.Migrations
                 new MilestoneType() { Id = (int)MilestoneTypeValues.GoldMedalist, Name = "Gold Medalist", Description = "Complete the Winter Olympics and Summer Olympics quizzes."},
                 new MilestoneType() { Id = (int)MilestoneTypeValues.HighFive, Name = "High Five", Description = "Complete 5 quizzes in a single day."},
                 new MilestoneType() { Id = (int)MilestoneTypeValues.MultiTalented, Name = "Multi Talented", Description = "Complete 1 quiz from each category." },
-                new MilestoneType() { Id = (int)MilestoneTypeValues.FriendlyExchange, Name = "Friendly Exchange", Description = "Send a gift to someone within 30 minutes of them sending you a gift." }
+                new MilestoneType() { Id = (int)MilestoneTypeValues.FriendlyExchange, Name = "Friendly Exchange", Description = "Send a gift to someone within 30 minutes of them sending you a gift." },
+                new MilestoneType() { Id = (int)MilestoneTypeValues.ReferralSignUps, Name = "I'll Make Them An Offer...", Description = "Have 3 people sign up as a result of your referrals." }
                 );
 
             context.Milestones.AddOrUpdate(m => m.Id,
@@ -238,7 +239,8 @@ namespace TwolipsDating.Migrations
                 new Milestone() { Id = (int)MilestoneValues.GoldMedalist, MilestoneTypeId = (int)MilestoneTypeValues.GoldMedalist, AmountRequired = 1, IconFileName = "GoldMedal.png" },
                 new Milestone() { Id = (int)MilestoneValues.HighFive, MilestoneTypeId = (int)MilestoneTypeValues.HighFive, AmountRequired = 1, IconFileName = "HighFive.png" },
                 new Milestone() { Id = (int)MilestoneValues.MultiTalented, MilestoneTypeId = (int)MilestoneTypeValues.MultiTalented, AmountRequired = 1, IconFileName = "Davinci.png" },
-                new Milestone() { Id = (int)MilestoneValues.FriendlyExchange, MilestoneTypeId = (int)MilestoneTypeValues.FriendlyExchange, AmountRequired = 1, IconFileName = "Exchange.png" }
+                new Milestone() { Id = (int)MilestoneValues.FriendlyExchange, MilestoneTypeId = (int)MilestoneTypeValues.FriendlyExchange, AmountRequired = 1, IconFileName = "Exchange.png" },
+                new Milestone() { Id = (int)MilestoneValues.ReferralSignUps, MilestoneTypeId = (int)MilestoneTypeValues.ReferralSignUps, AmountRequired = 1, IconFileName = "Referrals.png" }
                 );
 
             context.QuizCategories.AddOrUpdate(m => m.Id,
