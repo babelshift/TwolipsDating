@@ -138,9 +138,17 @@ input[type="checkbox"].input-validation-error {
     height: 100%;
 }
 
-.footer p, .footer h4, .footer h5,
-.footer-splash p, .footer-splash h4, .footer-splash h5 {
+.footer p, 
+.footer h4, 
+.footer h5,
+.footer-splash p, 
+.footer-splash h4, 
+.footer-splash h5 {
     color: #fff;
+}
+
+.footer-bottom small {
+    color: #999;
 }
 
 .footer hr,
@@ -152,7 +160,7 @@ input[type="checkbox"].input-validation-error {
 
 .footer-bottom {
     padding-top: 10px;
-    padding-bottom: 3px;
+    padding-bottom: 10px;
     background-color: #222;
 }
 

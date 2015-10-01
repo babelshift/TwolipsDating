@@ -40,7 +40,7 @@
     @RenderSection("styles", required: false)
     @Styles.Render("~/Content/css")
 </head>
-<body>
+<body itemscope itemtype="http://schema.org/WebSite">
     <!-- Google Tag Manager -->
     <noscript>
         <iframe src="//www.googletagmanager.com/ns.html?id=GTM-K5MZD9"
@@ -270,8 +270,18 @@
         "@@context" : "http://schema.org",
         "@@type" : "Organization",
         "legalName" : "Twolips Dating",
+        "name" : "Twolips Dating",
+        "description" : "A community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of games, trivia, activities, and challenges.",
         "url" : "https://www.twolipsdating.com",
         "logo" : "https://www.twolipsdating.com/Content/twolipsicon-white-200x200.png",
+        "address": {
+            "@@type": "PostalAddress",
+            "addressCountry": "United States",
+            "addressLocality": "Orlando",
+            "addressRegion": "FL",
+            "postalCode": "32878",
+            "postOfficeBoxNumber": "780835"
+            },
         "sameAs" : [
         "https://www.facebook.com/twolipsdating",
         "https://www.twitter.com/twolipsdating/",

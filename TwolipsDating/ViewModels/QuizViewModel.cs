@@ -9,7 +9,7 @@ namespace TwolipsDating.ViewModels
         public int QuizId { get; set; }
         public string QuizName { get; set; }
         public string QuizDescription { get; set; }
-        public IReadOnlyList<QuestionViewModel> Questions { get; set; }
+        public List<QuestionViewModel> Questions { get; set; }
         public IReadOnlyCollection<TagViewModel> Tags { get; set; }
         public bool IsAlreadyCompleted { get; set; }
         public string ThumbnailImageUrl { get; set; }

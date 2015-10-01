@@ -1,62 +1,29 @@
 ﻿@using TwolipsDating.Utilities
 
 <footer>
-    <div class="footer-bottom-social text-center">
-        <div style="margin: 0 auto; width: 300px;">
-            <a href="http://facebook.com/twolipsdating" title="Like us on Facebook">
-                <span class="fa-stack fa-lg text-facebook">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
-                </span>
-            </a>
-            <a href="http://twitter.com/twolipsdating" title="Follow us on Twitter">
-                <span class="fa-stack fa-lg text-twitter">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
-                </span>
-            </a>
-            <a href="http://plus.google.com/+twolipsdating" title="Follow us on Google+">
-                <span class="fa-stack fa-lg text-google-plus">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
-                </span>
-            </a>
-            <a href="https://instagram.com/twolipsdating/" title="Follow us on Instagram">
-                <span class="fa-stack fa-lg text-instagram">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-instagram fa-stack-1x fa-inverse"></i>
-                </span>
-            </a>
-            <a href="https://www.linkedin.com/company/twolips-dating" title="Connect with us on LinkedIn">
-                <span class="fa-stack fa-lg text-linkedin">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
-                </span>
-            </a>
-            <a href="https://www.pinterest.com/twolipsdating/" title="Pin us on Pinterest">
-                <span class="fa-stack fa-lg text-pinterest">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-pinterest-p fa-stack-1x fa-inverse"></i>
-                </span>
-            </a>
-        </div>
-    </div>
-    <div class="clearfix"></div>
     <div class="footer-bottom text-center-xs">
         <div class="container">
             <div class="row">
                 <div class="col-sm-6">
-                    <h4 style="display: inline-block">
-                        <small>&copy; @DateTime.Now.Year</small>
-                    </h4>
-                    <h4 style="display: inline-block">
-                        <a href="@Url.Action("index", "home")"><img src="~/Content/twolipsicon-white-180x180.png" width="32" height="32" /></a>
-                        <span class="hidden-xs">twolips dating</span>
-                        <small>@Html.CurrentVersion()</small>
-                    </h4>
+                    <div itemscope itemtype="http://schema.org/Organization">
+                        <h4 style="margin: 0">
+                            <small>&copy; @DateTime.Now.Year</small>
+                            <a href="@Url.Action("index", "home")"><img src="~/Content/twolipsicon-white-180x180.png" width="32" height="32" /></a>
+                            <span itemprop="name" class="hidden-xs">twolips dating</span>
+                            <small>@Html.CurrentVersion()</small>
+                        </h4>
+                        <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                            <small>
+                                PO Box <span itemprop="postOfficeBoxNumber">780835</span>,
+                                <span itemprop="addressLocality">Orlando, Florida</span>
+                                <span itemprop="postalCode">32878</span>
+                            </small>
+                        </div>
+                        <small><span itemprop="email">info@twolipsdating.com</span></small>
+                    </div>
                 </div>
                 <div class="col-sm-6">
-                    <div itemscope itemtype="http://www.schema.org/SiteNavigationElement" style="margin-top: 10px" class="text-right text-center-xs">
+                    <div itemscope itemtype="http://www.schema.org/SiteNavigationElement" class="text-right text-center-xs">
                         @Html.ActionLink("About", "index", "about")
                         <p style="display: inline-block;">&bull;</p>
                         <span itemprop="name">
@@ -72,6 +39,44 @@
                         <span itemprop="name">
                             @Html.ActionLink("Terms of Service", "terms", "about", null, new { itemprop = "url" })
                         </span>
+                    </div>
+                    <div class="text-right text-center-xs">
+                        <a href="http://facebook.com/twolipsdating" title="Like us on Facebook">
+                            <span class="fa-stack fa-lg text-facebook">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                        <a href="http://twitter.com/twolipsdating" title="Follow us on Twitter">
+                            <span class="fa-stack fa-lg text-twitter">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                        <a href="http://plus.google.com/+twolipsdating" title="Follow us on Google+">
+                            <span class="fa-stack fa-lg text-google-plus">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                        <a href="https://instagram.com/twolipsdating/" title="Follow us on Instagram">
+                            <span class="fa-stack fa-lg text-instagram">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-instagram fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                        <a href="https://www.linkedin.com/company/twolips-dating" title="Connect with us on LinkedIn">
+                            <span class="fa-stack fa-lg text-linkedin">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                        <a href="https://www.pinterest.com/twolipsdating/" title="Pin us on Pinterest">
+                            <span class="fa-stack fa-lg text-pinterest">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-pinterest-p fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
                     </div>
                 </div>
             </div>
