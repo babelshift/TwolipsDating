@@ -800,19 +800,14 @@ namespace TwolipsDating.Business
 
             try
             {
-                StringBuilder sb = new StringBuilder();
-                sb.Append("declare @answers as dbo.AnswerType;");
-
                 List<object> parameters = new List<object>();
-                AddBaseParameters(quizId, questionContent, points, parameters);
-                AddAnswerParameters(answers, correctAnswer, sb, parameters);
+                StringBuilder sb = new StringBuilder();
 
-                sb.Append("exec dbo.InsertQuizQuestion @question, @points, @quizId, @answers, @latestQuestionId output;");
+                BuildSqlToAddQuestionToQuiz(quizId, questionContent, points, answers, correctAnswer, parameters, sb);
 
                 var output = AddOutputParameters(parameters);
 
                 string sql = sb.ToString();
-
                 Log.Info(sql);
 
                 int count = await db.Database.ExecuteSqlCommandAsync(sql, parameters.ToArray());
@@ -820,11 +815,14 @@ namespace TwolipsDating.Business
 
                 if (success)
                 {
-                    var newQuestion = GetNewQuestion(output);
+                    if (tags != null)
+                    {
+                        var newQuestion = GetNewQuestionFromOutputParameter(output);
 
-                    AttachTagsToQuestion(tags, newQuestion);
+                        AttachTagsToQuestion(tags, newQuestion);
 
-                    await db.SaveChangesAsync();
+                        await db.SaveChangesAsync();
+                    }
                 }
             }
             catch (DbUpdateException ex)
@@ -836,25 +834,14 @@ namespace TwolipsDating.Business
             return success ? ServiceResult.Success : ServiceResult.Failed("Failed while inserting quiz question.");
         }
 
-        private static SqlParameter AddOutputParameters(List<object> parameters)
+        private void BuildSqlToAddQuestionToQuiz(int quizId, string questionContent, int points, IReadOnlyList<string> answers, int correctAnswer, List<object> parameters, StringBuilder sb)
         {
-            var output = new SqlParameter("@latestQuestionId", System.Data.SqlDbType.Int)
-            {
-                Direction = System.Data.ParameterDirection.Output
-            };
-            parameters.Add(output);
-            return output;
-        }
+            sb.Append("declare @answers as dbo.AnswerType;");
 
-        private static void AddBaseParameters(int quizId, string questionContent, int points, List<object> parameters)
-        {
             parameters.Add(new SqlParameter("@quizId", quizId));
             parameters.Add(new SqlParameter("@question", questionContent));
             parameters.Add(new SqlParameter("@points", points));
-        }
 
-        private void AddAnswerParameters(IReadOnlyList<string> answers, int correctAnswer, StringBuilder sb, List<object> parameters)
-        {
             for (int i = 1; i <= answers.Count; i++)
             {
                 string content = answers[i - 1];
@@ -866,11 +853,24 @@ namespace TwolipsDating.Business
                 }
 
                 sb.AppendFormat("insert into @answers(Content, IsCorrect) values(@answer{0}, @answer{0}Correct);", i);
+
                 parameters.Add(new SqlParameter(String.Format("@answer{0}", i), content));
                 parameters.Add(new SqlParameter(String.Format("@answer{0}Correct", i), correctAnswer == i ? 1 : 0));
 
                 Log.Info(String.Format("Answer{0}: {1}", i, content));
             }
+
+            sb.Append("exec dbo.InsertQuizQuestion @question, @points, @quizId, @answers, @latestQuestionId output;");
+        }
+
+        private static SqlParameter AddOutputParameters(List<object> parameters)
+        {
+            var output = new SqlParameter("@latestQuestionId", System.Data.SqlDbType.Int)
+            {
+                Direction = System.Data.ParameterDirection.Output
+            };
+            parameters.Add(output);
+            return output;
         }
 
         private void AttachTagsToQuestion(IReadOnlyCollection<int> tags, Question newQuestion)
@@ -896,7 +896,7 @@ namespace TwolipsDating.Business
             return tag;
         }
 
-        private Question GetNewQuestion(SqlParameter output)
+        private Question GetNewQuestionFromOutputParameter(SqlParameter output)
         {
             var newQuestion = new Question()
             {
