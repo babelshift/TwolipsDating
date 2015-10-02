@@ -829,7 +829,7 @@ namespace TwolipsDating.Business
             }
             catch (DbUpdateException ex)
             {
-                Log.Error("AddQuestionToQuizAsync", ex);
+                Log.Error("TriviaService.AddQuestionToQuizAsync", ex);
                 ValidationDictionary.AddError(Guid.NewGuid().ToString(), String.Format("Failed while inserting quiz question: \"{0}\"", questionContent));
             }
 

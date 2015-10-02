@@ -51,6 +51,17 @@ namespace TwolipsDating.Utilities
             logger.Error(logMessage.ToString());
         }
 
+        // Recursively appends inner exception details to the SringBuilder
+        public void LogInnerException(Exception e, StringBuilder logMessage)
+        {
+            if (e.InnerException != null)
+            {
+                logMessage.AppendFormat(", InnerMessage: {0}", e.InnerException.Message);
+
+                LogInnerException(e.InnerException, logMessage);
+            }
+        }
+
         public void Error(string methodName, Exception e, object parameters = null)
         {
             Debug.Assert(!String.IsNullOrEmpty(methodName));
@@ -61,15 +72,8 @@ namespace TwolipsDating.Utilities
             logMessage.AppendFormat("Action: {0}", methodName);
             logMessage.AppendFormat(", Message: {0}", e.Message);
 
-            if (e.InnerException != null)
-            {
-                logMessage.AppendFormat(", InnerMessage: {0}", e.InnerException.Message);
-
-                if (e.InnerException.InnerException != null)
-                {
-                    logMessage.AppendFormat(", InnerInnerMessage: {0}", e.InnerException.Message);
-                }
-            }
+            // recursively check inner exceptions
+            LogInnerException(e, logMessage);
 
             if (parameters != null)
             {
