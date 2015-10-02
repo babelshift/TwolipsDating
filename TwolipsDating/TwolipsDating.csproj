@@ -830,6 +830,7 @@
     <Compile Include="ViewModels\UserPointsViewModel.cs" />
     <Compile Include="ViewModels\UserStatsViewModel.cs" />
     <Compile Include="ViewModels\UserToMessageViewModel.cs" />
+    <Compile Include="ViewModels\UserWithSimilarQuizScoreViewModel.cs" />
     <Compile Include="ViewModels\WriteReviewViewModel.cs" />
     <Compile Include="ViewModels\WriteReviewViolationViewModel.cs" />
   </ItemGroup>

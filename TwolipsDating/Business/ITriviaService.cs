@@ -31,7 +31,7 @@ namespace TwolipsDating.Business
         Task<IReadOnlyCollection<TrendingQuizViewModel>> GetTrendingQuizzesAsync();
         Task<IReadOnlyCollection<MostPopularQuizViewModel>> GetPopularQuizzesAsync();
         Task<IReadOnlyCollection<Quiz>> GetUnfinishedQuizzesAsync(string userId);
-        Task<IReadOnlyCollection<Quiz>> GetSimilarQuizzes(int quizId);
+        Task<IReadOnlyCollection<Quiz>> GetSimilarQuizzesAsync(int quizId);
 
         Task<IReadOnlyCollection<Quiz>> GetQuizzesInCategoryAsync(int id);
         Task<QuizCategory> GetQuizCategoryAsync(int id);
@@ -47,5 +47,7 @@ namespace TwolipsDating.Business
         Task<int> GetQuizCategoriesTouchedByUserCountAsync(string userId);
 
         Task<ServiceResult> AddQuestionToQuizAsync(int quizId, string question, int points, IReadOnlyList<string> answers, int correctAnswer, IReadOnlyCollection<int> tags);
+
+        Task<IReadOnlyCollection<UserWithSimilarQuizScoreViewModel>> GetUsersWithSimilarScoresAsync(string userId, int quizId, int numRecords);
     }
 }

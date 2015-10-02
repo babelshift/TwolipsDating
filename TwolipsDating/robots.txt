@@ -2,3 +2,4 @@ User-agent: *
 Disallow: /search/datesite/
 Disallow: /review/selectsite/
 Disallow: /review/selectuser/
+Disallow: /bundles/

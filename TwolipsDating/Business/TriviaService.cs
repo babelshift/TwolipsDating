@@ -31,7 +31,7 @@ namespace TwolipsDating.Business
             return service;
         }
 
-        public async Task<IReadOnlyCollection<Quiz>> GetSimilarQuizzes(int quizId)
+        public async Task<IReadOnlyCollection<Quiz>> GetSimilarQuizzesAsync(int quizId)
         {
             Debug.Assert(quizId > 0);
 
@@ -119,10 +119,10 @@ namespace TwolipsDating.Business
         {
             // we have to group on the max date completed so that we can order by that date after the group by is complete
             var completedQuizzes = (from completedQuiz in db.CompletedQuizzes
-                                    group completedQuiz 
-                                    by new 
-                                    { 
-                                        completedQuiz.QuizId, 
+                                    group completedQuiz
+                                    by new
+                                    {
+                                        completedQuiz.QuizId,
                                         completedQuiz.Quiz.Name,
                                         completedQuiz.Quiz.ImageFileName
                                     } into g
@@ -176,7 +176,7 @@ namespace TwolipsDating.Business
 
             var result = await quizzes.ToListAsync();
 
-            foreach(var quiz in result)
+            foreach (var quiz in result)
             {
                 quiz.ThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(quiz.ThumbnailImagePath);
             }
@@ -539,18 +539,10 @@ namespace TwolipsDating.Business
                                            into g
                                            select new
                                            {
-                                               CorrectAnswerCount = g.Count(),
-                                               TotalQuestionCount = g.Key
+                                               Score = (double)g.Count() / (double)g.Key
                                            }).FirstOrDefaultAsync();
 
-            if (completedQuiz != null)
-            {
-                double score = (double)completedQuiz.CorrectAnswerCount / (double)completedQuiz.TotalQuestionCount;
-
-                return score;
-            }
-
-            return 0;
+            return completedQuiz != null ? completedQuiz.Score : 0;
         }
 
         private static void IncreaseUserPoints(ApplicationUser user, int points)
@@ -916,5 +908,45 @@ namespace TwolipsDating.Business
         }
 
         #endregion Question Creation
+
+        public async Task<IReadOnlyCollection<UserWithSimilarQuizScoreViewModel>> GetUsersWithSimilarScoresAsync(string userId, int quizId, int numRecords)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+            Debug.Assert(quizId > 0);
+
+            double userScore = await GetQuizScoreAsync(userId, quizId);
+
+            var similarCompletedQuizzes = (from completedQuizzes in db.CompletedQuizzes
+                                           where completedQuizzes.UserId != userId
+                                           where completedQuizzes.QuizId == quizId
+                                           from answers in completedQuizzes.User.AnsweredQuestions
+                                           from questions in completedQuizzes.Quiz.Questions
+                                           where answers.AnswerId == questions.CorrectAnswerId
+                                           group completedQuizzes by new
+                                           {
+                                               UserName = completedQuizzes.User.UserName,
+                                               ProfileId = completedQuizzes.User.Profile.Id,
+                                               ProfileThumbnailImagePath = completedQuizzes.User.Profile.UserImage.FileName,
+                                               completedQuizzes.Quiz.Questions.Count
+                                           } into g
+                                           select new UserWithSimilarQuizScoreViewModel()
+                                           {
+                                               UserName = g.Key.UserName,
+                                               ProfileId = g.Key.ProfileId,
+                                               ProfileThumbnailImagePath = g.Key.ProfileThumbnailImagePath,
+                                               Score = (double)g.Count() / (double)g.Key.Count
+                                           })
+                                     .Where((x => (x.Score <= userScore * 1.25) && (x.Score >= userScore * .75)))
+                                     .Take(numRecords);
+
+            var results = await similarCompletedQuizzes.ToListAsync();
+
+            foreach(var result in results)
+            {
+                result.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.ProfileThumbnailImagePath);
+            }
+
+            return results.AsReadOnly();
+        }
     }
 }

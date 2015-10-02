@@ -486,8 +486,9 @@ namespace TwolipsDating.Controllers
             var usersCompletedQuiz = await TriviaService.GetUsersCompletedQuizAsync(id, currentUserId);
             var tagsForQuiz = await GetTagsForQuizAsync(id);
             var questionViolationViewModel = await GetQuestionViolationViewModelAsync();
-            var similarQuizzes = await TriviaService.GetSimilarQuizzes(id);
+            var similarQuizzes = await TriviaService.GetSimilarQuizzesAsync(id);
             var quizCategories = await TriviaService.GetQuizCategoriesAsync();
+            var usersWithSimilarScores = await TriviaService.GetUsersWithSimilarScoresAsync(currentUserId, id, 4);
 
             QuizViewModel viewModel = new QuizViewModel()
             {
@@ -502,7 +503,8 @@ namespace TwolipsDating.Controllers
                 ThumbnailImageUrl = quiz.GetThumbnailImagePath(),
                 ImageUrl = quiz.GetImagePath(),
                 SimilarQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(similarQuizzes),
-                QuizCategories = Mapper.Map<IReadOnlyCollection<QuizCategory>, IReadOnlyCollection<QuizCategoryViewModel>>(quizCategories)
+                QuizCategories = Mapper.Map<IReadOnlyCollection<QuizCategory>, IReadOnlyCollection<QuizCategoryViewModel>>(quizCategories),
+                UsersWithSimilarScores = usersWithSimilarScores
             };
 
             return View(viewModel);

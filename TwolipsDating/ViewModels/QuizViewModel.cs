@@ -67,6 +67,7 @@ namespace TwolipsDating.ViewModels
         public IReadOnlyCollection<UserCompletedQuizViewModel> UsersCompletedQuiz { get; set; }
         public IReadOnlyCollection<QuizOverviewViewModel> SimilarQuizzes { get; set; }
         public IReadOnlyCollection<QuizCategoryViewModel> QuizCategories { get; set; }
+        public IReadOnlyCollection<UserWithSimilarQuizScoreViewModel> UsersWithSimilarScores { get; set; }
 
         public QuestionViolationViewModel QuestionViolation { get; set; }
     }

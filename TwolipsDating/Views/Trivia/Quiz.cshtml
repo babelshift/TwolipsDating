@@ -123,8 +123,8 @@
                             }
                             <div style="margin-bottom: 8px">
                                 @Html.Partial("_QuizRatingBarPartial", Model.AverageQuestionPoints)
-                                    <div class="g-plusone" data-size="medium" data-annotation="none"></div>
-                                    <div class="fb-like" data-layout="button" data-action="like" data-show-faces="false"></div>
+                                <div class="g-plusone" data-size="medium" data-annotation="none"></div>
+                                <div class="fb-like" data-layout="button" data-action="like" data-show-faces="false"></div>
                             </div>
                         </div>
                         <div class="col-sm-4">
@@ -183,6 +183,33 @@
                                     }
                                 </h5>
                             </div>
+                            if (Model.UsersWithSimilarScores != null && Model.UsersWithSimilarScores.Count > 0)
+                            {
+                                <div class="row" style="margin: 0">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"><i class="fa fa-users"></i> Users with similar scores...</h4>
+                                        </div>
+                                        <div class="panel-body text-center similar-people">
+                                            @foreach (var user in Model.UsersWithSimilarScores)
+                                            {
+                                                <div class="col-xs-6 col-sm-3">
+                                                    <a href="@Url.Action("index", "profile", new{ id = user.ProfileId })">
+                                                        @Html.Partial("_ProfileImagePartial", user.ProfileThumbnailImagePath)
+                                                    </a>
+                                                    <p style="margin-bottom: 0">
+                                                        <a href="@Url.Action("index", "profile", new{ id = user.ProfileId })">
+                                                            @user.UserName
+                                                        </a>
+                                                        <br />
+                                                        <small style="color: #999">Score: @String.Format("{0}%", user.Score)</small>
+                                                    </p>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         }
                     }
 
