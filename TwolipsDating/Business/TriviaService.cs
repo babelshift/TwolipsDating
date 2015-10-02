@@ -929,19 +929,27 @@ namespace TwolipsDating.Business
                                                ProfileThumbnailImagePath = completedQuizzes.User.Profile.UserImage.FileName,
                                                completedQuizzes.Quiz.Questions.Count
                                            } into g
-                                           select new UserWithSimilarQuizScoreViewModel()
+                                           select new
                                            {
                                                UserName = g.Key.UserName,
                                                ProfileId = g.Key.ProfileId,
                                                ProfileThumbnailImagePath = g.Key.ProfileThumbnailImagePath,
                                                Score = (double)g.Count() / (double)g.Key.Count
                                            })
-                                     .Where((x => (x.Score <= userScore * 1.25) && (x.Score >= userScore * .75)))
-                                     .Take(numRecords);
+                                           .Where((x => (x.Score <= userScore * 1.25) && (x.Score >= userScore * .75)))
+                                           .OrderBy(x => Guid.NewGuid())
+                                           .Select(x => new UserWithSimilarQuizScoreViewModel()
+                                           {
+                                               UserName = x.UserName,
+                                               ProfileId = x.ProfileId,
+                                               ProfileThumbnailImagePath = x.ProfileThumbnailImagePath,
+                                               Score = x.Score
+                                           })
+                                           .Take(numRecords);
 
             var results = await similarCompletedQuizzes.ToListAsync();
 
-            foreach(var result in results)
+            foreach (var result in results)
             {
                 result.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.ProfileThumbnailImagePath);
             }

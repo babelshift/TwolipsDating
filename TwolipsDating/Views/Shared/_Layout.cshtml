@@ -8,6 +8,7 @@
     <title>@String.Format("{0} | twolips", @ViewBag.Title)</title>
     <link rel="canonical" href="@Request.Url.AbsoluteUri" />
     <link rel="shortcut icon" href="~/Content/twolipsico.ico" type="image/x-icon">
+    <link rel="publisher" href="http://plus.google.com/+twolipsdating" />
     <meta name="description" content="@ViewBag.Description" />
     <meta name="keywords" content="online dating, meet people, new friends, date online, date site, relationships, dating games, trivia, quiz games, trivia games" />
     <meta property="og:image" content="@(!String.IsNullOrEmpty(ViewBag.ImageUrl) ? Url.Content(ViewBag.ImageUrl) : Request.Url.Scheme + "://" + Request.Url.Authority + Url.Content("~/Content/twolipsicon-white-200x200.png"))" />
