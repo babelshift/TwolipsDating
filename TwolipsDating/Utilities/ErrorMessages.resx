@@ -234,4 +234,7 @@
   <data name="ReferralCodeDoesNotExist" xml:space="preserve">
     <value>That referral code does not exist or has expired.</value>
   </data>
+  <data name="ProfileIsRequired" xml:space="preserve">
+    <value>A profile required to perform that action.</value>
+  </data>
 </root>

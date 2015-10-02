@@ -205,6 +205,15 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A profile required to perform that action..
+        /// </summary>
+        internal static string ProfileIsRequired {
+            get {
+                return ResourceManager.GetString("ProfileIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Something prevented your profile from being created. If this continues, contact support..
         /// </summary>
         internal static string ProfileNotCreated {

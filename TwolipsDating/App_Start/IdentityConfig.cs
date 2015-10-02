@@ -24,7 +24,7 @@ namespace TwolipsDating
             }
 
             SendGridMessage sgMessage = new SendGridMessage();
-            sgMessage.From = new MailAddress("noreply@twolipsdating.com", "Twolips Dating team");
+            sgMessage.From = new MailAddress("noreply@twolipsdating.com", "Twolips");
             sgMessage.AddTo(message.Destination);
             sgMessage.Subject = message.Subject;
             sgMessage.Html = message.Body;

@@ -28,9 +28,12 @@ namespace TwolipsDating.Utilities
                 {
                     if (filterContext.HttpContext.Request.IsAjaxRequest())
                     {
+                        var behavior = filterContext.HttpContext.Request.HttpMethod.ToUpper() == "GET" ? JsonRequestBehavior.AllowGet : JsonRequestBehavior.DenyGet;
+
                         filterContext.Result = new JsonResult
                         {
-                            Data = new { success = false, message = ErrorMessages.EmailAddressNotConfirmed }
+                            Data = new { success = false, message = ErrorMessages.ProfileIsRequired },
+                            JsonRequestBehavior = behavior
                         };
                     }
                     else
