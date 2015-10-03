@@ -1,4 +1,5 @@
 ﻿@model TwolipsDating.ViewModels.QuestionViewModel
+@using TwolipsDating.Utilities;
 
 @{
     ViewBag.Title = "Random question";
@@ -78,25 +79,29 @@
             @Html.Partial("_QuestionAndAnswerPartial", Model)
         </div>
         @Html.Partial("_SignUpIncentivePartial")
-        @if (!HttpContext.Current.IsDebuggingEnabled)
+
+        @if (HttpContext.Current.AreAdsEnabled())
         {
-            <div class="ad">
-                <!-- Random Question - Footer - 1 -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1823005717277864"
-                     data-ad-slot="2343303036"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        }
-        else
-        {
-            <div style="width: 610px; margin: 5px auto;">
-                <img src="http://placehold.it/600x90" />
-            </div>
+            if (!HttpContext.Current.IsDebuggingEnabled)
+            {
+                <div class="ad">
+                    <!-- Random Question - Footer - 1 -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1823005717277864"
+                         data-ad-slot="2343303036"
+                         data-ad-format="auto"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div style="width: 610px; margin: 5px auto;">
+                    <img src="http://placehold.it/600x90" />
+                </div>
+            }
         }
     </div>
     <div class="col-md-4">
@@ -104,25 +109,28 @@
         {
             @Html.Partial("_SidebarOthersAnsweredCorrectlyPartial", Model.UsersAnsweredCorrectly)
         }
-        @if (!HttpContext.Current.IsDebuggingEnabled)
+        @if (HttpContext.Current.AreAdsEnabled())
         {
-            <div class="ad">
-                <!-- Random Question - Sidebar - 1 -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1823005717277864"
-                     data-ad-slot="4195139430"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        }
-        else
-        {
-            <div style="width: 210px; margin: 5px auto;">
-                <img src="http://placehold.it/200x200" />
-            </div>
+            if (!HttpContext.Current.IsDebuggingEnabled)
+            {
+                <div class="ad">
+                    <!-- Random Question - Sidebar - 1 -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1823005717277864"
+                         data-ad-slot="4195139430"
+                         data-ad-format="auto"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div style="width: 210px; margin: 5px auto;">
+                    <img src="http://placehold.it/200x200" />
+                </div>
+            }
         }
     </div>
 </div>
@@ -130,7 +138,7 @@
 @section Scripts {
     @Scripts.Render("~/bundles/trivia/random")
 
-    @if (!HttpContext.Current.IsDebuggingEnabled)
+    @if (HttpContext.Current.AreAdsEnabled() && !HttpContext.Current.IsDebuggingEnabled)
     {
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     }

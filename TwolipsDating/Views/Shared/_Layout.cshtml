@@ -132,22 +132,16 @@
                                 <a id="popover-gifts" href="#" title="Received Gifts" data-placement="bottom" data-container="body" data-animation="false">
                                     <i class="fa fa-bell fa-lg fa-fw"></i>
                                     <span class="hidden-sm hidden-md hidden-lg">Notifications</span>
-                                    <div class="fa-overlay-bottom-right">
-                                        <span id="span-gift-notification-count">@ViewBag.GiftNotificationCount</span>
-                                    </div>
+                                    @if (ViewBag.GiftNotificationCount > 0)
+                                    {
+                                        <div class="fa-overlay-bottom-right">
+                                            <span id="span-gift-notification-count">@ViewBag.GiftNotificationCount</span>
+                                        </div>
+                                    }
                                 </a>
                                 <input id="gift-notification-count" type="hidden" value="@ViewBag.GiftNotificationCount" />
                             </li>
                         }
-
-                        @*if (ViewBag.AnnouncementNotificationCount != null)
-                {
-                    <li style="background: @(ViewBag.AnnouncementNotificationCount > 0 ? "#e55f00" : String.Empty)">
-                        <a id="popover-announcements" href="#" title="Announcements" data-toggle="popover" data-placement="bottom" data-container="body" data-animation="false">
-                            <i class="fa fa-bullhorn fa-lg"></i>&nbsp;&nbsp;@ViewBag.AnnouncementNotificationCount&nbsp;<span class="caret"></span>
-                        </a>
-                    </li>
-                }*@
                     }
                 </ul>
             </div>
@@ -305,10 +299,6 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/jqueryval")
-    @*@if (!HttpContext.Current.IsDebuggingEnabled)
-        {
-            <script src="@Url.Content("~/Scripts/analytics.js")" type="text/javascript"></script>
-        }*@
     <script src="@Url.Content("~/Scripts/advertisement.js")" type="text/javascript"></script>
     @Scripts.Render("~/bundles/shared/layout")
     @RenderSection("scripts", required: false)

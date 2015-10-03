@@ -1,6 +1,7 @@
-﻿@using TwolipsDating.ViewModels
+﻿@model DashboardViewModel
+@using TwolipsDating.ViewModels
+@using TwolipsDating.Utilities;
 @using PagedList.Mvc;
-@model DashboardViewModel
 
 @{
     ViewBag.Title = "Dashboard";
@@ -81,25 +82,28 @@
     </div>
 </div>
 
-@if (!HttpContext.Current.IsDebuggingEnabled)
+@if (HttpContext.Current.AreAdsEnabled())
 {
-    <div class="ad-banner-sm">
-        <!-- Dashboard - Top - 1 -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1823005717277864"
-             data-ad-slot="6266655036"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
-}
-else
-{
-    <div style="width: 610px; margin: 5px auto;">
-        <img src="http://placehold.it/600x90" />
-    </div>
+    if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="ad-banner-sm">
+            <!-- Dashboard - Top - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="6266655036"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    }
+    else
+    {
+        <div style="width: 610px; margin: 5px auto;">
+            <img src="http://placehold.it/600x90" />
+        </div>
+    }
 }
 <div class="row">
     @if (Model.IsCurrentUserEmailConfirmed)
@@ -284,32 +288,35 @@ else
         </div>
     }
 </div>
-@if (!HttpContext.Current.IsDebuggingEnabled)
+@if (HttpContext.Current.AreAdsEnabled())
 {
-    <div class="ad-banner-sm">
-        <!-- Dashboard - Sidebar - 1 -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1823005717277864"
-             data-ad-slot="9881746234"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
-}
-else
-{
-    <div style="width: 610px; margin: 5px auto;">
-        <img src="http://placehold.it/600x90" />
-    </div>
+    if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="ad-banner-sm">
+            <!-- Dashboard - Sidebar - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="9881746234"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    }
+    else
+    {
+        <div style="width: 610px; margin: 5px auto;">
+            <img src="http://placehold.it/600x90" />
+        </div>
+    }
 }
 
 @section Scripts {
     <script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
     @Scripts.Render("~/bundles/home/dashboard")
 
-    @if (!HttpContext.Current.IsDebuggingEnabled)
+    @if (HttpContext.Current.AreAdsEnabled() && !HttpContext.Current.IsDebuggingEnabled)
     {
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     }

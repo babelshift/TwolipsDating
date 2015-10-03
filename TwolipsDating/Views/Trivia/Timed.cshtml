@@ -1,4 +1,5 @@
 ﻿@model TwolipsDating.ViewModels.QuestionViewModel
+@using TwolipsDating.Utilities;
 
 @{
     ViewBag.Title = "Timed question";
@@ -77,25 +78,28 @@
         <div class="panel panel-default">
             @Html.Partial("_QuestionAndAnswerPartial", Model)
         </div>
-        @if (!HttpContext.Current.IsDebuggingEnabled)
+        @if (HttpContext.Current.AreAdsEnabled())
         {
-            <div class="ad">
-                <!-- Timed Question - Footer - 1 -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1823005717277864"
-                     data-ad-slot="3680435431"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        }
-        else
-        {
-            <div style="width: 610px; margin: 5px auto;">
-                <img src="http://placehold.it/600x90" />
-            </div>
+            if (!HttpContext.Current.IsDebuggingEnabled)
+            {
+                <div class="ad">
+                    <!-- Timed Question - Footer - 1 -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1823005717277864"
+                         data-ad-slot="3680435431"
+                         data-ad-format="auto"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div style="width: 610px; margin: 5px auto;">
+                    <img src="http://placehold.it/600x90" />
+                </div>
+            }
         }
     </div>
     <div class="col-md-4">
@@ -103,25 +107,28 @@
         {
             @Html.Partial("_SidebarOthersAnsweredCorrectlyPartial", Model.UsersAnsweredCorrectly)
         }
-        @if (!HttpContext.Current.IsDebuggingEnabled)
+        @if (HttpContext.Current.AreAdsEnabled())
         {
-            <div class="ad">
-                <!-- Timed Question - Sidebar - 1 -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1823005717277864"
-                     data-ad-slot="5671872638"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        }
-        else
-        {
-            <div style="width: 210px; margin: 5px auto;">
-                <img src="http://placehold.it/200x200" />
-            </div>
+            if (!HttpContext.Current.IsDebuggingEnabled)
+            {
+                <div class="ad">
+                    <!-- Timed Question - Sidebar - 1 -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1823005717277864"
+                         data-ad-slot="5671872638"
+                         data-ad-format="auto"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div style="width: 210px; margin: 5px auto;">
+                    <img src="http://placehold.it/200x200" />
+                </div>
+            }
         }
     </div>
 </div>
@@ -145,7 +152,7 @@
 @section Scripts {
     @Scripts.Render("~/bundles/trivia/timed")
 
-    @if (!HttpContext.Current.IsDebuggingEnabled)
+    @if (HttpContext.Current.AreAdsEnabled() && !HttpContext.Current.IsDebuggingEnabled)
     {
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     }

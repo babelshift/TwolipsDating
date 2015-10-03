@@ -1,27 +1,32 @@
 ﻿@model TwolipsDating.ViewModels.TriviaTopPlayersViewModel
+@using TwolipsDating.Utilities;
+
 @{
     ViewBag.Title = "Top performing people";
     ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
 }
-@if (!HttpContext.Current.IsDebuggingEnabled)
+@if (HttpContext.Current.AreAdsEnabled())
 {
-    <div class="ad">
-        <!-- Top Players - Top - 1 -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1823005717277864"
-             data-ad-slot="6016402231"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
-}
-else
-{
-    <div style="width: 610px; margin: 5px auto;">
-        <img src="http://placehold.it/600x90" />
-    </div>
+    if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="ad">
+            <!-- Top Players - Top - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="6016402231"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    }
+    else
+    {
+        <div style="width: 610px; margin: 5px auto;">
+            <img src="http://placehold.it/600x90" />
+        </div>
+    }
 }
 <div class="row">
     <div class="col-md-8">
@@ -120,28 +125,31 @@ else
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-12">
-            @if (!HttpContext.Current.IsDebuggingEnabled)
-            {
-                <div class="ad">
-                    <!-- Top Players - Right - 1 -->
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-1823005717277864"
-                         data-ad-slot="8969868630"
-                         data-ad-format="auto"></ins>
-                    <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                </div>
-            }
-            else
-            {
-                <div class="text-center" style="margin: 5px auto;">
-                    <img src="http://placehold.it/350x250" />
-                </div>
-            }
-        </div>
+        @if (HttpContext.Current.AreAdsEnabled())
+        {
+            <div class="col-sm-6 col-md-12">
+                @if (!HttpContext.Current.IsDebuggingEnabled)
+                {
+                    <div class="ad">
+                        <!-- Top Players - Right - 1 -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-1823005717277864"
+                             data-ad-slot="8969868630"
+                             data-ad-format="auto"></ins>
+                        <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center" style="margin: 5px auto;">
+                        <img src="http://placehold.it/350x250" />
+                    </div>
+                }
+            </div>
+        }
         <div class="col-sm-6 col-md-12">
             @if (Model.RecentlyCompletedQuizzes != null && Model.RecentlyCompletedQuizzes.Count > 0)
             {
@@ -189,32 +197,35 @@ else
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-12">
-            @if (!HttpContext.Current.IsDebuggingEnabled)
-            {
-                <div class="ad">
-                    <!-- Top Players - Right - 2 -->
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-1823005717277864"
-                         data-ad-slot="1446601833"
-                         data-ad-format="auto"></ins>
-                    <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                </div>
-            }
-            else
-            {
-                <div class="text-center" style="margin: 5px auto;">
-                    <img src="http://placehold.it/350x250" />
-                </div>
-            }
-        </div>
+        @if (HttpContext.Current.AreAdsEnabled())
+        {
+            <div class="col-sm-6 col-md-12">
+                @if (!HttpContext.Current.IsDebuggingEnabled)
+                {
+                    <div class="ad">
+                        <!-- Top Players - Right - 2 -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-1823005717277864"
+                             data-ad-slot="1446601833"
+                             data-ad-format="auto"></ins>
+                        <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center" style="margin: 5px auto;">
+                        <img src="http://placehold.it/350x250" />
+                    </div>
+                }
+            </div>
+        }
     </div>
 </div>
 @section Scripts {
-    @if (!HttpContext.Current.IsDebuggingEnabled)
+    @if (HttpContext.Current.AreAdsEnabled() && !HttpContext.Current.IsDebuggingEnabled)
     {
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     }

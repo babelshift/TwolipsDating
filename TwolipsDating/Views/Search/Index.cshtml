@@ -1,4 +1,5 @@
 ﻿@model TwolipsDating.ViewModels.SearchResultViewModel
+@using TwolipsDating.Utilities;
 @using PagedList.Mvc;
 @using Microsoft.AspNet.Identity;
 
@@ -9,25 +10,28 @@
 
 <input type="hidden" id="ProfileUserId" />
 
-@if (!HttpContext.Current.IsDebuggingEnabled)
+@if (HttpContext.Current.AreAdsEnabled())
 {
-    <div class="ad-banner-sm">
-        <!-- Search - Header - 1 -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1823005717277864"
-             data-ad-slot="9119376635"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
-}
-else
-{
-    <div style="width: 610px; margin: 5px auto;">
-        <img src="http://placehold.it/600x90" />
-    </div>
+    if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="ad-banner-sm">
+            <!-- Search - Header - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="9119376635"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    }
+    else
+    {
+        <div style="width: 610px; margin: 5px auto;">
+            <img src="http://placehold.it/600x90" />
+        </div>
+    }
 }
 @if (Model.SearchResults != null && Model.SearchResults.Count > 0)
 {
@@ -123,23 +127,26 @@ else
             </div>
         }
     </div>
-    if (!HttpContext.Current.IsDebuggingEnabled)
+    if (HttpContext.Current.AreAdsEnabled())
     {
+        if (!HttpContext.Current.IsDebuggingEnabled)
+        {
     <!-- Search - Footer - 1 -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1823005717277864"
-             data-ad-slot="1614615030"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    }
-    else
-    {
-        <div style="width: 610px; margin: 5px auto;">
-            <img src="http://placehold.it/600x90" />
-        </div>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="1614615030"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        }
+        else
+        {
+            <div style="width: 610px; margin: 5px auto;">
+                <img src="http://placehold.it/600x90" />
+            </div>
+        }
     }
 }
 @section Modals {
@@ -216,7 +223,7 @@ else
 @section Scripts {
     @Scripts.Render("~/bundles/search/index")
 
-    @if (!HttpContext.Current.IsDebuggingEnabled)
+    @if (HttpContext.Current.AreAdsEnabled() && !HttpContext.Current.IsDebuggingEnabled)
     {
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     }

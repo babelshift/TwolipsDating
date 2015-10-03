@@ -1,5 +1,6 @@
 ﻿@model TwolipsDating.ViewModels.ProfileViewModel
 @using Microsoft.AspNet.Identity;
+@using TwolipsDating.Utilities;
 
 @{
     ViewBag.Title = "Quick Matches";
@@ -245,7 +246,7 @@
 @section Scripts {
     <script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
 
-    @if (!HttpContext.Current.IsDebuggingEnabled)
+    @if (HttpContext.Current.AreAdsEnabled() && !HttpContext.Current.IsDebuggingEnabled)
     {
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     }

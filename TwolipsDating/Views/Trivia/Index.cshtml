@@ -1,27 +1,32 @@
 ﻿@model TwolipsDating.ViewModels.TriviaDashboardViewModel
+@using TwolipsDating.Utilities;
+
 @{
     ViewBag.Title = "Trivia and quizzes";
     ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
 }
-@if (!HttpContext.Current.IsDebuggingEnabled)
+@if (HttpContext.Current.AreAdsEnabled())
 {
-    <div class="ad-banner-sm">
-        <!-- TriviaDashboard - Middle - 1 -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1823005717277864"
-             data-ad-slot="1241673033"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
-}
-else
-{
-    <div style="width: 610px; margin: 5px auto;">
-        <img src="http://placehold.it/600x90" />
-    </div>
+    if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="ad-banner-sm">
+            <!-- TriviaDashboard - Middle - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="1241673033"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    }
+    else
+    {
+        <div style="width: 610px; margin: 5px auto;">
+            <img src="http://placehold.it/600x90" />
+        </div>
+    }
 }
 <div class="row">
     <div class="col-md-8">
@@ -243,13 +248,13 @@ else
                     {
                         <a style="font-size: 13px" class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })">
                             @*@if (quiz.PercentageOfTrending > 50)
-                            {
-                                <i class="text-danger fa fa-fire fa-lg fa-fw"></i>
-                            }
-                            else
-                            {
-                                <i class="text-warning fa fa-fire fa-lg fa-fw"></i>
-                            }*@
+                                {
+                                    <i class="text-danger fa fa-fire fa-lg fa-fw"></i>
+                                }
+                                else
+                                {
+                                    <i class="text-warning fa fa-fire fa-lg fa-fw"></i>
+                                }*@
                             <img src="@quiz.ThumbnailImagePath" width="90" height="45" />
                             @quiz.QuizName
                         </a>
@@ -258,30 +263,33 @@ else
             </div>
         </div>
 
-        <div class="col-sm-6 col-md-12">
-            @if (!HttpContext.Current.IsDebuggingEnabled)
-            {
-                <div class="col-md-4 col-sm-6">
-                    <div class="ad">
-                        <!-- Trivia Dashboard - Right 1 -->
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-client="ca-pub-1823005717277864"
-                             data-ad-slot="3552777032"
-                             data-ad-format="auto"></ins>
-                        <script>
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
+        @if (HttpContext.Current.AreAdsEnabled())
+        {
+            <div class="col-sm-6 col-md-12">
+                @if (!HttpContext.Current.IsDebuggingEnabled)
+                {
+                    <div class="col-md-4 col-sm-6">
+                        <div class="ad">
+                            <!-- Trivia Dashboard - Right 1 -->
+                            <ins class="adsbygoogle"
+                                 style="display:block"
+                                 data-ad-client="ca-pub-1823005717277864"
+                                 data-ad-slot="3552777032"
+                                 data-ad-format="auto"></ins>
+                            <script>
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script>
+                        </div>
                     </div>
-                </div>
-            }
-            else
-            {
-                <div class="text-center" style="margin: 5px auto;">
-                    <img src="http://placehold.it/350x250" />
-                </div>
-            }
-        </div>
+                }
+                else
+                {
+                    <div class="text-center" style="margin: 5px auto;">
+                        <img src="http://placehold.it/350x250" />
+                    </div>
+                }
+            </div>
+        }
 
         <div class="col-sm-6 col-md-12">
             @if (Model.RecentlyCompletedQuizzes != null && Model.RecentlyCompletedQuizzes.Count > 0)
@@ -333,34 +341,37 @@ else
             </div>
         </div>
 
-        <div class="col-sm-6 col-md-12">
-            @if (!HttpContext.Current.IsDebuggingEnabled)
-            {
-                <div class="col-md-4 col-sm-6">
-                    <div class="ad">
-                        <!-- Trivia Dashboard - Right 2 -->
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-client="ca-pub-1823005717277864"
-                             data-ad-slot="5029510239"
-                             data-ad-format="auto"></ins>
-                        <script>
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
+        @if (HttpContext.Current.AreAdsEnabled())
+        {
+            <div class="col-sm-6 col-md-12">
+                @if (!HttpContext.Current.IsDebuggingEnabled)
+                {
+                    <div class="col-md-4 col-sm-6">
+                        <div class="ad">
+                            <!-- Trivia Dashboard - Right 2 -->
+                            <ins class="adsbygoogle"
+                                 style="display:block"
+                                 data-ad-client="ca-pub-1823005717277864"
+                                 data-ad-slot="5029510239"
+                                 data-ad-format="auto"></ins>
+                            <script>
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script>
+                        </div>
                     </div>
-                </div>
-            }
-            else
-            {
-                <div class="text-center" style="margin: 5px auto;">
-                    <img src="http://placehold.it/350x250" />
-                </div>
-            }
-        </div>
+                }
+                else
+                {
+                    <div class="text-center" style="margin: 5px auto;">
+                        <img src="http://placehold.it/350x250" />
+                    </div>
+                }
+            </div>
+        }
     </div>
 </div>
 @section Scripts {
-    @if (!HttpContext.Current.IsDebuggingEnabled)
+    @if (HttpContext.Current.AreAdsEnabled() && !HttpContext.Current.IsDebuggingEnabled)
     {
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     }

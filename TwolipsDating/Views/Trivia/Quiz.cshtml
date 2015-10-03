@@ -1,4 +1,5 @@
 ﻿@model TwolipsDating.ViewModels.QuizViewModel
+@using TwolipsDating.Utilities;
 
 @{
     ViewBag.Title = String.Format("{0} (quiz)", Model.QuizName);
@@ -40,25 +41,28 @@
 }
 
 <div class="row">
-    @if (!HttpContext.Current.IsDebuggingEnabled)
+    @if (HttpContext.Current.AreAdsEnabled())
     {
-        <div class="ad-banner-sm">
-            <!-- Quiz - Top - 1 -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1823005717277864"
-                 data-ad-slot="9186755439"
-                 data-ad-format="auto"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
-    }
-    else
-    {
-        <div style="width: 610px; margin: 5px auto;">
-            <img src="http://placehold.it/600x90" />
-        </div>
+        if (!HttpContext.Current.IsDebuggingEnabled)
+        {
+            <div class="ad-banner-sm">
+                <!-- Quiz - Top - 1 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1823005717277864"
+                     data-ad-slot="9186755439"
+                     data-ad-format="auto"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        }
+        else
+        {
+            <div style="width: 610px; margin: 5px auto;">
+                <img src="http://placehold.it/600x90" />
+            </div>
+        }
     }
     <div class="col-md-8">
         <div class="panel panel-default">
@@ -339,25 +343,28 @@
         {
             @Html.Partial("_SidebarOthersCompletedQuizPartial", Model.UsersCompletedQuiz)
         }
-        @if (!HttpContext.Current.IsDebuggingEnabled)
+        @if (HttpContext.Current.AreAdsEnabled())
         {
-            <div class="ad">
-                <!-- Quiz - Sidebar - 1 -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1823005717277864"
-                     data-ad-slot="7710022230"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        }
-        else
-        {
-            <div style="width: 610px; margin: 5px auto;">
-                <img src="http://placehold.it/300x300" />
-            </div>
+            if (!HttpContext.Current.IsDebuggingEnabled)
+            {
+                <div class="ad">
+                    <!-- Quiz - Sidebar - 1 -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1823005717277864"
+                         data-ad-slot="7710022230"
+                         data-ad-format="auto"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div style="width: 610px; margin: 5px auto;">
+                    <img src="http://placehold.it/300x300" />
+                </div>
+            }
         }
     </div>
 </div>
@@ -383,7 +390,7 @@
 
     @Scripts.Render("~/bundles/trivia/quiz")
 
-    @if (!HttpContext.Current.IsDebuggingEnabled)
+    @if (HttpContext.Current.AreAdsEnabled() && !HttpContext.Current.IsDebuggingEnabled)
     {
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     }

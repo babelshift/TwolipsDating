@@ -1,4 +1,5 @@
 ﻿@model TwolipsDating.ViewModels.StoreViewModel
+@using TwolipsDating.Utilities;
 @using Microsoft.AspNet.Identity;
 @using PagedList;
 
@@ -127,53 +128,36 @@
                 </div>
             }
         </div>
-        @*@if (!HttpContext.Current.IsDebuggingEnabled)
-            {
-                <div class="ad">
-                    <!-- Store - Sidebar - 1 -->
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-1823005717277864"
-                         data-ad-slot="2718406231"
-                         data-ad-format="auto"></ins>
-                    <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                </div>
-            }
-            else
-            {
-                <div style="width: 95px; margin: 5px auto;">
-                    <img src="http://placehold.it/150x600" />
-                </div>
-            }*@
     </div>
-    @if (!HttpContext.Current.IsDebuggingEnabled)
+    @if (HttpContext.Current.AreAdsEnabled())
     {
-        <div class="ad-banner-sm">
-            <!-- Store - Footer - 1 -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1823005717277864"
-                 data-ad-slot="4806928234"
-                 data-ad-format="auto"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
-    }
-    else
-    {
-        <div style="width: 610px; margin: 5px auto;">
-            <img src="http://placehold.it/600x90" />
-        </div>
+        if (!HttpContext.Current.IsDebuggingEnabled)
+        {
+            <div class="ad-banner-sm">
+                <!-- Store - Footer - 1 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1823005717277864"
+                     data-ad-slot="4806928234"
+                     data-ad-format="auto"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        }
+        else
+        {
+            <div style="width: 610px; margin: 5px auto;">
+                <img src="http://placehold.it/600x90" />
+            </div>
+        }
     }
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/store/index")
 
-    @if (!HttpContext.Current.IsDebuggingEnabled)
+    @if (HttpContext.Current.AreAdsEnabled() && !HttpContext.Current.IsDebuggingEnabled)
     {
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     }

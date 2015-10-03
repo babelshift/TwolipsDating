@@ -1,5 +1,5 @@
 ﻿@model IReadOnlyCollection<TwolipsDating.Models.TagAndSuggestedCount>
-
+@using TwolipsDating.Utilities;
 @{
     ViewBag.Title = "All tags";
     ViewBag.Description = "Tags are used to identify users by a variety of categories. This is helpful when you want to view users who have earned or been identified as something specific. Tags are attached to profiles when other users suggest those tags for a profile or when a user earns a tag through an achievement.";
@@ -11,25 +11,28 @@
             users suggest those tags or when a user earns a tag by participating in the community.
         </div>
     </div>
-    @if (!HttpContext.Current.IsDebuggingEnabled)
+    @if (HttpContext.Current.AreAdsEnabled())
     {
-        <div class="ad">
-            <!-- Tags - Top - 1 -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1823005717277864"
-                 data-ad-slot="7334919034"
-                 data-ad-format="auto"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
-    }
-    else
-    {
-        <div style="width: 610px; margin: 5px auto;">
-            <img src="http://placehold.it/600x90" />
-        </div>
+        if (!HttpContext.Current.IsDebuggingEnabled)
+        {
+            <div class="ad">
+                <!-- Tags - Top - 1 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-1823005717277864"
+                     data-ad-slot="7334919034"
+                     data-ad-format="auto"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        }
+        else
+        {
+            <div style="width: 610px; margin: 5px auto;">
+                <img src="http://placehold.it/600x90" />
+            </div>
+        }
     }
     <div class="panel panel-default">
         <div class="panel-body">
@@ -61,30 +64,33 @@
             }
         </div>
     </div>
-    @if (!HttpContext.Current.IsDebuggingEnabled)
+    @if (HttpContext.Current.AreAdsEnabled())
     {
+        if (!HttpContext.Current.IsDebuggingEnabled)
+        {
         <!-- Tags - Bottom - 1 -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-1823005717277864"
-             data-ad-slot="5880035438"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    }
-    else
-    {
-        <div style="width: 610px; margin: 5px auto;">
-            <img src="http://placehold.it/600x90" />
-        </div>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="5880035438"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        }
+        else
+        {
+            <div style="width: 610px; margin: 5px auto;">
+                <img src="http://placehold.it/600x90" />
+            </div>
+        }
     }
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/tags/index")
 
-    @if (!HttpContext.Current.IsDebuggingEnabled)
+    @if (HttpContext.Current.AreAdsEnabled() && !HttpContext.Current.IsDebuggingEnabled)
     {
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     }
