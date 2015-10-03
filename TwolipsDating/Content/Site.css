@@ -138,11 +138,11 @@ input[type="checkbox"].input-validation-error {
     height: 100%;
 }
 
-.footer p, 
-.footer h4, 
+.footer p,
+.footer h4,
 .footer h5,
-.footer-splash p, 
-.footer-splash h4, 
+.footer-splash p,
+.footer-splash h4,
 .footer-splash h5 {
     color: #fff;
 }
@@ -224,6 +224,10 @@ input[type="checkbox"].input-validation-error {
 
 .navbar {
     margin-bottom: 10px;
+}
+
+.navbar i {
+    font-size: 23px;
 }
 
 .tags a {
@@ -1074,3 +1078,16 @@ input[readonly] {
     vertical-align: bottom !important;
 }
 
+.fa-overlay-bottom-right {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: #fff;
+    background-color: #f04124;
+    border: 1px solid #d32a0e;
+    margin: 0;
+    padding: 0 6px;
+    font-size: 12px;
+    line-height: 18px;
+    border-radius: 10px;
+}

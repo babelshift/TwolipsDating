@@ -58,7 +58,7 @@
             '//www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', 'GTM-K5MZD9');</script>
     <!-- End Google Tag Manager -->
-    <div class="navbar navbar-inverse" role="navigation">
+    <div class="navbar navbar-inverse" role="navigation" style="box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.25) ">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -71,35 +71,31 @@
                 </a>
             </div>
             <div class="navbar-collapse collapse">
-                @*@@if (User.Identity.IsAuthenticated)
-                    {
-                        using (Html.BeginForm("index", "search", FormMethod.Get, new { @class = "navbar-form navbar-left", role = "search" }))
-                        {
-                            <div class="input-group">
-                                @Html.TextBox("user", null, new { @id = "searchUserName", @class = "form-control", @placeholder = "Find someone..." })
-                                <span class="input-group-btn">
-                                    <button type="submit" class="btn btn-sm btn-default" style="line-height: 1.4"><i class="glyphicon glyphicon-search"></i></button>
-                                </span>
-                            </div>
-                        }
-                    }*@
-                <ul id="navbar-main" class="nav navbar-nav visible-md visible-lg">
-                    <li><a href="@Url.Action("quick", "profile")"><i class="fa fa-bolt fa-lg"></i> QuickMatch</a></li>
-                    <li><a href="@Url.Action("index", "search")"><i class="fa fa-heart fa-lg"></i> Browse</a></li>
-                    <li><a href="@Url.Action("index", "trivia")"><i class="fa fa-mortar-board fa-lg"></i> Trivia</a></li>
-                    <li><a href="@Url.Action("index", "store")"><i class="fa fa-shopping-cart fa-lg"></i>&nbsp;&nbsp;Store</a></li>
-                    <li><a href="@Url.Action("index", "tags")"><i class="fa fa-tags fa-lg"></i> Tags</a></li>
-                </ul>
-                <ul id="navbar-main" class="nav navbar-nav visible-xs visible-sm">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search fa-lg"></i>&nbsp;&nbsp;Explore <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="@Url.Action("quick", "profile")"><i class="fa fa-bolt fa-lg fa-fw"></i> QuickMatch</a></li>
-                            <li><a href="@Url.Action("index", "search")"><i class="fa fa-heart fa-lg fa-fw"></i> Browse</a></li>
-                            <li><a href="@Url.Action("index", "trivia")"><i class="fa fa-mortar-board fa-lg fa-fw"></i>&nbsp;&nbsp;Trivia</a></li>
-                            <li><a href="@Url.Action("index", "store")"><i class="fa fa-shopping-cart fa-lg fa-fw"></i>&nbsp;&nbsp;Store</a></li>
-                            <li><a href="@Url.Action("index", "tags")"><i class="fa fa-tags fa-lg fa-fw"></i>&nbsp;&nbsp;Tags</a></li>
-                        </ul>
+                <ul id="navbar-main" class="nav navbar-nav">
+                    <li>
+                        <a href="@Url.Action("quick", "profile")" data-placement="bottom" data-container="body" class="custom-tooltip" title="Flip through matches">
+                            <i class="fa fa-bolt fa-lg fa-fw"></i> <span class="hidden-sm">QuickMatch</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("index", "search")" data-placement="bottom" data-container="body" class="custom-tooltip" title="Browse all people">
+                            <i class="fa fa-heart fa-lg fa-fw"></i> <span class="hidden-sm">Browse</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("index", "trivia")" data-placement="bottom" data-container="body" class="custom-tooltip" title="Earn points and achievements">
+                            <i class="fa fa-mortar-board fa-lg fa-fw"></i> <span class="hidden-sm">Trivia</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("index", "store")" data-placement="bottom" data-container="body" class="custom-tooltip" title="Spend your points">
+                            <i class="fa fa-shopping-cart fa-lg fa-fw"></i> <span class="hidden-sm">Store</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("index", "tags")" data-placement="bottom" data-container="body" class="custom-tooltip" title="Find people by tag">
+                            <i class="fa fa-tags fa-lg fa-fw"></i> <span class="hidden-sm">Tags</span>
+                        </a>
                     </li>
                 </ul>
                 @Html.Partial("_LoginPartial")
@@ -109,38 +105,49 @@
                         if (ViewBag.PointsCount != null)
                         {
                             <li>
-                                <a href="@Url.Action("points", "account")" title="Points">
-                                    <i class="fa fa-money fa-lg"></i>&nbsp;&nbsp;<span id="span-points-count">@ViewBag.PointsCount</span>
+                                <a href="@Url.Action("points", "account")" data-placement="bottom" data-container="body" class="custom-tooltip" title="View your points">
+                                    <i class="fa fa-star fa-lg fa-fw"></i> <span id="span-points-count">@ViewBag.PointsCount</span>
                                 </a>
                             </li>
                         }
                         if (ViewBag.MessageNotificationCount != null)
                         {
-                            <li style="background: @(ViewBag.MessageNotificationCount > 0 ? "#e55f00" : String.Empty)">
-                                <a href="@Url.Action("conversation", "message")" title="Unread messages">
-                                    <i class="fa fa-envelope fa-lg"></i>&nbsp;&nbsp;@ViewBag.MessageNotificationCount
+                            <li>
+                                <a href="@Url.Action("conversation", "message")" data-placement="bottom" data-container="body" class="custom-tooltip" title="View your conversations">
+                                    <i class="fa fa-envelope fa-lg fa-fw"></i>
+                                    <span class="hidden-sm hidden-md hidden-lg">Conversations</span>
+                                    @if (ViewBag.MessageNotificationCount > 0)
+                                    {
+                                        <div class="fa-overlay-bottom-right">
+                                            @ViewBag.MessageNotificationCount
+                                        </div>
+                                    }
                                 </a>
                             </li>
                         }
 
                         if (ViewBag.GiftNotificationCount != null)
                         {
-                            <li style="background: @(ViewBag.GiftNotificationCount > 0 ? "#e55f00" : String.Empty)">
+                            <li>
                                 <a id="popover-gifts" href="#" title="Received Gifts" data-placement="bottom" data-container="body" data-animation="false">
-                                    <i class="fa fa-bell fa-lg"></i>&nbsp;&nbsp;<span id="span-gift-notification-count">@ViewBag.GiftNotificationCount</span>&nbsp;<span class="caret"></span>
+                                    <i class="fa fa-bell fa-lg fa-fw"></i>
+                                    <span class="hidden-sm hidden-md hidden-lg">Notifications</span>
+                                    <div class="fa-overlay-bottom-right">
+                                        <span id="span-gift-notification-count">@ViewBag.GiftNotificationCount</span>
+                                    </div>
                                 </a>
                                 <input id="gift-notification-count" type="hidden" value="@ViewBag.GiftNotificationCount" />
                             </li>
                         }
 
                         @*if (ViewBag.AnnouncementNotificationCount != null)
-                            {
-                                <li style="background: @(ViewBag.AnnouncementNotificationCount > 0 ? "#e55f00" : String.Empty)">
-                                    <a id="popover-announcements" href="#" title="Announcements" data-toggle="popover" data-placement="bottom" data-container="body" data-animation="false">
-                                        <i class="fa fa-bullhorn fa-lg"></i>&nbsp;&nbsp;@ViewBag.AnnouncementNotificationCount&nbsp;<span class="caret"></span>
-                                    </a>
-                                </li>
-                            }*@
+                {
+                    <li style="background: @(ViewBag.AnnouncementNotificationCount > 0 ? "#e55f00" : String.Empty)">
+                        <a id="popover-announcements" href="#" title="Announcements" data-toggle="popover" data-placement="bottom" data-container="body" data-animation="false">
+                            <i class="fa fa-bullhorn fa-lg"></i>&nbsp;&nbsp;@ViewBag.AnnouncementNotificationCount&nbsp;<span class="caret"></span>
+                        </a>
+                    </li>
+                }*@
                     }
                 </ul>
             </div>
@@ -277,13 +284,13 @@
         "url" : "https://www.twolipsdating.com",
         "logo" : "https://www.twolipsdating.com/Content/twolipsicon-white-200x200.png",
         "address": {
-            "@@type": "PostalAddress",
-            "addressCountry": "United States",
-            "addressLocality": "Orlando",
-            "addressRegion": "FL",
-            "postalCode": "32878",
-            "postOfficeBoxNumber": "780835"
-            },
+        "@@type": "PostalAddress",
+        "addressCountry": "United States",
+        "addressLocality": "Orlando",
+        "addressRegion": "FL",
+        "postalCode": "32878",
+        "postOfficeBoxNumber": "780835"
+        },
         "sameAs" : [
         "https://www.facebook.com/twolipsdating",
         "https://www.twitter.com/twolipsdating/",

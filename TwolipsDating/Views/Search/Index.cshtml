@@ -32,18 +32,22 @@ else
 @if (Model.SearchResults != null && Model.SearchResults.Count > 0)
 {
     <div class="row" style="margin-bottom: 10px">
-        <div class="col-md-6 col-md-offset-3">
-            @using (Html.BeginForm("index", "search", FormMethod.Get, new { role = "search" }))
-            {
-                <div class="input-group">
-                    @Html.ListBoxFor(m => m.Tags,
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="col-md-6 col-md-offset-3">
+                    @using (Html.BeginForm("index", "search", FormMethod.Get, new { role = "search" }))
+                    {
+                        <div class="input-group">
+                            @Html.ListBoxFor(m => m.Tags,
                         new SelectList(Model.SearchTags, "Key", "Value"),
                         new { id = "select-search", multiple = "multiple", @class = "form-control", data_placeholder = "Search for users by selecting some tags" })
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-                    </span>
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                            </span>
+                        </div>
+                    }
                 </div>
-            }
+            </div>
         </div>
     </div>
     <div class="row">
@@ -119,8 +123,25 @@ else
             </div>
         }
     </div>
+    if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+    <!-- Search - Footer - 1 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1823005717277864"
+             data-ad-slot="1614615030"
+             data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    }
+    else
+    {
+        <div style="width: 610px; margin: 5px auto;">
+            <img src="http://placehold.it/600x90" />
+        </div>
+    }
 }
-
 @section Modals {
     @if (!User.Identity.IsAuthenticated)
     {

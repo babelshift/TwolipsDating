@@ -6,11 +6,31 @@
     ViewBag.Title = "Your conversations";
     ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
 }
-
+@if (!HttpContext.Current.IsDebuggingEnabled)
+{
+    <div class="ad-banner-sm">
+        <!-- Conversation - Top - 1 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1823005717277864"
+             data-ad-slot="2092293034"
+             data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+}
+else
+{
+    <div style="width: 610px; margin: 5px auto;">
+        <img src="http://placehold.it/600x90" />
+    </div>
+}
 <div class="row">
     <div class="col-md-4">
         <div class="panel panel-default">
-            <div class="panel-body">
+            <div class="panel-body" style="max-height: 500px; overflow-y: auto">
+
                 @foreach (var conversation in Model.Conversations)
                 {
                     <div class="conversation-summary-item">
@@ -209,5 +229,9 @@
     </div>
 </div>
 @section Scripts {
+    @if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    }
     @Scripts.Render("~/bundles/message/conversation")
 }
