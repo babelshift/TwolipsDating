@@ -187,6 +187,15 @@ namespace TwolipsDating.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something prevented your answers from being submitted. If this continues, contact support..
+        /// </summary>
+        internal static string MinefieldAnswersNotSubmitted {
+            get {
+                return ResourceManager.GetString("MinefieldAnswersNotSubmitted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You need to earn at least 25 points to message someone. Go play some trivia and come back!.
         /// </summary>
         internal static string NeedPointsToMessage {

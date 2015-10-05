@@ -49,11 +49,30 @@ namespace TwolipsDating.Business
         {
             Debug.Assert(quizId > 0);
 
-            var quizResult = from quiz in db.Quizzes.Include(t => t.Questions)
-                             where quiz.Id == quizId
-                             select quiz;
+            int quizTypeId = await (from quizzes in db.Quizzes
+                                    where quizzes.Id == quizId
+                                    select quizzes.QuizTypeId).FirstAsync();
 
-            return await quizResult.FirstOrDefaultAsync();
+            if (quizTypeId == (int)QuizTypeValues.Individual)
+            {
+                var quiz = from quizzes in db.Quizzes
+                           .Include(x => x.Questions)
+                           .Include(x => x.Questions.Select(y => y.PossibleAnswers))
+                           .Include(x => x.Questions.Select(y => y.Tags))
+                           where quizzes.Id == quizId
+                           select quizzes;
+
+                return await quiz.FirstOrDefaultAsync();
+            }
+            else
+            {
+                var quiz = from quizzes in db.Quizzes
+                           .Include(x => x.MinefieldQuestion)
+                           where quizzes.Id == quizId
+                           select quizzes;
+
+                return await quiz.FirstOrDefaultAsync();
+            }
         }
 
         public async Task<IReadOnlyCollection<Quiz>> GetQuizzesAsync()
@@ -81,7 +100,7 @@ namespace TwolipsDating.Business
 
         public async Task<ReadOnlyDictionary<int, IReadOnlyCollection<Quiz>>> GetDailyQuizzesAsync(int daysAgo)
         {
-            var quizzes = from quiz in db.Quizzes
+            var quizzes = from quiz in db.Quizzes.Include(x => x.MinefieldQuestion)
                           where quiz.IsActive
                           select quiz;
 
@@ -358,18 +377,40 @@ namespace TwolipsDating.Business
             }
         }
 
-        private void AddAnsweredQuestion(string userId, int questionId, int answerId)
+        private void AddAnsweredMinefieldQuestion(string userId, int minefieldQuestionId, IReadOnlyCollection<int> selectedMinefieldAnswerIds)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
-            Debug.Assert(questionId > 0);
-            Debug.Assert(answerId > 0);
+            Debug.Assert(minefieldQuestionId > 0);
+            Debug.Assert(selectedMinefieldAnswerIds != null);
+            Debug.Assert(selectedMinefieldAnswerIds.Count > 0);
+
+            foreach (var selectedMinefieldAnswerId in selectedMinefieldAnswerIds)
+            {
+                // log the answered question
+                AnsweredMinefieldQuestion answeredMinefieldQuestion = new AnsweredMinefieldQuestion()
+                {
+                    MinefieldAnswerId = selectedMinefieldAnswerId,
+                    DateAnswered = DateTime.Now,
+                    MinefieldQuestionId = minefieldQuestionId,
+                    UserId = userId
+                };
+
+                db.AnsweredMinefieldQuestions.Add(answeredMinefieldQuestion);
+            }
+        }
+
+        private void AddAnsweredQuestion(string userId, int minefieldQuestionId, int minefieldAnswerId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+            Debug.Assert(minefieldQuestionId > 0);
+            Debug.Assert(minefieldAnswerId > 0);
 
             // log the answered question
             AnsweredQuestion answeredQuestion = new AnsweredQuestion()
             {
-                AnswerId = answerId,
+                AnswerId = minefieldAnswerId,
                 DateAnswered = DateTime.Now,
-                QuestionId = questionId,
+                QuestionId = minefieldQuestionId,
                 UserId = userId
             };
 
@@ -450,7 +491,22 @@ namespace TwolipsDating.Business
             return points.Value;
         }
 
-        public async Task<IReadOnlyDictionary<int, AnsweredQuestion>> GetAnsweredQuizQuestions(string userId, int quizId)
+        public async Task<IReadOnlyDictionary<int, AnsweredMinefieldQuestion>> GetSelectedMinefieldAnswersAsync(string userId, int quizId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+            Debug.Assert(quizId > 0);
+
+            var answeredQuestions = await (from answeredQuestion in db.AnsweredMinefieldQuestions
+                                           .Include(x => x.Answer)
+                                           where answeredQuestion.Question.Quiz.Id == quizId
+                                           where answeredQuestion.UserId == userId
+                                           select answeredQuestion)
+                                    .ToDictionaryAsync(x => x.MinefieldAnswerId, x => x);
+
+            return new ReadOnlyDictionary<int, AnsweredMinefieldQuestion>(answeredQuestions);
+        }
+
+        public async Task<IReadOnlyDictionary<int, AnsweredQuestion>> GetAnsweredQuizQuestionsAsync(string userId, int quizId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(quizId > 0);
@@ -470,7 +526,7 @@ namespace TwolipsDating.Business
             return new ReadOnlyDictionary<int, AnsweredQuestion>(result);
         }
 
-        public async Task<int> SetQuizAsCompleted(string userId, int quizId, int numberOfCorrectAnswers)
+        public async Task<int> SetQuizAsCompletedAsync(string userId, int quizId, int numberOfCorrectAnswers)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(quizId > 0);
@@ -486,7 +542,17 @@ namespace TwolipsDating.Business
 
             // if the user got enough questions right, give them points
             var quiz = await GetQuizAsync(quizId);
-            double percentageOfCorrectQuestions = (double)numberOfCorrectAnswers / (double)quiz.Questions.Count;
+
+            double percentageOfCorrectQuestions = 0;
+            if (quiz.QuizTypeId == (int)QuizTypeValues.Individual)
+            {
+                percentageOfCorrectQuestions = (double)numberOfCorrectAnswers / (double)quiz.Questions.Count;
+            }
+            else
+            {
+                percentageOfCorrectQuestions = (double)numberOfCorrectAnswers / (double)quiz.MinefieldQuestion.PossibleAnswers.Count;
+            }
+
             if (percentageOfCorrectQuestions >= 0.8)
             {
                 var user = db.Users.Find(userId);
@@ -614,7 +680,7 @@ namespace TwolipsDating.Business
 	                count(*) CorrectAnswerCount,
 	                (
 		                select count(*)
-		                from dbo.QuizQuestions qq2
+		                from dbo.QuestionQuizs qq2
 		                where qq2.Quiz_Id = q.Id
 	                ) TotalAnswerCount,
                     p.Birthday,
@@ -626,7 +692,7 @@ namespace TwolipsDating.Business
 	                inner join dbo.Profiles p on p.ApplicationUser_Id = u.Id
 	                left join dbo.UserImages ui on ui.Id = p.UserImageId
 	                inner join dbo.Quizs q on q.Id = cq.QuizId
-	                inner join dbo.QuizQuestions qq on qq.Quiz_Id = q.Id
+	                inner join dbo.QuestionQuizs qq on qq.Quiz_Id = q.Id
 	                inner join dbo.AnsweredQuestions aq on aq.UserId = cq.UserId and aq.QuestionId = qq.Question_Id
 	                inner join dbo.Questions qu on qu.Id = aq.QuestionId
                     left join dbo.FavoriteProfiles fp on fp.ProfileId = p.Id and fp.UserId = '{0}'
@@ -955,6 +1021,76 @@ namespace TwolipsDating.Business
             }
 
             return results.AsReadOnly();
+        }
+
+        public async Task<AnsweredMinefieldQuestionServiceResult> RecordAnsweredMinefieldQuestionAsync(string userId, int minefieldQuestionId, IList<MinefieldAnswerViewModel> minefieldAnswers)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+            Debug.Assert(minefieldQuestionId > 0);
+            Debug.Assert(minefieldAnswers != null);
+            Debug.Assert(minefieldAnswers.Count > 0);
+
+            bool success = false;
+            int correctAnswerCount = 0;
+
+            try
+            {
+                // find all the answers that the user got correct
+                List<int> selectedAnswerIds = minefieldAnswers
+                    .Where(x => x.IsSelected)
+                    .Select(x => x.AnswerId)
+                    .ToList();
+
+                // these are the answers that the user selected
+                var selectedAnswers = await (from minefieldAnswer in db.MinefieldAnswers
+                                             where selectedAnswerIds.Contains(minefieldAnswer.Id)
+                                             where minefieldAnswer.MinefieldQuestionId == minefieldQuestionId
+                                             select minefieldAnswer).ToListAsync();
+
+                // save the user's answers to the database
+                AddAnsweredMinefieldQuestion(userId, minefieldQuestionId, selectedAnswerIds);
+
+                // this is the user who answered the question
+                var user = db.Users.Find(userId);
+
+                // award points for each correct answer
+                foreach (var selectedAnswer in selectedAnswers)
+                {
+                    if (selectedAnswer.IsCorrect)
+                    {
+                        IncreaseUserPoints(user, 1);
+                        correctAnswerCount++;
+                    }
+                }
+
+                // tag awards?
+
+                // save the changes regarding the answered question
+                int changes = await db.SaveChangesAsync();
+
+                success = changes > 0;
+
+                //// any achievements met?
+                //if (changes > 0)
+                //{
+                //    // award the user any question-related milestones if they have enough question-related points
+                //    await MilestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.QuestionsAnsweredCorrectly);
+
+                //    // save the milestone and tag award changes
+                //    changes = await db.SaveChangesAsync();
+
+                //    success = true;
+                //}
+            }
+            catch (DbUpdateException ex)
+            {
+                Log.Error("TriviaService.RecordAnsweredMinefieldQuestionAsync", ex, new { userId, minefieldQuestionId });
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.AnswerNotSubmitted);
+            }
+
+            return success
+                ? AnsweredMinefieldQuestionServiceResult.Success(correctAnswerCount)
+                : AnsweredMinefieldQuestionServiceResult.Failed(ErrorMessages.AnswerNotSubmitted);
         }
     }
 }

@@ -112,7 +112,7 @@ select
 	cq.DateCompleted DateCompleted,
 	(
 		select count(*)
-		from dbo.QuizQuestions qq2
+		from dbo.QuestionQuizs qq2
 		inner join dbo.AnsweredQuestions aq on aq.UserId = cq.UserId and aq.QuestionId = qq2.Question_Id
 		inner join dbo.Questions qu on qu.Id = aq.QuestionId
 		where qq2.Quiz_Id = q.Id
@@ -120,7 +120,7 @@ select
 	) CorrectAnswerCount,
 	(
 		select count(*)
-		from dbo.QuizQuestions qq2
+		from dbo.QuestionQuizs qq2
 		where qq2.Quiz_Id = q.Id
 	) TotalAnswerCount
 from dbo.CompletedQuizs cq
@@ -219,7 +219,7 @@ select
 	cq.DateCompleted DateCompleted,
 	(
 		select count(*)
-		from dbo.QuizQuestions qq2
+		from dbo.QuestionQuizs qq2
 		inner join dbo.AnsweredQuestions aq on aq.UserId = cq.UserId and aq.QuestionId = qq2.Question_Id
 		inner join dbo.Questions qu on qu.Id = aq.QuestionId
 		where qq2.Quiz_Id = q.Id
@@ -227,7 +227,7 @@ select
 	) CorrectAnswerCount,
 	(
 		select count(*)
-		from dbo.QuizQuestions qq2
+		from dbo.QuestionQuizs qq2
 		where qq2.Quiz_Id = q.Id
 	) TotalAnswerCount
 from dbo.CompletedQuizs cq

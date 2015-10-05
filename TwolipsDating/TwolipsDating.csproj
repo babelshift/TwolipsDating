@@ -278,6 +278,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Business\AnsweredMinefieldQuestionServiceResult.cs" />
     <Compile Include="Business\IBaseService.cs" />
     <Compile Include="Business\IDashboardService.cs" />
     <Compile Include="Business\IMilestoneService.cs" />
@@ -449,12 +450,32 @@
     <Compile Include="Migrations\201509232150570_AddIconsToMilestones.Designer.cs">
       <DependentUpon>201509232150570_AddIconsToMilestones.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201510032048293_AddQuizTypePart1.cs" />
+    <Compile Include="Migrations\201510032048293_AddQuizTypePart1.Designer.cs">
+      <DependentUpon>201510032048293_AddQuizTypePart1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510032112218_AddQuizTypePart2.cs" />
+    <Compile Include="Migrations\201510032112218_AddQuizTypePart2.Designer.cs">
+      <DependentUpon>201510032112218_AddQuizTypePart2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510040300137_AddMinefieldQuestionAndAnswer.cs" />
+    <Compile Include="Migrations\201510040300137_AddMinefieldQuestionAndAnswer.Designer.cs">
+      <DependentUpon>201510040300137_AddMinefieldQuestionAndAnswer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510052053115_AddAnsweredMinefieldQuestions.cs" />
+    <Compile Include="Migrations\201510052053115_AddAnsweredMinefieldQuestions.Designer.cs">
+      <DependentUpon>201510052053115_AddAnsweredMinefieldQuestions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AnsweredMinefieldQuestion.cs" />
     <Compile Include="Models\CompletedQuizComparer.cs" />
     <Compile Include="Models\EmailNotifications.cs" />
     <Compile Include="Models\Language.cs" />
     <Compile Include="Models\LookingForLocation.cs" />
     <Compile Include="Models\LookingForType.cs" />
+    <Compile Include="Models\MinefieldAnswer.cs" />
+    <Compile Include="Models\MinefieldQuestion.cs" />
     <Compile Include="Models\QuizCategory.cs" />
+    <Compile Include="Models\QuizType.cs" />
     <Compile Include="Models\Referral.cs" />
     <Compile Include="Models\RelationshipStatus.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
@@ -497,6 +518,8 @@
     <Compile Include="ViewModels\GiftReceivedFeedViewModel.cs" />
     <Compile Include="ViewModels\LanguageViewModel.cs" />
     <Compile Include="ViewModels\ManageNotificationsViewModel.cs" />
+    <Compile Include="ViewModels\MinefieldAnswerViewModel.cs" />
+    <Compile Include="ViewModels\MinefieldQuestionViewModel.cs" />
     <Compile Include="ViewModels\MostPopularQuizViewModel.cs" />
     <Compile Include="ViewModels\QuizCategoryViewModel.cs" />
     <Compile Include="ViewModels\QuizSearchResultViewModel.cs" />
@@ -1345,6 +1368,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509232150570_AddIconsToMilestones.resx">
       <DependentUpon>201509232150570_AddIconsToMilestones.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510032048293_AddQuizTypePart1.resx">
+      <DependentUpon>201510032048293_AddQuizTypePart1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510032112218_AddQuizTypePart2.resx">
+      <DependentUpon>201510032112218_AddQuizTypePart2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510040300137_AddMinefieldQuestionAndAnswer.resx">
+      <DependentUpon>201510040300137_AddMinefieldQuestionAndAnswer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510052053115_AddAnsweredMinefieldQuestions.resx">
+      <DependentUpon>201510052053115_AddAnsweredMinefieldQuestions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

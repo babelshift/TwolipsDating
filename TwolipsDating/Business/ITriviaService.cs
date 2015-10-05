@@ -8,7 +8,7 @@ namespace TwolipsDating.Business
 {
     public interface ITriviaService : IBaseService
     {
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<int, TwolipsDating.Models.AnsweredQuestion>> GetAnsweredQuizQuestions(string userId, int quizId);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<int, TwolipsDating.Models.AnsweredQuestion>> GetAnsweredQuizQuestionsAsync(string userId, int quizId);
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<int, TwolipsDating.Models.CompletedQuiz>> GetCompletedQuizzesForUserAsync(string currentUserId);
         System.Threading.Tasks.Task<int> GetCorrectAnswerAsync(int questionId, int answerId);
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Quiz>> GetNewQuizzesAsync(int takeCount = 10);
@@ -25,7 +25,7 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task<int> GetUsersQuestionPointsForTypeAsync(string userId, int questionTypeId);
         System.Threading.Tasks.Task<bool> IsQuizCompletedByUserAsync(string userId, int quizId);
         System.Threading.Tasks.Task<AnsweredQuestionServiceResult> RecordAnsweredQuestionAsync(string userId, int profileId, int questionId, int answerId, int questionTypeId);
-        System.Threading.Tasks.Task<int> SetQuizAsCompleted(string userId, int quizId, int numberOfCorrectAnswers);
+        System.Threading.Tasks.Task<int> SetQuizAsCompletedAsync(string userId, int quizId, int numberOfCorrectAnswers);
         Task<ReadOnlyDictionary<int, IReadOnlyCollection<Quiz>>> GetDailyQuizzesAsync(int daysAgo);
 
         Task<IReadOnlyCollection<TrendingQuizViewModel>> GetTrendingQuizzesAsync();
@@ -49,5 +49,9 @@ namespace TwolipsDating.Business
         Task<ServiceResult> AddQuestionToQuizAsync(int quizId, string question, int points, IReadOnlyList<string> answers, int correctAnswer, IReadOnlyCollection<int> tags);
 
         Task<IReadOnlyCollection<UserWithSimilarQuizScoreViewModel>> GetUsersWithSimilarScoresAsync(string userId, int quizId, int numRecords);
+
+        Task<AnsweredMinefieldQuestionServiceResult> RecordAnsweredMinefieldQuestionAsync(string userId, int minefieldQuestionId, IList<MinefieldAnswerViewModel> minefieldAnswers);
+
+        Task<IReadOnlyDictionary<int, AnsweredMinefieldQuestion>> GetSelectedMinefieldAnswersAsync(string currentUserId, int id);
     }
 }

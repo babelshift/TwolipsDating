@@ -61,7 +61,9 @@ namespace TwolipsDating.Controllers
             viewModel.NewQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(newQuizzes);
 
             var dailyQuizzes = await TriviaService.GetDailyQuizzesAsync(5);
-            viewModel.DailyQuizzes = dailyQuizzes.ToDictionary(x => x.Key, x => Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(x.Value));
+            viewModel.DailyQuizzes = dailyQuizzes.ToDictionary(
+                x => x.Key,
+                x => Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(x.Value));
 
             viewModel.TrendingQuizzes = await GetTrendingQuizzesAsync();
 
@@ -434,6 +436,7 @@ namespace TwolipsDating.Controllers
 
             bool isAlreadyCompleted = false;
             List<QuestionViewModel> questionListViewModel = new List<QuestionViewModel>();
+            MinefieldQuestionViewModel minefieldQuestion = new MinefieldQuestionViewModel();
             int correctAnswerCount = 0;
 
             if (User.Identity.IsAuthenticated)
@@ -444,43 +447,78 @@ namespace TwolipsDating.Controllers
                 // if it has already been completed, get answered questions for quiz and user
                 if (isAlreadyCompleted)
                 {
-                    // get the already answered questions for this quiz
-                    var answeredQuizQuestions = await TriviaService.GetAnsweredQuizQuestions(currentUserId, id);
-
-                    // get the list of all possible questions for this quiz
-                    var quizQuestions = await TriviaService.GetQuizQuestionsAsync(id);
-                    questionListViewModel = Mapper.Map<IReadOnlyCollection<Question>, List<QuestionViewModel>>(quizQuestions);
-
-                    // match up the already selected answers with the questions for this quiz
-                    foreach (var questionViewModel in questionListViewModel)
+                    if (quiz.QuizTypeId == (int)QuizTypeValues.Individual)
                     {
-                        var answeredQuizQuestion = answeredQuizQuestions[questionViewModel.QuestionId];
-                        questionViewModel.SelectedAnswerId = answeredQuizQuestion.AnswerId;
-                        questionViewModel.IsAlreadyAnswered = true;
+                        // get the already answered questions for this quiz
+                        var answeredQuizQuestions = await TriviaService.GetAnsweredQuizQuestionsAsync(currentUserId, id);
 
-                        // if the user selected the correct answer
-                        if (questionViewModel.SelectedAnswerId == questionViewModel.CorrectAnswerId)
+                        // get the list of all possible questions for this quiz
+                        var quizQuestions = await TriviaService.GetQuizQuestionsAsync(id);
+                        questionListViewModel = Mapper.Map<IReadOnlyCollection<Question>, List<QuestionViewModel>>(quizQuestions);
+
+                        // match up the already selected answers with the questions for this quiz
+                        foreach (var questionViewModel in questionListViewModel)
                         {
-                            correctAnswerCount++;
+                            var answeredQuizQuestion = answeredQuizQuestions[questionViewModel.QuestionId];
+                            questionViewModel.SelectedAnswerId = answeredQuizQuestion.AnswerId;
+                            questionViewModel.IsAlreadyAnswered = true;
+
+                            // if the user selected the correct answer, increase their correct answer count
+                            if (questionViewModel.SelectedAnswerId == questionViewModel.CorrectAnswerId)
+                            {
+                                correctAnswerCount++;
+                            }
+
+                            // mark the correct answer to show the user on the UI that it was correct
+                            foreach (var answer in questionViewModel.Answers)
+                            {
+                                answer.IsCorrect = (answer.AnswerId == questionViewModel.CorrectAnswerId);
+                            }
                         }
+                    }
+                    else
+                    {
+                        // get the already answered questions for this quiz
+                        var answeredQuizQuestions = await TriviaService.GetSelectedMinefieldAnswersAsync(currentUserId, id);
 
-                        // mark the correct answer to show the user
-                        foreach (var answer in questionViewModel.Answers)
+                        minefieldQuestion = Mapper.Map<MinefieldQuestion, MinefieldQuestionViewModel>(quiz.MinefieldQuestion);
+
+                        foreach(var answer in minefieldQuestion.Answers)
                         {
-                            answer.IsCorrect = (answer.AnswerId == questionViewModel.CorrectAnswerId);
+                            AnsweredMinefieldQuestion answeredQuizQuestion = null;
+                            bool selectedByUser = answeredQuizQuestions.TryGetValue(answer.AnswerId, out answeredQuizQuestion);
+                            if(selectedByUser)
+                            {
+                                answer.IsSelected = true;
+                                answer.IsCorrect = answeredQuizQuestion.Answer.IsCorrect;
+                            }
                         }
                     }
                 }
                 // if it hasn't been completed, get unanswered questions for quiz
                 else
                 {
-                    questionListViewModel = Mapper.Map<ICollection<Question>, List<QuestionViewModel>>(quiz.Questions);
+                    if (quiz.QuizTypeId == (int)QuizTypeValues.Individual)
+                    {
+                        questionListViewModel = Mapper.Map<ICollection<Question>, List<QuestionViewModel>>(quiz.Questions);
+                    }
+                    else
+                    {
+                        minefieldQuestion = Mapper.Map<MinefieldQuestion, MinefieldQuestionViewModel>(quiz.MinefieldQuestion);
+                    }
                 }
             }
             // user isn't authenticated, so anonymous users the questions
             else
             {
-                questionListViewModel = Mapper.Map<ICollection<Question>, List<QuestionViewModel>>(quiz.Questions);
+                if (quiz.QuizTypeId == (int)QuizTypeValues.Individual)
+                {
+                    questionListViewModel = Mapper.Map<ICollection<Question>, List<QuestionViewModel>>(quiz.Questions);
+                }
+                else
+                {
+                    minefieldQuestion = Mapper.Map<MinefieldQuestion, MinefieldQuestionViewModel>(quiz.MinefieldQuestion);
+                }
             }
 
             var usersCompletedQuiz = await TriviaService.GetUsersCompletedQuizAsync(id, currentUserId);
@@ -493,8 +531,10 @@ namespace TwolipsDating.Controllers
             QuizViewModel viewModel = new QuizViewModel()
             {
                 Questions = questionListViewModel,
+                MinefieldQuestion = minefieldQuestion,
                 QuizName = quiz.Name,
                 QuizId = id,
+                QuizTypeId = quiz.QuizTypeId,
                 IsAlreadyCompleted = isAlreadyCompleted,
                 QuizDescription = quiz.Description,
                 UsersCompletedQuiz = usersCompletedQuiz,
@@ -547,9 +587,35 @@ namespace TwolipsDating.Controllers
                 }
             }
 
-            int count = await TriviaService.SetQuizAsCompleted(currentUserId, viewModel.QuizId, numberOfCorrectAnswers);
+            int count = await TriviaService.SetQuizAsCompletedAsync(currentUserId, viewModel.QuizId, numberOfCorrectAnswers);
 
-            return RedirectToAction("quiz", new { id = viewModel.QuizId });
+            return RedirectToAction("quiz", new { id = viewModel.QuizId, seoName = viewModel.SEOName });
+        }
+
+        [HttpPost, ExportModelStateToTempData, ValidateAntiForgeryToken]
+        public async Task<ActionResult> MinefieldQuiz(QuizViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("quiz", new { id = viewModel.QuizId, seoName = viewModel.SEOName });
+            }
+
+            string currentUserId = User.Identity.GetUserId();
+
+            var profile = await ProfileService.GetProfileAsync(currentUserId);
+
+            // loop through questions and record answers
+            var result = await TriviaService.RecordAnsweredMinefieldQuestionAsync(
+                currentUserId,
+                viewModel.MinefieldQuestion.MinefieldQuestionId,
+                viewModel.MinefieldQuestion.Answers);
+
+            if(result.Succeeded)
+            {
+                int count = await TriviaService.SetQuizAsCompletedAsync(currentUserId, viewModel.QuizId, result.CorrectAnswerCount);
+            }
+
+            return RedirectToAction("quiz", new { id = viewModel.QuizId, seoName = viewModel.SEOName });
         }
 
         /// <summary>
@@ -637,7 +703,7 @@ namespace TwolipsDating.Controllers
             return viewModel;
         }
 
-        [Authorize(Users="justin")]
+        [Authorize(Users = "justin")]
         public async Task<ActionResult> AddQuizQuestions(int id)
         {
             AddQuizQuestionsViewModel viewModel = new AddQuizQuestionsViewModel();
@@ -682,16 +748,16 @@ namespace TwolipsDating.Controllers
         [ValidateAntiForgeryToken, HttpPost, Authorize(Users = "justin")]
         public async Task<ActionResult> AddQuizQuestions(AddQuizQuestionsViewModel viewModel)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                foreach(var question in viewModel.Questions)
+                foreach (var question in viewModel.Questions)
                 {
                     var answerContents = question.Answers.Select(x => x.Content).ToList();
                     var result = await TriviaService.AddQuestionToQuizAsync(
-                        viewModel.QuizId, 
-                        question.Content, 
-                        question.Points, 
-                        answerContents.AsReadOnly(), 
+                        viewModel.QuizId,
+                        question.Content,
+                        question.Points,
+                        answerContents.AsReadOnly(),
                         question.CorrectAnswer,
                         question.SelectedTags.AsReadOnly());
                 }

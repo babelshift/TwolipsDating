@@ -60,6 +60,10 @@ namespace TwolipsDating.Models
         public virtual DbSet<Language> Languages { get; set; }
         public virtual DbSet<QuizCategory> QuizCategories { get; set; }
         public virtual DbSet<Referral> Referrals { get; set; }
+        public virtual DbSet<QuizType> QuizTypes { get; set; }
+        public virtual DbSet<MinefieldQuestion> MinefieldQuestions { get; set; }
+        public virtual DbSet<MinefieldAnswer> MinefieldAnswers { get; set; }
+        public virtual DbSet<AnsweredMinefieldQuestion> AnsweredMinefieldQuestions { get; set; }
 
         public static ApplicationDbContext Create()
         {
@@ -121,6 +125,90 @@ namespace TwolipsDating.Models
             SetupLanguages(modelBuilder);
             SetupQuizCategories(modelBuilder);
             SetupReferrals(modelBuilder);
+            SetupQuizTypes(modelBuilder);
+            SetupMinefieldQuestions(modelBuilder);
+            SetupMinefieldAnswers(modelBuilder);
+            SetupAnsweredMinefieldQuestions(modelBuilder);
+        }
+
+        private void SetupAnsweredMinefieldQuestions(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<AnsweredMinefieldQuestion>()
+                .HasKey(v => new { v.UserId, v.MinefieldAnswerId });
+
+            modelBuilder.Entity<AnsweredMinefieldQuestion>()
+                .Property(v => v.DateAnswered)
+                .IsRequired();
+
+            modelBuilder.Entity<AnsweredMinefieldQuestion>()
+                .HasRequired(v => v.Answer)
+                .WithMany(v => v.Instances)
+                .HasForeignKey(v => v.MinefieldAnswerId);
+
+            modelBuilder.Entity<AnsweredMinefieldQuestion>()
+                .HasRequired(v => v.Question)
+                .WithMany(v => v.AnsweredInstances)
+                .HasForeignKey(v => v.MinefieldQuestionId);
+
+            modelBuilder.Entity<AnsweredMinefieldQuestion>()
+                .HasRequired(v => v.User)
+                .WithMany(v => v.AnsweredMinefieldQuestions)
+                .HasForeignKey(v => v.UserId);
+        }
+
+        private void SetupMinefieldAnswers(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<MinefieldAnswer>()
+                .HasKey(v => new { v.Id });
+
+            modelBuilder.Entity<MinefieldAnswer>()
+                .Property(v => v.Content)
+                .IsRequired();
+
+            modelBuilder.Entity<MinefieldAnswer>()
+                .Property(v => v.Content)
+                .HasMaxLength(1000);
+
+            modelBuilder.Entity<MinefieldAnswer>()
+                .HasRequired(v => v.MinefieldQuestion)
+                .WithMany(v => v.PossibleAnswers)
+                .HasForeignKey(v => v.MinefieldQuestionId);
+        }
+
+        private void SetupMinefieldQuestions(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<MinefieldQuestion>()
+                .HasKey(v => v.MinefieldQuestionId);
+
+            modelBuilder.Entity<MinefieldQuestion>()
+                .Property(v => v.Content)
+                .IsRequired();
+
+            modelBuilder.Entity<MinefieldQuestion>()
+                .Property(v => v.Content)
+                .HasMaxLength(1000);
+
+            modelBuilder.Entity<MinefieldQuestion>()
+                .HasRequired(x => x.Quiz)
+                .WithOptional(x => x.MinefieldQuestion);
+        }
+
+        private void SetupQuizTypes(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<QuizType>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<QuizType>()
+                .Property(v => v.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+            modelBuilder.Entity<QuizType>()
+                .Property(c => c.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<QuizType>()
+                .Property(c => c.Name)
+                .HasMaxLength(50);
         }
 
         private void SetupReferrals(DbModelBuilder modelBuilder)
@@ -762,6 +850,15 @@ namespace TwolipsDating.Models
                 .HasRequired(x => x.QuizCategory)
                 .WithMany(v => v.Quizzes)
                 .HasForeignKey(v => v.QuizCategoryId);
+
+            modelBuilder.Entity<Quiz>()
+                .HasRequired(x => x.QuizType)
+                .WithMany(v => v.Quizzes)
+                .HasForeignKey(v => v.QuizTypeId);
+
+            modelBuilder.Entity<Quiz>()
+                .HasOptional(x => x.MinefieldQuestion)
+                .WithRequired(x => x.Quiz);
         }
 
         private void SetupIgnoredUsers(DbModelBuilder modelBuilder)

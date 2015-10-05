@@ -31,10 +31,10 @@ as
 		-- don't associate this question with the quiz if it already is
 		if not exists
 		(
-			select 1 from dbo.QuizQuestions
+			select 1 from dbo.QuestionQuizs
 			where Question_Id = @latestQuestionId
 		)
-		insert into dbo.QuizQuestions(Quiz_id, Question_id)
+		insert into dbo.QuestionQuizs(Quiz_id, Question_id)
 		values(@quizId, @latestQuestionId);
 	end
 	else
@@ -66,7 +66,7 @@ as
 		set CorrectAnswerId = @correctAnswerId
 		where Id = @latestQuestionId;
 		
-		insert into dbo.QuizQuestions(Quiz_id, Question_id)
+		insert into dbo.QuestionQuizs(Quiz_id, Question_id)
 		values(@quizId, @latestQuestionId);
 	end
 go

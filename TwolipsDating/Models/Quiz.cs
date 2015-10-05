@@ -45,9 +45,12 @@ namespace TwolipsDating.Models
         public bool IsActive { get; set; }
         public string ImageFileName { get; set; }
         public int QuizCategoryId { get; set; }
+        public int QuizTypeId { get; set; }
 
+        public virtual QuizType QuizType { get; set; }
         public virtual QuizCategory QuizCategory { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
         public virtual ICollection<CompletedQuiz> CompletedByUsers { get; set; }
+        public virtual MinefieldQuestion MinefieldQuestion { get; set; } // only populated when QuizType = Minefield
     }
 }

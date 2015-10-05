@@ -237,4 +237,7 @@
   <data name="ProfileIsRequired" xml:space="preserve">
     <value>A profile required to perform that action.</value>
   </data>
+  <data name="MinefieldAnswersNotSubmitted" xml:space="preserve">
+    <value>Something prevented your answers from being submitted. If this continues, contact support.</value>
+  </data>
 </root>

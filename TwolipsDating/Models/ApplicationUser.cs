@@ -50,6 +50,7 @@ namespace TwolipsDating.Models
         public virtual ICollection<UserTitle> ObtainedTitles { get; set; }
         public virtual ICollection<ProfileViewLog> ProfilesVisited { get; set; }
         public virtual ICollection<Referral> ReferralsSent { get; set; }
+        public virtual ICollection<AnsweredMinefieldQuestion> AnsweredMinefieldQuestions { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

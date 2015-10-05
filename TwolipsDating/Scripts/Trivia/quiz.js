@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿var guessesRemaining = 0;
+
+$(document).ready(function () {
     $('#share-score-fb').on('click', function (e) {
         var shareHref = $(this).data('share-href');
         var description = $(this).data('share-description');
@@ -24,12 +26,77 @@
     });
 
     $('.followify').followify();
+
+    initGuessesRemaining();
+
+    $('#button-reset').on('click', function (e) {
+        $('.minefield-checkbox-label').removeClass('disabled');
+        $('.minefield-checkbox-label').removeClass('active');
+        resetGuessesRemaining();
+        $('#minefield-selected-answer-count').html(guessesRemaining);
+    });
+
+    $('.minefield-checkbox').on('change', function (e) {
+
+        var checkbox = $(this);
+        var isChecked = checkbox.prop('checked');
+
+        if (isChecked) {
+            decreaseGuessesRemaining();
+        } else {
+            increaseGuessesRemaining();
+        }
+
+        var possibleCorrectAnswerCount = getPossibleCorrectAnswerCount();
+
+        if (guessesRemaining <= 0) {
+            $('.minefield-checkbox-label').each(function (i, e) {
+                isChecked = $(e).find('input:checkbox').prop('checked');
+                if (!isChecked) {
+                    $(e).addClass('disabled');
+                }
+            });
+        } else {
+            $('.minefield-checkbox-label').removeClass('disabled');
+        }
+    });
 });
+
+function getPossibleCorrectAnswerCount() {
+    return $('#minefield-possible-correct-answer-count').html();
+}
+
+function setGuessesRemaining(value) {
+    guessesRemaining = value;
+    $('#minefield-selected-answer-count').html(guessesRemaining);
+
+    if (guessesRemaining == 0) {
+        $('#minefield-selected-answer-count').addClass('text-danger');
+    } else {
+        $('#minefield-selected-answer-count').removeClass('text-danger');
+    }
+}
+
+function initGuessesRemaining() {
+    setGuessesRemaining(getPossibleCorrectAnswerCount());
+}
+
+function resetGuessesRemaining() {
+    setGuessesRemaining(getPossibleCorrectAnswerCount());
+}
+
+function increaseGuessesRemaining() {
+    setGuessesRemaining(guessesRemaining + 1);
+}
+
+function decreaseGuessesRemaining() {
+    setGuessesRemaining(guessesRemaining - 1);
+}
 
 function onAddQuestionViolation(e, obj) {
     var questionId = $('#selected-question-id').val();
     var violationTypeId = $('#QuestionViolation_ViolationTypeId').val();
-    
+
     var jsonObject = {
         "questionId": questionId,
         "violationTypeId": violationTypeId

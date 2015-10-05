@@ -203,6 +203,17 @@ namespace TwolipsDating
                 .ForMember(dest => dest.InventoryItemId, opts => opts.MapFrom(source => source.InventoryItemId))
                 .ForMember(dest => dest.ItemCount, opts => opts.MapFrom(source => source.ItemCount));
 
+            Mapper.CreateMap<MinefieldQuestion, MinefieldQuestionViewModel>()
+               .ForMember(dest => dest.MinefieldQuestionId, opts => opts.MapFrom(source => source.MinefieldQuestionId))
+               .ForMember(dest => dest.Content, opts => opts.MapFrom(source => source.Content))
+               .ForMember(dest => dest.Points, opts => opts.MapFrom(source => source.Points))
+               .ForMember(dest => dest.Answers, opts => opts.MapFrom(source => source.PossibleAnswers.ToList().AsReadOnly()));
+
+            Mapper.CreateMap<MinefieldAnswer, MinefieldAnswerViewModel>()
+                .ForMember(dest => dest.AnswerId, opts => opts.MapFrom(source => source.Id))
+                .ForMember(dest => dest.Content, opts => opts.MapFrom(source => source.Content))
+                .ForMember(dest => dest.IsCorrect, opts => opts.MapFrom(source => source.IsCorrect));
+
             Mapper.CreateMap<Question, QuestionViewModel>()
                 .ForMember(dest => dest.QuestionId, opts => opts.MapFrom(source => source.Id))
                 .ForMember(dest => dest.Content, opts => opts.MapFrom(source => source.Content))
@@ -220,8 +231,17 @@ namespace TwolipsDating
                 .ForMember(dest => dest.QuizCategoryName, opts => opts.MapFrom(source => source.QuizCategory.Name))
                 .ForMember(dest => dest.QuizCategoryId, opts => opts.MapFrom(source => source.QuizCategoryId))
                 .ForMember(dest => dest.ThumbnailImagePath, opts => opts.MapFrom(source => source.GetThumbnailImagePath()))
-                .ForMember(dest => dest.AveragePoints, opts => opts.MapFrom(source =>
-                    source.Questions != null && source.Questions.Count > 0 ? (int)Math.Round(source.Questions.Average(x => x.Points)) : 0));
+                .ForMember(dest => dest.AveragePoints, opts => opts.ResolveUsing(source =>
+                    {
+                        if (source.QuizTypeId == (int)QuizTypeValues.Individual)
+                        {
+                            return source.Questions != null && source.Questions.Count > 0 ? (int)Math.Round(source.Questions.Average(x => x.Points)) : 0;
+                        }
+                        else
+                        {
+                            return source.MinefieldQuestion != null ? source.MinefieldQuestion.Points : 0;
+                        }
+                    }));
 
             Mapper.CreateMap<StoreItem, StoreItemViewModel>()
                 .ForMember(dest => dest.ItemId, opts => opts.MapFrom(source => source.Id))

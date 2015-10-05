@@ -109,11 +109,11 @@ namespace TwolipsDating.Business
 		                qq.Quiz_Id as QuizId,
                         round(avg(cast(qu.Points as float)), 0) as QuestionPointAverage,
 		                count(qq.Question_Id) as QuestionCount
-		                from dbo.QuizQuestions qq
+		                from dbo.QuestionQuizs qq
 		                inner join dbo.questions qu on qu.Id = qq.Question_Id
 		                group by qq.Quiz_Id
 	                ) qqc on qqc.QuizId = q.Id
-	                inner join dbo.QuizQuestions as qq on qq.Quiz_Id = q.Id
+	                inner join dbo.QuestionQuizs as qq on qq.Quiz_Id = q.Id
 	                inner join dbo.questions qu on qu.Id = qq.Question_Id
 	                inner join dbo.TagQuestions tq on tq.Question_Id = qu.Id
 	                inner join dbo.Tags t on t.TagId = tq.Tag_TagId

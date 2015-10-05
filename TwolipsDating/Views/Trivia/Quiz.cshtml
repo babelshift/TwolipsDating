@@ -108,208 +108,287 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-body quiz-body">
-                @if (Model.Questions != null && Model.Questions.Count > 0)
-                {
-                    <h3 style="margin-top: 0">@Model.QuizName</h3>
-                    <div class="row" style="margin: 0 0 10px 0">
-                        <div class="col-sm-8">
-                            <h4 style="margin: 0">@Model.QuizDescription</h4>
-                            @if (Model.Tags != null && Model.Tags.Count > 0)
-                            {
-                                <div class="tags" style="display: inline-block; margin-top: 5px">
-                                    @foreach (var tag in Model.Tags)
-                                    {
-                                        <a href="@Url.Action("index", "search", new { tags = tag.Name })" class="custom-tooltip btn btn-default btn-xs" title="@tag.Description">
-                                            @tag.Name
-                                        </a>
-                                    }
-                                </div>
-                            }
-                            <div style="margin-bottom: 8px">
-                                @Html.Partial("_QuizRatingBarPartial", Model.AverageQuestionPoints)
-                                <div class="g-plusone" data-size="medium" data-annotation="none"></div>
-                                <div class="fb-like" data-layout="button" data-action="like" data-show-faces="false"></div>
+                <h3 style="margin-top: 0">@Model.QuizName</h3>
+                <div class="row" style="margin: 0 0 10px 0">
+                    <div class="col-sm-8">
+                        <h4 style="margin: 0">@Model.QuizDescription</h4>
+                        @if (Model.Tags != null && Model.Tags.Count > 0)
+                        {
+                            <div class="tags" style="display: inline-block; margin-top: 5px">
+                                @foreach (var tag in Model.Tags)
+                                {
+                                    <a href="@Url.Action("index", "search", new { tags = tag.Name })" class="custom-tooltip btn btn-default btn-xs" title="@tag.Description">
+                                        @tag.Name
+                                    </a>
+                                }
                             </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <img src="@Model.ThumbnailImageUrl" class="img-responsive" />
+                        }
+                        <div style="margin-bottom: 8px">
+                            @Html.Partial("_QuizRatingBarPartial", Model.AverageQuestionPoints)
+                            <div class="g-plusone" data-size="medium" data-annotation="none"></div>
+                            <div class="fb-like" data-layout="button" data-action="like" data-show-faces="false"></div>
                         </div>
                     </div>
+                    <div class="col-sm-4">
+                        <img src="@Model.ThumbnailImageUrl" class="img-responsive" />
+                    </div>
+                </div>
 
-                    if (User.Identity.IsAuthenticated)
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (Model.IsAlreadyCompleted)
                     {
-                        if (Model.IsAlreadyCompleted)
-                        {
-                            <div class="well well-sm text-center" style="margin-top: 15px">
-                                <h3 style="margin: 0;">You completed this quiz.</h3>
-                                <div class="row" style="margin: 0">
-                                    <div class="col-xs-4">
-                                        <small class="text-muted">SCORE</small>
-                                        <h4 style="margin-top: 5px"><strong>@Model.CorrectAnswerCount/@Model.Questions.Count (@String.Format("{0}%", Model.UserScorePercent))</strong></h4>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <small class="text-muted">POINTS EARNED</small>
-                                        <h4 style="margin-top: 5px"><strong>@Model.PointsEarned/@Model.PointsPossible</strong></h4>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <small class="text-muted">SHARE SCORE</small>
-                                        <br />
-                                        <a id="share-score-fb" class="btn btn-facebook btn-xs"
-                                           data-share-href="@Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme)"
-                                           data-share-description="@String.Format("I scored {0}% on this quiz. {2}", Model.UserScorePercent, Model.QuizName, Model.QuizDescription)">
-                                            <i class="fa fa-facebook fa-lg fa-fw"></i>
-                                        </a>
-                                        <a class="btn btn-twitter btn-xs" href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("I scored {0}% on the {1} quiz on @twolipsdating", Model.UserScorePercent, Model.QuizName)) + "&url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))">
-                                            <i class=" fa fa-twitter fa-lg fa-fw"></i>
-                                        </a>
-                                    </div>
+                        <div class="well well-sm text-center" style="margin-top: 15px">
+                            <h3 style="margin: 0;">You completed this quiz.</h3>
+                            <div class="row" style="margin: 0">
+                                <div class="col-xs-4">
+                                    <small class="text-muted">SCORE</small>
+                                    <h4 style="margin-top: 5px"><strong>@Model.CorrectAnswerCount/@Model.PossibleCorrectAnswerCount (@String.Format("{0}%", Model.UserScorePercent))</strong></h4>
                                 </div>
-                                <h5 class="text-muted" style="margin: 0">
-                                    @if (Model.UserScorePercent >= 0 && Model.UserScorePercent < 25)
-                                    {
-                                        @:Wow, well the good news is that you can't get much worse.
-                                    }
-                                    else if (Model.UserScorePercent >= 25 && Model.UserScorePercent < 50)
-                                    {
-                                        @:We know you can do better than that.
-                                    }
-                                    else if (Model.UserScorePercent >= 50 && Model.UserScorePercent < 75)
-                                    {
-                                        @:OK, not great, but at least you're pretty smart.
-                                    }
-                                    else if (Model.UserScorePercent >= 75 && Model.UserScorePercent < 100)
-                                    {
-                                        @:Nice! You were definitely on point with this one.
-                                    }
-                                    else if (Model.UserScorePercent == 100)
-                                    {
-                                        @:Incredible, you managed to get every single answer correct.
-                                    }
-                                </h5>
+                                <div class="col-xs-4">
+                                    <small class="text-muted">POINTS EARNED</small>
+                                    <h4 style="margin-top: 5px"><strong>@Model.PointsEarned/@Model.PointsPossible</strong></h4>
+                                </div>
+                                <div class="col-xs-4">
+                                    <small class="text-muted">SHARE SCORE</small>
+                                    <br />
+                                    <a id="share-score-fb" class="btn btn-facebook btn-xs"
+                                       data-share-href="@Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme)"
+                                       data-share-description="@String.Format("I scored {0}% on this quiz. {2}", Model.UserScorePercent, Model.QuizName, Model.QuizDescription)">
+                                        <i class="fa fa-facebook fa-lg fa-fw"></i>
+                                    </a>
+                                    <a class="btn btn-twitter btn-xs" href="@("https://twitter.com/intent/tweet?text=" + Url.Encode(String.Format("I scored {0}% on the {1} quiz on @twolipsdating", Model.UserScorePercent, Model.QuizName)) + "&url=" + Url.Action("quiz", "trivia", new { id = Model.QuizId }, Request.Url.Scheme))">
+                                        <i class=" fa fa-twitter fa-lg fa-fw"></i>
+                                    </a>
+                                </div>
                             </div>
-                            if (Model.UsersWithSimilarScores != null && Model.UsersWithSimilarScores.Count > 0)
-                            {
-                                <div class="row" style="margin: 0">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title"><i class="fa fa-users"></i> People with similar scores...</h4>
-                                        </div>
-                                        <div class="panel-body text-center similar-people">
-                                            @foreach (var user in Model.UsersWithSimilarScores)
-                                            {
-                                                <div class="col-xs-6 col-sm-3">
+                            <h5 class="text-muted" style="margin: 0">
+                                @if (Model.UserScorePercent >= 0 && Model.UserScorePercent < 25)
+                                {
+                                    @:Wow, well the good news is that you can't get much worse.
+                                    }
+                                else if (Model.UserScorePercent >= 25 && Model.UserScorePercent < 50)
+                                {
+                                    @:We know you can do better than that.
+                                    }
+                                else if (Model.UserScorePercent >= 50 && Model.UserScorePercent < 75)
+                                {
+                                    @:OK, not great, but at least you're pretty smart.
+                                    }
+                                else if (Model.UserScorePercent >= 75 && Model.UserScorePercent < 100)
+                                {
+                                    @:Nice! You were definitely on point with this one.
+                                    }
+                                else if (Model.UserScorePercent == 100)
+                                {
+                                    @:Incredible, you managed to get every single answer correct.
+                                    }
+                            </h5>
+                        </div>
+                        if (Model.UsersWithSimilarScores != null && Model.UsersWithSimilarScores.Count > 0)
+                        {
+                            <div class="row" style="margin: 0">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title"><i class="fa fa-users"></i> People with similar scores...</h4>
+                                    </div>
+                                    <div class="panel-body text-center similar-people">
+                                        @foreach (var user in Model.UsersWithSimilarScores)
+                                        {
+                                            <div class="col-xs-6 col-sm-3">
+                                                <a href="@Url.Action("index", "profile", new{ id = user.ProfileId })">
+                                                    @Html.Partial("_ProfileImagePartial", user.ProfileThumbnailImagePath)
+                                                </a>
+                                                <p style="margin-bottom: 0">
                                                     <a href="@Url.Action("index", "profile", new{ id = user.ProfileId })">
-                                                        @Html.Partial("_ProfileImagePartial", user.ProfileThumbnailImagePath)
+                                                        @user.UserName
                                                     </a>
-                                                    <p style="margin-bottom: 0">
-                                                        <a href="@Url.Action("index", "profile", new{ id = user.ProfileId })">
-                                                            @user.UserName
-                                                        </a>
-                                                        <br />
-                                                        <small style="color: #999">Score: @String.Format("{0}%", user.PercentScore)</small>
-                                                    </p>
-                                                </div>
-                                            }
-                                        </div>
+                                                    <br />
+                                                    <small style="color: #999">Score: @String.Format("{0}%", user.PercentScore)</small>
+                                                </p>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
-                            }
+                            </div>
                         }
                     }
+                }
 
-                    using (Html.BeginForm("quiz", "trivia", FormMethod.Post, new { role = "form" }))
+                @if (Model.QuizTypeId == (int)TwolipsDating.Models.QuizTypeValues.Individual)
+                {
+                    if (Model.Questions != null && Model.Questions.Count > 0)
                     {
-                        @Html.AntiForgeryToken()
-                        @Html.ValidationSummary(true)
-
-                        for (int i = 0; i < Model.Questions.Count; i++)
+                        using (Html.BeginForm("quiz", "trivia", FormMethod.Post, new { role = "form" }))
                         {
-                            var question = Model.Questions[i];
-                            if (User.Identity.IsAuthenticated)
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true)
+
+                            for (int i = 0; i < Model.Questions.Count; i++)
                             {
-                                <div class="row" style="margin: 0">
-                                    <div class="col-xs-9 col-sm-10" style="padding-left: 0; padding-right: 0">
-                                        @String.Format("{0}. {1}", i + 1, question.Content)
-                                    </div>
-                                    <div class="col-xs-3 col-sm-2" style="padding-left: 0; padding-right: 0">
-                                        <a href="#" data-toggle="modal" data-target="#modalQuestionViolation" data-question-id="@question.QuestionId" class="btn btn-default btn-xs pull-right">
-                                            <i class="glyphicon glyphicon-flag"></i> Report
-                                        </a>
-                                    </div>
-                                </div>
-                                @Html.ValidationMessage(String.Format("Questions[{0}].SelectedAnswerId", i))
-                            }
-                            else
-                            {
-                                @String.Format("{0}. {1}", i + 1, question.Content)
-                                <div class="clearfix"></div>
-                            }
-                            @Html.Partial("_QuestionRatingBarPartial", question.Points)
-                            <div style="margin-top: 5px;">
-                                @foreach (var answer in question.Answers)
+                                var question = Model.Questions[i];
+                                if (User.Identity.IsAuthenticated)
                                 {
-                                    string radioStyle = "radio-info";
-                                    <div>
-                                        @if (Model.Questions[i].IsAlreadyAnswered)
-                                        {
-                                            if (answer.IsCorrect)
+                                    <div class="row" style="margin: 0">
+                                        <div class="col-xs-9 col-sm-10" style="padding-left: 0; padding-right: 0">
+                                            @String.Format("{0}. {1}", i + 1, question.Content)
+                                        </div>
+                                        <div class="col-xs-3 col-sm-2" style="padding-left: 0; padding-right: 0">
+                                            <a href="#" data-toggle="modal" data-target="#modalQuestionViolation" data-question-id="@question.QuestionId" class="btn btn-default btn-xs pull-right">
+                                                <i class="glyphicon glyphicon-flag"></i> Report
+                                            </a>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessage(String.Format("Questions[{0}].SelectedAnswerId", i))
+                                }
+                                else
+                                {
+                                    @String.Format("{0}. {1}", i + 1, question.Content)
+                                    <div class="clearfix"></div>
+                                }
+                                @Html.Partial("_QuestionRatingBarPartial", question.Points)
+                                <div style="margin-top: 5px;">
+                                    @foreach (var answer in question.Answers)
+                                    {
+                                        string radioStyle = "radio-info";
+                                        <div>
+                                            @if (Model.Questions[i].IsAlreadyAnswered)
                                             {
-                                                radioStyle = "radio-success";
-                                                <span class="text-success"><i class="fa fa-check fa-lg fa-fw"></i></span>
-                                            }
-                                            else
-                                            {
-                                                radioStyle = "radio-danger";
-                                                <span class="text-danger"><i class="fa fa-remove fa-lg fa-fw"></i></span>
-                                            }
-                                        }
-                                        <div class="radio @radioStyle" style="display: inline-block">
-                                            @if (User.Identity.IsAuthenticated)
-                                            {
-                                                if (Model.Questions[i].IsAlreadyAnswered)
+                                                if (answer.IsCorrect)
                                                 {
-                                                    @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { id = answer.AnswerId, disabled = "disabled" })
+                                                    radioStyle = "radio-success";
+                                                    <span class="text-success"><i class="fa fa-check fa-lg fa-fw"></i></span>
                                                 }
                                                 else
                                                 {
-                                                    @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { id = answer.AnswerId })
+                                                    radioStyle = "radio-danger";
+                                                    <span class="text-danger"><i class="fa fa-remove fa-lg fa-fw"></i></span>
                                                 }
                                             }
-                                            else
-                                            {
-                                                @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { id = answer.AnswerId, onclick = "$('#modalSignUpIncentive').modal('show')" })
-                                            }
-                                            <label for="@answer.AnswerId">@answer.Content</label>
+                                            <div class="radio @radioStyle" style="display: inline-block">
+                                                @if (User.Identity.IsAuthenticated)
+                                                {
+                                                    if (Model.Questions[i].IsAlreadyAnswered)
+                                                    {
+                                                        @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { id = answer.AnswerId, disabled = "disabled" })
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { id = answer.AnswerId })
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    @Html.RadioButtonFor(m => m.Questions[i].SelectedAnswerId, answer.AnswerId, new { id = answer.AnswerId, onclick = "$('#modalSignUpIncentive').modal('show')" })
+                                                }
+                                                <label for="@answer.AnswerId">@answer.Content</label>
+                                            </div>
                                         </div>
-                                    </div>
-                                }
-                                @Html.HiddenFor(m => Model.Questions[i].QuestionId)
-                            </div>
-                            <hr />
-                        }
-
-                        if (User.Identity.IsAuthenticated)
-                        {
-                            if (!Model.IsAlreadyCompleted)
-                            {
-                                <button id="button-submit" type="submit" class="btn btn-primary">
-                                    <i class="fa fa-check fa-lg fa-fw"></i> Complete Quiz
-                                </button>
+                                    }
+                                    @Html.HiddenFor(m => Model.Questions[i].QuestionId)
+                                </div>
+                                <hr />
                             }
+
+                            if (User.Identity.IsAuthenticated)
+                            {
+                                if (!Model.IsAlreadyCompleted)
+                                {
+                                    <button id="button-submit" type="submit" class="btn btn-primary">
+                                        <i class="fa fa-check"></i> Complete Quiz
+                                    </button>
+                                }
+                            }
+                            else
+                            {
+                                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modalSignUpIncentive" data-keyboard="true">
+                                    <i class="fa fa-check"></i> Complete Quiz
+                                </a>
+                            }
+                            @Html.HiddenFor(m => m.QuizId)
+                            @Html.HiddenFor(m => m.SEOName)
                         }
-                        else
-                        {
-                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modalSignUpIncentive" data-keyboard="true">
-                                <i class="fa fa-check fa-lg fa-fw"></i> Complete Quiz
-                            </a>
-                        }
-                        @Html.HiddenFor(m => m.QuizId)
-                        @Html.HiddenFor(m => m.SEOName)
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="fa fa-exclamation-triangle fa-lg"></i> We had trouble loading the questions for this quiz. Contact us via
+                            <a class="alert-link" href="mailto:info@twolipsdating.com">Email</a>,
+                            <a class="alert-link" href="https://www.facebook.com/twolipsdating">Facebook</a>, or
+                            <a class="alert-link" href="https://www.twitter.com/twolipsdating">Twitter</a> to let us know.
+                        </div>
                     }
                 }
-                else
+                else if (Model.QuizTypeId == (int)TwolipsDating.Models.QuizTypeValues.Minefield)
                 {
-                    <h4>Something went wrong, and the quiz can't be loaded.</h4>
+                    if (!Model.IsAlreadyCompleted)
+                    {
+                        <hr />
+                        <div class="row">
+                            <div class="col-xs-6 text-center">
+                                <small class="text-muted">GUESSES REMAINING</small>
+                                <h4 style="margin-top: 5px"><strong><span id="minefield-selected-answer-count">0</span></strong></h4>
+                            </div>
+                            <div class="col-xs-6 text-center">
+                                <small class="text-muted">GUESSES ALLOWED</small>
+                                <h4 style="margin-top: 5px"><strong><span id="minefield-possible-correct-answer-count">@Model.PossibleCorrectAnswerCount</span></strong></h4>
+                            </div>
+                        </div>
+                    }
+                    using (Html.BeginForm("minefieldQuiz", "trivia", FormMethod.Post, new { role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary()
+
+                        <div class="well text-center">
+                            <div class="btn-group" data-toggle="buttons">
+                                @for (int i = 0; i < Model.MinefieldQuestion.Answers.Count; i++)
+                                {
+                                    var disabled = String.Empty;
+                                    var btnStyle = "btn-default";
+                                    var active = String.Empty;
+
+                                    if (Model.IsAlreadyCompleted)
+                                    {
+                                        disabled = "disabled";
+                                    }
+
+                                    if (Model.MinefieldQuestion.Answers[i].IsSelected)
+                                    {
+                                        active = "active";
+
+                                        if (Model.MinefieldQuestion.Answers[i].IsCorrect)
+                                        {
+                                            btnStyle = "btn-success";
+                                        }
+                                        else
+                                        {
+                                            btnStyle = "btn-danger";
+                                        }
+                                    }
+
+                                    <label class="btn @btnStyle minefield-checkbox-label @active @disabled">
+                                        @Html.CheckBoxFor(x => Model.MinefieldQuestion.Answers[i].IsSelected)
+                                        <input type="checkbox" class="minefield-checkbox" autocomplete="off">
+                                        @Model.MinefieldQuestion.Answers[i].Content
+                                    </label>
+                                    @Html.HiddenFor(x => Model.MinefieldQuestion.Answers[i].AnswerId)
+                                }
+                            </div>
+                        </div>
+                        if (!Model.IsAlreadyCompleted)
+                        {
+                            <button id="button-reset" type="reset" class="btn btn-default">
+                                <i class="fa fa-refresh"></i> Reset Selections
+                            </button>
+                            <button id="button-submit" type="submit" class="btn btn-primary">
+                                <i class="fa fa-check"></i> Complete Quiz
+                            </button>
+                        }
+                        @Html.HiddenFor(m => m.QuizId)
+                        @Html.HiddenFor(m => m.MinefieldQuestion.MinefieldQuestionId)
+                        @Html.HiddenFor(m => m.SEOName)
+                    }
                 }
             </div>
         </div>
