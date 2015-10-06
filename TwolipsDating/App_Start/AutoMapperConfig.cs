@@ -210,7 +210,11 @@ namespace TwolipsDating
                .ForMember(dest => dest.MinefieldQuestionId, opts => opts.MapFrom(source => source.MinefieldQuestionId))
                .ForMember(dest => dest.Content, opts => opts.MapFrom(source => source.Content))
                .ForMember(dest => dest.Points, opts => opts.MapFrom(source => source.Points))
-               .ForMember(dest => dest.Answers, opts => opts.MapFrom(source => source.PossibleAnswers.ToList().AsReadOnly()));
+               .ForMember(dest => dest.Answers, opts => opts.MapFrom(source => 
+                   source.PossibleAnswers
+                   .OrderBy(x => Guid.NewGuid())
+                   .ToList()
+                   .AsReadOnly()));
 
             Mapper.CreateMap<MinefieldAnswer, MinefieldAnswerViewModel>()
                 .ForMember(dest => dest.AnswerId, opts => opts.MapFrom(source => source.Id))
