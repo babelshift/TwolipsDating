@@ -590,25 +590,50 @@ namespace TwolipsDating.Business
             }
         }
 
-        public async Task<double> GetQuizScoreAsync(string userId, int quizId)
+        public async Task<double> GetQuizScoreAsync(string userId, int quizId, int quizTypeId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(quizId > 0);
 
-            var completedQuiz = await (from completedQuizzes in db.CompletedQuizzes
-                                       where completedQuizzes.UserId == userId
-                                       where completedQuizzes.QuizId == quizId
-                                       from answers in completedQuizzes.User.AnsweredQuestions
-                                       from questions in completedQuizzes.Quiz.Questions
-                                       where answers.AnswerId == questions.CorrectAnswerId
-                                       group completedQuizzes by completedQuizzes.Quiz.Questions.Count
-                                           into g
-                                           select new
-                                           {
-                                               Score = (double)g.Count() / (double)g.Key
-                                           }).FirstOrDefaultAsync();
+            if (quizTypeId == (int)QuizTypeValues.Individual)
+            {
+                var query = from completedQuizzes in db.CompletedQuizzes
+                            where completedQuizzes.UserId == userId
+                            where completedQuizzes.QuizId == quizId
+                            from answers in completedQuizzes.User.AnsweredQuestions
+                            from questions in completedQuizzes.Quiz.Questions
+                            where answers.AnswerId == questions.CorrectAnswerId
+                            group completedQuizzes by completedQuizzes.Quiz.Questions.Count
+                                into g
+                                select new
+                                {
+                                    Score = (double)g.Count() / (double)g.Key
+                                };
 
-            return completedQuiz != null ? completedQuiz.Score : 0;
+                var result = await query.FirstOrDefaultAsync();
+
+                return result != null ? result.Score : 0;
+            }
+            else
+            {
+                var query = from completedQuizzes in db.CompletedQuizzes
+                            where completedQuizzes.UserId == userId
+                            where completedQuizzes.QuizId == quizId
+                            from minefieldAnswers in completedQuizzes.User.AnsweredMinefieldQuestions
+                            where minefieldAnswers.Answer.IsCorrect
+                            from possibleAnswers in completedQuizzes.Quiz.MinefieldQuestion.PossibleAnswers
+                            where possibleAnswers.IsCorrect
+                            group completedQuizzes by completedQuizzes.Quiz.MinefieldQuestion.PossibleAnswers.Count
+                                into g
+                                select new
+                                {
+                                    Score = (double)g.Count() / (double)g.Key
+                                };
+
+                var result = await query.FirstOrDefaultAsync();
+
+                return result != null ? result.Score : 0;
+            }
         }
 
         private static void IncreaseUserPoints(ApplicationUser user, int points)
@@ -666,6 +691,7 @@ namespace TwolipsDating.Business
             string sql = String.Format(@"
                 select top 10
 	                q.Id,
+					q.QuizTypeId,
 	                q.Name QuizName,
 	                u.UserName,
                     u.Id UserId,
@@ -677,12 +703,44 @@ namespace TwolipsDating.Business
 							WHEN fp.UserId is null THEN 0
 							ELSE 1
 						END,
-	                count(*) CorrectAnswerCount,
 	                (
-		                select count(*)
-		                from dbo.QuestionQuizs qq2
-		                where qq2.Quiz_Id = q.Id
-	                ) TotalAnswerCount,
+						case
+							when q.QuizTypeId = 1
+							then (
+								select count(*)
+								from dbo.QuestionQuizs qq2
+								inner join dbo.AnsweredQuestions aq on aq.QuestionId = qq2.Question_Id
+								inner join dbo.Questions qu on qu.Id = aq.QuestionId
+								where qq2.Quiz_Id = q.Id
+								and aq.UserId = u.Id
+								and aq.AnswerId = qu.CorrectAnswerId
+							)
+							else (
+								select count(*)
+								from dbo.answeredminefieldquestions amq
+								inner join dbo.MinefieldAnswers ma on ma.Id = amq.MinefieldAnswerId
+								inner join dbo.MinefieldQuestions mq on mq.MinefieldQuestionId = amq.MinefieldQuestionId
+								where mq.MinefieldQuestionId = q.Id
+								and ma.IsCorrect = 1
+							)
+						end
+					) CorrectAnswerCount,
+					(
+						case
+							when q.QuizTypeId = 1
+							then (
+								select count(*)
+								from dbo.QuestionQuizs qq2
+								where qq2.Quiz_Id = q.Id
+							)
+							else (
+								select count(*)
+								from dbo.MinefieldAnswers ma
+								where MinefieldQuestionId = q.Id
+								and ma.IsCorrect = 1
+							)
+						end
+					) TotalAnswerCount,
                     p.Birthday,
 					gc.Name CityName,
 					gs.Abbreviation StateName
@@ -692,18 +750,15 @@ namespace TwolipsDating.Business
 	                inner join dbo.Profiles p on p.ApplicationUser_Id = u.Id
 	                left join dbo.UserImages ui on ui.Id = p.UserImageId
 	                inner join dbo.Quizs q on q.Id = cq.QuizId
-	                inner join dbo.QuestionQuizs qq on qq.Quiz_Id = q.Id
-	                inner join dbo.AnsweredQuestions aq on aq.UserId = cq.UserId and aq.QuestionId = qq.Question_Id
-	                inner join dbo.Questions qu on qu.Id = aq.QuestionId
                     left join dbo.FavoriteProfiles fp on fp.ProfileId = p.Id and fp.UserId = '{0}'
 					inner join dbo.GeoCities gc on gc.Id = p.GeoCityId
 					inner join dbo.GeoStates gs on gs.Id = gc.GeoStateId
                 where
-	                aq.AnswerId = qu.CorrectAnswerId
-                    and u.IsActive = 1
+                    u.IsActive = 1
                     {1}
                 group by
 	                q.Id,
+					q.QuizTypeId,
 	                q.Name,
 	                u.UserName,
                     u.Id,
@@ -975,46 +1030,99 @@ namespace TwolipsDating.Business
 
         #endregion Question Creation
 
+        /// <summary>
+        /// Returns a collection of users and their scores who are similar to the passed user and his score for the passed quiz. For example, if a user
+        /// scored 50% on a Star Trek quiz, anyone else that scored within 25% of that score will be returned.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="quizId"></param>
+        /// <param name="numRecords"></param>
+        /// <returns></returns>
         public async Task<IReadOnlyCollection<UserWithSimilarQuizScoreViewModel>> GetUsersWithSimilarScoresAsync(string userId, int quizId, int numRecords)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(quizId > 0);
 
-            double userScore = await GetQuizScoreAsync(userId, quizId);
+            // the score calculation depends on the type of quiz
+            int quizTypeId = (await db.Quizzes.FindAsync(quizId)).QuizTypeId;
 
-            var similarCompletedQuizzes = (from completedQuizzes in db.CompletedQuizzes
-                                           where completedQuizzes.UserId != userId
-                                           where completedQuizzes.QuizId == quizId
-                                           from answers in completedQuizzes.User.AnsweredQuestions
-                                           from questions in completedQuizzes.Quiz.Questions
-                                           where answers.AnswerId == questions.CorrectAnswerId
-                                           group completedQuizzes by new
-                                           {
-                                               UserName = completedQuizzes.User.UserName,
-                                               ProfileId = completedQuizzes.User.Profile.Id,
-                                               ProfileThumbnailImagePath = completedQuizzes.User.Profile.UserImage.FileName,
-                                               completedQuizzes.Quiz.Questions.Count
-                                           } into g
-                                           select new
-                                           {
-                                               UserName = g.Key.UserName,
-                                               ProfileId = g.Key.ProfileId,
-                                               ProfileThumbnailImagePath = g.Key.ProfileThumbnailImagePath,
-                                               Score = (double)g.Count() / (double)g.Key.Count
-                                           })
-                                           .Where((x => (x.Score <= userScore * 1.25) && (x.Score >= userScore * .75)))
-                                           .OrderBy(x => Guid.NewGuid())
-                                           .Select(x => new UserWithSimilarQuizScoreViewModel()
-                                           {
-                                               UserName = x.UserName,
-                                               ProfileId = x.ProfileId,
-                                               ProfileThumbnailImagePath = x.ProfileThumbnailImagePath,
-                                               Score = x.Score
-                                           })
-                                           .Take(numRecords);
+            // we want the user's score on this quiz so we can find the similar scores
+            double userScore = await GetQuizScoreAsync(userId, quizId, quizTypeId);
 
-            var results = await similarCompletedQuizzes.ToListAsync();
+            IQueryable<UserWithSimilarQuizScoreViewModel> scoreQuery = null;
 
+            if (quizTypeId == (int)QuizTypeValues.Individual)
+            {
+                // quizzes with individual questions (multiple choice answers) have to calculate their score based on:
+                // users correct answer count (where the answer they chose is equal to the correct answer)
+                // total question count for the quiz (for example, a quiz with 10 questions has a total question count of 10)
+                // score is UsersCorrectAnswerCount divided by TotalQuestionCount
+                scoreQuery = from completedQuizzes in db.CompletedQuizzes
+                             where completedQuizzes.UserId != userId
+                             where completedQuizzes.QuizId == quizId
+                             from answers in completedQuizzes.User.AnsweredQuestions
+                             from questions in completedQuizzes.Quiz.Questions
+                             where answers.AnswerId == questions.CorrectAnswerId
+                             group completedQuizzes by new
+                             {
+                                 UserName = completedQuizzes.User.UserName,
+                                 ProfileId = completedQuizzes.User.Profile.Id,
+                                 ProfileThumbnailImagePath = completedQuizzes.User.Profile.UserImage.FileName,
+                                 completedQuizzes.Quiz.Questions.Count
+                             } into g
+                             select new UserWithSimilarQuizScoreViewModel()
+                             {
+                                 UserName = g.Key.UserName,
+                                 ProfileId = g.Key.ProfileId,
+                                 ProfileThumbnailImagePath = g.Key.ProfileThumbnailImagePath,
+                                 Score = (double)g.Count() / (double)g.Key.Count
+                             };
+            }
+            else
+            {
+                // quizzes with minefield questions (many possible answers for a single question) have to calculate their score based on:
+                // users correct answer count (where the answers they chose are marked as "correct" answers)
+                // total possible correct answer count (for example, a question with 3 correct answers and 5 incorrect answers has a total possible correct answer count of 3)
+                // score is UsersCorrectAnswerCount divided by TotalPossibleCorrectAnswerCount
+                scoreQuery = from completedQuizzes in db.CompletedQuizzes
+                             where completedQuizzes.UserId != userId
+                             where completedQuizzes.QuizId == quizId
+                             from minefieldAnswers in completedQuizzes.User.AnsweredMinefieldQuestions
+                             where minefieldAnswers.Answer.IsCorrect
+                             from possibleAnswers in completedQuizzes.Quiz.MinefieldQuestion.PossibleAnswers
+                             where possibleAnswers.IsCorrect
+                             group completedQuizzes by new
+                             {
+                                 UserName = completedQuizzes.User.UserName,
+                                 ProfileId = completedQuizzes.User.Profile.Id,
+                                 ProfileThumbnailImagePath = completedQuizzes.User.Profile.UserImage.FileName,
+                                 completedQuizzes.Quiz.MinefieldQuestion.PossibleAnswers.Count
+                             } into g
+                             select new UserWithSimilarQuizScoreViewModel()
+                             {
+                                 UserName = g.Key.UserName,
+                                 ProfileId = g.Key.ProfileId,
+                                 ProfileThumbnailImagePath = g.Key.ProfileThumbnailImagePath,
+                                 Score = (double)g.Count() / (double)g.Key.Count
+                             };
+            }
+
+            // filter down the results to only include scores in a certain range of the user's score
+            var resultQuery = scoreQuery
+                .Where((x => (x.Score <= userScore * 1.25) && (x.Score >= userScore * .75)))
+                .OrderBy(x => Guid.NewGuid())
+                .Select(x => new UserWithSimilarQuizScoreViewModel()
+                {
+                    UserName = x.UserName,
+                    ProfileId = x.ProfileId,
+                    ProfileThumbnailImagePath = x.ProfileThumbnailImagePath,
+                    Score = x.Score
+                })
+                .Take(numRecords);
+
+            var results = await resultQuery.ToListAsync();
+
+            // we have to do this outside of the query because Linq to Entities doesn't support custom extensions
             foreach (var result in results)
             {
                 result.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.ProfileThumbnailImagePath);

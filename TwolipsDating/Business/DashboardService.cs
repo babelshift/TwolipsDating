@@ -219,7 +219,7 @@ select
 	cq.DateCompleted DateCompleted,
 	(
         case
-            when q.QuizTypeId = @quizTypeIndividual		
+            when q.QuizTypeId = @quizTypeIndividual
             then (
                 select count(*)
 		        from dbo.QuestionQuizs qq2
@@ -229,7 +229,7 @@ select
 		        and aq.AnswerId = qu.CorrectAnswerId
             )
             else (
-                select count(*) 
+                select count(*)
                 from dbo.answeredminefieldquestions amq
                 inner join dbo.MinefieldAnswers ma on ma.Id = amq.MinefieldAnswerId
                 inner join dbo.MinefieldQuestions mq on mq.MinefieldQuestionId = amq.MinefieldQuestionId
@@ -240,7 +240,7 @@ select
 	) CorrectAnswerCount,
 	(
         case
-            when q.QuizTypeId = @quizTypeIndividual		
+            when q.QuizTypeId = @quizTypeIndividual
             then (
 		        select count(*)
 		        from dbo.QuestionQuizs qq2

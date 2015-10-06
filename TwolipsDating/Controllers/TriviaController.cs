@@ -2,9 +2,7 @@
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using TwolipsDating.Business;
@@ -189,7 +187,7 @@ namespace TwolipsDating.Controllers
             return View(viewModel);
         }
 
-        #endregion
+        #endregion Dashboard
 
         #region Random Question
 
@@ -483,11 +481,11 @@ namespace TwolipsDating.Controllers
 
                         minefieldQuestion = Mapper.Map<MinefieldQuestion, MinefieldQuestionViewModel>(quiz.MinefieldQuestion);
 
-                        foreach(var answer in minefieldQuestion.Answers)
+                        foreach (var answer in minefieldQuestion.Answers)
                         {
                             AnsweredMinefieldQuestion answeredQuizQuestion = null;
                             bool selectedByUser = answeredQuizQuestions.TryGetValue(answer.AnswerId, out answeredQuizQuestion);
-                            if(selectedByUser)
+                            if (selectedByUser)
                             {
                                 answer.IsSelected = true;
                                 answer.IsCorrect = answeredQuizQuestion.Answer.IsCorrect;
@@ -551,6 +549,21 @@ namespace TwolipsDating.Controllers
         }
 
         /// <summary>
+        /// Returns a collection of tag associated with the questions of a quiz.
+        /// </summary>
+        /// <param name="quizId"></param>
+        /// <returns></returns>
+        private async Task<IReadOnlyCollection<TagViewModel>> GetTagsForQuizAsync(int quizId)
+        {
+            var tags = await TriviaService.GetTagsForQuizAsync(quizId);
+            return tags;
+        }
+
+        #endregion Quiz
+
+        #region Individual Quiz
+
+        /// <summary>
         /// Submits the completion of a quiz for the currently logged in user.
         /// </summary>
         /// <param name="viewModel"></param>
@@ -592,6 +605,10 @@ namespace TwolipsDating.Controllers
             return RedirectToAction("quiz", new { id = viewModel.QuizId, seoName = viewModel.SEOName });
         }
 
+        #endregion Individual Quiz
+
+        #region Minefield Quiz
+
         [HttpPost, ExportModelStateToTempData, ValidateAntiForgeryToken]
         public async Task<ActionResult> MinefieldQuiz(QuizViewModel viewModel)
         {
@@ -610,7 +627,7 @@ namespace TwolipsDating.Controllers
                 viewModel.MinefieldQuestion.MinefieldQuestionId,
                 viewModel.MinefieldQuestion.Answers);
 
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 int count = await TriviaService.SetQuizAsCompletedAsync(currentUserId, viewModel.QuizId, result.CorrectAnswerCount);
             }
@@ -618,18 +635,7 @@ namespace TwolipsDating.Controllers
             return RedirectToAction("quiz", new { id = viewModel.QuizId, seoName = viewModel.SEOName });
         }
 
-        /// <summary>
-        /// Returns a collection of tag associated with the questions of a quiz.
-        /// </summary>
-        /// <param name="quizId"></param>
-        /// <returns></returns>
-        private async Task<IReadOnlyCollection<TagViewModel>> GetTagsForQuizAsync(int quizId)
-        {
-            var tags = await TriviaService.GetTagsForQuizAsync(quizId);
-            return tags;
-        }
-
-        #endregion Quiz
+        #endregion Minefield Quiz
 
         /// <summary>
         /// Returns a view model containing a random question of a certain type with its tags and users who have already answered it correctly.
@@ -703,6 +709,8 @@ namespace TwolipsDating.Controllers
             return viewModel;
         }
 
+        #region Add Questions to Quiz (Admin Page)
+
         [Authorize(Users = "justin")]
         public async Task<ActionResult> AddQuizQuestions(int id)
         {
@@ -714,35 +722,6 @@ namespace TwolipsDating.Controllers
             viewModel.Tags = await GetSearchableTagsAsync();
 
             return View(viewModel);
-        }
-
-        private async Task<Dictionary<int, string>> GetSearchableTagsAsync()
-        {
-            var allTags = await ProfileService.GetAllTagsAsync();
-            Dictionary<int, string> d = new Dictionary<int, string>();
-
-            foreach (var tag in allTags)
-            {
-                d.Add(tag.TagId, tag.Name);
-            }
-
-            return d;
-        }
-
-        private static void SetupQuestions(AddQuizQuestionsViewModel viewModel)
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                CreateQuestionViewModel q = new CreateQuestionViewModel();
-                List<CreateAnswerViewModel> answers = new List<CreateAnswerViewModel>();
-                for (int j = 0; j < 4; j++)
-                {
-                    CreateAnswerViewModel a = new CreateAnswerViewModel();
-                    answers.Add(a);
-                }
-                q.Answers = answers;
-                viewModel.Questions.Add(q);
-            }
         }
 
         [ValidateAntiForgeryToken, HttpPost, Authorize(Users = "justin")]
@@ -767,5 +746,36 @@ namespace TwolipsDating.Controllers
 
             return View(viewModel);
         }
+
+        private static void SetupQuestions(AddQuizQuestionsViewModel viewModel)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                CreateQuestionViewModel q = new CreateQuestionViewModel();
+                List<CreateAnswerViewModel> answers = new List<CreateAnswerViewModel>();
+                for (int j = 0; j < 4; j++)
+                {
+                    CreateAnswerViewModel a = new CreateAnswerViewModel();
+                    answers.Add(a);
+                }
+                q.Answers = answers;
+                viewModel.Questions.Add(q);
+            }
+        }
+
+        private async Task<Dictionary<int, string>> GetSearchableTagsAsync()
+        {
+            var allTags = await ProfileService.GetAllTagsAsync();
+            Dictionary<int, string> d = new Dictionary<int, string>();
+
+            foreach (var tag in allTags)
+            {
+                d.Add(tag.TagId, tag.Name);
+            }
+
+            return d;
+        }
+
+        #endregion Add Questions to Quiz (Admin Page)
     }
 }
