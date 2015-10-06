@@ -616,23 +616,26 @@ namespace TwolipsDating.Business
             }
             else
             {
-                var query = from completedQuizzes in db.CompletedQuizzes
-                            where completedQuizzes.UserId == userId
-                            where completedQuizzes.QuizId == quizId
-                            from minefieldAnswers in completedQuizzes.User.AnsweredMinefieldQuestions
-                            where minefieldAnswers.Answer.IsCorrect
-                            from possibleAnswers in completedQuizzes.Quiz.MinefieldQuestion.PossibleAnswers
-                            where possibleAnswers.IsCorrect
-                            group completedQuizzes by completedQuizzes.Quiz.MinefieldQuestion.PossibleAnswers.Count
-                                into g
-                                select new
-                                {
-                                    Score = (double)g.Count() / (double)g.Key
-                                };
+                var correctAnswerQuery = from completedQuizzes in db.CompletedQuizzes
+                                         where completedQuizzes.UserId == userId
+                                         where completedQuizzes.QuizId == quizId
+                                         join selectedAnswers in db.AnsweredMinefieldQuestions on
+                                             new { QuizId = completedQuizzes.QuizId, UserId = completedQuizzes.UserId }
+                                             equals new { QuizId = selectedAnswers.MinefieldQuestionId, UserId = selectedAnswers.UserId }
+                                         select completedQuizzes;
 
-                var result = await query.FirstOrDefaultAsync();
+                int correctAnswerCount = await correctAnswerQuery.CountAsync();
 
-                return result != null ? result.Score : 0;
+                var totalPossibleCorrectAnswerQuery = from minefieldAnswers in db.MinefieldAnswers
+                                                      where minefieldAnswers.MinefieldQuestionId == quizId
+                                                      where minefieldAnswers.IsCorrect == true
+                                                      select minefieldAnswers;
+
+                int totalPossibleCorrectAnswerCount = await totalPossibleCorrectAnswerQuery.CountAsync();
+
+                double userScore = (double)correctAnswerCount / (double)totalPossibleCorrectAnswerCount;
+
+                return userScore;
             }
         }
 
@@ -1084,27 +1087,33 @@ namespace TwolipsDating.Business
                 // users correct answer count (where the answers they chose are marked as "correct" answers)
                 // total possible correct answer count (for example, a question with 3 correct answers and 5 incorrect answers has a total possible correct answer count of 3)
                 // score is UsersCorrectAnswerCount divided by TotalPossibleCorrectAnswerCount
+                
+                var totalPossibleCorrectAnswerQuery = from minefieldAnswers in db.MinefieldAnswers
+                                                      where minefieldAnswers.MinefieldQuestionId == quizId
+                                                      where minefieldAnswers.IsCorrect == true
+                                                      select minefieldAnswers;
+
+                int totalPossibleCorrectAnswerCount = await totalPossibleCorrectAnswerQuery.CountAsync();
+
                 scoreQuery = from completedQuizzes in db.CompletedQuizzes
                              where completedQuizzes.UserId != userId
                              where completedQuizzes.QuizId == quizId
-                             from minefieldAnswers in completedQuizzes.User.AnsweredMinefieldQuestions
-                             where minefieldAnswers.Answer.IsCorrect
-                             from possibleAnswers in completedQuizzes.Quiz.MinefieldQuestion.PossibleAnswers
-                             where possibleAnswers.IsCorrect
+                             join selectedAnswers in db.AnsweredMinefieldQuestions on
+                                 new { QuizId = completedQuizzes.QuizId, UserId = completedQuizzes.UserId }
+                                 equals new { QuizId = selectedAnswers.MinefieldQuestionId, UserId = selectedAnswers.UserId }
                              group completedQuizzes by new
                              {
                                  UserName = completedQuizzes.User.UserName,
                                  ProfileId = completedQuizzes.User.Profile.Id,
-                                 ProfileThumbnailImagePath = completedQuizzes.User.Profile.UserImage.FileName,
-                                 completedQuizzes.Quiz.MinefieldQuestion.PossibleAnswers.Count
+                                 ProfileThumbnailImagePath = completedQuizzes.User.Profile.UserImage.FileName
                              } into g
                              select new UserWithSimilarQuizScoreViewModel()
-                             {
-                                 UserName = g.Key.UserName,
-                                 ProfileId = g.Key.ProfileId,
-                                 ProfileThumbnailImagePath = g.Key.ProfileThumbnailImagePath,
-                                 Score = (double)g.Count() / (double)g.Key.Count
-                             };
+                            {
+                                UserName = g.Key.UserName,
+                                ProfileId = g.Key.ProfileId,
+                                ProfileThumbnailImagePath = g.Key.ProfileThumbnailImagePath,
+                                Score = (double)g.Count() / (double)totalPossibleCorrectAnswerCount
+                            };
             }
 
             // filter down the results to only include scores in a certain range of the user's score
