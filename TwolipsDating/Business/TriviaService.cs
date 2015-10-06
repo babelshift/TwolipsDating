@@ -725,6 +725,7 @@ namespace TwolipsDating.Business
 								inner join dbo.MinefieldQuestions mq on mq.MinefieldQuestionId = amq.MinefieldQuestionId
 								where mq.MinefieldQuestionId = q.Id
 								and ma.IsCorrect = 1
+				                and amq.UserId = u.id
 							)
 						end
 					) CorrectAnswerCount,
