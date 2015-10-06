@@ -218,17 +218,41 @@ select
 	q.Id QuizId,
 	cq.DateCompleted DateCompleted,
 	(
-		select count(*)
-		from dbo.QuestionQuizs qq2
-		inner join dbo.AnsweredQuestions aq on aq.UserId = cq.UserId and aq.QuestionId = qq2.Question_Id
-		inner join dbo.Questions qu on qu.Id = aq.QuestionId
-		where qq2.Quiz_Id = q.Id
-		and aq.AnswerId = qu.CorrectAnswerId
+        case
+            when q.QuizTypeId = @quizTypeIndividual		
+            then (
+                select count(*)
+		        from dbo.QuestionQuizs qq2
+		        inner join dbo.AnsweredQuestions aq on aq.UserId = cq.UserId and aq.QuestionId = qq2.Question_Id
+		        inner join dbo.Questions qu on qu.Id = aq.QuestionId
+		        where qq2.Quiz_Id = q.Id
+		        and aq.AnswerId = qu.CorrectAnswerId
+            )
+            else (
+                select count(*) 
+                from dbo.answeredminefieldquestions amq
+                inner join dbo.MinefieldAnswers ma on ma.Id = amq.MinefieldAnswerId
+                inner join dbo.MinefieldQuestions mq on mq.MinefieldQuestionId = amq.MinefieldQuestionId
+                where mq.MinefieldQuestionId = q.Id
+                and ma.IsCorrect = 1
+            )
+        end
 	) CorrectAnswerCount,
 	(
-		select count(*)
-		from dbo.QuestionQuizs qq2
-		where qq2.Quiz_Id = q.Id
+        case
+            when q.QuizTypeId = @quizTypeIndividual		
+            then (
+		        select count(*)
+		        from dbo.QuestionQuizs qq2
+		        where qq2.Quiz_Id = q.Id
+            )
+            else (
+		        select count(*)
+                from dbo.MinefieldAnswers ma
+                where MinefieldQuestionId = q.Id
+                and ma.IsCorrect = 1
+            )
+        end
 	) TotalAnswerCount
 from dbo.CompletedQuizs cq
 inner join dbo.Quizs q on cq.QuizId = q.Id
@@ -239,7 +263,7 @@ where
 	cq.UserId = @userId
 	and u.IsActive = 1";
 
-            var results = await QueryAsync<CompletedQuizFeedViewModel>(sql, new { userId = userId });
+            var results = await QueryAsync<CompletedQuizFeedViewModel>(sql, new { userId = userId, quizTypeIndividual = (int)QuizTypeValues.Individual });
 
             foreach (var result in results)
             {
