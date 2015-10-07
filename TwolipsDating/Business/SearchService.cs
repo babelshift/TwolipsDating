@@ -90,25 +90,27 @@ namespace TwolipsDating.Business
             return profiles.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<QuizSearchResultViewModel>> GetQuizzesByTagsAsync(string tag)
+        public async Task<IReadOnlyCollection<QuizOverviewViewModel>> GetQuizzesByTagsAsync(string tag)
         {
             Debug.Assert(!String.IsNullOrEmpty(tag));
 
             string sql = @"
                 select
-	                q.Id as QuizId,
-	                q.Name as QuizName,
-	                q.Description as QuizDescription,
-	                qqc.QuestionCount as QuestionCount,
-	                qqc.QuestionPointAverage as AveragePoints
+	                q.Id as Id,
+	                q.Name as Name,
+	                q.Description as Description,
+	                qqc.QuestionPointAverage as AveragePoints,
+                    0 as IsComplete,
+                    q.ImageFileName as ThumbnailImagePath,
+					qc.Id as QuizCategoryId,
+					qc.Name as QuizCategoryName
                 from
 	                dbo.Quizs q
 	                inner join
 	                (
 		                select
 		                qq.Quiz_Id as QuizId,
-                        round(avg(cast(qu.Points as float)), 0) as QuestionPointAverage,
-		                count(qq.Question_Id) as QuestionCount
+                        round(avg(cast(qu.Points as float)), 0) as QuestionPointAverage
 		                from dbo.QuestionQuizs qq
 		                inner join dbo.questions qu on qu.Id = qq.Question_Id
 		                group by qq.Quiz_Id
@@ -117,17 +119,25 @@ namespace TwolipsDating.Business
 	                inner join dbo.questions qu on qu.Id = qq.Question_Id
 	                inner join dbo.TagQuestions tq on tq.Question_Id = qu.Id
 	                inner join dbo.Tags t on t.TagId = tq.Tag_TagId
+					inner join dbo.QuizCategories qc on qc.Id = q.QuizCategoryId
                 where
 	                t.Name in (@tagList)
                 group by
 	                q.Id,
 	                q.Name,
 	                q.Description,
-	                qqc.QuestionCount,
-	                qqc.QuestionPointAverage
+                    q.ImageFileName,
+	                qqc.QuestionPointAverage,
+					qc.Id,
+					qc.Name
             ";
 
-            var results = await QueryAsync<QuizSearchResultViewModel>(sql, new { tagList = tag });
+            var results = await QueryAsync<QuizOverviewViewModel>(sql, new { tagList = tag });
+
+            foreach(var result in results)
+            {
+                result.ThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(result.ThumbnailImagePath);
+            }
 
             return results.ToList().AsReadOnly();
         }

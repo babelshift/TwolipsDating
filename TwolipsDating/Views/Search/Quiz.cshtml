@@ -1,4 +1,4 @@
-﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.QuizSearchResultViewModel>
+﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.QuizOverviewViewModel>
 
 @{
     ViewBag.Title = "Search for quizzes";
@@ -11,32 +11,9 @@
         <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @{ int i = 0; }
                     @foreach (var quiz in Model)
                     {
-                        <div class="search-result">
-                            @if (quiz.AveragePoints > 0)
-                            {
-                                @Html.Partial("_QuizRatingBarPartial", quiz.AveragePoints)
-                            }
-                            else
-                            {
-                                <span class="label label-warning">No bonus</span>
-                            }
-                            <span style="vertical-align: middle; margin-left: 5px">
-                                <a href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })">
-                                    @quiz.QuizName
-                                </a>
-                                &nbsp;
-                                <small>@quiz.QuestionCount questions</small>
-                            </span>
-                            <p style="color: #888"><small>@quiz.QuizDescription</small></p>
-                            @if (i < Model.Count - 1)
-                            {
-                                <hr />
-                            }
-                        </div>
-                        i++;
+                        @Html.Partial("_QuizOverviewPartial", quiz)
                     }
                 </div>
             </div>

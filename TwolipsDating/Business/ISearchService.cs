@@ -13,7 +13,7 @@ namespace TwolipsDating.Business
 
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Profile>> GetProfilesByUserNameAsync(string userName, string currentUserId);
 
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.QuizSearchResultViewModel>> GetQuizzesByTagsAsync(string tag);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.QuizOverviewViewModel>> GetQuizzesByTagsAsync(string tag);
 
         System.Threading.Tasks.Task<IReadOnlyCollection<SearchResultProfileViewModel>> GetAllProfilesAsync(string userId);
     }

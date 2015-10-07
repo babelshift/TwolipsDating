@@ -1,0 +1,33 @@
+﻿@model TwolipsDating.ViewModels.QuizOverviewViewModel
+
+<div class="row" style="margin-bottom: 25px">
+    <div class="col-xs-4">
+        <a href="@Url.Action("quiz", new { id = Model.Id })">
+            <img class="pull-left img-responsive" src="@Model.ThumbnailImagePath" alt="@Model.Name">
+        </a>
+    </div>
+    <div class="col-xs-8">
+        <h4 style="margin-top: 0; margin-bottom: 5px; font-weight: 400">
+            <a href="@Url.Action("quiz", new { id = Model.Id })">@Model.Name</a>
+        </h4>
+        <p>
+            <a href="@Url.Action("category", "trivia", new { id = Model.QuizCategoryId })" class="label label-info">@Model.QuizCategoryName.ToUpper()</a>
+            @if (Model.IsComplete)
+            {
+                <span class="label label-success">COMPLETED</span>
+            }
+            else
+            {
+                if (Model.AveragePoints > 0)
+                {
+                    @Html.Partial("_QuizRatingBarPartial", Model.AveragePoints)
+                }
+                else
+                {
+                    <span class="label label-danger">NOT RATED</span>
+                }
+            }
+        </p>
+        <p style="font-weight: 300">@Model.Description</p>
+    </div>
+</div>
