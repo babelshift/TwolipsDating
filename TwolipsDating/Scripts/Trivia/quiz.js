@@ -1,6 +1,18 @@
 ﻿var guessesRemaining = 0;
 
 $(document).ready(function () {
+    $(this).on('submit', '#form-main', function (e) {
+
+        $('#button-submit').attr('disabled', true);
+
+        var buttonReset = $('#button-reset');
+        if (buttonReset != null) {
+            buttonReset.attr('disabled', true);
+        }
+
+        $('#modalScoringQuiz').modal('show');
+    });
+
     $('#share-score-fb').on('click', function (e) {
         var shareHref = $(this).data('share-href');
         var description = $(this).data('share-description');

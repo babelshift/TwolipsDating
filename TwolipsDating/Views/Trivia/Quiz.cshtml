@@ -219,7 +219,7 @@
                 {
                     if (Model.Questions != null && Model.Questions.Count > 0)
                     {
-                        using (Html.BeginForm("quiz", "trivia", FormMethod.Post, new { role = "form" }))
+                        using (Html.BeginForm("quiz", "trivia", FormMethod.Post, new { @id = "form-main", role = "form" }))
                         {
                             @Html.AntiForgeryToken()
                             @Html.ValidationSummary(true)
@@ -335,7 +335,7 @@
                             </div>
                         </div>
                     }
-                    using (Html.BeginForm("minefieldQuiz", "trivia", FormMethod.Post, new { role = "form" }))
+                    using (Html.BeginForm("minefieldQuiz", "trivia", FormMethod.Post, new { @id = "form-main", role = "form" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary()
@@ -478,7 +478,26 @@
     @Styles.Render("~/Content/awesome-bootstrap-checkbox")
 }
 @section Modals {
-    @if (!User.Identity.IsAuthenticated)
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="modal" id="modalScoringQuiz" tabindex="-1" role="dialog" aria-labelledby="modalScoringQuizLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <i class="fa fa-cog fa-spin fa-4x text-primary"></i>
+                        <h4>Our best helper monkeys are calculating your score</h4>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                <span class="sr-only">Calculating...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
     {
         <div class="modal" id="modalSignUpIncentive" tabindex="-1" role="dialog" aria-labelledby="modalSignUpIncentiveLabel" aria-hidden="true">
             <div class="modal-dialog">

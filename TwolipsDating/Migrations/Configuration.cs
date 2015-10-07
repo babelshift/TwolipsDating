@@ -255,7 +255,8 @@ namespace TwolipsDating.Migrations
                 new QuizCategory() { Id = (int)QuizCategoryValues.Technical, Name = "Technical", FontAwesomeIconName = "fa-laptop" },
                 new QuizCategory() { Id = (int)QuizCategoryValues.Television, Name = "Television", FontAwesomeIconName = "fa-tv" },
                 new QuizCategory() { Id = (int)QuizCategoryValues.VideoGames, Name = "Video Games", FontAwesomeIconName = "fa-gamepad" },
-                new QuizCategory() { Id = (int)QuizCategoryValues.Sports, Name = "Sports", FontAwesomeIconName = "fa-futbol-o" }
+                new QuizCategory() { Id = (int)QuizCategoryValues.Sports, Name = "Sports", FontAwesomeIconName = "fa-futbol-o" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Geography, Name = "Geography", FontAwesomeIconName = "fa-globe" }
             );
 
             context.QuizTypes.AddOrUpdate(m => m.Id,
@@ -298,7 +299,8 @@ namespace TwolipsDating.Migrations
                 new Quiz() { Id = 33, QuizTypeId = (int)QuizTypeValues.Individual, QuizCategoryId = (int)QuizCategoryValues.History, Name = "Apollo Program", Description = "\"...landing a man on the Moon and returning him safely to the Earth.\"", DateCreated = new DateTime(2015, 10, 2, 14, 0, 0), Points = 20, IsActive = true, ImageFileName = "ApolloProgram.jpg" },
                 new Quiz() { Id = 34, QuizTypeId = (int)QuizTypeValues.Individual, QuizCategoryId = (int)QuizCategoryValues.Television, Name = "Star Trek: The Next Generation", Description = "Two decades between series and still just as good.", DateCreated = new DateTime(2015, 10, 2, 15, 0, 0), Points = 15, IsActive = true, ImageFileName = "StarTrekTNG.jpg" },
                 new Quiz() { Id = 35, QuizTypeId = (int)QuizTypeValues.Minefield, QuizCategoryId = (int)QuizCategoryValues.Food, Name = "Select the Fruits", Description = "Can you select all the fruit while avoiding the vegetables? No, pizza isn't a vegetable.", DateCreated = new DateTime(2015, 10, 3, 19, 0, 0), Points = 15, IsActive = true, ImageFileName = "SelectTheFruits.jpg" },
-                new Quiz() { Id = 36, QuizTypeId = (int)QuizTypeValues.Minefield, QuizCategoryId = (int)QuizCategoryValues.Creative, Name = "Colors of the Rainbow", Description = "Can you select all the colors that appear in a rainbow?", DateCreated = new DateTime(2015, 10, 6, 16, 0, 0), Points = 15, IsActive = true, ImageFileName = "RainbowColors.jpg" });
+                new Quiz() { Id = 36, QuizTypeId = (int)QuizTypeValues.Minefield, QuizCategoryId = (int)QuizCategoryValues.Creative, Name = "Colors of the Rainbow", Description = "Can you select all the colors that appear in a rainbow? Think back to early science classes.", DateCreated = new DateTime(2015, 10, 6, 16, 0, 0), Points = 15, IsActive = true, ImageFileName = "RainbowColors.jpg" },
+                new Quiz() { Id = 37, QuizTypeId = (int)QuizTypeValues.Minefield, QuizCategoryId = (int)QuizCategoryValues.Geography, Name = "United States' Capitals", Description = "Can you select all the capital cities of the United States?", DateCreated = new DateTime(2015, 10, 9, 19, 0, 0), Points = 20, IsActive = true, ImageFileName = "StateCapitals.jpg" });
 
             context.LookingForLocations.AddOrUpdate(m => m.Id,
                 new LookingForLocation() { Id = 1, Range = "Anywhere" },
