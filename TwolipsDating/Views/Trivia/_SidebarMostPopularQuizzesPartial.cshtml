@@ -1,0 +1,19 @@
+﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.MostPopularQuizViewModel>
+
+<div class="col-sm-6 col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading text-center">
+            <h4 class="panel-title"><i class="fa fa-bolt fa-lg fa-fw"></i> Most Popular</h4>
+        </div>
+        <div class="list-group">
+            @foreach (var quiz in Model)
+            {
+                <a style="font-size: 13px" class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })">
+                    <span style="margin-top: 12px;" class="badge">@quiz.CompletedCount</span>
+                    <img src="@quiz.ThumbnailImagePath" width="90" height="45" />
+                    @quiz.QuizName
+                </a>
+            }
+        </div>
+    </div>
+</div>

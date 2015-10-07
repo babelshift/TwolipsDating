@@ -1,0 +1,30 @@
+﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.UserCompletedQuizViewModel>
+
+<div class="col-sm-6 col-md-12">
+    <div class="panel panel-default recently-completed-quizzes">
+        <div class="panel-heading text-center">
+            <h4 class="panel-title"><i class="fa fa-feed fa-lg fa-fw"></i> Recent Activity</h4>
+        </div>
+        <div class="list-group">
+            @foreach (var quiz in Model)
+            {
+                <a href="@Url.Action("index", "profile", new { id = quiz.ProfileId })" class="list-group-item" style="padding: 5px 10px">
+                    <span class="badge" style="margin-top: 17px">@quiz.TimeAgo</span>
+                    @Html.Partial("_ProfileImagePartial", quiz.ProfileImagePath)
+                    <div class="profile-info-wrapper">
+                        <span class="name-and-location">
+                            @quiz.UserName
+                        </span>
+                        <br />
+                        <span style="color: #999">@quiz.QuizName</span>
+                        <br />
+                        <span style="color: #999">Score: @String.Format("{0}%", @quiz.UserScorePercent)</span>
+                    </div>
+                </a>
+            }
+        </div>
+        <div class="panel-footer text-center">
+            <a href="@Url.Action("index", "search")"><small>Find more people</small></a>
+        </div>
+    </div>
+</div>

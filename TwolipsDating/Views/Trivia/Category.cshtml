@@ -2,8 +2,8 @@
 @using TwolipsDating.Utilities;
 
 @{
-    ViewBag.Title = "Quizzes in category '" + Model.ActiveQuizCategoryName + "'";
-    ViewBag.Description = "Join our community to complete free quizzes and trivia questions related to the category '" + Model.ActiveQuizCategoryName + "'";
+    ViewBag.Title = "Free " + Model.ActiveQuizCategoryName + " Quizzes, Trivia, and Games";
+    ViewBag.Description = "Play free " + Model.ActiveQuizCategoryName + " quizzes, trivia, and games on Twolips. Find friends with similar knowledge of " + Model.ActiveQuizCategoryName + ".";
 }
 
 @if (HttpContext.Current.AreAdsEnabled())
@@ -129,29 +129,7 @@
         </div>
     </div>
     <div class="col-md-4">
-        <div class="col-sm-6 col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading text-center">
-                    <h4 class="panel-title"><i class="fa fa-line-chart fa-lg fa-fw"></i> Trending Now</h4>
-                </div>
-                <div class="list-group">
-                    @foreach (var quiz in Model.TrendingQuizzes)
-                    {
-                        <a style="font-size: 13px" class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })">
-                            @if (quiz.PercentageOfTrending > 50)
-                            {
-                                <i class="text-danger fa fa-fire fa-lg fa-fw"></i>
-                            }
-                            else
-                            {
-                                <i class="text-warning fa fa-fire fa-lg fa-fw"></i>
-                            }
-                            @quiz.QuizName
-                        </a>
-                    }
-                </div>
-            </div>
-        </div>
+        @Html.Partial("_SidebarTrendingNowPartial", Model.TrendingQuizzes)
 
         @if (HttpContext.Current.AreAdsEnabled())
         {
@@ -179,54 +157,9 @@
             </div>
         }
 
-        <div class="col-sm-6 col-md-12">
-            @if (Model.RecentlyCompletedQuizzes != null && Model.RecentlyCompletedQuizzes.Count > 0)
-            {
-                <div class="panel panel-default recently-completed-quizzes">
-                    <div class="panel-heading text-center">
-                        <h4 class="panel-title"><i class="fa fa-feed fa-lg fa-fw"></i> Recent Activity</h4>
-                    </div>
-                    <div class="list-group">
-                        @foreach (var quiz in Model.RecentlyCompletedQuizzes)
-                        {
-                            <a href="@Url.Action("index", "profile", new { id = quiz.ProfileId })" class="list-group-item" style="padding: 5px 10px">
-                                <span class="badge" style="margin-top: 17px">@quiz.TimeAgo</span>
-                                @Html.Partial("_ProfileImagePartial", quiz.ProfileImagePath)
-                                <div class="profile-info-wrapper">
-                                    <span class="name-and-location">
-                                        @quiz.UserName
-                                    </span>
-                                    <br />
-                                    <span style="color: #999">@quiz.QuizName</span>
-                                    <br />
-                                    <span style="color: #999">Score: @String.Format("{0}%", @quiz.UserScorePercent)</span>
-                                </div>
-                            </a>
-                        }
-                    </div>
-                    <div class="panel-footer text-center">
-                        <a href="@Url.Action("index", "search")"><small>Find more people</small></a>
-                    </div>
-                </div>
-            }
-        </div>
+        @Html.Partial("_SidebarRecentQuizActivityPartial", Model.RecentlyCompletedQuizzes)
 
-        <div class="col-sm-6 col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading text-center">
-                    <h4 class="panel-title"><i class="fa fa-bolt fa-lg fa-fw"></i> Most Popular</h4>
-                </div>
-                <div class="list-group">
-                    @foreach (var quiz in Model.PopularQuizzes)
-                    {
-                        <a style="font-size: 13px" class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })">
-                            <span class="badge">@quiz.CompletedCount</span>
-                            @quiz.QuizName
-                        </a>
-                    }
-                </div>
-            </div>
-        </div>
+        @Html.Partial("_SidebarMostPopularQuizzesPartial", Model.PopularQuizzes)
 
         @if (HttpContext.Current.AreAdsEnabled())
         {

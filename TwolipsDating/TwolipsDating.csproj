@@ -1111,6 +1111,9 @@
     <Content Include="Views\Profile\Quick.cshtml" />
     <Content Include="Views\Trivia\AddQuizQuestions.cshtml" />
     <Content Include="Views\Shared\_QuizOverviewPartial.cshtml" />
+    <Content Include="Views\Trivia\_SidebarTrendingNowPartial.cshtml" />
+    <Content Include="Views\Trivia\_SidebarRecentQuizActivityPartial.cshtml" />
+    <Content Include="Views\Trivia\_SidebarMostPopularQuizzesPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
