@@ -1044,7 +1044,11 @@ namespace TwolipsDating.Business
         /// <returns></returns>
         public async Task<IReadOnlyCollection<UserWithSimilarQuizScoreViewModel>> GetUsersWithSimilarScoresAsync(string userId, int quizId, int numRecords)
         {
-            Debug.Assert(!String.IsNullOrEmpty(userId));
+            if(String.IsNullOrEmpty(userId))
+            {
+                return new List<UserWithSimilarQuizScoreViewModel>().AsReadOnly();
+            }
+
             Debug.Assert(quizId > 0);
 
             // the score calculation depends on the type of quiz
