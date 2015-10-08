@@ -380,14 +380,28 @@
                                 }
                             </div>
                         </div>
-                        if (!Model.IsAlreadyCompleted)
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            if (!Model.IsAlreadyCompleted)
+                            {
+                                <button id="button-reset" type="reset" class="btn btn-default">
+                                    <i class="fa fa-refresh"></i> Reset Selections
+                                </button>
+
+                                <button id="button-submit" type="submit" class="btn btn-primary">
+                                    <i class="fa fa-check"></i> Complete Quiz
+                                </button>
+                            }
+                        }
+                        else
                         {
                             <button id="button-reset" type="reset" class="btn btn-default">
                                 <i class="fa fa-refresh"></i> Reset Selections
                             </button>
-                            <button id="button-submit" type="submit" class="btn btn-primary">
+
+                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modalSignUpIncentive" data-keyboard="true">
                                 <i class="fa fa-check"></i> Complete Quiz
-                            </button>
+                            </a>
                         }
                         @Html.HiddenFor(m => m.QuizId)
                         @Html.HiddenFor(m => m.MinefieldQuestion.MinefieldQuestionId)
