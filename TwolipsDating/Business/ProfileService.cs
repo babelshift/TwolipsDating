@@ -1049,6 +1049,7 @@ namespace TwolipsDating.Business
         {
             var inventory = from inventoryItems in db.InventoryItems
                             where inventoryItems.ApplicationUserId == userId
+                            orderby inventoryItems.ItemCount descending
                             select inventoryItems;
 
             var results = await inventory.ToListAsync();

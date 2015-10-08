@@ -1100,3 +1100,7 @@ input[readonly] {
     line-height: 18px;
     border-radius: 10px;
 }
+
+.alert {
+    margin-bottom: 10px;
+}

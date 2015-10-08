@@ -44,7 +44,7 @@ namespace TwolipsDating.Controllers
         /// </summary>
         /// <returns></returns>
         [RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
-        public async Task<ActionResult> Index(int? page)
+        public async Task<ActionResult> Index(int? page, bool? success)
         {
             var currentUserId = User.Identity.GetUserId();
 
@@ -52,6 +52,8 @@ namespace TwolipsDating.Controllers
 
             var storeItems = await StoreService.GetNewStoreItemsAsync();
             StoreViewModel viewModel = await GetStoreViewModelAsync(storeItems, currentUserId, page);
+
+            ViewBag.SuccessfulPurchase = success.HasValue ? success.Value : false;
 
             return View(viewModel);
         }
@@ -143,7 +145,7 @@ namespace TwolipsDating.Controllers
                 // model state may have become invalid as a result of attempting to buy the item
                 if(ModelState.IsValid)
                 {
-                    return RedirectToAction("index", "store");
+                    return RedirectToAction("index", "store", new { success = true });
                 }
                 else
                 {

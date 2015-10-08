@@ -10,6 +10,15 @@
 @Html.Partial("_ItemAddedConfirmationPartial")
 <div class="row">
     <div class="col-md-8">
+        @if (ViewBag.SuccessfulPurchase)
+        {
+            <div class="alert alert-success alert-dismissable" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5 style="margin: 0;">
+                    Your items have been successfully added to your inventory. <a href="@Url.Action("index", "profile", new { tab = "inventory" })" class="alert-link">Go take a look</a>.
+                </h5>
+            </div>
+        }
         <div class="panel panel-default">
             <div class="panel-body">
                 <a href="@Url.Action("cart", "store")" class="btn btn-default pull-right">
