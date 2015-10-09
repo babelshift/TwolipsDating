@@ -39,7 +39,124 @@ $(document).ready(function () {
     $('.followify').followify();
 
     setupNewUserGuide();
+
+    setupProfileSetupPanel();
 });
+
+function setupProfileSetupPanel() {
+    if (shouldShowProfileSetup()) {
+        $('#panel-profile-setup').removeClass('hidden');
+
+        var hasUserCompletedChangeBannerStep = $.cookie('userCompletedChangeBannerStep');
+        if (hasUserCompletedChangeBannerStep) {
+            completeGuideStep('#link-guide-change-banner', '#icon-guide-change-banner', 'fa-camera', 'fa-check', '#span-guide-change-banner', '#header-guide-change-banner');
+        } else {
+            setupProfileSetupItemClick('#link-guide-change-banner', '#icon-guide-change-banner', 'fa-camera', 'fa-check', '#span-guide-change-banner', '#header-guide-change-banner',
+                function () {
+                    $.cookie('userCompletedChangeBannerStep', true);
+                    $('#upload-header').click();
+                });
+        }
+
+        var hasUserCompletedChangeImageStep = $.cookie('userCompletedChangeImageStep');
+        if (hasUserCompletedChangeImageStep) {
+            completeGuideStep('#link-guide-change-image', '#icon-guide-change-image', 'fa-user', 'fa-check', '#span-guide-change-image', '#header-guide-change-image');
+        } else {
+            setupProfileSetupItemClick('#link-guide-change-image', '#icon-guide-change-image', 'fa-user', 'fa-check', '#span-guide-change-image', '#header-guide-change-image',
+                function () {
+                    $.cookie('userCompletedChangeImageStep', true);
+                    $('#modalProfileImage').modal('show');
+                });
+        }
+        
+        var hasUserCompletedProfileDetilsStep = $.cookie('userCompletedProfileDetailsStep');
+        if (hasUserCompletedProfileDetilsStep) {
+            completeGuideStep('#link-guide-profile-details', '#icon-guide-profile-details', 'fa-edit', 'fa-check', '#span-guide-profile-details', '#header-guide-profile-details');
+        } else {
+            setupProfileSetupItemClick('#link-guide-profile-details', '#icon-guide-profile-details', 'fa-edit', 'fa-check', '#span-guide-profile-details', '#header-guide-profile-details',
+                function () {
+                    $.cookie('userCompletedProfileDetailsStep', true);
+                    $('#modalWhatImLookingFor').modal('show');
+                });
+        }
+
+        $('#button-goto-guide-incomplete').on('click', function (e) {
+            e.preventDefault();
+            $('.guide-complete').addClass('hidden');
+            $('.guide-incomplete').removeClass('hidden');
+        });
+
+        $('#button-close-profile-setup').on('click', function (e) {
+            e.preventDefault();
+            setShowProfile(false);
+        });
+    }
+}
+
+function setupProfileSetupItemClick(host, icon, iconToRemove, iconToAdd, span, header, callback) {
+    $(host).on('click', function (e) {
+        e.preventDefault();
+        completeGuideStep(this, icon, iconToRemove, iconToAdd, span, header);
+
+        if (callback != null) {
+            callback();
+        }
+    });
+}
+
+function shouldShowProfileSetup() {
+    // if the panel doesn't exist, this isn't the user's profile, so don't show the panel
+    var panel = $('#panel-profile-setup');
+    if (panel == null) {
+        return false;
+    }
+
+    // if the user doesn't have a cookie indicating anything about the panel, show it to them
+    var value = getShowProfileValue();
+    if (value == null || value == true) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function getShowProfileValue() {
+    return $.cookie('showProfileSetup');
+}
+
+function setShowProfile(value) {
+    $.cookie('showProfileSetup', value);
+
+    if (value == false) {
+        $('#panel-profile-setup').remove();
+    }
+}
+
+function updateGuideProgress() {
+    var percentGuideComplete = parseInt($('#header-percent-guide-complete').text());
+    percentGuideComplete += 25;
+    $('#header-percent-guide-complete').text(percentGuideComplete);
+    $('#progress-guide-complete').attr('aria-valuenow', percentGuideComplete);
+    $('#progress-guide-complete').attr('style', 'width: ' + percentGuideComplete + '%');
+    $('#sr-guide-complete').text(percentGuideComplete);
+    if (percentGuideComplete == 100) {
+        $('.guide-complete').removeClass('hidden');
+        $('.guide-incomplete').addClass('hidden');
+    }
+}
+
+function completeGuideStep(host, iconControl, iconToRemove, iconToAdd, span, header) {
+    $(iconControl).removeClass(iconToRemove);
+    $(iconControl).addClass(iconToAdd);
+    $(span).addClass('text-success');
+
+    var text = $(host).text();
+    $(host).remove();
+    $(header).append(text);
+    $(header).addClass('text-muted');
+
+    updateGuideProgress();
+}
 
 function setupNewUserGuide() {
     if (shouldShowGuide()) {
@@ -123,6 +240,13 @@ function setupNewUserGuide() {
 }
 
 function shouldShowGuide() {
+    // if the alert doesn't exist, this isn't the user's profile, so don't show the guide
+    var alert = $('#alert-start-guide');
+    if (alert == null) {
+        return false;
+    }
+
+    // if the user doesn't have a cookie indicating anything about the guide, show it to them
     var value = getGuideToShowValue();
     if (value == null || value == true) {
         return true;
@@ -548,6 +672,9 @@ function setupFileUploadText() {
     // handle file selection text updating
     $('#form-upload-images').on('change', function () {
         $('#form-upload-images').submit();
+    });
+    $('#form-upload-images-modal').on('change', function () {
+        $('#form-upload-images-modal').submit();
     });
 }
 

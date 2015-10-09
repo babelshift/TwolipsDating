@@ -431,6 +431,19 @@ namespace TwolipsDating.Controllers
             return result.Succeeded;
         }
 
+        [HttpPost, RequireConfirmedEmailIfAuthenticated, ExportModelStateToTempData]
+        public async Task<ActionResult> UploadImageFromModal(ProfileViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToIndex(new { tab = "pictures" });
+            }
+
+            await UploadImageTaskAsync(viewModel.UploadImage, replaceCurrentProfileImage: true);
+
+            return RedirectToIndex(new { tab = "pictures" });
+        }
+
         /// <summary>
         /// Uploads multiple images from a user's selection.
         /// Does nothing if attempting to upload to someone else's profile.
@@ -448,6 +461,13 @@ namespace TwolipsDating.Controllers
                 return RedirectToIndex(new { tab = "pictures" });
             }
 
+            await UploadImageTaskAsync(viewModel);
+
+            return RedirectToIndex(new { tab = "pictures" });
+        }
+
+        private async Task UploadImageTaskAsync(UploadImageViewModel viewModel, bool replaceCurrentProfileImage = false)
+        {
             string currentUserId = User.Identity.GetUserId();
             int i = 0;
             foreach (var uploadedImage in viewModel.UploadedImages)
@@ -469,18 +489,16 @@ namespace TwolipsDating.Controllers
                     await UploadProfileThumbnailToAzureStorageAsync(newImage);
 
                     // if this is the first image being uploaded and the user doesn't have a profile image set, set the user's profile image to the file being uploaded
-                    if (i == 0)
+                    if (i == 0 || replaceCurrentProfileImage)
                     {
                         var profile = await ProfileService.GetProfileAsync(currentUserId);
-                        if (profile != null && profile.UserImage == null)
+                        if (profile != null && (profile.UserImage == null || replaceCurrentProfileImage))
                         {
                             await ProfileService.ChangeProfileUserImageAsync(profile.Id, result.UploadedImageId);
                         }
                     }
                 }
             }
-
-            return RedirectToIndex(new { tab = "pictures" });
         }
 
         private static CloudBlobContainer GetAzureStorageContainer()
@@ -812,21 +830,19 @@ namespace TwolipsDating.Controllers
             string currentUserId,
             int? page)
         {
-            if (viewModel.ActiveTab == "about")
-            {
-                var lookingForTypes = await ProfileService.GetLookingForTypesAsync();
-                var lookingForLocations = await ProfileService.GetLookingForLocationsAsync();
-                var languages = await ProfileService.GetLanguagesAsync();
-                var relationshipStatuses = await ProfileService.GetRelationshipStatusesAsync();
-                viewModel.SelectedLanguages = (await ProfileService.GetSelectedLanguagesAsync(currentUserId))
-                    .Select(s => s.Id)
-                    .ToList();
+            var lookingForTypes = await ProfileService.GetLookingForTypesAsync();
+            var lookingForLocations = await ProfileService.GetLookingForLocationsAsync();
+            var languages = await ProfileService.GetLanguagesAsync();
+            var relationshipStatuses = await ProfileService.GetRelationshipStatusesAsync();
+            viewModel.SelectedLanguages = (await ProfileService.GetSelectedLanguagesAsync(currentUserId))
+                .Select(s => s.Id)
+                .ToList();
 
-                viewModel.LookingForTypes = lookingForTypes.ToDictionary(t => t.Id, t => t.Name);
-                viewModel.LookingForLocations = lookingForLocations.ToDictionary(t => t.Id, t => t.Range);
-                viewModel.AllLanguages = languages.ToDictionary(t => t.Id, t => t.Name);
-                viewModel.RelationshipStatuses = relationshipStatuses.ToDictionary(t => t.Id, t => t.Name);
-            }
+            viewModel.LookingForTypes = lookingForTypes.ToDictionary(t => t.Id, t => t.Name);
+            viewModel.LookingForLocations = lookingForLocations.ToDictionary(t => t.Id, t => t.Range);
+            viewModel.AllLanguages = languages.ToDictionary(t => t.Id, t => t.Name);
+            viewModel.RelationshipStatuses = relationshipStatuses.ToDictionary(t => t.Id, t => t.Name);
+
             if (viewModel.ActiveTab == "feed")
             {
                 var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);

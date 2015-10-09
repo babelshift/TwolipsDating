@@ -105,7 +105,7 @@
     <div id="guide-part-7" class="hide">
         <div class="custom-popover-content">
             <p>Setup your community information to let others know what type of friends you want to find.</p>
-            <button type="button" class="btn btn-primary btn-xs button-goto-guide-part-8">Next</button>
+            <button type="button" class="btn btn-primary btn-xs button-goto-guide-part-8 hidden">Next</button>
             <button type="button" class="btn btn-default btn-xs button-end-guide-7">End Guide</button>
         </div>
     </div>
@@ -132,16 +132,91 @@
     </div>
 }
 <div class="row">
-    <div id="alert-start-guide" class="hidden">
-        <div class="col-xs-12">
-            <div class="alert alert-success" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 style="margin-top: 0; margin-bottom: 10px;">This is your personal profile page! Do you want me to show you around with a guided tour?</h4>
-                <button type="button" class="btn btn-primary btn-xs" id="button-start-guide"><i class="fa fa-check"></i> Start Guide</button>
-                <button type="button" class="btn btn-success btn-xs" id="button-end-guide"><i class="fa fa-remove"></i> No Thanks</button>
+    @if (User.Identity.GetUserId() == Model.ProfileUserId)
+    {
+        <div id="panel-profile-setup" class="col-xs-12 hidden">
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <div class="col-xs-12">
+                        <div class="pull-right text-muted">
+                            <a id="button-close-profile-setup" href="#"><i class="fa fa-remove"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 text-center">
+                        <div class="guide-complete hidden">
+                            <h2 style="margin: 0">
+                                <span class="fa-stack fa-lg text-success">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-trophy fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </h2>
+                            All done!
+                        </div>
+                        <div class="guide-incomplete">
+                            <h1 style="margin-top: 0; margin-bottom: 10px"><span id="header-percent-guide-complete">25</span>%</h1>
+                            <div class="progress" style="margin-bottom: 5px">
+                                <div id="progress-guide-complete" class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%">
+                                    <div class="sr-only"><span id="sr-guide-complete">25</span>%</div>
+                                </div>
+                            </div>
+                            <small>Profile completion</small>
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="guide-complete hidden">
+                            <h3>Nice! Now your profile is looking good.</h3>
+                            <h4 style="margin: 0">The only thing left to do is <a href="@Url.Action("index", "trivia")">start playing some trivia</a> and <a href="@Url.Action("index", "search")">find new friends</a>.</h4>
+                            <a id="button-goto-guide-incomplete" href="#" class="pull-right btn btn-default btn-xs"><i class="fa fa-chevron-left"></i> Go back to task list</a>
+                        </div>
+                        <div class="guide-incomplete">
+                            <div class="col-sm-6 col-md-5 col-md-offset-1 col-lg-4 col-lg-offset-2">
+                                <h4 style="margin: 0" class="text-muted">
+                                    <span class="fa-stack fa-lg text-success">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-check fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                    Profile created
+                                </h4>
+                                <h4 id="header-guide-change-image" style="margin: 0">
+                                    <span id="span-guide-change-image" class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i id="icon-guide-change-image" class="fa fa-user fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                    <a id="link-guide-change-image" href="#">Change profile image</a>
+                                </h4>
+                            </div>
+                            <div class="col-sm-6 col-md-5 col-lg-4">
+                                <h4 id="header-guide-change-banner" style="margin: 0">
+                                    <span id="span-guide-change-banner" class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i id="icon-guide-change-banner" class="fa fa-camera fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                    <a id="link-guide-change-banner" href="#">Change banner image</a>
+                                </h4>
+                                <h4 id="header-guide-profile-details" style="margin: 0">
+                                    <span id="span-guide-profile-details" class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i id="icon-guide-profile-details" class="fa fa-edit fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                    <a id="link-guide-profile-details" href="#">Enter profile details</a>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+        <div id="alert-start-guide" class="hidden">
+            <div class="col-xs-12">
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 style="margin-top: 0; margin-bottom: 10px;">This is your personal profile page! Do you want me to show you around with a guided tour?</h4>
+                    <button type="button" class="btn btn-primary btn-xs" id="button-start-guide"><i class="fa fa-check"></i> Start Guide</button>
+                    <button type="button" class="btn btn-success btn-xs" id="button-end-guide"><i class="fa fa-remove"></i> No Thanks</button>
+                </div>
+            </div>
+        </div>
+    }
     <div class="col-xs-12">
         <div id="profile-banner-background" class="panel panel-default"
              style="@(!String.IsNullOrEmpty(Model.BannerImagePath) ? "background: url(" + Model.BannerImagePath + ") no-repeat; background-size: cover; background-position: " + String.Format("{0}px {1}px", Model.BannerPositionX, Model.BannerPositionY) : "background-color: #8FC6D8")">
@@ -629,66 +704,67 @@
             </div>
         </div>
     }
-    @if (Model.ActiveTab == "about")
-    {
-        <div class="modal" id="modalWhatImLookingFor" tabindex="-1" role="dialog" aria-labelledby="modalWhatImLookingForLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                @using (Html.BeginForm("saveLookingFor", "profile", FormMethod.Post))
-                {
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="modalWhatImLookingForLabel">Update what you're looking for</h4>
-                        </div>
-                        <div class="modal-body">
-                            @Html.HiddenFor(m => m.ActiveTab)
-                            @Html.HiddenFor(m => m.ProfileId)
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-xs-12 col-md-8 col-md-offset-2">
-                                        <div class="form-group">
-                                            @Html.LabelFor(m => m.LookingForTypeId, new { @class = "control-label" })
-                                            @Html.DropDownListFor(m => m.LookingForTypeId,
+    <div class="modal" id="modalWhatImLookingFor" tabindex="-1" role="dialog" aria-labelledby="modalWhatImLookingForLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            @using (Html.BeginForm("saveLookingFor", "profile", FormMethod.Post))
+            {
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modalWhatImLookingForLabel">Update what you're looking for</h4>
+                    </div>
+                    <div class="modal-body">
+                        @Html.HiddenFor(m => m.ActiveTab)
+                        @Html.HiddenFor(m => m.ProfileId)
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-8 col-md-offset-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.LookingForTypeId, new { @class = "control-label" })
+                                        @Html.DropDownListFor(m => m.LookingForTypeId,
                                 new SelectList(Model.LookingForTypes, "Key", "Value"),
                                 String.Empty,
                                 new { @class = "form-control", data_placeholder = "Select a relationship type" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Ages</label>
+                                        <div class="clearfix"></div>
+                                        <div class="col-xs-3">
+                                            @Html.TextBoxFor(m => m.LookingForAgeMin, new { id = "looking-for-age-min", @class = "form-control", maxlength = "2" })
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label">Ages</label>
-                                            <div class="clearfix"></div>
-                                            <div class="col-xs-3">
-                                                @Html.TextBoxFor(m => m.LookingForAgeMin, new { id = "looking-for-age-min", @class = "form-control", maxlength = "2" })
-                                            </div>
-                                            <div class="col-xs-1 text-center">
-                                                <span style="display: block; margin-top: 8px;">to</span>
-                                            </div>
-                                            <div class="col-xs-3">
-                                                @Html.TextBoxFor(m => m.LookingForAgeMax, new { id = "looking-for-age-max", @class = "form-control", maxlength = "2" })
-                                            </div>
-                                            <div class="clearfix"></div>
+                                        <div class="col-xs-1 text-center">
+                                            <span style="display: block; margin-top: 8px;">to</span>
                                         </div>
-                                        <div class="form-group">
-                                            @Html.LabelFor(m => m.LookingForLocationId, new { @class = "control-label" })
-                                            @Html.DropDownListFor(m => m.LookingForLocationId,
+                                        <div class="col-xs-3">
+                                            @Html.TextBoxFor(m => m.LookingForAgeMax, new { id = "looking-for-age-max", @class = "form-control", maxlength = "2" })
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.LookingForLocationId, new { @class = "control-label" })
+                                        @Html.DropDownListFor(m => m.LookingForLocationId,
                                 new SelectList(Model.LookingForLocations, "Key", "Value"),
                                 String.Empty,
                                 new { @class = "form-control", data_placeholder = "Select an area range" })
-                                        </div>
-                                        <div id="looking-for-error" class="hidden alert alert-danger" role="alert">
-                                            <p id="looking-for-error-text">Something happened which prevented your information from being submitted.</p>
-                                        </div>
+                                    </div>
+                                    <div id="looking-for-error" class="hidden alert alert-danger" role="alert">
+                                        <p id="looking-for-error-text">Something happened which prevented your information from being submitted.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button id="button-looking-for-close" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            <button id="button-looking-for-submit" type="submit" class="btn btn-primary">Save</button>
-                        </div>
                     </div>
-                }
-            </div>
+                    <div class="modal-footer">
+                        <button id="button-looking-for-close" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button id="button-looking-for-submit" type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
         </div>
+    </div>
+
+    @if (Model.ActiveTab == "about")
+    {
         <div class="modal" id="modalMyDetails" tabindex="-1" role="dialog" aria-labelledby="modalMyDetailsLabel" aria-hidden="true">
             <div class="modal-dialog">
                 @using (Html.BeginForm("saveMyDetails", "profile", FormMethod.Post))
@@ -735,7 +811,7 @@
     }
     @if (Model.WriteReviewViolation != null && Model.WriteReviewViolation.ViolationTypes != null && Model.WriteReviewViolation.ViolationTypes.Count > 0)
     {
-        <div class="modal fade" id="modalReviewViolation" tabindex="-1" role="dialog" aria-labelledby="modalReviewViolationLabel" aria-hidden="true">
+        <div class="modal" id="modalReviewViolation" tabindex="-1" role="dialog" aria-labelledby="modalReviewViolationLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -775,7 +851,7 @@
             </div>
         </div>
     }
-    <div class="modal fade" id="modalGift" tabindex="-1" role="dialog" aria-labelledby="modalGiftLabel" aria-hidden="true">
+    <div class="modal" id="modalGift" tabindex="-1" role="dialog" aria-labelledby="modalGiftLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -854,7 +930,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalReview" tabindex="-1" role="dialog" aria-labelledby="modalReviewLabel" aria-hidden="true">
+    <div class="modal" id="modalReview" tabindex="-1" role="dialog" aria-labelledby="modalReviewLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -907,7 +983,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalMessage" tabindex="-1" role="dialog" aria-labelledby="modalMessageLabel" aria-hidden="true">
+    <div class="modal" id="modalMessage" tabindex="-1" role="dialog" aria-labelledby="modalMessageLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -964,7 +1040,7 @@
     </div>
     @if (Model.ActiveTab == "pictures" || User.Identity.GetUserId() == Model.ProfileUserId)
     {
-        <div class="modal fade" id="modalProfileImage" tabindex="-1" role="dialog" aria-labelledby="modalProfileImageLabel" aria-hidden="true">
+        <div class="modal" id="modalProfileImage" tabindex="-1" role="dialog" aria-labelledby="modalProfileImageLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -973,12 +1049,31 @@
                     </div>
                     @if (Model.UploadImage.UserImages.Count > 0)
                     {
-                        using (Html.BeginForm("changeimage", "profile", FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
-                            <div class="modal-body">
-                                <div class="row">
-                                    @foreach (var userImage in Model.UploadImage.UserImages)
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    @using (Html.BeginForm("uploadimagefrommodal", "profile", FormMethod.Post, new { @id = "form-upload-images-modal", enctype = "multipart/form-data" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.ValidationSummary()
+                                        <div class="input-group">
+                                            <span class="input-group-btn">
+                                                <span class="btn btn-xs btn-primary btn-file">
+                                                    <i class="fa fa-plus fa-lg"></i>&nbsp;&nbsp;Add Pictures
+                                                    @Html.TextBoxFor(x => x.UploadImage.UploadedImages, new { type = "file", multiple = "multiple", accept = "image/jpeg,image/gif,image/bmp,image/png" })
+                                                </span>
+                                            </span>
+                                            @Html.HiddenFor(m => m.ProfileUserId)
+                                        </div>
+                                    }
+                                </div>
+                                <br />
+                                <br />
+                                @using (Html.BeginForm("changeimage", "profile", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary()
+                                    foreach (var userImage in Model.UploadImage.UserImages)
                                     {
                                         <div class="col-xs-4 col-sm-3 text-center">
                                             <a id="@userImage.Id" class="thumbnail" href="#" onclick="onSelectProfileImageClick(event, this)">
@@ -986,25 +1081,40 @@
                                             </a>
                                         </div>
                                     }
-                                </div>
+                                    @Html.HiddenFor(m => m.ChangeImage.UserImageId)
+                                    @Html.HiddenFor(m => m.ProfileUserId)
+                                    @Html.HiddenFor(m => m.ProfileId)
+                                    <div class="col-xs-12">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                <i class="fa fa-close fa-lg"></i> Close
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fa fa-check fa-lg"></i> OK
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
                             </div>
-                            @Html.HiddenFor(m => m.ChangeImage.UserImageId)
-                            @Html.HiddenFor(m => m.ProfileUserId)
-                            @Html.HiddenFor(m => m.ProfileId)
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">
-                                    <i class="fa fa-close fa-lg"></i> Close
-                                </button>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-check fa-lg"></i> OK
-                                </button>
-                            </div>
-                        }
+                        </div>
                     }
                     else
                     {
                         <div class="modal-body">
-                            <h4>You can't change your profile image because you haven't uploaded any images.</h4>
+                            @using (Html.BeginForm("uploadimagefrommodal", "profile", FormMethod.Post, new { @id = "form-upload-images-modal", enctype = "multipart/form-data" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary()
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <span class="btn btn-xs btn-primary btn-file">
+                                            <i class="fa fa-plus fa-lg"></i>&nbsp;&nbsp;Add Pictures
+                                            @Html.TextBoxFor(x => x.UploadImage.UploadedImages, new { type = "file", multiple = "multiple", accept = "image/jpeg,image/gif,image/bmp,image/png" })
+                                        </span>
+                                    </span>
+                                    @Html.HiddenFor(m => m.ProfileUserId)
+                                </div>
+                            }
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -1017,7 +1127,7 @@
     }
     @if (Model.ActiveTab == "tags")
     {
-        <div class="modal fade" id="modalSuggestTags" tabindex="-1" role="dialog" aria-labelledby="modalSuggestTagsLabel" aria-hidden="true">
+        <div class="modal" id="modalSuggestTags" tabindex="-1" role="dialog" aria-labelledby="modalSuggestTagsLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
