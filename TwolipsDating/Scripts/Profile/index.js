@@ -84,6 +84,9 @@ function setupNewUserGuide() {
             });
         });
 
+        // we need to scroll the window into the view of the popover each time it shows so it isn't off screen
+        $('html, body').scrollTop($(host).offset().top - $(window).height() / 2);
+
         // show the latest popover
         popover.popover('show');
 
@@ -105,7 +108,10 @@ function setupNewUserGuide() {
                                                 function () {
                                                     setupPopover('#button-about', '#guide-part-6', 'Navigate your profile', 'right', '.button-end-guide-6', '.button-goto-guide-part-7',
                                                         function () {
-                                                            setGuideToShow(false);
+                                                            setupPopover('#div-community-info', '#guide-part-7', 'Setup your profile details', 'left', '.button-end-guide-7', '.button-goto-guide-part-8',
+                                                                function () {
+                                                                    setGuideToShow(false);
+                                                                });
                                                         });
                                                 });
                                         });
