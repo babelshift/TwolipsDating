@@ -76,6 +76,7 @@ namespace TwolipsDating
                     "~/Scripts/jquery.form.min.js",
                     "~/Scripts/draggable_background.js",
                     "~/Scripts/Shared/followify.js",
+                    "~/Scripts/jquery.cookie.js",
                     "~/Scripts/Profile/index.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/shared/layout").Include(

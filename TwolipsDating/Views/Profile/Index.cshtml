@@ -60,6 +60,48 @@
 }
 @if (User.Identity.GetUserId() == Model.ProfileUserId)
 {
+    <div id="guide-part-1" class="hide">
+        <div class="custom-popover-content">
+            <p>You can change your profile image by uploading new images, clicking here, and selecting it.</p>
+            <button type="button" class="btn btn-primary btn-xs button-goto-guide-part-2">Next</button>
+            <button type="button" class="btn btn-default btn-xs button-end-guide-1">End Guide</button>
+        </div>
+    </div>
+    <div id="guide-part-2" class="hide">
+        <div class="custom-popover-content">
+            <p>You can change your banner image by clicking here and uploading a new image. The best image size is anything larger than 1000px wide.</p>
+            <button type="button" class="btn btn-primary btn-xs button-goto-guide-part-3">Next</button>
+            <button type="button" class="btn btn-default btn-xs button-end-guide-2">End Guide</button>
+        </div>
+    </div>
+    <div id="guide-part-3" class="hide">
+        <div class="custom-popover-content">
+            <p>Anyone that is following you will be counted here. Click to see a detailed list of all your followers.</p>
+            <button type="button" class="btn btn-primary btn-xs button-goto-guide-part-4">Next</button>
+            <button type="button" class="btn btn-default btn-xs button-end-guide-3">End Guide</button>
+        </div>
+    </div>
+    <div id="guide-part-4" class="hide">
+        <div class="custom-popover-content">
+            <p>Anyone that you are following will be counted here. Click to see a detailed list of everyone you are following.</p>
+            <button type="button" class="btn btn-primary btn-xs button-goto-guide-part-5">Next</button>
+            <button type="button" class="btn btn-default btn-xs button-end-guide-4">End Guide</button>
+        </div>
+    </div>
+    <div id="guide-part-5" class="hide">
+        <div class="custom-popover-content">
+            <p>You can change your displayed title by purchasing one in the store or earning one through an achievement.</p>
+            <button type="button" class="btn btn-primary btn-xs button-goto-guide-part-6">Next</button>
+            <button type="button" class="btn btn-default btn-xs button-end-guide-5">End Guide</button>
+        </div>
+    </div>
+    <div id="guide-part-6" class="hide">
+        <div class="custom-popover-content">
+            <p>Here you can view your profile details, activity feed, uploaded pictures, earned tags, reviews about you, your inventory items, and earned achievements.</p>
+            <button type="button" class="btn btn-primary btn-xs button-goto-guide-part-7">Next</button>
+            <button type="button" class="btn btn-default btn-xs button-end-guide-6">End Guide</button>
+        </div>
+    </div>
     <div id="popover-titles-content" class="hide">
         <div class="custom-popover-content">
             @if (Model.UserTitles != null && Model.UserTitles.Count > 0)
@@ -83,6 +125,16 @@
     </div>
 }
 <div class="row">
+    <div id="alert-start-guide" class="hidden">
+        <div class="col-xs-12">
+            <div class="alert alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 style="margin-top: 0; margin-bottom: 10px;">This is your personal profile page! Do you want me to show you around with a guided tour?</h4>
+                <button type="button" class="btn btn-primary btn-xs" id="button-start-guide"><i class="fa fa-check"></i> Start Guide</button>
+                <button type="button" class="btn btn-success btn-xs" id="button-end-guide"><i class="fa fa-remove"></i> No Thanks</button>
+            </div>
+        </div>
+    </div>
     <div class="col-xs-12">
         <div id="profile-banner-background" class="panel panel-default"
              style="@(!String.IsNullOrEmpty(Model.BannerImagePath) ? "background: url(" + Model.BannerImagePath + ") no-repeat; background-size: cover; background-position: " + String.Format("{0}px {1}px", Model.BannerPositionX, Model.BannerPositionY) : "background-color: #8FC6D8")">
@@ -93,7 +145,7 @@
                         @using (Html.BeginForm("changebackgroundimage", "profile", FormMethod.Post, new { @id = "upload-header-form", enctype = "multipart/form-data" }))
                         {
                             @Html.HiddenFor(m => m.ProfileUserId)
-                            <span class="btn btn-default btn-xs btn-file">
+                            <span id="button-upload-header" class="btn btn-default btn-xs btn-file">
                                 <i id="upload-header-spinner" class="hidden fa fa-cog fa-spin fa-lg fa-fw"></i>
                                 <i id="upload-header-camera" class="fa fa-camera fa-lg fa-fw"></i>
                                 Change banner
@@ -130,7 +182,7 @@
                                     {
                                         <a href="#" data-toggle="modal" data-target="#modalProfileImage" data-keyboard="true" title="Change your profile image">
                                             <div class="circular-image-wrapper">
-                                                <img class="circular-image" src="@Model.ProfileThumbnailImagePath" />
+                                                <img id="button-change-profile-image" class="circular-image" src="@Model.ProfileThumbnailImagePath" />
                                             </div>
                                         </a>
                                     }
@@ -215,11 +267,11 @@
                     </a>
                     @if (!String.IsNullOrEmpty(Model.SelectedTitleImage))
                     {
-                        <img src="@Model.SelectedTitleImage" width="32" height="32" />
+                        <img id="selected-title-image" src="@Model.SelectedTitleImage" width="32" height="32" />
                     }
                     else
                     {
-                        <i class="fa fa-user fa-lg"></i>
+                        <i id="selected-title-image" class="fa fa-user fa-lg"></i>
                     }
                 </div>
                 <div class="col-xs-12 hidden-sm hidden-md hidden-lg">
@@ -227,7 +279,7 @@
                 </div>
                 <div class="col-xs-12 col-sm-2 text-center profile-follow-stats" style="line-height: 17px;">
                     <div class="col-xs-3 col-xs-offset-3 col-sm-6 col-sm-offset-0">
-                        <a href="#" data-toggle="modal" data-target="#modalFollowers" data-keyboard="true">
+                        <a id="button-show-followers" href="#" data-toggle="modal" data-target="#modalFollowers" data-keyboard="true">
                             <div style="padding-top: 2px;">
                                 <strong style="font-size: 20px">@Model.FollowerCount</strong>
                                 <br />
@@ -236,7 +288,7 @@
                         </a>
                     </div>
                     <div class="col-xs-3 col-sm-6">
-                        <a href="#" data-toggle="modal" data-target="#modalFollowing" data-keyboard="true">
+                        <a id="button-show-following" href="#" data-toggle="modal" data-target="#modalFollowing" data-keyboard="true">
                             <div style="padding-top: 2px;">
                                 <strong style="font-size: 20px">@Model.FollowingCount</strong>
                                 <br />
@@ -357,7 +409,7 @@
             <div class="panel-body">
                 <ul class="nav nav-pills">
                     <li @(Model.ActiveTab == "about" ? "class=active" : String.Empty)>
-                        <a id="m-about" href="@String.Format("{0}#{1}", Url.Action("index", new { tab = "about" }), "m-about")" title="About this person">
+                        <a id="m-about" href="@String.Format("{0}#{1}", Url.Action("index", new { tab = "about" }), "m-about")">
                             <i class="fa fa-user fa-lg"></i>
                             <span class="hidden-xs hidden-md hidden-lg"> About</span>
                         </a>
@@ -407,7 +459,7 @@
     <div class="col-md-3">
         <div class="panel panel-default hidden-xs hidden-sm">
             <div class="list-group" style="font-size: 16px">
-                <a href="@Url.Action("index", new { tab = "about" })" title="About this person" class="list-group-item @(Model.ActiveTab == "about" ? "active" : "overflow-ellipsis")">
+                <a id="button-about" href="@Url.Action("index", new { tab = "about" })" class="list-group-item @(Model.ActiveTab == "about" ? "active" : "overflow-ellipsis")">
                     <i class="fa fa-user fa-lg fa-fw"></i> About
                     @if (Model.ActiveTab == "about")
                     {

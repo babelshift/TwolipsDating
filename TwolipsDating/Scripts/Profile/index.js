@@ -37,8 +37,107 @@ $(document).ready(function () {
     setupEditBanner();
 
     $('.followify').followify();
+
+    setupNewUserGuide();
 });
 
+function setupNewUserGuide() {
+    if (shouldShowGuide()) {
+        $('#alert-start-guide').removeClass('hidden');
+    }
+
+    $('#button-end-guide').on('click', function (e) {
+        e.preventDefault();
+
+        setGuideToShow(false);
+    })
+
+    // if the user has not yet gone through the user guide, set it up
+    var setupPopover = function (host, popoverContent, popoverTitle, popoverPlacement, buttonEndGuide, buttonNext, popoverNextClickFunction) {
+        // create the popover based on user parameters
+        var popover = $(host).popover({
+            trigger: "manual",
+            title: popoverTitle,
+            animation: false,
+            placement: popoverPlacement,
+            container: 'body',
+            html: true,
+            content: function () {
+                return $(popoverContent).html();
+            }
+        });
+
+        // when the popover shows, setup the button click events in the popover such as:
+        // next: will go to the next guide step
+        // end: will end the guide
+        popover.on('shown.bs.popover', function () {
+            // when the user clicks to end the guide, kill the current popover
+            $(buttonEndGuide).on('click', function (e) {
+                if (popover != null) { popover.popover('destroy') }
+                setGuideToShow(false);
+            });
+
+            // when the user clicks the next button, go to the next popover and hide the existing popover
+            $(buttonNext).on('click', function () {
+                popoverNextClickFunction();
+                popover.popover('hide');
+            });
+        });
+
+        // show the latest popover
+        popover.popover('show');
+
+        return popover;
+    };
+
+    $('#button-start-guide').on('click', function (e) {
+        // get the cookie which determines if the user has already gone through the user guide
+        if (shouldShowGuide()) {
+            setupPopover('#button-change-profile-image', '#guide-part-1', 'This is your profile image', 'right', '.button-end-guide-1', '.button-goto-guide-part-2',
+                function (previousPopover) {
+                    setupPopover('#button-upload-header', '#guide-part-2', 'Change your banner background', 'right', '.button-end-guide-2', '.button-goto-guide-part-3',
+                        function () {
+                            setupPopover('#button-show-followers', '#guide-part-3', 'See your followers', 'left', '.button-end-guide-3', '.button-goto-guide-part-4',
+                                function () {
+                                    setupPopover('#button-show-following', '#guide-part-4', 'See who you are following', 'right', '.button-end-guide-4', '.button-goto-guide-part-5',
+                                        function () {
+                                            setupPopover('#selected-title-image', '#guide-part-5', 'Customize your displayed title', 'right', '.button-end-guide-5', '.button-goto-guide-part-6',
+                                                function () {
+                                                    setupPopover('#button-about', '#guide-part-6', 'Navigate your profile', 'right', '.button-end-guide-6', '.button-goto-guide-part-7',
+                                                        function () {
+                                                            setGuideToShow(false);
+                                                        });
+                                                });
+                                        });
+                                });
+                        });
+                });
+        }
+    });
+}
+
+function shouldShowGuide() {
+    var value = getGuideToShowValue();
+    if (value == null || value == true) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function getGuideToShowValue() {
+    return $.cookie('showNewUserGuide');
+}
+
+function setGuideToShow(value) {
+    $.cookie('showNewUserGuide', value);
+
+    if (value == false) {
+        $('#alert-start-guide').addClass('hidden');
+    }
+}
+
+// when the window has completed loading (including all images, reposition the user's banner to fix a bug where banner repositioning isn't correct with responsive windows
 $(window).load(function () {
     repositionBannerCoverToLimits();
 });
@@ -128,7 +227,7 @@ function setupEditBanner() {
 
     // when the user clicks to submit the "save banner position" form, submit and then callback to hide the button and disable draggong
     $('#save-header-form').ajaxForm({
-        beforeSubmit: function() {
+        beforeSubmit: function () {
             $('#save-header-spinner').removeClass('hidden');
             $('#save-header-check').addClass('hidden');
         },
