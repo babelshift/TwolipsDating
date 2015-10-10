@@ -44,9 +44,12 @@ $(document).ready(function () {
 });
 
 function setupProfileSetupPanel() {
+    // check a cookie to see if we need to show the user the profile setup panel
     if (shouldShowProfileSetup()) {
+        // show the profile setup panel
         $('#panel-profile-setup').removeClass('hidden');
 
+        // has the user completed the step to change their banner? if so, show it as complete, otherwise, show it as incomplete
         var hasUserCompletedChangeBannerStep = $.cookie('userCompletedChangeBannerStep');
         if (hasUserCompletedChangeBannerStep) {
             completeGuideStep('#link-guide-change-banner', '#icon-guide-change-banner', 'fa-camera', 'fa-check', '#span-guide-change-banner', '#header-guide-change-banner');
@@ -58,6 +61,7 @@ function setupProfileSetupPanel() {
                 });
         }
 
+        // has the user completed the step to change their profile image? if so, show it as complete, otherwise, show it as incomplete
         var hasUserCompletedChangeImageStep = $.cookie('userCompletedChangeImageStep');
         if (hasUserCompletedChangeImageStep) {
             completeGuideStep('#link-guide-change-image', '#icon-guide-change-image', 'fa-user', 'fa-check', '#span-guide-change-image', '#header-guide-change-image');
@@ -68,7 +72,8 @@ function setupProfileSetupPanel() {
                     $('#modalProfileImage').modal('show');
                 });
         }
-        
+
+        // has the user completed the step to fill in their profile details? if so, show it as complete, otherwise, show it as incomplete
         var hasUserCompletedProfileDetilsStep = $.cookie('userCompletedProfileDetailsStep');
         if (hasUserCompletedProfileDetilsStep) {
             completeGuideStep('#link-guide-profile-details', '#icon-guide-profile-details', 'fa-edit', 'fa-check', '#span-guide-profile-details', '#header-guide-profile-details');
@@ -80,12 +85,14 @@ function setupProfileSetupPanel() {
                 });
         }
 
+        // when the user clicks to go back to the incomplete step of the profile setup panel, go there!
         $('#button-goto-guide-incomplete').on('click', function (e) {
             e.preventDefault();
             $('.guide-complete').addClass('hidden');
             $('.guide-incomplete').removeClass('hidden');
         });
 
+        // when the user clicks to closet he profile setup panel, close it and set a cookie to hide it forever
         $('#button-close-profile-setup').on('click', function (e) {
             e.preventDefault();
             setShowProfile(false);
@@ -93,6 +100,7 @@ function setupProfileSetupPanel() {
     }
 }
 
+// this function is used to setup a click event and step completion event for an item in the setup profile panel
 function setupProfileSetupItemClick(host, icon, iconToRemove, iconToAdd, span, header, callback) {
     $(host).on('click', function (e) {
         e.preventDefault();
