@@ -659,6 +659,9 @@ namespace TwolipsDating.Controllers
                 int count = await TriviaService.SetQuizAsCompletedAsync(currentUserId, viewModel.QuizId, result.CorrectAnswerCount);
             }
 
+            TempData["TagsAwardedCount"] = 0;
+            TempData["DidUserJustCompleteQuiz"] = true;
+
             return RedirectToAction("quiz", new { id = viewModel.QuizId, seoName = viewModel.SEOName });
         }
 
