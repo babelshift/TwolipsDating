@@ -426,6 +426,7 @@ namespace TwolipsDating.Controllers
                 return new HttpNotFoundResult();
             }
 
+            // redirect to the SEO name if not provided
             string expectedSeoName = quiz.GetSEOName();
             if (seoName != expectedSeoName)
             {
@@ -435,7 +436,6 @@ namespace TwolipsDating.Controllers
             bool isAlreadyCompleted = false;
             List<QuestionViewModel> questionListViewModel = new List<QuestionViewModel>();
             MinefieldQuestionViewModel minefieldQuestion = new MinefieldQuestionViewModel();
-            int correctAnswerCount = 0;
 
             if (User.Identity.IsAuthenticated)
             {
@@ -447,50 +447,11 @@ namespace TwolipsDating.Controllers
                 {
                     if (quiz.QuizTypeId == (int)QuizTypeValues.Individual)
                     {
-                        // get the already answered questions for this quiz
-                        var answeredQuizQuestions = await TriviaService.GetAnsweredQuizQuestionsAsync(currentUserId, id);
-
-                        // get the list of all possible questions for this quiz
-                        var quizQuestions = await TriviaService.GetQuizQuestionsAsync(id);
-                        questionListViewModel = Mapper.Map<IReadOnlyCollection<Question>, List<QuestionViewModel>>(quizQuestions);
-
-                        // match up the already selected answers with the questions for this quiz
-                        foreach (var questionViewModel in questionListViewModel)
-                        {
-                            var answeredQuizQuestion = answeredQuizQuestions[questionViewModel.QuestionId];
-                            questionViewModel.SelectedAnswerId = answeredQuizQuestion.AnswerId;
-                            questionViewModel.IsAlreadyAnswered = true;
-
-                            // if the user selected the correct answer, increase their correct answer count
-                            if (questionViewModel.SelectedAnswerId == questionViewModel.CorrectAnswerId)
-                            {
-                                correctAnswerCount++;
-                            }
-
-                            // mark the correct answer to show the user on the UI that it was correct
-                            foreach (var answer in questionViewModel.Answers)
-                            {
-                                answer.IsCorrect = (answer.AnswerId == questionViewModel.CorrectAnswerId);
-                            }
-                        }
+                        questionListViewModel = await GetQuestionsForIndividualQuizAsync(currentUserId, quiz.Id, quiz.Questions);
                     }
                     else
                     {
-                        // get the already answered questions for this quiz
-                        var answeredQuizQuestions = await TriviaService.GetSelectedMinefieldAnswersAsync(currentUserId, id);
-
-                        minefieldQuestion = Mapper.Map<MinefieldQuestion, MinefieldQuestionViewModel>(quiz.MinefieldQuestion);
-
-                        foreach (var answer in minefieldQuestion.Answers)
-                        {
-                            AnsweredMinefieldQuestion answeredQuizQuestion = null;
-                            bool selectedByUser = answeredQuizQuestions.TryGetValue(answer.AnswerId, out answeredQuizQuestion);
-                            if (selectedByUser)
-                            {
-                                answer.IsSelected = true;
-                                answer.IsCorrect = answeredQuizQuestion.Answer.IsCorrect;
-                            }
-                        }
+                        minefieldQuestion = await GetQuestionForMinefieldQuizAsync(currentUserId, quiz.Id, quiz.MinefieldQuestion);
                     }
                 }
                 // if it hasn't been completed, get unanswered questions for quiz
@@ -545,7 +506,67 @@ namespace TwolipsDating.Controllers
                 UsersWithSimilarScores = usersWithSimilarScores
             };
 
+            if (TempData["DidUserJustCompleteQuiz"] != null)
+            {
+                viewModel.PointsObtainedProgress = await MilestoneService.GetAchievementProgressForUserAsync(currentUserId, (int)MilestoneTypeValues.PointsObtained);
+                viewModel.PointsObtainedProgress.IncreaseAchievedCount = viewModel.PointsEarned;
+
+                viewModel.QuizzesCompletedProgress = await MilestoneService.GetAchievementProgressForUserAsync(currentUserId, (int)MilestoneTypeValues.QuizzesCompletedSuccessfully);
+                viewModel.QuizzesCompletedProgress.IncreaseAchievedCount = 1;
+
+                viewModel.TagsAwardedProgress = await MilestoneService.GetAchievementProgressForUserAsync(currentUserId, (int)MilestoneTypeValues.TagsAwarded);
+                viewModel.TagsAwardedProgress.IncreaseAchievedCount = TempData["TagsAwardedCount"] != null ? Int32.Parse(TempData["TagsAwardedCount"].ToString()) : 0;
+            }
+
             return View(viewModel);
+        }
+
+        private async Task<List<QuestionViewModel>> GetQuestionsForIndividualQuizAsync(string currentUserId, int quizId, ICollection<Question> questionsEntity)
+        {
+            // get the already answered questions for this quiz
+            var answeredQuizQuestions = await TriviaService.GetAnsweredQuizQuestionsAsync(currentUserId, quizId);
+
+            // get the list of all possible questions for this quiz
+            //var quizQuestions = await TriviaService.GetQuizQuestionsAsync(quizId);
+            var questionListViewModel = Mapper.Map<ICollection<Question>, List<QuestionViewModel>>(questionsEntity);
+
+            // match up the already selected answers with the questions for this quiz
+            foreach (var questionViewModel in questionListViewModel)
+            {
+                var answeredQuizQuestion = answeredQuizQuestions[questionViewModel.QuestionId];
+                questionViewModel.SelectedAnswerId = answeredQuizQuestion.AnswerId;
+                questionViewModel.IsAlreadyAnswered = true;
+
+                // mark the correct answer to show the user on the UI that it was correct
+                foreach (var answer in questionViewModel.Answers)
+                {
+                    answer.IsCorrect = (answer.AnswerId == questionViewModel.CorrectAnswerId);
+                }
+            }
+
+            return questionListViewModel;
+        }
+
+        private async Task<MinefieldQuestionViewModel> GetQuestionForMinefieldQuizAsync(string currentUserId, int quizId, MinefieldQuestion minefieldQuestionEntity)
+        {
+            // get the already answered questions for this quiz
+            var answeredQuizQuestions = await TriviaService.GetSelectedMinefieldAnswersAsync(currentUserId, quizId);
+
+            var minefieldQuestion = Mapper.Map<MinefieldQuestion, MinefieldQuestionViewModel>(minefieldQuestionEntity);
+
+            // mark up the answers that were selected and are correct for the user's quiz score
+            foreach (var answer in minefieldQuestion.Answers)
+            {
+                AnsweredMinefieldQuestion answeredQuizQuestion = null;
+                bool selectedByUser = answeredQuizQuestions.TryGetValue(answer.AnswerId, out answeredQuizQuestion);
+                if (selectedByUser)
+                {
+                    answer.IsSelected = true;
+                    answer.IsCorrect = answeredQuizQuestion.Answer.IsCorrect;
+                }
+            }
+
+            return minefieldQuestion;
         }
 
         /// <summary>
@@ -582,6 +603,7 @@ namespace TwolipsDating.Controllers
 
             // loop through questions and record answers
             int numberOfCorrectAnswers = 0;
+            int numberOfTagsAwarded = 0;
             foreach (var question in viewModel.Questions)
             {
                 var result = await TriviaService.RecordAnsweredQuestionAsync(
@@ -597,8 +619,13 @@ namespace TwolipsDating.Controllers
                     {
                         numberOfCorrectAnswers++;
                     }
+
+                    numberOfTagsAwarded += result.TagsAwardedCount;
                 }
             }
+
+            TempData["TagsAwardedCount"] = numberOfTagsAwarded;
+            TempData["DidUserJustCompleteQuiz"] = true;
 
             int count = await TriviaService.SetQuizAsCompletedAsync(currentUserId, viewModel.QuizId, numberOfCorrectAnswers);
 

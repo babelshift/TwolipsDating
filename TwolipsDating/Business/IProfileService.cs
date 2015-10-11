@@ -29,7 +29,7 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Message>> GetMessagesBetweenUsersAsync(string userId, string userId2);
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Message>> GetMessagesReceivedByUserAsync(string userId);
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Message>> GetMessagesSentByUserAsync(string userId);
-        System.Threading.Tasks.Task<int> GetLifetimeForUserAsync(string userId);
+        System.Threading.Tasks.Task<int> GetLifetimePointsForUserAsync(string userId);
         System.Threading.Tasks.Task<TwolipsDating.Models.Profile> GetProfileAsync(int profileId);
         System.Threading.Tasks.Task<TwolipsDating.Models.Profile> GetProfileAsync(string userId);
         System.Threading.Tasks.Task<int> GetPurchasedItemCountForUserAsync(string userId, int storeItemTypeId);

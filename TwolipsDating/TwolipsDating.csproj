@@ -507,6 +507,7 @@
     <Compile Include="ViewModels\AchievementFeedViewModel.cs" />
     <Compile Include="ViewModels\AchievementManagerViewModel.cs" />
     <Compile Include="ViewModels\AchievementOverviewViewModel.cs" />
+    <Compile Include="ViewModels\AchievementProgressViewModel.cs" />
     <Compile Include="ViewModels\AchievementStatusViewModel.cs" />
     <Compile Include="ViewModels\AddQuizQuestionsViewModel.cs" />
     <Compile Include="ViewModels\CompletedQuizFeedViewModel.cs" />
@@ -1115,6 +1116,7 @@
     <Content Include="Views\Trivia\_SidebarTrendingNowPartial.cshtml" />
     <Content Include="Views\Trivia\_SidebarRecentQuizActivityPartial.cshtml" />
     <Content Include="Views\Trivia\_SidebarMostPopularQuizzesPartial.cshtml" />
+    <Content Include="Views\Trivia\_AchievementProgressPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

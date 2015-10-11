@@ -550,7 +550,7 @@ input[readonly] {
 }
 
 .quiz-body hr {
-    margin-top: 5px;
+    margin-top: 10px;
     margin-bottom: 10px;
 }
 
@@ -840,6 +840,10 @@ input[readonly] {
 .similar-people .circular-image-wrapper {
     width: 64px;
     height: 64px;
+}
+
+.similar-people {
+    line-height: 15px;
 }
 
 .profile-mobile-menu .panel-body {

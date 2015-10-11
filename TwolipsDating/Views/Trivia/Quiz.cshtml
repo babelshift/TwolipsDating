@@ -188,15 +188,11 @@
                                     @:Incredible, you managed to get every single answer correct.
                                     }
                             </h5>
-                        </div>
-                        if (Model.UsersWithSimilarScores != null && Model.UsersWithSimilarScores.Count > 0)
-                        {
-                            <div class="row" style="margin: 0">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><i class="fa fa-users"></i> People with similar scores...</h4>
-                                    </div>
-                                    <div class="panel-body text-center similar-people">
+                            @if (Model.UsersWithSimilarScores != null && Model.UsersWithSimilarScores.Count > 0)
+                            {
+                                <hr />
+                                <div class="row" style="margin: 0">
+                                    <div class="similar-people">
                                         @foreach (var user in Model.UsersWithSimilarScores)
                                         {
                                             <div class="col-xs-6 col-sm-3">
@@ -214,8 +210,9 @@
                                         }
                                     </div>
                                 </div>
-                            </div>
-                        }
+                            }
+                        </div>
+
                     }
                 }
 
@@ -496,6 +493,52 @@
     @Styles.Render("~/Content/awesome-bootstrap-checkbox")
 }
 @section Modals {
+
+    @if (Model.PointsObtainedProgress != null && Model.QuizzesCompletedProgress != null && Model.TagsAwardedProgress != null)
+    {
+        <div class="modal" id="modalQuizCompletionUpdate" tabindex="-1" role="dialog" aria-labelledby="modalQuizCompletionUpdateLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        @*<div class="row">
+                            <div class="col-xs-12">
+                                <h2 style="margin-top: 0">You unlocked an achievement!</h2>
+                                <img src="https://az732589.vo.msecnd.net/twolipsdatingcdn/Star1.png?5" />
+                                <h4 style="margin-bottom: 5px" class="text-success"><strong>Trekkie</strong></h4>
+                            </div>
+                        </div>
+                        <hr style="margin: 10px 0" />*@
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h3 style="margin-top: 0">Your achievement progress...</h3>
+                            </div>
+                            <div class="col-sm-4">
+                                <h4>Points obtained</h4>
+                                @Html.Partial("_AchievementProgressPartial", Model.PointsObtainedProgress)
+                                @Html.HiddenFor(x => x.PointsObtainedProgress.PercentComplete)
+                            </div>
+                            <div class="col-sm-4">
+                                <h4>Quizzes completed</h4>
+                                @Html.Partial("_AchievementProgressPartial", Model.QuizzesCompletedProgress)
+                                @Html.HiddenFor(x => x.QuizzesCompletedProgress.PercentComplete)
+                            </div>
+                            <div class="col-sm-4">
+                                <h4>Tags awarded</h4>
+                                @Html.Partial("_AchievementProgressPartial", Model.TagsAwardedProgress)
+                                @Html.HiddenFor(x => x.TagsAwardedProgress.PercentComplete)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                            <i class="fa fa-check"></i>
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 
     @if (User.Identity.IsAuthenticated)
     {

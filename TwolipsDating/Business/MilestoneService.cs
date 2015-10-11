@@ -47,7 +47,7 @@ namespace TwolipsDating.Business
             var milestonesAchievedForType = await GetMilestonesAchievedByUserAsync(userId, milestoneTypeId); // milestones achieved by user
 
             // look up how much the user has achieved for this milestone
-            int amountAchieved = await GetAchievedAmountForUser(userId, milestoneTypeId);
+            int amountAchieved = await GetAchievedAmountForUserAsync(userId, milestoneTypeId);
 
             foreach (var milestone in allMilestonesForType)
             {
@@ -63,7 +63,7 @@ namespace TwolipsDating.Business
             }
         }
 
-        private async Task<int> GetAchievedAmountForUser(string userId, int milestoneTypeId)
+        private async Task<int> GetAchievedAmountForUserAsync(string userId, int milestoneTypeId)
         {
             int amount = 0;
 
@@ -91,7 +91,7 @@ namespace TwolipsDating.Business
             // get the number of points obtained
             else if (milestoneTypeId == (int)MilestoneTypeValues.PointsObtained)
             {
-                amount = await ProfileService.GetLifetimeForUserAsync(userId);
+                amount = await ProfileService.GetLifetimePointsForUserAsync(userId);
             }
             // get the number of profiles reviewed
             else if (milestoneTypeId == (int)MilestoneTypeValues.ProfileReviewsWritten)
@@ -550,6 +550,42 @@ namespace TwolipsDating.Business
                                        select achievements).CountAsync();
 
             return possibleCount;
+        }
+
+        public async Task<AchievementProgressViewModel> GetAchievementProgressForUserAsync(string userId, int milestoneTypeId)
+        {
+            var milestones = from milestone in db.Milestones
+                             where milestone.MilestoneTypeId == milestoneTypeId
+                             join milestoneAchievement in db.MilestoneAchievements on milestone.Id equals milestoneAchievement.MilestoneId into lj
+                             from milestoneAchievements in lj.DefaultIfEmpty()
+                             where milestoneAchievements.UserId == userId || String.IsNullOrEmpty(milestoneAchievements.UserId)
+                             orderby milestone.Id
+                             select milestone;
+
+            var results = await milestones.ToListAsync();
+
+            foreach (var milestone in results)
+            {
+                // user has completed this milestone, skip it
+                if (milestone.MilestonesAchieved != null && milestone.MilestonesAchieved.Count > 0)
+                {
+                    continue;
+                }
+                // this is the first instance of an unachieved milestone, get it and break out, we're done here
+                else
+                {
+                    AchievementProgressViewModel v = new AchievementProgressViewModel()
+                    {
+                        AchievedCount = await GetAchievedAmountForUserAsync(userId, milestoneTypeId),
+                        AchievementIconPath = MilestoneExtensions.GetIconPath(milestone.IconFileName),
+                        RequiredCount = milestone.AmountRequired
+                    };
+
+                    return v;
+                }
+            }
+
+            return null; // TODO return the last milestone in the collection
         }
     }
 }

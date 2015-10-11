@@ -296,6 +296,7 @@ namespace TwolipsDating.Business
 
             bool success = false;
             int correctAnswerId = 0;
+            int tagsAwardedCount = 0;
 
             try
             {
@@ -314,7 +315,7 @@ namespace TwolipsDating.Business
                 }
 
                 // award the user any tags for question-related points
-                await HandleTagAwards(userId, profileId);
+                tagsAwardedCount = await HandleTagAwards(userId, profileId);
 
                 // save the changes regarding the answered question
                 int changes = await db.SaveChangesAsync();
@@ -324,6 +325,7 @@ namespace TwolipsDating.Business
                 {
                     // award the user any question-related milestones if they have enough question-related points
                     await MilestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.QuestionsAnsweredCorrectly);
+                    await MilestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.PointsObtained);
 
                     // save the milestone and tag award changes
                     changes = await db.SaveChangesAsync();
@@ -337,7 +339,7 @@ namespace TwolipsDating.Business
                 ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.AnswerNotSubmitted);
             }
 
-            return success ? AnsweredQuestionServiceResult.Success(correctAnswerId) : AnsweredQuestionServiceResult.Failed(ErrorMessages.AnswerNotSubmitted);
+            return success ? AnsweredQuestionServiceResult.Success(correctAnswerId, tagsAwardedCount) : AnsweredQuestionServiceResult.Failed(ErrorMessages.AnswerNotSubmitted);
         }
 
         private async Task<int> GetQuestionPointsAsync(int questionId)
@@ -349,13 +351,15 @@ namespace TwolipsDating.Business
             return questionPoints;
         }
 
-        private async Task HandleTagAwards(string userId, int profileId)
+        private async Task<int> HandleTagAwards(string userId, int profileId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(profileId > 0);
 
             // get a collection of all tags and associated point sums for the user
             var tagsForAnsweredQuestions = await GetTagsForAnsweredQuestionsAsync(userId);
+
+            int totalNumberOfTagsAwarded = 0;
 
             // for each tag, check how many tags he should have and award the missing
             foreach (var tag in tagsForAnsweredQuestions)
@@ -369,12 +373,19 @@ namespace TwolipsDating.Business
                 // the number of tags to award is the difference between the supposed to have and the actual have
                 int numberOfTagsToAward = supposedTagAwardCount - actualTagAwardCount;
 
+                if(numberOfTagsToAward > 0)
+                {
+                    totalNumberOfTagsAwarded += numberOfTagsToAward;
+                }
+
                 // award the proper number of tags the user deserves
                 for (int i = 0; i < numberOfTagsToAward; i++)
                 {
                     AwardTagToProfile(profileId, tag.TagId);
                 }
             }
+
+            return totalNumberOfTagsAwarded;
         }
 
         private void AddAnsweredMinefieldQuestion(string userId, int minefieldQuestionId, IReadOnlyCollection<int> selectedMinefieldAnswerIds)

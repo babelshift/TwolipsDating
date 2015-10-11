@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using TwolipsDating.ViewModels;
 namespace TwolipsDating.Business
 {
     public interface IMilestoneService : IBaseService
@@ -10,5 +12,6 @@ namespace TwolipsDating.Business
         IProfileService ProfileService { set; }
         ITriviaService TriviaService { set; }
         IUserService UserService { get; set; }
+        Task<AchievementProgressViewModel> GetAchievementProgressForUserAsync(string userId, int milestoneTypeId);
     }
 }

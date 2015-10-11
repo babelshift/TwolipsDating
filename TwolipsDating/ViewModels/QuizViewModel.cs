@@ -166,5 +166,9 @@ namespace TwolipsDating.ViewModels
         public IReadOnlyCollection<UserWithSimilarQuizScoreViewModel> UsersWithSimilarScores { get; set; }
 
         public QuestionViolationViewModel QuestionViolation { get; set; }
+
+        public AchievementProgressViewModel PointsObtainedProgress { get; set; }
+        public AchievementProgressViewModel QuizzesCompletedProgress { get; set; }
+        public AchievementProgressViewModel TagsAwardedProgress { get; set; }
     }
 }

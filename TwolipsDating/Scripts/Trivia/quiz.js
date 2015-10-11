@@ -1,6 +1,21 @@
 ﻿var guessesRemaining = 0;
 
 $(document).ready(function () {
+    //$('#modalQuizCompletionUpdate').on('shown.bs.modal', function (e) {
+    //    var newPercentComplete = $('#PointsObtainedProgress_PercentComplete').val();
+    //    $('#progress-points-obtained').attr('aria-valuenow', newPercentComplete);
+    //    $('#progress-points-obtained').attr('style', 'width: ' + newPercentComplete + '%');
+
+    //    newPercentComplete = $('#QuizzesCompletedProgress_PercentComplete').val();
+    //    $('#progress-quizzes-completed').attr('aria-valuenow', newPercentComplete);
+    //    $('#progress-quizzes-completed').attr('style', 'width: ' + newPercentComplete + '%');
+
+    //    newPercentComplete = $('#TagsAwardedProgress_PercentComplete').val();
+    //    $('#progress-quizzes-completed').attr('aria-valuenow', newPercentComplete);
+    //    $('#progress-quizzes-completed').attr('style', 'width: ' + newPercentComplete + '%');
+    //});
+    $('#modalQuizCompletionUpdate').modal('show');
+
     $(this).on('submit', '#form-main', function (e) {
 
         $('#button-submit').attr('disabled', true);
