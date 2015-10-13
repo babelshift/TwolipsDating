@@ -516,6 +516,15 @@ namespace TwolipsDating.Controllers
 
                 viewModel.TagsAwardedProgress = await MilestoneService.GetAchievementProgressForUserAsync(currentUserId, (int)MilestoneTypeValues.TagsAwarded);
                 viewModel.TagsAwardedProgress.IncreaseAchievedCount = TempData["TagsAwardedCount"] != null ? Int32.Parse(TempData["TagsAwardedCount"].ToString()) : 0;
+
+                if(TempData["MilestoneIdsUnlocked"] != null)
+                {
+                    IReadOnlyCollection<int> milestoneIdsUnlocked = TempData["MilestoneIdsUnlocked"] as IReadOnlyCollection<int>;
+                    if(milestoneIdsUnlocked != null)
+                    {
+                        viewModel.UnlockedAchievements = await MilestoneService.GetMilestoneDetailsAsync(milestoneIdsUnlocked);
+                    }
+                }
             }
 
             return View(viewModel);
@@ -604,6 +613,7 @@ namespace TwolipsDating.Controllers
             // loop through questions and record answers
             int numberOfCorrectAnswers = 0;
             int numberOfTagsAwarded = 0;
+            List<int> milestoneIdsUnlocked = new List<int>();
             foreach (var question in viewModel.Questions)
             {
                 var result = await TriviaService.RecordAnsweredQuestionAsync(
@@ -621,11 +631,18 @@ namespace TwolipsDating.Controllers
                     }
 
                     numberOfTagsAwarded += result.TagsAwardedCount;
+
+                    // collect up any milestones that were unlocked by the user
+                    foreach(var milestoneIds in result.AwardedAchievements)
+                    {
+                        milestoneIdsUnlocked.AddRange(milestoneIds.MilestoneIdsUnlocked);
+                    }
                 }
             }
 
-            TempData["TagsAwardedCount"] = numberOfTagsAwarded;
             TempData["DidUserJustCompleteQuiz"] = true;
+            TempData["TagsAwardedCount"] = numberOfTagsAwarded;
+            TempData["MilestoneIdsUnlocked"] = milestoneIdsUnlocked;
 
             int count = await TriviaService.SetQuizAsCompletedAsync(currentUserId, viewModel.QuizId, numberOfCorrectAnswers);
 

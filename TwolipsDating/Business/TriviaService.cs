@@ -297,6 +297,7 @@ namespace TwolipsDating.Business
             bool success = false;
             int correctAnswerId = 0;
             int tagsAwardedCount = 0;
+            List<AwardAchievementServiceResult> awardedAchievements = new List<AwardAchievementServiceResult>();
 
             try
             {
@@ -324,8 +325,18 @@ namespace TwolipsDating.Business
                 if (changes > 0)
                 {
                     // award the user any question-related milestones if they have enough question-related points
-                    await MilestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.QuestionsAnsweredCorrectly);
-                    await MilestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.PointsObtained);
+                    var result = await MilestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.QuestionsAnsweredCorrectly);
+                    var result2 = await MilestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.PointsObtained);
+
+                    if(result.Succeeded && result.MilestoneIdsUnlocked != null && result.MilestoneIdsUnlocked.Count > 0)
+                    {
+                        awardedAchievements.Add(result);
+                    }
+
+                    if (result2.Succeeded && result2.MilestoneIdsUnlocked != null && result2.MilestoneIdsUnlocked.Count > 0)
+                    {
+                        awardedAchievements.Add(result2);
+                    }
 
                     // save the milestone and tag award changes
                     changes = await db.SaveChangesAsync();
@@ -339,7 +350,9 @@ namespace TwolipsDating.Business
                 ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.AnswerNotSubmitted);
             }
 
-            return success ? AnsweredQuestionServiceResult.Success(correctAnswerId, tagsAwardedCount) : AnsweredQuestionServiceResult.Failed(ErrorMessages.AnswerNotSubmitted);
+            return success 
+                ? AnsweredQuestionServiceResult.Success(correctAnswerId, tagsAwardedCount, awardedAchievements) 
+                : AnsweredQuestionServiceResult.Failed(ErrorMessages.AnswerNotSubmitted);
         }
 
         private async Task<int> GetQuestionPointsAsync(int questionId)
@@ -373,6 +386,7 @@ namespace TwolipsDating.Business
                 // the number of tags to award is the difference between the supposed to have and the actual have
                 int numberOfTagsToAward = supposedTagAwardCount - actualTagAwardCount;
 
+                // if the user has been awarded tags, count it up, we will display / log this count somewhere for the user to be informed
                 if(numberOfTagsToAward > 0)
                 {
                     totalNumberOfTagsAwarded += numberOfTagsToAward;

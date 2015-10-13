@@ -170,5 +170,6 @@ namespace TwolipsDating.ViewModels
         public AchievementProgressViewModel PointsObtainedProgress { get; set; }
         public AchievementProgressViewModel QuizzesCompletedProgress { get; set; }
         public AchievementProgressViewModel TagsAwardedProgress { get; set; }
+        public IReadOnlyCollection<AchievementUnlockedViewModel> UnlockedAchievements { get; set; }
     }
 }

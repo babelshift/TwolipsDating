@@ -500,14 +500,38 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body text-center">
-                        @*<div class="row">
-                            <div class="col-xs-12">
-                                <h2 style="margin-top: 0">You unlocked an achievement!</h2>
-                                <img src="https://az732589.vo.msecnd.net/twolipsdatingcdn/Star1.png?5" />
-                                <h4 style="margin-bottom: 5px" class="text-success"><strong>Trekkie</strong></h4>
+                        @if (Model.UnlockedAchievements != null && Model.UnlockedAchievements.Count > 0)
+                        {
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <h2 style="margin-top: 0">You unlocked an achievement!</h2>
+                                </div>
+
+                                @{
+                                    string colSize = String.Empty;
+                                    if (Model.UnlockedAchievements.Count == 1)
+                                    {
+                                        colSize = "col-xs-12";
+                                    }
+                                    else if (Model.UnlockedAchievements.Count == 2)
+                                    {
+                                        colSize = "col-sm-6";
+                                    }
+                                    else
+                                    {
+                                        colSize = "col-sm-4";
+                                    }
+                                }
+                                @foreach (var unlockedAchievement in Model.UnlockedAchievements)
+                                {
+                                    <div class="@colSize">
+                                        <img src="@unlockedAchievement.AchievementIconPath" />
+                                        <h4 style="margin-bottom: 5px" class="text-success"><strong>@unlockedAchievement.AchievementName</strong></h4>
+                                    </div>
+                                }
                             </div>
-                        </div>
-                        <hr style="margin: 10px 0" />*@
+                        }
+                        <hr style="margin: 10px 0" />
                         <div class="row">
                             <div class="col-xs-12">
                                 <h3 style="margin-top: 0">Your achievement progress...</h3>

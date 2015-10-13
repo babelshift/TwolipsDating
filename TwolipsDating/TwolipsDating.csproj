@@ -279,6 +279,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Business\AnsweredMinefieldQuestionServiceResult.cs" />
+    <Compile Include="Business\AwardAchievementServiceResult.cs" />
     <Compile Include="Business\IBaseService.cs" />
     <Compile Include="Business\IDashboardService.cs" />
     <Compile Include="Business\IMilestoneService.cs" />
@@ -509,6 +510,7 @@
     <Compile Include="ViewModels\AchievementOverviewViewModel.cs" />
     <Compile Include="ViewModels\AchievementProgressViewModel.cs" />
     <Compile Include="ViewModels\AchievementStatusViewModel.cs" />
+    <Compile Include="ViewModels\AchievementUnlockedViewModel.cs" />
     <Compile Include="ViewModels\AddQuizQuestionsViewModel.cs" />
     <Compile Include="ViewModels\CompletedQuizFeedViewModel.cs" />
     <Compile Include="ViewModels\CreateAnswerViewModel.cs" />

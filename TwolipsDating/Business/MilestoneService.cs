@@ -38,7 +38,7 @@ namespace TwolipsDating.Business
         /// <param name="userId"></param>
         /// <param name="milestoneTypeId"></param>
         /// <returns></returns>
-        public async Task AwardAchievedMilestonesAsync(string userId, int milestoneTypeId)
+        public async Task<AwardAchievementServiceResult> AwardAchievedMilestonesAsync(string userId, int milestoneTypeId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(milestoneTypeId > 0);
@@ -49,6 +49,8 @@ namespace TwolipsDating.Business
             // look up how much the user has achieved for this milestone
             int amountAchieved = await GetAchievedAmountForUserAsync(userId, milestoneTypeId);
 
+            List<int> milestoneIdsUnlocked = new List<int>();
+
             foreach (var milestone in allMilestonesForType)
             {
                 // only bother with this milestone if the user hasn't already achieved it
@@ -58,9 +60,13 @@ namespace TwolipsDating.Business
                     if (amountAchieved >= milestone.AmountRequired)
                     {
                         AwardMilestoneToUser(userId, milestone.Id);
+                        milestoneIdsUnlocked.Add(milestone.Id);
                     }
                 }
             }
+
+            AwardAchievementServiceResult result = AwardAchievementServiceResult.Success(milestoneIdsUnlocked.AsReadOnly());
+            return result;
         }
 
         private async Task<int> GetAchievedAmountForUserAsync(string userId, int milestoneTypeId)
@@ -586,6 +592,25 @@ namespace TwolipsDating.Business
             }
 
             return null; // TODO return the last milestone in the collection
+        }
+
+        public async Task<IReadOnlyCollection<AchievementUnlockedViewModel>> GetMilestoneDetailsAsync(IReadOnlyCollection<int> milestoneIdsUnlocked)
+        {
+            var milestones = from milestone in db.Milestones
+                             where milestoneIdsUnlocked.Contains(milestone.Id)
+                             select new AchievementUnlockedViewModel()
+                             {
+                                 AchievementName = milestone.MilestoneType.Name,
+                                 AchievementIconPath = milestone.IconFileName
+                             };
+
+            var result = await milestones.ToListAsync();
+            foreach(var milestone in result)
+            {
+                milestone.AchievementIconPath = MilestoneExtensions.GetIconPath(milestone.AchievementIconPath);
+            }
+
+            return result.AsReadOnly();
         }
     }
 }
