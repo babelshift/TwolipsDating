@@ -1099,6 +1099,14 @@ namespace TwolipsDating.Models
             modelBuilder.Entity<Tag>()
                 .HasMany(t => t.Profiles)
                 .WithMany(t => t.Tags);
+
+            modelBuilder.Entity<Tag>()
+                .HasMany(t => t.Questions)
+                .WithMany(t => t.Tags);
+
+            modelBuilder.Entity<Tag>()
+                .HasMany(t => t.MinefieldQuestions)
+                .WithMany(t => t.Tags);
         }
 
         private void SetupUserImageEntity(DbModelBuilder modelBuilder)

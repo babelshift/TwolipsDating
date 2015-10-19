@@ -13,5 +13,6 @@ namespace TwolipsDating.Models
 
         public virtual ICollection<MinefieldAnswer> PossibleAnswers { get; set; }
         public virtual ICollection<AnsweredMinefieldQuestion> AnsweredInstances { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; }
     }
 }

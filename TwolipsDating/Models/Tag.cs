@@ -43,11 +43,6 @@ namespace TwolipsDating.Models
 
     public class Tag
     {
-        public Tag()
-        {
-            Profiles = new List<Profile>();
-        }
-
         public int TagId { get; set; }
 
         [Index("UX_Name", 1, IsUnique = true)]      // EF 6.1 doesn't support first class unique indexes via Fluent API
@@ -60,6 +55,8 @@ namespace TwolipsDating.Models
         public virtual ICollection<TagSuggestion> TagSuggestions { get; set; }
 
         public virtual ICollection<Question> Questions { get; set; }
+
+        public virtual ICollection<MinefieldQuestion> MinefieldQuestions { get; set; }
 
         public virtual ICollection<TagAward> TagAwards { get; set; }
     }

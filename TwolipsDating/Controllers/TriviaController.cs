@@ -257,33 +257,20 @@ namespace TwolipsDating.Controllers
         /// <param name="questionId"></param>
         /// <param name="answerId"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated,]
         public async Task<JsonResult> SubmitAnswer(int questionId, int answerId)
         {
             var currentUserId = User.Identity.GetUserId();
 
-            int? currentUserProfileId = await UserService.GetProfileIdAsync(currentUserId);
+            var result = await TriviaService.RecordAnsweredQuestionAsync(
+                currentUserId,
+                questionId,
+                answerId,
+                (int)QuestionTypeValues.Random);
 
-            // only allow submit answer if the user has a profile
-            if (currentUserProfileId.HasValue)
+            if (result.Succeeded)
             {
-                var result = await TriviaService.RecordAnsweredQuestionAsync(
-                    currentUserId,
-                    currentUserProfileId.Value,
-                    questionId,
-                    answerId,
-                    (int)QuestionTypeValues.Random);
-
-                if (result.Succeeded)
-                {
-                    return Json(new { success = true, correctAnswerId = result.CorrectAnswerId });
-                }
-            }
-            else
-            {
-                Log.Error("TriviaController/SubmitAnswer", ErrorMessages.AnswerNotSubmitted,
-                    parameters: new { questionId, answerId }
-                );
+                return Json(new { success = true, correctAnswerId = result.CorrectAnswerId });
             }
 
             return Json(new { success = false, error = ErrorMessages.AnswerNotSubmitted });
@@ -327,7 +314,7 @@ namespace TwolipsDating.Controllers
         /// <param name="questionId"></param>
         /// <param name="answerId"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
         public async Task<JsonResult> SubmitTimedAnswer(int questionId, int answerId)
         {
             DateTime utcNow = DateTime.UtcNow;
@@ -343,14 +330,9 @@ namespace TwolipsDating.Controllers
                 {
                     var currentUserId = User.Identity.GetUserId();
 
-                    int? currentUserProfileId = await UserService.GetProfileIdAsync(currentUserId);
-
-                    if (currentUserProfileId.HasValue)
-                    {
                         // log the answer for this user's question history
                         var result = await TriviaService.RecordAnsweredQuestionAsync(
                             currentUserId,
-                            currentUserProfileId.Value,
                             questionId,
                             answerId,
                             (int)QuestionTypeValues.Timed);
@@ -359,15 +341,6 @@ namespace TwolipsDating.Controllers
                         {
                             return Json(new { success = true, correctAnswerId = result.CorrectAnswerId });
                         }
-                    }
-                    else
-                    {
-                        Log.Error("SubmitTimedAnswer", ErrorMessages.AnswerNotSubmitted,
-                            parameters: new { questionId = questionId, answerId = answerId }
-                        );
-
-                        responseMessage = ErrorMessages.AnswerNotSubmitted;
-                    }
                 }
                 else
                 {
@@ -622,8 +595,6 @@ namespace TwolipsDating.Controllers
 
             string currentUserId = User.Identity.GetUserId();
 
-            var profile = await ProfileService.GetProfileAsync(currentUserId);
-
             // loop through questions and record answers
             int numberOfCorrectAnswers = 0;
             int numberOfTagsAwarded = 0;
@@ -632,7 +603,6 @@ namespace TwolipsDating.Controllers
             {
                 var result = await TriviaService.RecordAnsweredQuestionAsync(
                     currentUserId,
-                    profile.Id,
                     question.QuestionId,
                     question.SelectedAnswerId.Value,
                     (int)QuestionTypeValues.Quiz);
@@ -647,7 +617,7 @@ namespace TwolipsDating.Controllers
                     numberOfTagsAwarded += result.TagsAwardedCount;
 
                     // collect up any milestones that were unlocked by the user
-                    foreach(var milestoneIds in result.AwardedAchievements)
+                    foreach (var milestoneIds in result.AwardedAchievements)
                     {
                         milestoneIdsUnlocked.AddRange(milestoneIds.MilestoneIdsUnlocked);
                     }
