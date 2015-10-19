@@ -508,19 +508,19 @@
                                 </div>
 
                                 @{
-                                    string colSize = String.Empty;
-                                    if (Model.UnlockedAchievements.Count == 1)
-                                    {
-                                        colSize = "col-xs-12";
-                                    }
-                                    else if (Model.UnlockedAchievements.Count == 2)
-                                    {
-                                        colSize = "col-sm-6";
-                                    }
-                                    else
-                                    {
-                                        colSize = "col-sm-4";
-                                    }
+                            string colSize = String.Empty;
+                            if (Model.UnlockedAchievements.Count == 1)
+                            {
+                                colSize = "col-xs-12";
+                            }
+                            else if (Model.UnlockedAchievements.Count == 2)
+                            {
+                                colSize = "col-sm-6";
+                            }
+                            else
+                            {
+                                colSize = "col-sm-4";
+                            }
                                 }
                                 @foreach (var unlockedAchievement in Model.UnlockedAchievements)
                                 {
@@ -530,8 +530,8 @@
                                     </div>
                                 }
                             </div>
+                            <hr style="margin: 10px 0" />
                         }
-                        <hr style="margin: 10px 0" />
                         <div class="row">
                             <div class="col-xs-12">
                                 <h3 style="margin-top: 0">Your achievement progress...</h3>
