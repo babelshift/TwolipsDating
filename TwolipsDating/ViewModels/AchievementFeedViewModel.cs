@@ -14,5 +14,6 @@ namespace TwolipsDating.ViewModels
         public DateTime DateAchieved { get; set; }
         public string TimeAgo { get { return DateAchieved.GetTimeAgo(); } }
         public string AchievementName { get; set; }
+        public string AchievementIconPath { get; set; }
     }
 }

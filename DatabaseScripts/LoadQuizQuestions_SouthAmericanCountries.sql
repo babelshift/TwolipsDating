@@ -8,7 +8,7 @@ insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values
 insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(41, 'Ecuador', 1)
 insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(41, 'French Guiana', 1)
 insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(41, 'Guyana', 1)
-insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(41, 'Paraguya', 1)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(41, 'Paraguay', 1)
 insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(41, 'Peru', 1)
 insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(41, 'Suriname', 1)
 insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(41, 'Uruguay', 1)

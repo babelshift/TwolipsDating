@@ -149,6 +149,7 @@ namespace TwolipsDating
                     : source.Milestone.MilestoneType.Name))
                 .ForMember(dest => dest.ProfileId, opts => opts.MapFrom(source => source.User.Profile.Id))
                 .ForMember(dest => dest.UserName, opts => opts.MapFrom(source => source.User.UserName))
+                .ForMember(dest => dest.AchievementIconPath, opts => opts.MapFrom(source => source.Milestone.GetIconPath()))
                 .ForMember(dest => dest.UserProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileThumbnailImagePath()));
 
             Mapper.CreateMap<FavoriteProfile, FollowerFeedViewModel>()
