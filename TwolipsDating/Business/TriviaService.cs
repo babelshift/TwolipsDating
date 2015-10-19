@@ -324,22 +324,7 @@ namespace TwolipsDating.Business
                 // only award if there are changes
                 if (changes > 0)
                 {
-                    // award the user any question-related milestones if they have enough question-related points
-                    var result = await MilestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.QuestionsAnsweredCorrectly);
-                    var result2 = await MilestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.PointsObtained);
-
-                    if (result.Succeeded && result.MilestoneIdsUnlocked != null && result.MilestoneIdsUnlocked.Count > 0)
-                    {
-                        awardedAchievements.Add(result);
-                    }
-
-                    if (result2.Succeeded && result2.MilestoneIdsUnlocked != null && result2.MilestoneIdsUnlocked.Count > 0)
-                    {
-                        awardedAchievements.Add(result2);
-                    }
-
-                    // save the milestone and tag award changes
-                    changes = await db.SaveChangesAsync();
+                    awardedAchievements = await AwardAchievementsAsync(userId);
 
                     success = true;
                 }
@@ -1197,6 +1182,7 @@ namespace TwolipsDating.Business
 
             bool success = false;
             int correctAnswerCount = 0;
+            List<AwardAchievementServiceResult> awardedAchievements = new List<AwardAchievementServiceResult>();
 
             try
             {
@@ -1234,19 +1220,13 @@ namespace TwolipsDating.Business
                 // save the changes regarding the answered question
                 int changes = await db.SaveChangesAsync();
 
-                success = changes > 0;
+                // only award if there are changes
+                if (changes > 0)
+                {
+                    awardedAchievements = await AwardAchievementsAsync(userId);
 
-                //// any achievements met?
-                //if (changes > 0)
-                //{
-                //    // award the user any question-related milestones if they have enough question-related points
-                //    await MilestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.QuestionsAnsweredCorrectly);
-
-                //    // save the milestone and tag award changes
-                //    changes = await db.SaveChangesAsync();
-
-                //    success = true;
-                //}
+                    success = true;
+                }
             }
             catch (DbUpdateException ex)
             {
@@ -1257,6 +1237,30 @@ namespace TwolipsDating.Business
             return success
                 ? AnsweredMinefieldQuestionServiceResult.Success(correctAnswerCount)
                 : AnsweredMinefieldQuestionServiceResult.Failed(ErrorMessages.AnswerNotSubmitted);
+        }
+
+        private async Task<List<AwardAchievementServiceResult>> AwardAchievementsAsync(string userId)
+        {
+            List<AwardAchievementServiceResult> awardedAchievements = new List<AwardAchievementServiceResult>();
+
+            // award the user any question-related milestones if they have enough question-related points
+            var result = await MilestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.QuestionsAnsweredCorrectly);
+            var result2 = await MilestoneService.AwardAchievedMilestonesAsync(userId, (int)MilestoneTypeValues.PointsObtained);
+
+            if (result.Succeeded && result.MilestoneIdsUnlocked != null && result.MilestoneIdsUnlocked.Count > 0)
+            {
+                awardedAchievements.Add(result);
+            }
+
+            if (result2.Succeeded && result2.MilestoneIdsUnlocked != null && result2.MilestoneIdsUnlocked.Count > 0)
+            {
+                awardedAchievements.Add(result2);
+            }
+
+            // save the milestone and tag award changes
+            await db.SaveChangesAsync();
+
+            return awardedAchievements;
         }
     }
 }
