@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TwolipsDating.Models;
+using System.Linq;
+using System;
 
 namespace TwolipsDating.ViewModels
 {
@@ -83,6 +85,18 @@ namespace TwolipsDating.ViewModels
         public int BannerPositionX { get; set; }
         public int BannerPositionY { get; set; }
 
+        public int AverageUserScorePercent
+        {
+            get
+            {
+                if(RecentlyCompletedQuizzes != null && RecentlyCompletedQuizzes.Count > 0)
+                {
+                    return (int)Math.Round(RecentlyCompletedQuizzes.Average(x => x.UserScorePercent));
+                }
+
+                return 0;
+            }
+        }
         public int CurrentPoints { get; set; }
         public int LifeTimePoints { get; set; }
 

@@ -4,11 +4,42 @@
     <div class="panel-body">
         <div class="well well-sm">
             <div class="row text-center">
-                <div class="col-sm-4 col-sm-offset-2">
+                <div class="col-sm-3">
+                    <small class="text-muted">COMPLETED</small>
+                    @if (Model.RecentlyCompletedQuizzes != null && Model.RecentlyCompletedQuizzes.Count > 0)
+                    {
+                        <h4 style="margin-top: 5px"><strong>@Model.RecentlyCompletedQuizzes.Count</strong></h4>
+                    }
+                    else
+                    {
+                        <h4 style="margin-top: 5px"><strong>0</strong></h4>
+                    }
+                </div>
+                <div class="col-sm-3">
+                    <small class="text-muted">AVERAGE SCORE</small>
+                    <h4 style="margin-top: 5px">
+                        <strong>
+                            @if (Model.AverageUserScorePercent >= 0 && Model.AverageUserScorePercent < 33)
+                            {
+                                <i class="fa fa-thumbs-down text-danger"></i>
+                            }
+                            else if (Model.AverageUserScorePercent >= 33 && Model.AverageUserScorePercent < 66)
+                            {
+                                <i class="fa fa-minus text-warning"></i>
+                            }
+                            else if (Model.AverageUserScorePercent >= 66 && Model.AverageUserScorePercent <= 100)
+                            {
+                                <i class="fa fa-thumbs-up text-success"></i>
+                            }
+                            @Model.AverageUserScorePercent%
+                        </strong>
+                    </h4>
+                </div>
+                <div class="col-sm-3">
                     <small class="text-muted">CURRENT POINTS</small>
                     <h4 style="margin-top: 5px"><strong><i class="fa fa-star" style="color: #D08002"></i> @Model.CurrentPoints</strong></h4>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <small class="text-muted">LIFETIME POINTS</small>
                     <h4 style="margin-top: 5px"><strong><i class="fa fa-star" style="color: #D08002"></i> @Model.LifeTimePoints</strong></h4>
                 </div>
