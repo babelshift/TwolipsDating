@@ -83,6 +83,7 @@ namespace TwolipsDating.ViewModels
         public int BannerPositionX { get; set; }
         public int BannerPositionY { get; set; }
 
+        public int CurrentPoints { get; set; }
         public int LifeTimePoints { get; set; }
 
         public int FollowerCount { get; set; }
