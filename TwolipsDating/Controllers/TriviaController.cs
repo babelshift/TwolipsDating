@@ -105,7 +105,7 @@ namespace TwolipsDating.Controllers
         /// <returns></returns>
         private async Task SetQuizzesCompletedByCurrentUser(string currentUserId, TriviaDashboardViewModel viewModel)
         {
-            var completedQuizzes = await TriviaService.GetCompletedQuizzesForUserAsync(currentUserId);
+            var completedQuizzes = await TriviaService.GetCompletedQuizzesByUserAsync(currentUserId);
 
             foreach (var quiz in viewModel.NewQuizzes)
             {
@@ -517,10 +517,10 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private async Task<List<QuestionViewModel>> GetQuestionsForIndividualQuizAsync(string currentUserId, int quizId, ICollection<Question> questionsEntity)
+        private async Task<List<QuestionViewModel>> GetQuestionsForIndividualQuizAsync(string userId, int quizId, ICollection<Question> questionsEntity)
         {
             // get the already answered questions for this quiz
-            var answeredQuizQuestions = await TriviaService.GetAnsweredQuizQuestionsAsync(currentUserId, quizId);
+            var answeredQuizQuestions = await TriviaService.GetAnsweredQuizQuestionsAsync(userId, quizId);
 
             // get the list of all possible questions for this quiz
             //var quizQuestions = await TriviaService.GetQuizQuestionsAsync(quizId);

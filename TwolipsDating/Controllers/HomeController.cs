@@ -109,7 +109,7 @@ namespace TwolipsDating.Controllers
         {
             var quizzes = await TriviaService.GetQuizzesAsync();
             viewModel.Quizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(quizzes);
-            var completedQuizzes = await TriviaService.GetCompletedQuizzesForUserAsync(currentUserId);
+            var completedQuizzes = await TriviaService.GetCompletedQuizzesByUserAsync(currentUserId);
 
             foreach (var quiz in viewModel.Quizzes)
             {

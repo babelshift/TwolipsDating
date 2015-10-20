@@ -9,7 +9,8 @@ namespace TwolipsDating.Business
     public interface ITriviaService : IBaseService
     {
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<int, TwolipsDating.Models.AnsweredQuestion>> GetAnsweredQuizQuestionsAsync(string userId, int quizId);
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<int, TwolipsDating.Models.CompletedQuiz>> GetCompletedQuizzesForUserAsync(string currentUserId);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<int, TwolipsDating.Models.CompletedQuiz>> GetCompletedQuizzesByUserAsync(string userId);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Quiz>> GetRecentlyCompletedQuizzesByUserAsync(string userId);
         System.Threading.Tasks.Task<int> GetCorrectAnswerAsync(int questionId, int answerId);
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Quiz>> GetNewQuizzesAsync(int takeCount = 10);
         System.Threading.Tasks.Task<int> GetQuestionsAnsweredCorrectlyCountAsync(string userId);
@@ -53,5 +54,7 @@ namespace TwolipsDating.Business
         Task<AnsweredMinefieldQuestionServiceResult> RecordAnsweredMinefieldQuestionAsync(string userId, int minefieldQuestionId, IList<MinefieldAnswerViewModel> minefieldAnswers);
 
         Task<IReadOnlyDictionary<int, AnsweredMinefieldQuestion>> GetSelectedMinefieldAnswersAsync(string currentUserId, int id);
+
+        Task<IReadOnlyCollection<UserStatQuizOverviewViewModel>> GetUserQuizStatsAsync(string currentUserId, IEnumerable<int> completedQuizIds);
     }
 }

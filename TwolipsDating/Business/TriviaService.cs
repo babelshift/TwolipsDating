@@ -695,13 +695,137 @@ namespace TwolipsDating.Business
             return completedQuiz != null;
         }
 
-        public async Task<IReadOnlyDictionary<int, CompletedQuiz>> GetCompletedQuizzesForUserAsync(string currentUserId)
+        public async Task<IReadOnlyDictionary<int, CompletedQuiz>> GetCompletedQuizzesByUserAsync(string userId)
         {
             var completedQuizzes = await (from quizzes in db.CompletedQuizzes
-                                          where quizzes.UserId == currentUserId
+                                          where quizzes.UserId == userId
                                           select quizzes).ToDictionaryAsync(q => q.QuizId, q => q);
 
             return new ReadOnlyDictionary<int, CompletedQuiz>(completedQuizzes);
+        }
+
+        public async Task<IReadOnlyCollection<Quiz>> GetRecentlyCompletedQuizzesByUserAsync(string userId)
+        {
+            var completedQuizzes = await (from quizzes in db.CompletedQuizzes
+                                          where quizzes.UserId == userId
+                                          orderby quizzes.DateCompleted descending
+                                          select quizzes.Quiz).ToListAsync();
+
+            return completedQuizzes.AsReadOnly();
+        }
+
+        public async Task<IReadOnlyCollection<UserStatQuizOverviewViewModel>> GetUserQuizStatsAsync(string userId, IEnumerable<int> completedQuizIds)
+        {
+            #region User's Results on Completed Quizzes
+
+            var individualQuizQuery = (from quiz in db.Quizzes
+                                       where completedQuizIds.Contains(quiz.Id) // where the quiz is in the parameter
+                                       where quiz.QuizTypeId == (int)QuizTypeValues.Individual // only look at individual quiz type
+                                       from question in quiz.Questions
+                                       from answeredQuestion in question.AnsweredInstances
+                                       where answeredQuestion.UserId == userId // where the specific user answered the question
+                                       where answeredQuestion.AnswerId == answeredQuestion.Question.CorrectAnswerId // where correct answer was selected
+                                       group answeredQuestion by quiz.Id into g
+                                       select new UserQuizPerformance()
+                                       {
+                                           QuizId = g.Key,
+                                           CorrectAnswerCount = g.Count(),
+                                           PointsEarned = g.Sum(x => x.Question.Points)
+                                       });
+
+            var minefieldQuizQuery = (from quiz in db.Quizzes
+                                      where completedQuizIds.Contains(quiz.Id) // where the quiz is in the parameter
+                                      where quiz.QuizTypeId == (int)QuizTypeValues.Minefield // only look at minefield quiz type
+                                      from answeredQuestion in quiz.MinefieldQuestion.AnsweredInstances
+                                      where answeredQuestion.UserId == userId // where the specific user answered the question
+                                      where answeredQuestion.Answer.IsCorrect // where correct answer was selected
+                                      group answeredQuestion by quiz.Id into g
+                                      select new UserQuizPerformance()
+                                      {
+                                          QuizId = g.Key,
+                                          CorrectAnswerCount = g.Count(),
+                                          PointsEarned = g.Sum(x => x.Question.Points)
+                                      });
+
+            var bothQuery = individualQuizQuery.Union(minefieldQuizQuery);
+
+            var bothResults = await bothQuery.ToDictionaryAsync(x => x.QuizId, x => x);
+
+            #endregion
+
+            #region Possible Results on All Quizzes
+
+            var individualQuizTotalQuery = (from quiz in db.Quizzes
+                                            where completedQuizIds.Contains(quiz.Id) // where the quiz is in the parameter
+                                            where quiz.QuizTypeId == (int)QuizTypeValues.Individual // only look at individual quiz type
+                                            from question in quiz.Questions
+                                            group question by quiz.Id into g
+                                            select new PossibleQuizPerformance()
+                                            {
+                                                QuizId = g.Key,
+                                                PossibleCorrectAnswerCount = g.Count(),
+                                                PointsPossible = g.Sum(x => x.Points),
+                                                PointsAverage = (int)Math.Round(g.Average(x => x.Points))
+                                            });
+
+            var minefieldQuizTotalQuery = (from quiz in db.Quizzes
+                                           where completedQuizIds.Contains(quiz.Id) // where the quiz is in the parameter
+                                           where quiz.QuizTypeId == (int)QuizTypeValues.Minefield // only look at individual quiz type
+                                           from answer in quiz.MinefieldQuestion.PossibleAnswers
+                                           where answer.IsCorrect
+                                           group answer by quiz.Id into g
+                                           select new PossibleQuizPerformance()
+                                            {
+                                                QuizId = g.Key,
+                                                PossibleCorrectAnswerCount = g.Count(),
+                                                PointsPossible = g.Sum(x => x.MinefieldQuestion.Points),
+                                                PointsAverage = (int)Math.Round(g.Average(x => x.MinefieldQuestion.Points))
+                                            });
+
+            var bothTotalQuery = individualQuizTotalQuery.Union(minefieldQuizTotalQuery);
+
+            var bothTotalResults = await bothTotalQuery.ToDictionaryAsync(x => x.QuizId, x => x);
+
+            #endregion
+
+            var quizDetails = await (from quiz in db.Quizzes
+                                     where completedQuizIds.Contains(quiz.Id)
+                                     from completedQuiz in quiz.CompletedByUsers
+                                     where completedQuiz.UserId == userId
+                                     orderby completedQuiz.DateCompleted descending
+                                     select new UserStatQuizOverviewViewModel()
+                                     {
+                                         Id = quiz.Id,
+                                         Name = quiz.Name,
+                                         QuizCategoryId = quiz.QuizCategoryId,
+                                         QuizCategoryName = quiz.QuizCategory.Name,
+                                         ThumbnailImagePath = quiz.ImageFileName,
+                                         DateCompleted = completedQuiz.DateCompleted
+                                     }).ToListAsync();
+
+            foreach (var quiz in quizDetails)
+            {
+                UserQuizPerformance u = new UserQuizPerformance();
+                bool success = bothResults.TryGetValue(quiz.Id, out u);
+                if (success)
+                {
+                    quiz.PointsEarned = u.PointsEarned;
+                    quiz.CorrectAnswerCount = u.CorrectAnswerCount;
+                }
+
+                PossibleQuizPerformance p = new PossibleQuizPerformance();
+                success = bothTotalResults.TryGetValue(quiz.Id, out p);
+                if (success)
+                {
+                    quiz.PointsPossible = p.PointsPossible;
+                    quiz.PossibleCorrectAnswerCount = p.PossibleCorrectAnswerCount;
+                    quiz.AveragePoints = p.PointsAverage;
+                }
+
+                quiz.ThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(quiz.ThumbnailImagePath);
+            }
+
+            return quizDetails.AsReadOnly();
         }
 
         public async Task<IReadOnlyCollection<AnsweredQuestion>> GetUsersAnsweredCorrectlyAsync(int questionId)

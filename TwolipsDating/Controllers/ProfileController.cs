@@ -892,6 +892,13 @@ namespace TwolipsDating.Controllers
                 viewModel.Inventory.CurrentUserId = currentUserId;
                 viewModel.Inventory.ProfileUserId = profile.ApplicationUser.Id;
             }
+            if(viewModel.ActiveTab == "stats")
+            {
+                var completedQuizzes = await TriviaService.GetRecentlyCompletedQuizzesByUserAsync(currentUserId);
+                var completedQuizIds = completedQuizzes.Select(x => x.Id);
+
+                viewModel.RecentlyCompletedQuizzes = await TriviaService.GetUserQuizStatsAsync(profile.ApplicationUser.Id, completedQuizIds);
+            }
         }
 
         /// <summary>

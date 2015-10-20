@@ -33,6 +33,7 @@ namespace TwolipsDating.ViewModels
         public IReadOnlyCollection<TitleViewModel> UserTitles { get; set; }
         public IReadOnlyCollection<AchievementOverviewViewModel> Achievements { get; set; }
         public IReadOnlyCollection<SimilarUserViewModel> SimilarUsers { get; set; }
+        public IReadOnlyCollection<UserStatQuizOverviewViewModel> RecentlyCompletedQuizzes { get; set; }
 
         public bool IsIgnoredByCurrentUser { get; set; }
         public bool IsFavoritedByCurrentUser { get; set; }

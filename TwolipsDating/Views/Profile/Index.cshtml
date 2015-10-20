@@ -391,18 +391,24 @@
                                 <button type="button" class="button-toggle-favorite btn btn-primary" title="Add to favorites" onclick="onToggleFavoriteProfile(event, this, '@Model.ProfileUserId', @Model.ProfileId)">
                                     <i class="button-toggle-favorite-icon fa fa-user-plus"></i> <span class="button-toggle-favorite-text">Following</span>
                                 </button>
+                                <button type="button" class="btn btn-default hidden-xs" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
+                                    <i class="glyphicon glyphicon-comment"></i> Message
+                                </button>
+                                <button type="button" class="btn btn-default hidden-xs hidden-sm" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
+                                    <i class="glyphicon glyphicon-gift"></i> Gift
+                                </button>
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fa fa-gear fa-lg"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right">
                                         <li>
-                                            <button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
+                                            <button type="button" class="btn btn-default btn-block hidden-lg hidden-md hidden-sm" data-toggle="modal" data-target="#modalMessage" data-keyboard="true" title="Send a message">
                                                 <i class="glyphicon glyphicon-comment"></i> Message
                                             </button>
                                         </li>
                                         <li>
-                                            <button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
+                                            <button type="button" class="btn btn-default btn-block hidden-lg hidden-md hidden-sm" data-toggle="modal" data-target="#modalGift" data-keyboard="true" title="Send a gift">
                                                 <i class="glyphicon glyphicon-gift"></i> Gift
                                             </button>
                                         </li>
@@ -508,6 +514,12 @@
                             <span class="hidden-xs hidden-md hidden-lg"> Pictures</span>
                         </a>
                     </li>
+                    <li @(Model.ActiveTab == "stats" ? "class=active" : String.Empty)>
+                        <a id="m-stats" href="@String.Format("{0}#{1}", Url.Action("index", new { tab = "stats" }), "m-stats")" title="Trivia statistics and scores">
+                            <i class="fa fa-line-chart fa-lg"></i>
+                            <span class="hidden-xs hidden-md hidden-lg"> Stats</span>
+                        </a>
+                    </li>
                     <li @(Model.ActiveTab == "reviews" ? "class=active" : String.Empty)>
                         <a id="m-reviews" href="@String.Format("{0}#{1}", Url.Action("index", new { tab = "reviews" }), "m-reviews")" title="Reviews from other people">
                             <i class="fa fa-files-o fa-lg"></i>
@@ -584,6 +596,15 @@
                         { <small>@Model.TagCount <span class="hidden-md">tags</span></small> }
                     </span>
                 </a>
+                <a href="@Url.Action("index", new { tab = "stats" })" title="Trivia Stats" class="list-group-item @(Model.ActiveTab == "stats" ? "active" : String.Empty)">
+                    <i class="fa fa-line-chart fa-lg fa-fw"></i> Stats
+                    <span class="pull-right">
+                        @if (Model.ActiveTab == "points")
+                        { <i class="fa fa-chevron-right"></i> }
+                        else
+                        { <small>@Model.LifeTimePoints <span class="hidden-md">points</span></small> }
+                    </span>
+                </a>
                 <a href="@Url.Action("index", new { tab = "reviews" })" title="Reviews" class="list-group-item @(Model.ActiveTab == "reviews" ? "active" : String.Empty)">
                     <i class="fa fa-files-o fa-lg fa-fw"></i> Reviews
                     <span class="pull-right">
@@ -650,6 +671,10 @@
         else if (Model.ActiveTab == "tags")
         {
             Html.RenderPartial("_TagsPartial", Model);
+        }
+        else if (Model.ActiveTab == "stats")
+        {
+            Html.RenderPartial("_StatsPartial", Model);
         }
         @if (String.IsNullOrEmpty(Model.ActiveTab) || Model.ActiveTab == "feed")
         {
@@ -1207,7 +1232,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalFollowers" tabindex="-1" role="dialog" aria-labelledby="modalFollowersLabel" aria-hidden="true">
+    <div class="modal" id="modalFollowers" tabindex="-1" role="dialog" aria-labelledby="modalFollowersLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1226,7 +1251,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalFollowing" tabindex="-1" role="dialog" aria-labelledby="modalFollowing" aria-hidden="true">
+    <div class="modal" id="modalFollowing" tabindex="-1" role="dialog" aria-labelledby="modalFollowing" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">

@@ -290,6 +290,7 @@
     <Compile Include="Business\ITriviaService.cs" />
     <Compile Include="Business\IUserService.cs" />
     <Compile Include="Business\IViolationService.cs" />
+    <Compile Include="Business\PossibleQuizPerformance.cs" />
     <Compile Include="Business\ReferralCodeServiceResult.cs" />
     <Compile Include="Business\ToggleServiceResult.cs" />
     <Compile Include="Business\UploadedImageServiceResult.cs" />
@@ -305,6 +306,7 @@
     <Compile Include="Business\ServiceResult.cs" />
     <Compile Include="Business\StoreService.cs" />
     <Compile Include="Business\TriviaService.cs" />
+    <Compile Include="Business\UserQuizPerformance.cs" />
     <Compile Include="Business\UserService.cs" />
     <Compile Include="Business\ViolationService.cs" />
     <Compile Include="Controllers\AboutController.cs" />
@@ -492,6 +494,7 @@
     <Compile Include="Models\UserTitle.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UserStatQuizOverviewViewModel.cs" />
     <Compile Include="Utilities\ApplicationUserExtensions.cs" />
     <Compile Include="Utilities\CalendarHelper.cs" />
     <Compile Include="Utilities\DictionaryHelper.cs" />
@@ -1123,6 +1126,7 @@
     <Content Include="Views\Trivia\_SidebarRecentQuizActivityPartial.cshtml" />
     <Content Include="Views\Trivia\_SidebarMostPopularQuizzesPartial.cshtml" />
     <Content Include="Views\Trivia\_AchievementProgressPartial.cshtml" />
+    <Content Include="Views\Profile\_StatsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -81,7 +81,7 @@ namespace TwolipsDating.Business
             // get the number of quizzes completed successfully
             else if (milestoneTypeId == (int)MilestoneTypeValues.QuizzesCompletedSuccessfully)
             {
-                var completedQuizzes = await TriviaService.GetCompletedQuizzesForUserAsync(userId);
+                var completedQuizzes = await TriviaService.GetCompletedQuizzesByUserAsync(userId);
                 amount = completedQuizzes.Count;
             }
             // get the number of gifts sent
