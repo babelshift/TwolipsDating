@@ -562,9 +562,6 @@ namespace TwolipsDating.Business
         {
             var milestones = from milestone in db.Milestones
                              where milestone.MilestoneTypeId == milestoneTypeId
-                             join milestoneAchievement in db.MilestoneAchievements on milestone.Id equals milestoneAchievement.MilestoneId into lj
-                             from milestoneAchievements in lj.DefaultIfEmpty()
-                             where milestoneAchievements.UserId == userId || String.IsNullOrEmpty(milestoneAchievements.UserId)
                              orderby milestone.Id
                              select milestone;
 
