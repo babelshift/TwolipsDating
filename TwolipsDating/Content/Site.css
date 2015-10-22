@@ -1079,7 +1079,6 @@ input[readonly] {
     }
 
 .like-buttons {
-    vertical-align: middle;
     padding-left: 5px;
     display: inline-block;
 }
@@ -1088,6 +1087,11 @@ input[readonly] {
         padding: 0;
         margin: 0;
     }
+
+
+.like-buttons .fb-like.fb_iframe_widget span {
+    top: -5px;
+}
 
 .fa-overlay-bottom-right {
     position: absolute;
