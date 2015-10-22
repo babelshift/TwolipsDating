@@ -1,0 +1,35 @@
+﻿@model IReadOnlyCollection<TwolipsDating.ViewModels.FollowerViewModel>
+@using Microsoft.AspNet.Identity;
+
+<input type="hidden" id="selected-gift-id-to-following" />
+<input type="hidden" id="selected-inventory-item-id-to-following" />
+<input type="hidden" id="selected-inventory-item-count-to-following" />
+<div id="alert-sending-gift-to-following" class="alert alert-danger alert-dismissable hidden" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h5 id="alert-sending-gift-to-following-text" style="margin: 0">There was a problem sending that gift.</h5>
+</div>
+<h4 style="margin-top: 0">Click 'Send' for anyone to which you want to send the gift.</h4>
+<div class="row" style="margin: 0">
+    @foreach (var follower in Model)
+    {
+        <div class="col-sm-3 col-md-4" style="position: relative; margin-bottom: 25px">
+            <div style="@(!String.IsNullOrEmpty(follower.BannerImagePath) ? "background: url(" + follower.BannerImagePath + " ) no-repeat; background-size: cover; background-position: " + String.Format("{0}px {1}px", follower.BannerPositionX, follower.BannerPositionY) : "background-color: #8FC6D8"); height: 100px; border-radius: 3px">
+            </div>
+            <a href="@Url.Action("index", "profile", new { id = follower.ProfileId })">
+                <div class="circular-image-wrapper follower-modal-thumbnail">
+                    <img class="circular-image" src="@follower.ProfileThumbnailImagePath" />
+                </div>
+            </a>
+            @if (User.Identity.IsAuthenticated && User.Identity.GetUserId() != follower.UserId)
+            {
+                <a href="#" class="btn btn-primary follower-modal-follow-button send-gift-to-following-button" data-user-id="@follower.UserId">
+                    <i class="fa fa-send send-gift-to-following-button-icon"></i>
+                    <span class="send-gift-to-following-button-text">Send</span>
+                </a>
+            }
+            <div class="follower-modal-user-details">
+                <h4><a href="@Url.Action("index", "profile", new { id = follower.ProfileId })">@follower.UserName</a></h4>
+            </div>
+        </div>
+    }
+</div>

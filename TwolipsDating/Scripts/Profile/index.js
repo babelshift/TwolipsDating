@@ -41,6 +41,53 @@ $(document).ready(function () {
     setupNewUserGuide();
 
     setupProfileSetupPanel();
+
+    $('.send-gift-to-following-button').on('click', function(e) {
+        e.preventDefault();
+
+        var button = $(this);
+
+        var userId = button.data('user-id');
+        var giftId = $('#selected-gift-id-to-following').val();
+        var inventoryItemId = $('#selected-inventory-item-id-to-following').val();
+
+        var jsonObject = {
+            "profileUserId": userId,
+            "giftId": giftId,
+            "inventoryItemId": inventoryItemId
+        };
+
+        var json = JSON.stringify(jsonObject);
+
+        button.find('.send-gift-to-following-button-text').html('Sending');
+        button.find('.send-gift-to-following-button-icon').removeClass('fa-send');
+        button.find('.send-gift-to-following-button-icon').addClass('fa-cog fa-spin');
+        button.removeClass('btn-primary');
+        button.addClass('btn-warning');
+
+        postJson('/profile/sendGift', json, function (data) {
+            if (data.success) {
+                button.find('.send-gift-to-following-button-text').html('Sent');
+                button.find('.send-gift-to-following-button-icon').removeClass('fa-cog fa-spin');
+                button.find('.send-gift-to-following-button-icon').addClass('fa-check');
+                button.removeClass('btn-warning');
+                button.addClass('btn-success');
+            } else {
+                $('#alert-sending-gift-to-following').removeClass('hidden');
+                $('#alert-sending-gift-to-following-text').text(data.error);
+            }
+        });
+    });
+
+    $('#modalSendGiftToFollowers').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+
+        var giftId = button.data('gift-id');
+        var inventoryItemId = button.data('inventory-item-id');
+
+        $('#selected-gift-id-to-following').val(giftId);
+        $('#selected-inventory-item-id-to-following').val(inventoryItemId);
+    });
 });
 
 function setupProfileSetupPanel() {
@@ -74,8 +121,8 @@ function setupProfileSetupPanel() {
         }
 
         // has the user completed the step to fill in their profile details? if so, show it as complete, otherwise, show it as incomplete
-        var hasUserCompletedProfileDetilsStep = $.cookie('userCompletedProfileDetailsStep');
-        if (hasUserCompletedProfileDetilsStep) {
+        var hasUserCompletedProfileDetailsStep = $.cookie('userCompletedProfileDetailsStep');
+        if (hasUserCompletedProfileDetailsStep) {
             completeGuideStep('#link-guide-profile-details', '#icon-guide-profile-details', 'fa-edit', 'fa-check', '#span-guide-profile-details', '#header-guide-profile-details');
         } else {
             setupProfileSetupItemClick('#link-guide-profile-details', '#icon-guide-profile-details', 'fa-edit', 'fa-check', '#span-guide-profile-details', '#header-guide-profile-details',

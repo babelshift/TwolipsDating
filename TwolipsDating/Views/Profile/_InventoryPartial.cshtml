@@ -1,4 +1,5 @@
 ﻿@model TwolipsDating.ViewModels.ProfileInventoryViewModel
+@using Microsoft.AspNet.Identity;
 
 <div class="panel panel-default">
     <div class="panel-body">
@@ -6,9 +7,33 @@
         {
             foreach (var item in Model.Items)
             {
-                <div class="col-xs-6 col-sm-2 text-center">
-                    <img alt="@item.GiftName" title="@item.GiftName" src="@item.GiftIconFilePath" />
-                    <p class="bg-info">@item.ItemCount</p>
+                <div class="col-xs-6 col-sm-3 text-center">
+                    <div class="thumbnail">
+                        <img alt="@item.GiftName" title="@item.GiftName" src="@item.GiftIconFilePath" />
+                        <div class="caption">
+                            <h4 style="margin: 0">
+                                @item.GiftName
+                            </h4>
+                        </div>
+                        @if (item.ItemCount > 1)
+                        {
+                            <h4 style="margin: 1px 0 0 0; position: absolute; top: 3px; left: 8px">
+                                <span class="label label-info">
+                                    <i class="fa fa-times"></i>
+                                    @item.ItemCount
+                                </span>
+                            </h4>
+                        }
+                        @if (User.Identity.GetUserId() == Model.ProfileUserId)
+                        {
+                            <a type="button" class="btn btn-primary btn-xs" href="#"
+                               data-toggle="modal" data-target="#modalSendGiftToFollowers" data-keyboard="true"
+                               data-gift-id="@item.GiftId" data-inventory-item-id="@item.InventoryItemId" data-inventory-item-count="@item.ItemCount">
+                                <i class="fa fa-send"></i>
+                                Send
+                            </a>
+                        }
+                    </div>
                 </div>
             }
         }
@@ -23,6 +48,5 @@
                 <h4>This user doesn't have any items. If you send a gift, they might just return the favor.</h4>
             }
         }
-
     </div>
 </div>

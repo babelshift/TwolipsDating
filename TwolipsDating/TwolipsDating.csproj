@@ -1127,6 +1127,7 @@
     <Content Include="Views\Trivia\_SidebarMostPopularQuizzesPartial.cshtml" />
     <Content Include="Views\Trivia\_AchievementProgressPartial.cshtml" />
     <Content Include="Views\Profile\_StatsPartial.cshtml" />
+    <Content Include="Views\Profile\_SendGiftToFollowingPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
