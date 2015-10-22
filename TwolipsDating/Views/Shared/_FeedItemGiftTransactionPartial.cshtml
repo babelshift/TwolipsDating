@@ -42,7 +42,10 @@
             <img src="@gift.Value.GiftImagePath" width="46" height="46">
             @if (gift.Value.GiftSentCount > 1)
             {
-                <span class="label label-default">@gift.Value.GiftSentCount</span>
+                <span class="label label-default">
+                    <i class="fa fa-times"></i>
+                    @gift.Value.GiftSentCount
+                </span>
             }
         </div>
     }

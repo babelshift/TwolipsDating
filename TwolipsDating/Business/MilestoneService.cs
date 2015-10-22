@@ -570,28 +570,22 @@ namespace TwolipsDating.Business
 
             var results = await milestones.ToListAsync();
 
+            AchievementProgressViewModel v = new AchievementProgressViewModel();
+
             foreach (var milestone in results)
             {
-                // user has completed this milestone, skip it
-                if (milestone.MilestonesAchieved != null && milestone.MilestonesAchieved.Count > 0)
-                {
-                    continue;
-                }
-                // this is the first instance of an unachieved milestone, get it and break out, we're done here
-                else
-                {
-                    AchievementProgressViewModel v = new AchievementProgressViewModel()
-                    {
-                        AchievedCount = await GetAchievedAmountForUserAsync(userId, milestoneTypeId),
-                        AchievementIconPath = MilestoneExtensions.GetIconPath(milestone.IconFileName),
-                        RequiredCount = milestone.AmountRequired
-                    };
+                v.AchievedCount = await GetAchievedAmountForUserAsync(userId, milestoneTypeId);
+                v.AchievementIconPath = MilestoneExtensions.GetIconPath(milestone.IconFileName);
+                v.RequiredCount = milestone.AmountRequired;
 
-                    return v;
+                // if the user has not achieved this milestone, break and use it
+                if (milestone.MilestonesAchieved == null || (milestone.MilestonesAchieved != null && milestone.MilestonesAchieved.Count == 0))
+                {
+                    break;
                 }
             }
 
-            return null; // TODO return the last milestone in the collection
+            return v;
         }
 
         public async Task<IReadOnlyCollection<AchievementUnlockedViewModel>> GetMilestoneDetailsAsync(IReadOnlyCollection<int> milestoneIdsUnlocked)

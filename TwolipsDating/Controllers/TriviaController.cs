@@ -330,17 +330,17 @@ namespace TwolipsDating.Controllers
                 {
                     var currentUserId = User.Identity.GetUserId();
 
-                        // log the answer for this user's question history
-                        var result = await TriviaService.RecordAnsweredQuestionAsync(
-                            currentUserId,
-                            questionId,
-                            answerId,
-                            (int)QuestionTypeValues.Timed);
+                    // log the answer for this user's question history
+                    var result = await TriviaService.RecordAnsweredQuestionAsync(
+                        currentUserId,
+                        questionId,
+                        answerId,
+                        (int)QuestionTypeValues.Timed);
 
-                        if (result.Succeeded)
-                        {
-                            return Json(new { success = true, correctAnswerId = result.CorrectAnswerId });
-                        }
+                    if (result.Succeeded)
+                    {
+                        return Json(new { success = true, correctAnswerId = result.CorrectAnswerId });
+                    }
                 }
                 else
                 {
@@ -486,32 +486,35 @@ namespace TwolipsDating.Controllers
 
         private async Task SetupAchievementProgressDetails(string currentUserId, QuizViewModel viewModel)
         {
-            // if the user just completed a quiz before viewing this action, check various achievement and milestone progress
-            if (TempData["DidUserJustCompleteQuiz"] != null)
+            if (TempData != null)
             {
-                // what is the user's current progress on the "points obtained" achievement set
-                // show the increase to the user based on the points they earned by completing the quiz
-                viewModel.PointsObtainedProgress = await MilestoneService.GetAchievementProgressForUserAsync(currentUserId, (int)MilestoneTypeValues.PointsObtained);
-                viewModel.PointsObtainedProgress.IncreaseAchievedCount = viewModel.PointsEarned;
-
-                // what is the user's current progress on the "quizzes completed" achievement set?
-                // show the increase tot he user based on a constant "1" (they completed 1 quiz)
-                viewModel.QuizzesCompletedProgress = await MilestoneService.GetAchievementProgressForUserAsync(currentUserId, (int)MilestoneTypeValues.QuizzesCompletedSuccessfully);
-                viewModel.QuizzesCompletedProgress.IncreaseAchievedCount = 1;
-
-                // what is the user's current progress on the "tags obtained" achievement set?
-                // show the increase to the user based on the tags awarded when the quiz was completed and scored
-                viewModel.TagsAwardedProgress = await MilestoneService.GetAchievementProgressForUserAsync(currentUserId, (int)MilestoneTypeValues.TagsAwarded);
-                viewModel.TagsAwardedProgress.IncreaseAchievedCount = TempData["TagsAwardedCount"] != null ? Int32.Parse(TempData["TagsAwardedCount"].ToString()) : 0;
-
-                // did the user unlock any achievements? 
-                if (TempData["MilestoneIdsUnlocked"] != null)
+                // if the user just completed a quiz before viewing this action, check various achievement and milestone progress
+                if (TempData["DidUserJustCompleteQuiz"] != null)
                 {
-                    IReadOnlyCollection<int> milestoneIdsUnlocked = TempData["MilestoneIdsUnlocked"] as IReadOnlyCollection<int>;
-                    if (milestoneIdsUnlocked != null && milestoneIdsUnlocked.Count > 0)
+                    // what is the user's current progress on the "points obtained" achievement set
+                    // show the increase to the user based on the points they earned by completing the quiz
+                    viewModel.PointsObtainedProgress = await MilestoneService.GetAchievementProgressForUserAsync(currentUserId, (int)MilestoneTypeValues.PointsObtained);
+                    viewModel.PointsObtainedProgress.IncreaseAchievedCount = viewModel.PointsEarned;
+
+                    // what is the user's current progress on the "quizzes completed" achievement set?
+                    // show the increase tot he user based on a constant "1" (they completed 1 quiz)
+                    viewModel.QuizzesCompletedProgress = await MilestoneService.GetAchievementProgressForUserAsync(currentUserId, (int)MilestoneTypeValues.QuizzesCompletedSuccessfully);
+                    viewModel.QuizzesCompletedProgress.IncreaseAchievedCount = 1;
+
+                    // what is the user's current progress on the "tags obtained" achievement set?
+                    // show the increase to the user based on the tags awarded when the quiz was completed and scored
+                    viewModel.TagsAwardedProgress = await MilestoneService.GetAchievementProgressForUserAsync(currentUserId, (int)MilestoneTypeValues.TagsAwarded);
+                    viewModel.TagsAwardedProgress.IncreaseAchievedCount = TempData["TagsAwardedCount"] != null ? Int32.Parse(TempData["TagsAwardedCount"].ToString()) : 0;
+
+                    // did the user unlock any achievements? 
+                    if (TempData["MilestoneIdsUnlocked"] != null)
                     {
-                        // get details of any achievements that the user unlocked as a result of completing the quiz
-                        viewModel.UnlockedAchievements = await MilestoneService.GetMilestoneDetailsAsync(milestoneIdsUnlocked);
+                        IReadOnlyCollection<int> milestoneIdsUnlocked = TempData["MilestoneIdsUnlocked"] as IReadOnlyCollection<int>;
+                        if (milestoneIdsUnlocked != null && milestoneIdsUnlocked.Count > 0)
+                        {
+                            // get details of any achievements that the user unlocked as a result of completing the quiz
+                            viewModel.UnlockedAchievements = await MilestoneService.GetMilestoneDetailsAsync(milestoneIdsUnlocked);
+                        }
                     }
                 }
             }

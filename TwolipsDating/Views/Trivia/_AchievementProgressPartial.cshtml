@@ -3,7 +3,7 @@
 <img src="@Model.AchievementIconPath" style="border-radius: 64px;" />
 <div class="progress" style="margin: 3px auto; width: 75%">
     <div id="progress-quizzes-completed" class="progress-bar progress-bar-info progress-bar-striped" role="progressbar"
-         aria-valuenow="@Model.PercentComplete" aria-valuemin="0" aria-valuemax="100"
+         aria-valuenow="@Model.PercentComplete.ToString()" aria-valuemin="0" aria-valuemax="100"
          style="width: @Model.PercentComplete%">
         <span class="sr-only">Calculating...</span>
     </div>

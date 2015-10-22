@@ -13,7 +13,23 @@ namespace TwolipsDating.ViewModels
 
     public class AchievementStatusViewModel
     {
-        public int AchievedCount { get; set; }
+        private int achievedCount = 0;
+
+        public int AchievedCount
+        {
+            get 
+            { 
+                if(achievedCount > RequiredCount)
+                {
+                    return RequiredCount;
+                }
+                else
+                {
+                    return achievedCount;
+                }
+            }
+            set { achievedCount = value; }
+        }
         public int RequiredCount { get; set; }
         public int PercentComplete
         {
