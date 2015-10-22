@@ -19,7 +19,8 @@ namespace TwolipsDating.Models
         Literature = 9,
         Television = 10,
         Sports = 11,
-        Geography = 12
+        Geography = 12,
+        Math
     }
 
     public class QuizCategory

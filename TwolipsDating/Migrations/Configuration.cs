@@ -256,7 +256,8 @@ namespace TwolipsDating.Migrations
                 new QuizCategory() { Id = (int)QuizCategoryValues.Television, Name = "Television", FontAwesomeIconName = "fa-tv" },
                 new QuizCategory() { Id = (int)QuizCategoryValues.VideoGames, Name = "Video Games", FontAwesomeIconName = "fa-gamepad" },
                 new QuizCategory() { Id = (int)QuizCategoryValues.Sports, Name = "Sports", FontAwesomeIconName = "fa-futbol-o" },
-                new QuizCategory() { Id = (int)QuizCategoryValues.Geography, Name = "Geography", FontAwesomeIconName = "fa-globe" }
+                new QuizCategory() { Id = (int)QuizCategoryValues.Geography, Name = "Geography", FontAwesomeIconName = "fa-globe" },
+                new QuizCategory() { Id = (int)QuizCategoryValues.Math, Name = "Math", FontAwesomeIconName = "fa-object-group" }
             );
 
             context.QuizTypes.AddOrUpdate(m => m.Id,
@@ -304,7 +305,8 @@ namespace TwolipsDating.Migrations
                 new Quiz() { Id = 38, QuizTypeId = (int)QuizTypeValues.Minefield, QuizCategoryId = (int)QuizCategoryValues.Literature, Name = "Ernest Hemingway Books", Description = "Can you select all the books written by Ernhest Hemingway?", DateCreated = new DateTime(2015, 10, 7, 15, 0, 0), Points = 20, IsActive = true, ImageFileName = "ErnestHemingway.jpg" },
                 new Quiz() { Id = 39, QuizTypeId = (int)QuizTypeValues.Minefield, QuizCategoryId = (int)QuizCategoryValues.Sports, Name = "Hall of Fame Quarterbacks", Description = "Can you select all the NFL quarterbacks in the Hall of Fame?", DateCreated = new DateTime(2015, 10, 7, 23, 0, 0), Points = 20, IsActive = true, ImageFileName = "HallOfFameQuarterbacks.jpg" },
                 new Quiz() { Id = 40, QuizTypeId = (int)QuizTypeValues.Minefield, QuizCategoryId = (int)QuizCategoryValues.Television, Name = "Arrested Development Characters", Description = "The Bluth family is a disaster. Can you sort them out by picking the correct names?", DateCreated = new DateTime(2015, 10, 8, 23, 0, 0), Points = 20, IsActive = true, ImageFileName = "ArrestedDevelopment.jpg" },
-                new Quiz() { Id = 41, QuizTypeId = (int)QuizTypeValues.Minefield, QuizCategoryId = (int)QuizCategoryValues.Geography, Name = "South American Countries", Description = "Can you name all the countries of South America?", DateCreated = new DateTime(2015, 10, 12, 23, 0, 0), Points = 20, IsActive = true, ImageFileName = "SouthAmerica.jpg" });
+                new Quiz() { Id = 41, QuizTypeId = (int)QuizTypeValues.Minefield, QuizCategoryId = (int)QuizCategoryValues.Geography, Name = "South American Countries", Description = "Can you name all the countries of South America?", DateCreated = new DateTime(2015, 10, 12, 23, 0, 0), Points = 20, IsActive = true, ImageFileName = "SouthAmerica.jpg" },
+                new Quiz() { Id = 42, QuizTypeId = (int)QuizTypeValues.Minefield, QuizCategoryId = (int)QuizCategoryValues.Math, Name = "Multiples of 3", Description = "Select only the multiples of 3. If it isn't divisible by 3, you shouldn't select it!", DateCreated = new DateTime(2015, 10, 20, 23, 0, 0), Points = 10, IsActive = true, ImageFileName = "MultiplesOf3.jpg" });
 
             context.LookingForLocations.AddOrUpdate(m => m.Id,
                 new LookingForLocation() { Id = 1, Range = "Anywhere" },
