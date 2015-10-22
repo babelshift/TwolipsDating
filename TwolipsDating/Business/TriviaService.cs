@@ -1258,6 +1258,7 @@ namespace TwolipsDating.Business
                              join selectedAnswers in db.AnsweredMinefieldQuestions on
                                  new { QuizId = completedQuizzes.QuizId, UserId = completedQuizzes.UserId }
                                  equals new { QuizId = selectedAnswers.MinefieldQuestionId, UserId = selectedAnswers.UserId }
+                             where selectedAnswers.Answer.IsCorrect
                              group completedQuizzes by new
                              {
                                  UserName = completedQuizzes.User.UserName,
