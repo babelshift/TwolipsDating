@@ -158,6 +158,29 @@
             {
                 @Html.Partial("_SidebarYouMightAlsoLikePeoplePartial", Model.UsersToFollow)
             }
+            @if (HttpContext.Current.AreAdsEnabled())
+            {
+                if (!HttpContext.Current.IsDebuggingEnabled)
+                {
+                    <div class="ad">
+                        <!-- Dashboard - Sidebar - 1 -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-1823005717277864"
+                             data-ad-slot="8267337038"
+                             data-ad-format="auto"></ins>
+                        <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
+                }
+                else
+                {
+                    <div style="width: 350px; margin: 5px auto;">
+                        <img src="http://placehold.it/350x250" />
+                    </div>
+                }
+            }
         </div>
         <div class="col-md-8">
             @if (Model.Items.Count > 0)
