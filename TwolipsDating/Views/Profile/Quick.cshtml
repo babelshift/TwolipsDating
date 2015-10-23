@@ -8,6 +8,30 @@
 
 @Html.HiddenFor(m => m.ProfileUserId)
 
+@if (HttpContext.Current.AreAdsEnabled())
+{
+    if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="ad-banner-sm">
+            <!-- QuickMatch - Top - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="1802001033"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    }
+    else
+    {
+        <div style="width: 610px; margin: 5px auto;">
+            <img src="http://placehold.it/600x90" />
+        </div>
+    }
+}
+
 <div class="row">
     <div class="col-xs-12">
         <div id="profile-banner-background" class="panel panel-default"
@@ -133,6 +157,29 @@
         </div>
     </div>
 </div>
+@if (HttpContext.Current.AreAdsEnabled())
+{
+    if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="ad-banner-sm">
+            <!-- QuickMatch - Bottom - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="3278734233"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    }
+    else
+    {
+        <div style="width: 610px; margin: 5px auto;">
+            <img src="http://placehold.it/600x90" />
+        </div>
+    }
+}
 
 @section Modals {
     @if (!User.Identity.IsAuthenticated)

@@ -7,6 +7,29 @@
     ViewBag.Title = "Browse the store";
     ViewBag.Description = "twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
 }
+@if (HttpContext.Current.AreAdsEnabled())
+{
+    if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="ad-banner-sm">
+            <!-- Store - Top - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="4755467433"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    }
+    else
+    {
+        <div style="width: 610px; margin: 5px auto;">
+            <img src="http://placehold.it/600x90" />
+        </div>
+    }
+}
 @Html.Partial("_ItemAddedConfirmationPartial")
 <div class="row">
     <div class="col-md-8">
@@ -137,32 +160,54 @@
                 </div>
             }
         </div>
+        @if (HttpContext.Current.AreAdsEnabled())
+        {
+            if (!HttpContext.Current.IsDebuggingEnabled)
+            {
+                <div class="ad">
+                    <!-- Store - Sidebar - 1 -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1823005717277864"
+                         data-ad-slot="2718406231"
+                         data-ad-format="auto"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div style="width: 350px; margin: 5px auto;">
+                    <img src="http://placehold.it/350x250" />
+                </div>
+            }
+        }
     </div>
-    @if (HttpContext.Current.AreAdsEnabled())
-    {
-        if (!HttpContext.Current.IsDebuggingEnabled)
-        {
-            <div class="ad-banner-sm">
-                <!-- Store - Footer - 1 -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1823005717277864"
-                     data-ad-slot="4806928234"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        }
-        else
-        {
-            <div style="width: 610px; margin: 5px auto;">
-                <img src="http://placehold.it/600x90" />
-            </div>
-        }
-    }
 </div>
-
+@if (HttpContext.Current.AreAdsEnabled())
+{
+    if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="ad-banner-sm">
+            <!-- Store - Footer - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="4806928234"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    }
+    else
+    {
+        <div style="width: 610px; margin: 5px auto;">
+            <img src="http://placehold.it/600x90" />
+        </div>
+    }
+}
 @section Scripts {
     @Scripts.Render("~/bundles/store/index")
 
