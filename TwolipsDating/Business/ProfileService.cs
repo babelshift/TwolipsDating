@@ -623,6 +623,8 @@ namespace TwolipsDating.Business
 
                 await UserService.SendReviewEmailNotificationAsync(authorUserProfileImagePath, authorUserName, content, authorProfileUrl,
                     targetUserId, targetUserName, targetUserEmail);
+
+                await UserService.IncreaseNotificationCountAsync(targetUserId);
             }
 
             return count;
@@ -666,6 +668,7 @@ namespace TwolipsDating.Business
                     {
                         success = (await db.SaveChangesAsync() > 0);
 
+                        // message was sent successfully, send email notification
                         if (success)
                         {
                             string senderProfileImagePath = senderUser.Profile.GetProfileThumbnailImagePath();
@@ -677,6 +680,8 @@ namespace TwolipsDating.Business
 
                             await UserService.SendMessageEmailNotificationAsync(senderProfileImagePath, senderUserName, body,
                                 conversationUrl, receiverUserId, receiverUserName, receiverEmail);
+
+                            await UserService.IncreaseNotificationCountAsync(receiverUserId);
                         }
                     }
                     catch (DbUpdateException ex)
@@ -1105,6 +1110,8 @@ namespace TwolipsDating.Business
                     gift.Name, gift.GetIconPath(),
                     toUserId, receiverUserName, receiverEmail
                 );
+
+                await UserService.IncreaseNotificationCountAsync(toUserId);
             }
 
             return giftCount;
@@ -1245,7 +1252,7 @@ namespace TwolipsDating.Business
         /// <param name="followerUserId"></param>
         /// <param name="followingProfileId"></param>
         /// <returns></returns>
-        public async Task<bool> ToggleFavoriteProfileAsync(string followerUserId, int followingProfileId, string profileIndexUrlRoot)
+        public async Task<bool> ToggleFavoriteProfileAsync(string followerUserId, string followingUserId, int followingProfileId, string profileIndexUrlRoot)
         {
             Debug.Assert(!String.IsNullOrEmpty(followerUserId));
             Debug.Assert(followingProfileId > 0);
@@ -1273,11 +1280,16 @@ namespace TwolipsDating.Business
                 favoriteProfile.DateFavorited = DateTime.Now;
                 db.FavoriteProfiles.Add(favoriteProfile);
 
-                await db.SaveChangesAsync();
+                bool success = (await db.SaveChangesAsync() > 0);
 
                 isFavorite = true;
 
-                await SendNewFollowerNotificationAsync(followerUserId, followingProfileId, profileIndexUrlRoot);
+                if (success)
+                {
+                    await SendNewFollowerNotificationAsync(followerUserId, followingProfileId, profileIndexUrlRoot);
+
+                    await UserService.IncreaseNotificationCountAsync(followingUserId);
+                }
             }
 
             return isFavorite;
@@ -1285,7 +1297,7 @@ namespace TwolipsDating.Business
 
         private async Task SendNewFollowerNotificationAsync(string followerUserId, int followingProfileId, string profileIndexUrlRoot)
         {
-            // the "following" user is the person who is being followed
+            // the following user is the person who is being followed
             var followingProfile = await db.Profiles.FindAsync(followingProfileId);
             string followingUserName = followingProfile.ApplicationUser.UserName;
             string followingUserEmail = followingProfile.ApplicationUser.Email;

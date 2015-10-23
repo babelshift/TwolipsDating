@@ -60,7 +60,7 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task<int> SetSelfSummaryAsync(string userId, string selfSummary);
         System.Threading.Tasks.Task<int> SetSummaryOfDoingAsync(string userId, string summaryOfDoing);
         System.Threading.Tasks.Task<int> SetSummaryOfGoingAsync(string userId, string summaryOfGoing);
-        System.Threading.Tasks.Task<bool> ToggleFavoriteProfileAsync(string followerUserId, int followingProfileId, string profileIndexUrlRoot);
+        System.Threading.Tasks.Task<bool> ToggleFavoriteProfileAsync(string followerUserId, string followingUserId, int followingProfileId, string profileIndexUrlRoot);
         System.Threading.Tasks.Task<ToggleServiceResult> ToggleIgnoredUserAsync(string sourceUserId, string targetUserId);
         IUserService UserService { set; }
         System.Threading.Tasks.Task<int> WriteReviewAsync(string authorUserId, string targetUserId, string content, int ratingValue, string authorProfileUrlRoot);

@@ -384,5 +384,25 @@ namespace TwolipsDating.Business
 
             return success;
         }
+
+        public async Task IncreaseNotificationCountAsync(string userId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            var user = db.Users.Find(userId);
+            user.NotificationCount++;
+
+            await db.SaveChangesAsync();
+        }
+
+        public async Task ClearNotificationsAsync(string userId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            var user = db.Users.Find(userId);
+            user.NotificationCount = 0;
+
+            await db.SaveChangesAsync();
+        }
     }
 }

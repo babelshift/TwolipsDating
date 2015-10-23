@@ -46,7 +46,7 @@ namespace TwolipsDating.Controllers
                 }
 
                 string profileIndexUrlRoot = Url.ActionWithFullUrl(Request, "index", "profile", new { id = (int?)null });
-                bool isFavorite = await ProfileService.ToggleFavoriteProfileAsync(currentUserId, profileId, profileIndexUrlRoot);
+                bool isFavorite = await ProfileService.ToggleFavoriteProfileAsync(currentUserId, profileUserId, profileId, profileIndexUrlRoot);
 
                 return Json(new { success = true, isFavorite = isFavorite });
             }

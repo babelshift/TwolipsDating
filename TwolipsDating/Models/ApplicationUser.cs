@@ -25,6 +25,8 @@ namespace TwolipsDating.Models
 
         public virtual int LifetimePoints { get; set; }
 
+        public virtual int NotificationCount { get; set; }
+
         public virtual Profile Profile { get; set; }
 
         public virtual EmailNotifications EmailNotifications { get; set; }

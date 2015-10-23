@@ -237,10 +237,22 @@ namespace TwolipsDating.Controllers
                 //ViewBag.Announcements = announcements;
                 //ViewBag.AnnouncementNotificationCount = announcements.Count;
 
-                var gifts = await ProfileService.GetUnreviewedGiftTransactionsAsync(currentUserId);
-                var giftsViewModels = Mapper.Map<IReadOnlyCollection<GiftTransactionLog>, IReadOnlyCollection<GiftTransactionViewModel>>(gifts);
-                ViewBag.GiftsReceived = giftsViewModels;
-                ViewBag.GiftNotificationCount = giftsViewModels != null ? giftsViewModels.Count : 0;
+                //var gifts = await ProfileService.GetUnreviewedGiftTransactionsAsync(currentUserId);
+                //var giftsViewModels = Mapper.Map<IReadOnlyCollection<GiftTransactionLog>, IReadOnlyCollection<GiftTransactionViewModel>>(gifts);
+                //ViewBag.GiftsReceived = giftsViewModels;
+                //ViewBag.GiftNotificationCount = giftsViewModels != null ? giftsViewModels.Count : 0;
+
+                ViewBag.NotificationCount = currentUser.NotificationCount;
+            }
+        }
+
+        protected async Task ClearNotificationsAsync()
+        {
+            // notifications are only useful for logged in users
+            if (User.Identity.IsAuthenticated)
+            {
+                string currentUserId = User.Identity.GetUserId();
+                await UserService.ClearNotificationsAsync(currentUserId);
             }
         }
 

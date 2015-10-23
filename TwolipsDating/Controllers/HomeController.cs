@@ -19,6 +19,7 @@ namespace TwolipsDating.Controllers
         [RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
         public async Task<ActionResult> Notifications(int? page)
         {
+            await ClearNotificationsAsync();
             await SetNotificationsAsync();
 
             string currentUserId = User.Identity.GetUserId();

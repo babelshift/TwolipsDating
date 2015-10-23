@@ -473,6 +473,10 @@
     <Compile Include="Migrations\201510191800396_AddTagsToMinefieldQuestions.Designer.cs">
       <DependentUpon>201510191800396_AddTagsToMinefieldQuestions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201510231824446_AddNotificationCountToUser.cs" />
+    <Compile Include="Migrations\201510231824446_AddNotificationCountToUser.Designer.cs">
+      <DependentUpon>201510231824446_AddNotificationCountToUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\AnsweredMinefieldQuestion.cs" />
     <Compile Include="Models\CompletedQuizComparer.cs" />
     <Compile Include="Models\EmailNotifications.cs" />
@@ -1402,6 +1406,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201510191800396_AddTagsToMinefieldQuestions.resx">
       <DependentUpon>201510191800396_AddTagsToMinefieldQuestions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510231824446_AddNotificationCountToUser.resx">
+      <DependentUpon>201510231824446_AddNotificationCountToUser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ErrorMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

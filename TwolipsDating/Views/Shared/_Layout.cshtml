@@ -126,16 +126,16 @@
                             </li>
                         }
 
-                        if (ViewBag.GiftNotificationCount != null)
+                        if (ViewBag.NotificationCount != null)
                         {
                             <li>
                                 <a href="@Url.Action("notifications", "home")" title="View your notifications" data-placement="bottom" data-container="body" class="custom-tooltip">
                                     <i class="fa fa-bell fa-lg fa-fw"></i>
                                     <span class="hidden-sm hidden-md hidden-lg">Notifications</span>
-                                    @if (ViewBag.GiftNotificationCount > 0)
+                                    @if (ViewBag.NotificationCount > 0)
                                     {
                                         <div class="fa-overlay-bottom-right">
-                                            <span id="span-gift-notification-count">@ViewBag.GiftNotificationCount</span>
+                                            <span id="span-gift-notification-count">@ViewBag.NotificationCount</span>
                                         </div>
                                     }
                                 </a>
