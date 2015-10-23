@@ -45,7 +45,7 @@
                                 if (category.QuizCategoryId == Model.ActiveQuizCategoryId)
                                 {
                                     <li role="presentation" class="active">
-                                        <a href="@Url.Action("category", "trivia", new { id = category.QuizCategoryId })">
+                                        <a href="@Url.Action("category", "trivia", new { id = category.QuizCategoryId, seoName = category.QuizSEOName })">
                                             <i class="fa @category.QuizIcon fa-lg fa-fw"></i>
                                             @category.QuizName
                                         </a>
@@ -54,7 +54,7 @@
                                 else
                                 {
                                     <li role="presentation">
-                                        <a href="@Url.Action("category", "trivia", new { id = category.QuizCategoryId })">
+                                        <a href="@Url.Action("category", "trivia", new { id = category.QuizCategoryId, seoName = category.QuizSEOName })">
                                             <i class="fa @category.QuizIcon fa-lg fa-fw"></i>
                                             @category.QuizName
                                         </a>
@@ -92,36 +92,8 @@
                     <hr />
                     @foreach (var quiz in Model.Quizzes)
                     {
-                        <div class="row quiz-item">
-                            <div class="col-xs-4">
-                                <a href="@Url.Action("quiz", new { id = quiz.Id })">
-                                    <img class="pull-left img-responsive" src="@quiz.ThumbnailImagePath" alt="@quiz.Name">
-                                </a>
-                            </div>
-                            <div class="col-xs-8">
-                                <h4 class="quiz-title">
-                                    <a href="@Url.Action("quiz", new { id = quiz.Id })">@quiz.Name</a>
-                                </h4>
-                                <p>
-                                    <a href="@Url.Action("category", "trivia", new { id = @quiz.QuizCategoryId })" class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>
-                                    @if (quiz.IsComplete)
-                                    {
-                                        <span class="label label-success">COMPLETED</span>
-                                    }
-                                    else
-                                    {
-                                        if (quiz.AveragePoints > 0)
-                                        {
-                                            @Html.Partial("_QuizRatingBarPartial", quiz.AveragePoints)
-                                        }
-                                        else
-                                        {
-                                            <span class="label label-danger">NOT RATED</span>
-                                        }
-                                    }
-                                </p>
-                                <p class="quiz-description">@quiz.Description</p>
-                            </div>
+                        <div class="quiz-item">
+                            @Html.Partial("_QuizOverviewPartial", quiz)
                         </div>
                     }
                 </div>

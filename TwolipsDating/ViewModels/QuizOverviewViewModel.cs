@@ -10,5 +10,6 @@
         public string ThumbnailImagePath { get; set; }
         public int QuizCategoryId { get; set; }
         public string QuizCategoryName { get; set; }
+        public string QuizCategorySEOName { get; set; }
     }
 }

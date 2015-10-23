@@ -238,6 +238,7 @@ namespace TwolipsDating
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(source => source.Id))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(source => source.Name))
                 .ForMember(dest => dest.QuizCategoryName, opts => opts.MapFrom(source => source.QuizCategory.Name))
+                .ForMember(dest => dest.QuizCategorySEOName, opts => opts.MapFrom(source => source.QuizCategory.GetSEOName()))
                 .ForMember(dest => dest.QuizCategoryId, opts => opts.MapFrom(source => source.QuizCategoryId))
                 .ForMember(dest => dest.ThumbnailImagePath, opts => opts.MapFrom(source => source.GetThumbnailImagePath()))
                 .ForMember(dest => dest.AveragePoints, opts => opts.ResolveUsing(source =>
@@ -315,6 +316,7 @@ namespace TwolipsDating
 
             Mapper.CreateMap<QuizCategory, QuizCategoryViewModel>()
                 .ForMember(dest => dest.QuizCategoryId, opts => opts.MapFrom(source => source.Id))
+                .ForMember(dest => dest.QuizSEOName, opts => opts.MapFrom(source => source.GetSEOName()))
                 .ForMember(dest => dest.QuizIcon, opts => opts.MapFrom(source => source.FontAwesomeIconName))
                 .ForMember(dest => dest.QuizName, opts => opts.MapFrom(source => source.Name));
         }

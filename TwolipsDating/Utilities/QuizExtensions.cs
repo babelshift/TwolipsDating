@@ -22,6 +22,17 @@ namespace TwolipsDating.Utilities
             return Regex.Replace(root.ToLower().Replace(@"'", String.Empty), @"[^\w]+", "-");
         }
 
+        internal static string GetCategorySEOName(string categoryName)
+        {
+            if (String.IsNullOrEmpty(categoryName))
+            {
+                return String.Empty;
+            }
+
+            string root = String.Format("{0}", categoryName);
+            return Regex.Replace(root.ToLower().Replace(@"'", String.Empty), @"[^\w]+", "-");
+        }
+
         internal static string GetSEOName(this Quiz quiz)
         {
             if (String.IsNullOrEmpty(quiz.Name))

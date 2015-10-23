@@ -13,6 +13,7 @@ namespace TwolipsDating
         public string ThumbnailImagePath { get; set; }
         public int QuizCategoryId { get; set; }
         public string QuizCategoryName { get; set; }
+        public string QuizCategorySEOName { get; set; }
         public int AveragePoints { get; set; }
         public int PointsEarned { get; set; }
         public int PointsPossible { get; set; }

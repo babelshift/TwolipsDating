@@ -823,6 +823,7 @@ namespace TwolipsDating.Business
                 }
 
                 quiz.ThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(quiz.ThumbnailImagePath);
+                quiz.QuizCategorySEOName = QuizExtensions.GetCategorySEOName(quiz.QuizCategoryName);
             }
 
             return quizDetails.AsReadOnly();

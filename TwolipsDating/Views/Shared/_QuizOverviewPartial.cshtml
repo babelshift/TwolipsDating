@@ -11,7 +11,7 @@
             <a href="@Url.Action("quiz", new { id = Model.Id })">@Model.Name</a>
         </h4>
         <p>
-            <a href="@Url.Action("category", "trivia", new { id = Model.QuizCategoryId })" class="label label-info">@Model.QuizCategoryName.ToUpper()</a>
+            <a href="@Url.Action("category", "trivia", new { id = Model.QuizCategoryId, seoName = Model.QuizCategorySEOName })" class="label label-info">@Model.QuizCategoryName.ToUpper()</a>
             @if (Model.IsComplete)
             {
                 <span class="label label-success">COMPLETED</span>

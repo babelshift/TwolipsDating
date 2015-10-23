@@ -63,7 +63,7 @@
                                     <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })">@quiz.Name</a>
                                 </h4>
                                 <p>
-                                    <a href="@Url.Action("category", "trivia", new { id = quiz.QuizCategoryId })" class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>
+                                    <a href="@Url.Action("category", "trivia", new { id = quiz.QuizCategoryId, seoName = quiz.QuizCategorySEOName })" class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>
                                     @Html.Partial("_QuizRatingBarPartial", quiz.AveragePoints)
                                 </p>
                             </div>

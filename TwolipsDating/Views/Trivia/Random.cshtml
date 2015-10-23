@@ -22,7 +22,7 @@
                             @foreach (var category in Model.QuizCategories)
                             {
                                 <li role="presentation">
-                                    <a href="@Url.Action("category", "trivia", new { id = category.QuizCategoryId })">
+                                    <a href="@Url.Action("category", "trivia", new { id = category.QuizCategoryId, seoName = category.QuizSEOName })">
                                         <i class="fa @category.QuizIcon fa-lg fa-fw"></i>
                                         @category.QuizName
                                     </a>
