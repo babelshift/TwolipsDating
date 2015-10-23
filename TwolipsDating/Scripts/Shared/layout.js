@@ -105,85 +105,85 @@ $(document).ready(function () {
     $('.custom-tooltip').tooltip({ animation: false });
 
     // setup announcement/gift popovers
-    var announcementPopover = setupHtmlPopover('#popover-announcements', '#popover-announcements-content');
-    var giftsPopover = setupHtmlPopover('#popover-gifts', '#popover-gifts-content');
+    //var announcementPopover = setupHtmlPopover('#popover-announcements', '#popover-announcements-content');
+    //var giftsPopover = setupHtmlPopover('#popover-gifts', '#popover-gifts-content');
 
-    // when the gifts popover is hidden, re-create it based on any edits made by the user
-    $("#popover-gifts").on("hidden.bs.popover", function () {
-        var giftsPopover = setupHtmlPopover('#popover-gifts', '#popover-gifts-content');
-    });
+    //// when the gifts popover is hidden, re-create it based on any edits made by the user
+    //$("#popover-gifts").on("hidden.bs.popover", function () {
+    //    var giftsPopover = setupHtmlPopover('#popover-gifts', '#popover-gifts-content');
+    //});
 
-    // when the button to remove all gift notifications is clicked, post to the server to remove all notifications and then re-create the popover with all cleared
-    $(document).on("click", ".popover .remove-all-gift-notifications", function (e) {
-        e.preventDefault();
+    //// when the button to remove all gift notifications is clicked, post to the server to remove all notifications and then re-create the popover with all cleared
+    //$(document).on("click", ".popover .remove-all-gift-notifications", function (e) {
+    //    e.preventDefault();
 
-        var owner = $(this);
+    //    var owner = $(this);
 
-        post('/profile/removeAllGiftNotifications',
-            function (data) {
-                if (data.success) {
-                    var html = "<p>Nothing to see here.</p>"
+    //    post('/profile/removeAllGiftNotifications',
+    //        function (data) {
+    //            if (data.success) {
+    //                var html = "<p>Nothing to see here.</p>"
 
-                    // clear out the popover itself
-                    owner.parent().parent().html(html);
+    //                // clear out the popover itself
+    //                owner.parent().parent().html(html);
 
-                    // clear out the popover's source
-                    $("#popover-gifts-container").html(html);
+    //                // clear out the popover's source
+    //                $("#popover-gifts-container").html(html);
 
-                    // change indicators on notification button
-                    $("#span-gift-notification-count").text("0");
-                    $("#gift-notification-count").val("0");
-                } else {
-                    alert(data.error);
-                }
-            });
-    });
+    //                // change indicators on notification button
+    //                $("#span-gift-notification-count").text("0");
+    //                $("#gift-notification-count").val("0");
+    //            } else {
+    //                alert(data.error);
+    //            }
+    //        });
+    //});
 
-    // when the user clicks to remove a single gift notification, post to the server to remove it and on success remove that notification from the UI
-    $(document).on("click", ".popover .remove-gift-notification", function (e) {
-        e.preventDefault();
+    //// when the user clicks to remove a single gift notification, post to the server to remove it and on success remove that notification from the UI
+    //$(document).on("click", ".popover .remove-gift-notification", function (e) {
+    //    e.preventDefault();
 
-        var transactionId = $(this).attr("data-transaction-id");
-        var owner = $(this);
+    //    var transactionId = $(this).attr("data-transaction-id");
+    //    var owner = $(this);
 
-        var jsonObject = {
-            "giftTransactionId": transactionId
-        };
+    //    var jsonObject = {
+    //        "giftTransactionId": transactionId
+    //    };
 
-        json = JSON.stringify(jsonObject);
+    //    json = JSON.stringify(jsonObject);
 
-        postJson('/profile/removeGiftNotification', json,
-            function (data) {
-                if (data.success) {
-                    owner.parent().parent().fadeOut("normal", function () {
-                        var notificationsRemaining = $(".popover .remove-gift-notification").length;
-                        if (notificationsRemaining > 1) {
-                            // remove the element from the popover itself
-                            $(this).remove();
+    //    postJson('/profile/removeGiftNotification', json,
+    //        function (data) {
+    //            if (data.success) {
+    //                owner.parent().parent().fadeOut("normal", function () {
+    //                    var notificationsRemaining = $(".popover .remove-gift-notification").length;
+    //                    if (notificationsRemaining > 1) {
+    //                        // remove the element from the popover itself
+    //                        $(this).remove();
 
-                            // remove the element from the popover's source
-                            $("#gift-notification-" + transactionId).remove();
+    //                        // remove the element from the popover's source
+    //                        $("#gift-notification-" + transactionId).remove();
 
-                            // reduce the notification count by 1
-                            var giftNotificationCount = $("#gift-notification-count").val() - 1;
-                            $("#gift-notification-count").val(giftNotificationCount);
-                            $("#span-gift-notification-count").text(giftNotificationCount);
-                        }
-                        else {
-                            var html = "<p>Nothing to see here.</p>"
+    //                        // reduce the notification count by 1
+    //                        var giftNotificationCount = $("#gift-notification-count").val() - 1;
+    //                        $("#gift-notification-count").val(giftNotificationCount);
+    //                        $("#span-gift-notification-count").text(giftNotificationCount);
+    //                    }
+    //                    else {
+    //                        var html = "<p>Nothing to see here.</p>"
 
-                            // clear out the popover itself
-                            $(this).parent().html(html);
+    //                        // clear out the popover itself
+    //                        $(this).parent().html(html);
 
-                            // clear out the popover's source
-                            $("#popover-gifts-container").html(html);
-                        }
-                    })
-                } else {
-                    alert(data.error);
-                }
-            });
-    });
+    //                        // clear out the popover's source
+    //                        $("#popover-gifts-container").html(html);
+    //                    }
+    //                })
+    //            } else {
+    //                alert(data.error);
+    //            }
+    //        });
+    //});
 
     $('#modalReferAFriend').on('show.bs.modal', function (e) {
         get('/account/referralcode', function (data) {

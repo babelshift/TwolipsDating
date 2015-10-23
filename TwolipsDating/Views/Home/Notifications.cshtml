@@ -1,0 +1,135 @@
+﻿@model NotificationsViewModel
+@using TwolipsDating.ViewModels
+@using TwolipsDating.Utilities;
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Your notifications and updates";
+    ViewBag.Description = "Twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
+}
+@if (HttpContext.Current.AreAdsEnabled())
+{
+    if (!HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="ad-banner-sm">
+            <!-- Notifications - Top - 1 -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1823005717277864"
+                 data-ad-slot="8546538631"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    }
+    else
+    {
+        <div style="width: 610px; margin: 5px auto;">
+            <img src="http://placehold.it/600x90" />
+        </div>
+    }
+}
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h4 style="margin: 0"><i class="fa fa-bell"></i> Notifications</h4>
+            </div>
+        </div>
+        @if (Model.Items.Count > 0)
+        {
+            for (int i = 0; i < Model.Items.Count; i++)
+            {
+                var feedItem = Model.Items[i];
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.Message)
+                        {
+                            Html.RenderPartial("_FeedItemMessagesPartial", feedItem.MessageFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.UploadedPictures)
+                        {
+                            Html.RenderPartial("_FeedItemUploadedPicturesPartial", feedItem.UploadedImageFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.ReviewWritten)
+                        {
+                            Html.RenderPartial("_FeedItemReviewWrittenPartial", feedItem.ReviewWrittenFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.GiftTransaction)
+                        {
+                            Html.RenderPartial("_FeedItemGiftTransactionPartial", feedItem.GiftReceivedFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.QuizCompletion)
+                        {
+                            Html.RenderPartial("_FeedItemCompletedQuizPartial", feedItem.CompletedQuizFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.TagSuggestion)
+                        {
+                            Html.RenderPartial("_FeedItemTagSuggestionPartial", feedItem.TagSuggestionReceivedFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.AchievementObtained)
+                        {
+                            Html.RenderPartial("_FeedItemAchievementPartial", feedItem.AchievementFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.NewFollower)
+                        {
+                            Html.RenderPartial("_FeedItemNewFollowerPartial", feedItem.FollowerFeedItem);
+                        }
+                    </div>
+                </div>
+            }
+
+            if (Model.Items.PageCount > 1)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @Html.PagedListPager(Model.Items, page => Url.Action("Index", new { page }))
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <h4><i class="fa fa-smile-o"></i> Nothing to report!</h4>
+        }
+    </div>
+    <div class="col-md-4">
+        @if (Model.UsersToFollow != null && Model.UsersToFollow.Count > 0)
+        {
+            @Html.Partial("_SidebarYouMightAlsoLikePeoplePartial", Model.UsersToFollow)
+        }
+    </div>
+    <div class="col-md-4">
+        @if (HttpContext.Current.AreAdsEnabled())
+        {
+            if (!HttpContext.Current.IsDebuggingEnabled)
+            {
+                <div class="ad">
+                    <!-- Notifications - Sidebar - 1 -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1823005717277864"
+                         data-ad-slot="7069805433"
+                         data-ad-format="auto"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div style="width: 350px; margin: 5px auto;">
+                    <img src="http://placehold.it/350x250" />
+                </div>
+            }
+        }
+    </div>
+</div>
+@section Scripts {
+    @if (HttpContext.Current.AreAdsEnabled() && !HttpContext.Current.IsDebuggingEnabled)
+    {
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    }
+}

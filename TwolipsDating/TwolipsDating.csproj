@@ -531,6 +531,7 @@
     <Compile Include="ViewModels\MinefieldAnswerViewModel.cs" />
     <Compile Include="ViewModels\MinefieldQuestionViewModel.cs" />
     <Compile Include="ViewModels\MostPopularQuizViewModel.cs" />
+    <Compile Include="ViewModels\NotificationsViewModel.cs" />
     <Compile Include="ViewModels\QuizCategoryViewModel.cs" />
     <Compile Include="ViewModels\RecentBuyerViewModel.cs" />
     <Compile Include="ViewModels\SearchResultProfileViewModel.cs" />
@@ -1128,6 +1129,8 @@
     <Content Include="Views\Trivia\_AchievementProgressPartial.cshtml" />
     <Content Include="Views\Profile\_StatsPartial.cshtml" />
     <Content Include="Views\Profile\_SendGiftToFollowingPartial.cshtml" />
+    <Content Include="Views\Home\Notifications.cshtml" />
+    <Content Include="Views\Shared\_SidebarYouMightAlsoLikePeoplePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

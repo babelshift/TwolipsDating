@@ -16,8 +16,34 @@ namespace TwolipsDating.Controllers
 {
     public class HomeController : BaseController
     {
-        [RequireProfileIfAuthenticated]
-        [AllowAnonymous]
+        [RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
+        public async Task<ActionResult> Notifications(int? page)
+        {
+            await SetNotificationsAsync();
+
+            string currentUserId = User.Identity.GetUserId();
+
+            NotificationsViewModel viewModel = new NotificationsViewModel();
+            viewModel.UsersToFollow = await GetUsersToFollowAsync(currentUserId);
+
+            List<DashboardItemViewModel> notificationItems = new List<DashboardItemViewModel>();
+            await AddReceivedMessagesToFeedAsync(currentUserId, notificationItems);
+            await AddReviewsToFeedAsync(currentUserId, notificationItems, FeedItemQueryType.Self);
+            await AddGiftTransactionsToFeedAsync(currentUserId, notificationItems, FeedItemQueryType.Self);
+            await AddFollowersToFeedAsync(currentUserId, notificationItems);
+
+            int pageSize = 20;
+            int pageNumber = page ?? 1;
+
+            viewModel.Items = notificationItems
+                .OrderByDescending(v => v.DateOccurred)
+                .ToList()
+                .ToPagedList(pageNumber, pageSize);
+
+            return View(viewModel);
+        }
+
+        [AllowAnonymous, RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
         public async Task<ActionResult> Index(int? page)
         {
             // if the user is authenticated, allow them to view their dashboard
@@ -27,13 +53,13 @@ namespace TwolipsDating.Controllers
 
                 List<DashboardItemViewModel> dashboardItems = new List<DashboardItemViewModel>();
 
-                await AddMessagesToFeedAsync(currentUserId, dashboardItems);
+                await AddReceivedMessagesToFeedAsync(currentUserId, dashboardItems);
 
-                await AddReviewsToFeedAsync(currentUserId, dashboardItems);
+                await AddReviewsToFeedAsync(currentUserId, dashboardItems, FeedItemQueryType.All);
 
                 await AddUploadedImagesToFeedAsync(currentUserId, dashboardItems);
 
-                await AddGiftTransactionsToFeedAsync(currentUserId, dashboardItems);
+                await AddGiftTransactionsToFeedAsync(currentUserId, dashboardItems, FeedItemQueryType.All);
 
                 await AddCompletedQuizzesToFeedAsync(currentUserId, dashboardItems);
 
@@ -55,16 +81,15 @@ namespace TwolipsDating.Controllers
                 viewModel.Items = dashboardItems
                     .OrderByDescending(v => v.DateOccurred)
                     .ToList()
-                    .AsReadOnly()
                     .ToPagedList(pageNumber, pageSize);
 
                 await SetupReviewViolationsOnDashboardAsync(viewModel);
 
                 await SetupRandomQuestionOnDashboardAsync(currentUserId, viewModel);
 
-                await SetupQuizzesOnDashboardAsync(currentUserId, viewModel);
+                //await SetupQuizzesOnDashboardAsync(currentUserId, viewModel);
 
-                await SetupUsersToFollowAsync(currentUserId, viewModel);
+                viewModel.UsersToFollow = await GetUsersToFollowAsync(currentUserId);
 
                 return View("dashboard", viewModel);
             }
@@ -80,11 +105,11 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private async Task SetupUsersToFollowAsync(string currentUserId, DashboardViewModel viewModel)
+        private async Task<IReadOnlyCollection<ProfileViewModel>> GetUsersToFollowAsync(string currentUserId)
         {
             int profilesToRetrieve = 8;
             var profiles = await ProfileService.GetRandomProfilesForDashboardAsync(currentUserId, profilesToRetrieve);
-            viewModel.UsersToFollow = Mapper.Map<IReadOnlyCollection<Models.Profile>, IReadOnlyCollection<ProfileViewModel>>(profiles);
+            return Mapper.Map<IReadOnlyCollection<Models.Profile>, IReadOnlyCollection<ProfileViewModel>>(profiles);
         }
 
         /// <summary>
@@ -161,9 +186,9 @@ namespace TwolipsDating.Controllers
         /// <param name="currentUserId"></param>
         /// <param name="dashboardItems"></param>
         /// <returns></returns>
-        private async Task AddReviewsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
+        private async Task AddReviewsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems, FeedItemQueryType queryType)
         {
-            var reviews = await DashboardService.GetRecentFollowerReviewsAsync(currentUserId);
+            var reviews = await DashboardService.GetRecentReviewsAsync(currentUserId, queryType);
             var reviewFeedViewModel = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewWrittenFeedViewModel>>(reviews);
 
             foreach (var reviewFeed in reviewFeedViewModel)
@@ -183,7 +208,7 @@ namespace TwolipsDating.Controllers
         /// <param name="currentUserId"></param>
         /// <param name="dashboardItems"></param>
         /// <returns></returns>
-        private async Task AddMessagesToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
+        private async Task AddReceivedMessagesToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
             var messages = await ProfileService.GetMessagesReceivedByUserAsync(currentUserId);
             var messageFeedViewModel = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyCollection<MessageFeedViewModel>>(messages);
@@ -199,9 +224,9 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private async Task AddGiftTransactionsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
+        private async Task AddGiftTransactionsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems, FeedItemQueryType queryType)
         {
-            var giftTransactions = await DashboardService.GetRecentFollowerGiftTransactionsAsync(currentUserId);
+            var giftTransactions = await DashboardService.GetRecentFollowerGiftTransactionsAsync(currentUserId, queryType);
             var giftTransactionsConsolidated = giftTransactions.GetConsolidatedGiftTransactions();
 
             foreach (var giftTransactionViewModel in giftTransactionsConsolidated)

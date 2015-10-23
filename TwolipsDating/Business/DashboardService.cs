@@ -13,6 +13,12 @@ using TwolipsDating.ViewModels;
 
 namespace TwolipsDating.Business
 {
+    public enum FeedItemQueryType
+    {
+        All,
+        Self
+    }
+
     public class DashboardService : BaseService, IDashboardService
     {
         public DashboardService(ApplicationDbContext db, IIdentityMessageService emailService)
@@ -51,53 +57,84 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<Review>> GetRecentFollowerReviewsAsync(string userId)
+        public async Task<IReadOnlyCollection<Review>> GetRecentReviewsAsync(string userId, FeedItemQueryType queryType)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
-            // get the reviews that were authored by favorited users
-            var reviewsWrittenByFavorites = from reviews in db.Reviews
-                                            join favoritedProfiles in db.FavoriteProfiles on reviews.AuthorUser.Profile.Id equals favoritedProfiles.ProfileId
-                                            where favoritedProfiles.UserId == userId
+            // get all reviews written by or for anyone that we are following
+            if (queryType == FeedItemQueryType.All)
+            {
+                // get the reviews that were authored by favorited users
+                var reviewsWrittenByFavorites = from reviews in db.Reviews
+                                                join favoritedProfiles in db.FavoriteProfiles on reviews.AuthorUser.Profile.Id equals favoritedProfiles.ProfileId
+                                                where favoritedProfiles.UserId == userId
+                                                where reviews.TargetUser.IsActive
+                                                where reviews.AuthorUser.IsActive
+                                                select reviews;
+
+                // get the reviews that were written for the favorited users
+                var reviewsWrittenAboutFavorites = from reviews in db.Reviews
+                                                   join favoritedProfiles in db.FavoriteProfiles on reviews.TargetUser.Profile.Id equals favoritedProfiles.ProfileId
+                                                   where favoritedProfiles.UserId == userId
+                                                   where reviews.TargetUser.IsActive
+                                                   where reviews.AuthorUser.IsActive
+                                                   select reviews;
+
+                // union the two sets together and return them
+                var results = await reviewsWrittenByFavorites.Union(reviewsWrittenAboutFavorites).ToListAsync();
+                return results.AsReadOnly();
+            }
+            // get only reviews that were written about our self
+            else
+            {
+                var reviewsWrittenForSelf = from reviews in db.Reviews
+                                            where reviews.TargetUserId == userId
                                             where reviews.TargetUser.IsActive
                                             where reviews.AuthorUser.IsActive
                                             select reviews;
-
-            // get the reviews that were written for the favorited users
-            var reviewsWrittenAboutFavorites = from reviews in db.Reviews
-                                               join favoritedProfiles in db.FavoriteProfiles on reviews.TargetUser.Profile.Id equals favoritedProfiles.ProfileId
-                                               where favoritedProfiles.UserId == userId
-                                               where reviews.TargetUser.IsActive
-                                               where reviews.AuthorUser.IsActive
-                                               select reviews;
-
-            // union the two sets together and return them
-            var results = await reviewsWrittenByFavorites.Union(reviewsWrittenAboutFavorites).ToListAsync();
-            return results.AsReadOnly();
+                var results = await reviewsWrittenForSelf.ToListAsync();
+                return results;
+            }
         }
 
-        public async Task<IReadOnlyCollection<GiftTransactionLog>> GetRecentFollowerGiftTransactionsAsync(string userId)
+        public async Task<IReadOnlyCollection<GiftTransactionLog>> GetRecentFollowerGiftTransactionsAsync(string userId, FeedItemQueryType queryType)
         {
-            var giftsFromUser = from gifts in db.GiftTransactions
-                                .Include(g => g.StoreItem)
-                                .Include(g => g.FromUser)
-                                join favoritedProfiles in db.FavoriteProfiles on gifts.FromUser.Profile.Id equals favoritedProfiles.ProfileId
-                                where favoritedProfiles.UserId == userId
-                                where gifts.FromUser.IsActive
-                                where gifts.ToUser.IsActive
-                                select gifts;
+            if (queryType == FeedItemQueryType.All)
+            {
+                var giftsFromUser = from gifts in db.GiftTransactions
+                                    .Include(g => g.StoreItem)
+                                    .Include(g => g.FromUser)
+                                    join favoritedProfiles in db.FavoriteProfiles on gifts.FromUser.Profile.Id equals favoritedProfiles.ProfileId
+                                    where favoritedProfiles.UserId == userId
+                                    where gifts.FromUser.IsActive
+                                    where gifts.ToUser.IsActive
+                                    select gifts;
 
-            var giftsToUser = from gifts in db.GiftTransactions
-                              .Include(g => g.StoreItem)
-                              .Include(g => g.FromUser)
-                              join favoritedProfiles in db.FavoriteProfiles on gifts.ToUser.Profile.Id equals favoritedProfiles.ProfileId
-                              where favoritedProfiles.UserId == userId
-                              where gifts.FromUser.IsActive
-                              where gifts.ToUser.IsActive
-                              select gifts;
+                var giftsToUser = from gifts in db.GiftTransactions
+                                  .Include(g => g.StoreItem)
+                                  .Include(g => g.FromUser)
+                                  join favoritedProfiles in db.FavoriteProfiles on gifts.ToUser.Profile.Id equals favoritedProfiles.ProfileId
+                                  where favoritedProfiles.UserId == userId
+                                  where gifts.FromUser.IsActive
+                                  where gifts.ToUser.IsActive
+                                  select gifts;
 
-            var results = await giftsFromUser.Union(giftsToUser).ToListAsync();
-            return results.AsReadOnly();
+                var results = await giftsFromUser.Union(giftsToUser).ToListAsync();
+                return results.AsReadOnly();
+            }
+            else
+            {
+                var giftsToSelf = from gifts in db.GiftTransactions
+                                  .Include(g => g.StoreItem)
+                                  .Include(g => g.FromUser)
+                                  where gifts.ToUserId == userId
+                                  where gifts.FromUser.IsActive
+                                  where gifts.ToUser.IsActive
+                                  select gifts;
+
+                var results = await giftsToSelf.ToListAsync();
+                return results.AsReadOnly();
+            }
         }
 
         public async Task<IReadOnlyCollection<CompletedQuizFeedViewModel>> GetRecentFollowerQuizCompletionsAsync(string userId)

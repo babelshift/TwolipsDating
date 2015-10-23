@@ -129,7 +129,7 @@
                         if (ViewBag.GiftNotificationCount != null)
                         {
                             <li>
-                                <a id="popover-gifts" href="#" title="Received Gifts" data-placement="bottom" data-container="body" data-animation="false">
+                                <a href="@Url.Action("notifications", "home")" title="View your notifications" data-placement="bottom" data-container="body" class="custom-tooltip">
                                     <i class="fa fa-bell fa-lg fa-fw"></i>
                                     <span class="hidden-sm hidden-md hidden-lg">Notifications</span>
                                     @if (ViewBag.GiftNotificationCount > 0)
@@ -139,7 +139,6 @@
                                         </div>
                                     }
                                 </a>
-                                <input id="gift-notification-count" type="hidden" value="@ViewBag.GiftNotificationCount" />
                             </li>
                         }
                     }

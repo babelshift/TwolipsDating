@@ -4,7 +4,7 @@
 @using PagedList.Mvc;
 
 @{
-    ViewBag.Title = "Dashboard";
+    ViewBag.Title = "Your personal dashboard";
     ViewBag.Description = "Twolips dating is a community focused on providing people with the ability to meet likeminded friends and colleagues through a variety of activities and challenges.";
 }
 <!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
@@ -156,44 +156,7 @@
             </div>
             @if (Model.UsersToFollow != null && Model.UsersToFollow.Count > 0)
             {
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <div class="panel-title">
-                            <i class="fa fa-users"></i> You might also like...
-                        </div>
-                    </div>
-                    <ul class="list-group">
-                        @foreach (var userProfile in Model.UsersToFollow)
-                        {
-                            <li id="@String.Format("user-to-follow-{0}", userProfile.ProfileId)" class="list-group-item user-to-follow">
-                                <div style="margin-left: 55px;">
-                                    <a href="@Url.Action("index", "profile", new{ id = userProfile.ProfileId })">
-                                        <img src="@userProfile.ProfileThumbnailImagePath">
-                                    </a>
-                                    <span class="user-to-follow-name">
-                                        @userProfile.UserName
-                                    </span>
-                                    <span class="user-to-follow-details">
-                                        <i class="fa fa-user fa-fw"></i> @userProfile.Age years old
-                                        <br />
-                                        @if (!String.IsNullOrEmpty(userProfile.Location))
-                                        {
-                                            <i class="fa fa-map-marker fa-fw"></i> @userProfile.Location
-                                        }
-                                    </span>
-                                </div>
-                                <button class="btn btn-default btn-sm custom-tooltip followify user-to-follow-button"
-                                        data-profile-id="@userProfile.ProfileId" data-user-id="@userProfile.ProfileUserId">
-                                    <i class="fa fa-user-plus fa-lg fa-fw"></i>
-                                    <span>Follow</span>
-                                </button>
-                            </li>
-                        }
-                    </ul>
-                    <div class="panel-footer text-center">
-                        <a href="@Url.Action("index", "search")"><small>Find more people</small></a>
-                    </div>
-                </div>
+                @Html.Partial("_SidebarYouMightAlsoLikePeoplePartial", Model.UsersToFollow)
             }
         </div>
         <div class="col-md-8">
