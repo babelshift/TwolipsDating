@@ -10,6 +10,13 @@ namespace TwolipsDating
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string SEOName
+        {
+            get
+            {
+                return QuizExtensions.GetQuizSEOName(Name);
+            }
+        }
         public string ThumbnailImagePath { get; set; }
         public int QuizCategoryId { get; set; }
         public string QuizCategoryName { get; set; }

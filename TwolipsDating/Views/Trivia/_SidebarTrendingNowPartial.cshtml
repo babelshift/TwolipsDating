@@ -8,7 +8,7 @@
         <div class="list-group">
             @foreach (var quiz in Model)
             {
-                <a style="font-size: 13px" class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId })">
+                <a style="font-size: 13px" class="list-group-item" href="@Url.Action("quiz", "trivia", new { id = quiz.QuizId, seoName = quiz.QuizSEOName })">
                     @*@if (quiz.PercentageOfTrending > 50)
                         {
                             <i class="text-danger fa fa-fire fa-lg fa-fw"></i>

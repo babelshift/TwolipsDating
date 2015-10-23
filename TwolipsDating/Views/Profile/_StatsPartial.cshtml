@@ -52,7 +52,7 @@
             {
                 <div class="row" style="margin-bottom: 15px; margin-left: 0; margin-right: 0">
                     <div class="col-xs-4">
-                        <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })">
+                        <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id, seoName = quiz.SEOName })">
                             <img class="pull-left img-responsive" src="@quiz.ThumbnailImagePath" alt="">
                         </a>
                     </div>
@@ -60,7 +60,7 @@
                         <div class="row" style="margin: 0">
                             <div class="col-xs-12">
                                 <h4 style="margin-top: 0; margin-bottom: 5px; font-weight: 400">
-                                    <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id })">@quiz.Name</a>
+                                    <a href="@Url.Action("quiz", "trivia", new { id = quiz.Id, seoName = quiz.SEOName })">@quiz.Name</a>
                                 </h4>
                                 <p>
                                     <a href="@Url.Action("category", "trivia", new { id = quiz.QuizCategoryId, seoName = quiz.QuizCategorySEOName })" class="label label-info">@quiz.QuizCategoryName.ToUpper()</a>

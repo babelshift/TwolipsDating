@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.ViewModels
 {
@@ -9,6 +10,13 @@ namespace TwolipsDating.ViewModels
     {
         public int QuizId { get; set; }
         public string QuizName { get; set; }
+        public string QuizSEOName
+        {
+            get
+            {
+                return QuizExtensions.GetQuizSEOName(QuizName);
+            }
+        }
         public int CompletedCount { get; set; }
         public string ThumbnailImagePath { get; set; }
     }
