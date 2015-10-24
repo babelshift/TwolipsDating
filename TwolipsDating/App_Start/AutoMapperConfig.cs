@@ -129,6 +129,7 @@ namespace TwolipsDating
                 .ForMember(dest => dest.QuizName, opts => opts.MapFrom(source => source.Quiz.Name))
                 .ForMember(dest => dest.SourceProfileId, opts => opts.MapFrom(source => source.User.Profile.Id))
                 .ForMember(dest => dest.SourceProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileThumbnailImagePath()))
+                .ForMember(dest => dest.QuizThumbnailImagePath, opts => opts.MapFrom(source => source.Quiz.GetThumbnailImagePath()))
                 .ForMember(dest => dest.SourceUserName, opts => opts.MapFrom(source => source.User.UserName));
 
             Mapper.CreateMap<TagSuggestion, TagSuggestionReceivedFeedViewModel>()

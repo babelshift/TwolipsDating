@@ -15,8 +15,16 @@ namespace TwolipsDating.ViewModels
         public int TotalAnswerCount { get; set; }
         public int UserScorePercent { get { return (int)Math.Round(((double)CorrectAnswerCount / (double)TotalAnswerCount) * 100); } }
         public string QuizName { get; set; }
+        public string QuizSEOName
+        {
+            get
+            {
+                return QuizExtensions.GetQuizSEOName(QuizName);
+            }
+        }
         public int QuizId { get; set; }
         public string TimeAgo { get { return DateCompleted.GetTimeAgo(); } }
         public DateTime DateCompleted { get; set; }
+        public string QuizThumbnailImagePath { get; set; }
     }
 }

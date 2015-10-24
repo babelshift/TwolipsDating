@@ -146,6 +146,7 @@ select
 	ui.FileName SourceProfileImagePath,
 	q.Name QuizName,
 	q.Id QuizId,
+    q.ImageFileName as QuizThumbnailImagePath,
 	cq.DateCompleted DateCompleted,
 	(
         case
@@ -200,6 +201,7 @@ where
             foreach (var result in results)
             {
                 result.SourceProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.SourceProfileImagePath);
+                result.QuizThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(result.QuizThumbnailImagePath);
             }
 
             return results.ToList().AsReadOnly();
