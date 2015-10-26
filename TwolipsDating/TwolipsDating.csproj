@@ -928,6 +928,7 @@
     <Content Include="Content\ig-icon-32.png" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.min.css" />
+    <Content Include="Content\LandingPageCollage.jpg" />
     <Content Include="Content\li-icon-32.png" />
     <Content Include="Content\LizardLord1.png" />
     <Content Include="Content\loading.gif" />

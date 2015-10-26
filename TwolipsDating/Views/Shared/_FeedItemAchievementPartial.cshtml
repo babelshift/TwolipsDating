@@ -14,7 +14,7 @@
     }
         else
         {
-            <a href="@Url.Action("index", "profile", new { id = Model.ProfileId })">@Model.UserName</a>
+            <a href="@Url.Action("index", "profile", new { id = Model.ProfileId, seoName = Model.ProfileSEOName })">@Model.UserName</a>
         }
         achieved
         <strong>@Model.AchievementName</strong>

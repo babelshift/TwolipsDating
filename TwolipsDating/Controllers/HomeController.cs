@@ -98,10 +98,10 @@ namespace TwolipsDating.Controllers
             else
             {
                 HomeViewModel viewModel = new HomeViewModel();
-                Random r = new Random();
-                int i = r.Next(1, 10);
-                string cdn = ConfigurationManager.AppSettings["cdnUrl"];
-                viewModel.BackgroundImage = String.Format("{0}/LandingPage{1}.jpg", cdn, i);
+                //Random r = new Random();
+                //int i = r.Next(1, 10);
+                //string cdn = ConfigurationManager.AppSettings["cdnUrl"];
+                //viewModel.BackgroundImage = String.Format("{0}/LandingPage{1}.jpg", cdn, i);
                 return View(String.Empty, "~/Views/Shared/_LayoutSplash.cshtml", viewModel);
             }
         }

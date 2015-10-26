@@ -9,6 +9,13 @@ namespace TwolipsDating.ViewModels
     public class AchievementFeedViewModel
     {
         public string ProfileId { get; set; }
+        public string ProfileSEOName
+        {
+            get
+            {
+                return ProfileExtensions.GetSEOProfileName(UserName);
+            }
+        }
         public string UserName { get; set; }
         public string UserProfileImagePath { get; set; }
         public DateTime DateAchieved { get; set; }

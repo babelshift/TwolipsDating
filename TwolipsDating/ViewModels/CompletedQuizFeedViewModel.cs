@@ -10,6 +10,13 @@ namespace TwolipsDating.ViewModels
     {
         public string SourceProfileId { get; set; }
         public string SourceUserName { get; set; }
+        public string SourceProfileSEOName
+        {
+            get
+            {
+                return ProfileExtensions.GetSEOProfileName(SourceUserName);
+            }
+        }
         public string SourceProfileImagePath { get; set; }
         public int CorrectAnswerCount { get; set; }
         public int TotalAnswerCount { get; set; }
