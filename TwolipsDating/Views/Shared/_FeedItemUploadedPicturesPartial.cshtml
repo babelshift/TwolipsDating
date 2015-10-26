@@ -24,7 +24,7 @@
         }
             else
             {
-                <a href="@Url.Action("index", "profile", new { id = Model.UploaderProfileId })">@Model.UploaderUserName</a>
+                <a href="@Url.Action("index", "profile", new { id = Model.UploaderProfileId, seoName = Model.UploaderSEOName })">@Model.UploaderUserName</a>
             }
             @text
             <br />

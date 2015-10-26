@@ -11,12 +11,12 @@
         </div>
     }
     <div class="feed-item-headline">
-        <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId })">@Model.SenderUserName</a> sent you a message
+        <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId, seoName = Model.SenderSEOName })">@Model.SenderUserName</a> sent you a message
         <br />
         <small>@Model.TimeAgo</small>
     </div>
     <span class="pull-right feed-item-buttons">
-        <a href="@Url.Action("conversation", "message", new{ id = Model.SenderUserId })" class="btn btn-default btn-xs" title="View conversation">
+        <a href="@Url.Action("conversation", "message", new { id = Model.SenderUserId })" class="btn btn-default btn-xs" title="View conversation">
             <i class="glyphicon glyphicon-envelope"></i>
         </a>
     </span>

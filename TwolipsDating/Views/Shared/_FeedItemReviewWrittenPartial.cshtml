@@ -17,7 +17,7 @@
     }
         else
         {
-            <a href="@Url.Action("index", "profile", new { id = Model.AuthorProfileId })">@Model.AuthorUserName</a>
+            <a href="@Url.Action("index", "profile", new { id = Model.AuthorProfileId, seoName = Model.AuthorSEOName })">@Model.AuthorUserName</a>
         }
         wrote a review about
         @if (Model.TargetUserName == User.Identity.Name)
@@ -26,7 +26,7 @@
     }
         else
         {
-            <a href="@Url.Action("index", "profile", new { id = Model.TargetProfileId })">@Model.TargetUserName</a>
+            <a href="@Url.Action("index", "profile", new { id = Model.TargetProfileId, seoName = Model.TargetSEOName })">@Model.TargetUserName</a>
         }
         <br />
         <small>

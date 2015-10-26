@@ -13,7 +13,7 @@ namespace TwolipsDating.ViewModels
         {
             get
             {
-                return ProfileExtensions.GetSEOProfileName(UserName);
+                return ProfileExtensions.GetProfileSEOName(UserName);
             }
         }
         public string UserName { get; set; }

@@ -10,10 +10,12 @@ namespace TwolipsDating.ViewModels
     {
         public string SenderUserName { get; set; }
         public int SenderProfileId { get; set; }
+        public string SenderSEOName { get; set; }
         public string SenderProfileImagePath { get; set; }
         public string SenderUserId { get; set; }
         public string ReceiverUserName { get; set; }
         public int ReceiverProfileId { get; set; }
+        public string ReceiverSEOName { get; set; }
         public string ReceiverProfileImagePath { get; set; }
         public DateTime DateSent { get; set; }
         public string TimeAgo { get { return DateSent.GetTimeAgo(); } }

@@ -14,7 +14,7 @@
     }
         else
         {
-            <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId })">@Model.SenderUserName</a>
+            <a href="@Url.Action("index", "profile", new { id = Model.SenderProfileId, seoName = Model.SenderSEOName })">@Model.SenderUserName</a>
         }
         @if (@Model.Gifts.Count > 1)
         {
@@ -30,7 +30,7 @@
     }
         else
         {
-            <a href="@Url.Action("index", "profile", new { id = Model.ReceiverProfileId })">@Model.ReceiverUserName</a>
+            <a href="@Url.Action("index", "profile", new { id = Model.ReceiverProfileId, seoName = Model.ReceiverSEOName })">@Model.ReceiverUserName</a>
         }
         <br />
         <small>@Model.TimeAgo</small>

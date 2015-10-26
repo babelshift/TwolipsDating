@@ -87,7 +87,19 @@ namespace TwolipsDating.Utilities
             return String.Format("{0}/{1}_{2}{3}?2", cdn, realFileName, "thumb", fileType);
         }
 
-        public static string GetSEOProfileName(string userName)
+        public static string GetProfileSEOName(this Profile profile)
+        {
+            if (profile != null && profile.ApplicationUser != null)
+            {
+                return GetProfileSEOName(profile.ApplicationUser.UserName);
+            }
+            else
+            {
+                return String.Empty;
+            }
+        }
+
+        public static string GetProfileSEOName(string userName)
         {
             if (String.IsNullOrEmpty(userName))
             {

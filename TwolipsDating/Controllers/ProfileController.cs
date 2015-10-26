@@ -674,7 +674,7 @@ namespace TwolipsDating.Controllers
                 // if the user has a profile and that user isn't inactive, show the profile
                 if (profileToBeViewed != null && profileToBeViewed.ApplicationUser.IsActive)
                 {
-                    string expectedSeoName = ProfileExtensions.GetSEOProfileName(profileToBeViewed.ApplicationUser.UserName);
+                    string expectedSeoName = ProfileExtensions.GetProfileSEOName(profileToBeViewed.ApplicationUser.UserName);
                     if (seoName != expectedSeoName)
                     {
                         return RedirectToAction("index", new { id = id, seoName = expectedSeoName });

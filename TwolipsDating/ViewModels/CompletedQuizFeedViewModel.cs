@@ -14,7 +14,7 @@ namespace TwolipsDating.ViewModels
         {
             get
             {
-                return ProfileExtensions.GetSEOProfileName(SourceUserName);
+                return ProfileExtensions.GetProfileSEOName(SourceUserName);
             }
         }
         public string SourceProfileImagePath { get; set; }

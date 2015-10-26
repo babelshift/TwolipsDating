@@ -14,7 +14,7 @@
         }
         else
         {
-            <a href="@Url.Action("index", "profile", new { id = Model.SuggestProfileId })">@Model.SuggestUserName</a>
+            <a href="@Url.Action("index", "profile", new { id = Model.SuggestProfileId, seoName = Model.SuggestSEOName })">@Model.SuggestUserName</a>
         }
         tagged
         @if (Model.ReceiverUserName == User.Identity.Name)
@@ -23,7 +23,7 @@
         }
         else
         {
-            <a href="@Url.Action("index", "profile", new { id = Model.ReceiverProfileId })">@Model.ReceiverUserName</a>
+            <a href="@Url.Action("index", "profile", new { id = Model.ReceiverProfileId, seoName = Model.ReceiverSEOName })">@Model.ReceiverUserName</a>
         }
         <br />
         <small>@Model.TimeAgo</small>

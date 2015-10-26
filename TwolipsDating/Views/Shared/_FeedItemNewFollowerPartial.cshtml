@@ -8,7 +8,7 @@
         <img class="circular-image" src="@Model.FollowerProfileImagePath" />
     </div>
     <div class="feed-item-headline">
-        <a href="@Url.Action("index", "profile", new { id = Model.FollowerProfileId })">@Model.FollowerName</a>
+        <a href="@Url.Action("index", "profile", new { id = Model.FollowerProfileId, seoName = Model.FollowerSEOName })">@Model.FollowerName</a>
         started following you
         <br />
         <small>@Model.TimeAgo</small>
