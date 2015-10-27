@@ -321,6 +321,7 @@
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Controllers\TagsController.cs" />
+    <Compile Include="Data\BaseData.cs" />
     <Compile Include="Migrations\201507311603205_ReworkStoreModel.cs" />
     <Compile Include="Migrations\201507311603205_ReworkStoreModel.Designer.cs">
       <DependentUpon>201507311603205_ReworkStoreModel.cs</DependentUpon>

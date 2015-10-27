@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using TwolipsDating.Models;
 using System.Linq;
 using System;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.ViewModels
 {
@@ -10,13 +11,19 @@ namespace TwolipsDating.ViewModels
     {
         #region Profile view stuff
 
+        public bool IsUserActive { get; set; }
         public bool IsCurrentUserEmailConfirmed { get; set; }
         public string UserName { get; set; }
         public string SelectedTitle { get; set; }
         public string SelectedTitleImage { get; set; }
-        public int Age { get; set; }
+        public DateTime Birthday { get; set; }
+        public int Age { get { return Birthday.GetAge(); } }
         public string Gender { get; set; }
-        public string Location { get; set; }
+        public int GenderId { get; set; }
+        public string CityName { get; set; }
+        public string StateAbbreviation { get; set; }
+        public string CountryName { get; set; }
+        public string Location { get { return CityExtensions.ToFullLocationString(CityName, StateAbbreviation, CountryName); } }
         public int ProfileId { get; set; }
         public string ProfileUserId { get; set; }
         public string ActiveTab { get; set; }
@@ -24,6 +31,7 @@ namespace TwolipsDating.ViewModels
         public string ProfileThumbnailImagePath { get; set; }
         public string ProfileImagePath { get; set; }
         public int ReviewCount { get; set; }
+        public DateTime DateLastLogin { get; set; }
 
         public ProfileFeedViewModel Feed { get; set; }
         public ProfileReviewsViewModel Reviews { get; set; }
@@ -79,11 +87,12 @@ namespace TwolipsDating.ViewModels
         public int? LookingForAgeMin { get; set; }
         public int? LookingForAgeMax { get; set; }
 
-        public string LastLoginTimeAgo { get; set; }
+        public string LastLoginTimeAgo { get { return DateLastLogin.GetTimeAgo(); } }
 
         public string BannerImagePath { get; set; }
         public int BannerPositionX { get; set; }
         public int BannerPositionY { get; set; }
+        public int BannerImageId { get; set; }
 
         public int AverageUserScorePercent
         {

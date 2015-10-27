@@ -731,15 +731,54 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="profileId"></param>
         /// <returns></returns>
-        public async Task<Profile> GetProfileAsync(int profileId)
+        public async Task<ProfileViewModel> GetProfileAsync(int profileId)
         {
             Debug.Assert(profileId > 0);
 
             var profile = from profiles in db.Profiles
                           where profiles.Id == profileId
-                          select profiles;
+                          select new ProfileViewModel()
+                          {
+                              IsUserActive = profiles.ApplicationUser.IsActive,
+                              UserName = profiles.ApplicationUser.UserName,
+                              Birthday = profiles.Birthday,
+                              Gender = profiles.Gender.Name,
+                              GenderId = profiles.GenderId,
+                              CityName = profiles.GeoCity.Name,
+                              StateAbbreviation = profiles.GeoCity.GeoState.Abbreviation,
+                              CountryName = profiles.GeoCity.GeoState.GeoCountry.Name,
+                              ProfileId = profiles.Id,
+                              ProfileUserId = profiles.ApplicationUser.Id,
+                              ProfileImagePath = profiles.UserImage.FileName,
+                              ProfileThumbnailImagePath = profiles.UserImage.FileName,
+                              SelectedTitle = profiles.SelectedTitle != null ? profiles.SelectedTitle.Name : String.Empty,
+                              SelectedTitleImage = profiles.SelectedTitle != null ? profiles.SelectedTitle.IconFileName : String.Empty,
+                              SummaryOfSelf = profiles.SummaryOfSelf,
+                              SummaryOfDoing = profiles.SummaryOfDoing,
+                              SummaryOfGoing = profiles.SummaryOfGoing,
+                              LookingForType = profiles.LookingForType.Name,
+                              LookingForLocation = profiles.LookingForLocation.Range,
+                              RelationshipStatus = profiles.RelationshipStatus.Name,
+                              LookingForAgeMin = profiles.LookingForAgeMin,
+                              LookingForAgeMax = profiles.LookingForAgeMax,
+                              DateLastLogin = profiles.ApplicationUser.DateLastLogin,
+                              BannerImagePath = profiles.BannerImage.FileName,
+                              BannerPositionX = profiles.BannerPositionX.HasValue ? profiles.BannerPositionX.Value : 0,
+                              BannerPositionY = profiles.BannerPositionY.HasValue ? profiles.BannerPositionY.Value : 0,
+                              CurrentPoints = profiles.ApplicationUser.CurrentPoints,
+                              LifeTimePoints = profiles.ApplicationUser.LifetimePoints,
+                              BannerImageId = profiles.BannerImageId.HasValue ? profiles.BannerImageId.Value : 0,
+                              Languages = profiles.Languages.Select(x => x.Name).ToList()
+                          };
 
-            return await profile.FirstOrDefaultAsync();
+            var result = await profile.FirstOrDefaultAsync();
+
+            result.ProfileImagePath = ProfileExtensions.GetImagePath(result.ProfileImagePath);
+            result.ProfileThumbnailImagePath = ProfileExtensions.GetThumbnailImagePath(result.ProfileThumbnailImagePath);
+            result.SelectedTitleImage = StoreItemExtensions.GetImagePath(result.SelectedTitleImage);
+            result.BannerImagePath = UserImageExtensions.GetPath(result.BannerImagePath);
+
+            return result;
         }
 
         /// <summary>
@@ -747,15 +786,54 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<Profile> GetProfileAsync(string userId)
+        public async Task<ProfileViewModel> GetProfileAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
-            var profile = from user in db.Users
-                          where user.Id == userId
-                          select user.Profile;
+            var profile = from profiles in db.Profiles
+                          where profiles.ApplicationUser.Id == userId
+                          select new ProfileViewModel()
+                          {
+                              IsUserActive = profiles.ApplicationUser.IsActive,
+                              UserName = profiles.ApplicationUser.UserName,
+                              Birthday = profiles.Birthday,
+                              Gender = profiles.Gender.Name,
+                              GenderId = profiles.GenderId,
+                              CityName = profiles.GeoCity.Name,
+                              StateAbbreviation = profiles.GeoCity.GeoState.Abbreviation,
+                              CountryName = profiles.GeoCity.GeoState.GeoCountry.Name,
+                              ProfileId = profiles.Id,
+                              ProfileUserId = profiles.ApplicationUser.Id,
+                              ProfileImagePath = profiles.UserImage.FileName,
+                              ProfileThumbnailImagePath = profiles.UserImage.FileName,
+                              SelectedTitle = profiles.SelectedTitle != null ? profiles.SelectedTitle.Name : String.Empty,
+                              SelectedTitleImage = profiles.SelectedTitle != null ? profiles.SelectedTitle.IconFileName : String.Empty,
+                              SummaryOfSelf = profiles.SummaryOfSelf,
+                              SummaryOfDoing = profiles.SummaryOfDoing,
+                              SummaryOfGoing = profiles.SummaryOfGoing,
+                              LookingForType = profiles.LookingForType.Name,
+                              LookingForLocation = profiles.LookingForLocation.Range,
+                              RelationshipStatus = profiles.RelationshipStatus.Name,
+                              LookingForAgeMin = profiles.LookingForAgeMin,
+                              LookingForAgeMax = profiles.LookingForAgeMax,
+                              DateLastLogin = profiles.ApplicationUser.DateLastLogin,
+                              BannerImagePath = profiles.BannerImage.FileName,
+                              BannerPositionX = profiles.BannerPositionX.HasValue ? profiles.BannerPositionX.Value : 0,
+                              BannerPositionY = profiles.BannerPositionY.HasValue ? profiles.BannerPositionY.Value : 0,
+                              CurrentPoints = profiles.ApplicationUser.CurrentPoints,
+                              LifeTimePoints = profiles.ApplicationUser.LifetimePoints,
+                              BannerImageId = profiles.BannerImageId.HasValue ? profiles.BannerImageId.Value : 0,
+                              Languages = profiles.Languages.Select(x => x.Name).ToList()
+                          };
 
-            return await profile.FirstOrDefaultAsync();
+            var result = await profile.FirstOrDefaultAsync();
+
+            result.ProfileImagePath = ProfileExtensions.GetImagePath(result.ProfileImagePath);
+            result.ProfileThumbnailImagePath = ProfileExtensions.GetThumbnailImagePath(result.ProfileThumbnailImagePath);
+            result.SelectedTitleImage = StoreItemExtensions.GetImagePath(result.SelectedTitleImage);
+            result.BannerImagePath = UserImageExtensions.GetPath(result.BannerImagePath);
+
+            return result;
         }
 
         /// <summary>
@@ -993,16 +1071,16 @@ namespace TwolipsDating.Business
                                where messages.SenderApplicationUser.IsActive
                                select new MessageFeedViewModel()
                                {
-                                    DateOccurred = messages.DateSent,
-                                    MessageContent = messages.Body,
-                                    ReceiverProfileId = messages.ReceiverApplicationUser.Profile.Id,
-                                    ReceiverProfileImagePath = messages.ReceiverApplicationUser.Profile.UserImage.FileName,
-                                    ReceiverUserId = messages.ReceiverApplicationUserId,
-                                    ReceiverUserName = messages.ReceiverApplicationUser.UserName,
-                                    SenderProfileId = messages.SenderApplicationUser.Profile.Id,
-                                    SenderProfileImagePath = messages.SenderApplicationUser.Profile.UserImage.FileName,
-                                    SenderUserId = messages.SenderApplicationUserId,
-                                    SenderUserName = messages.SenderApplicationUser.UserName
+                                   DateOccurred = messages.DateSent,
+                                   MessageContent = messages.Body,
+                                   ReceiverProfileId = messages.ReceiverApplicationUser.Profile.Id,
+                                   ReceiverProfileImagePath = messages.ReceiverApplicationUser.Profile.UserImage.FileName,
+                                   ReceiverUserId = messages.ReceiverApplicationUserId,
+                                   ReceiverUserName = messages.ReceiverApplicationUser.UserName,
+                                   SenderProfileId = messages.SenderApplicationUser.Profile.Id,
+                                   SenderProfileImagePath = messages.SenderApplicationUser.Profile.UserImage.FileName,
+                                   SenderUserId = messages.SenderApplicationUserId,
+                                   SenderUserName = messages.SenderApplicationUser.UserName
                                };
 
             var results = await userMessages.ToListAsync();
@@ -1093,14 +1171,28 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<InventoryItem>> GetInventoryAsync(string userId)
+        public async Task<IReadOnlyCollection<InventoryItemViewModel>> GetInventoryAsync(string userId)
         {
             var inventory = from inventoryItems in db.InventoryItems
                             where inventoryItems.ApplicationUserId == userId
                             orderby inventoryItems.ItemCount descending
-                            select inventoryItems;
+                            select new InventoryItemViewModel()
+                            {
+                                GiftDescription = inventoryItems.StoreItem.Description,
+                                GiftIconFilePath = inventoryItems.StoreItem.IconFileName,
+                                GiftId = inventoryItems.StoreItemId,
+                                GiftName = inventoryItems.StoreItem.Name,
+                                InventoryItemId = inventoryItems.InventoryItemId,
+                                ItemCount = inventoryItems.ItemCount
+                            };
 
             var results = await inventory.ToListAsync();
+
+            foreach(var result in results)
+            {
+                result.GiftIconFilePath = StoreItemExtensions.GetImagePath(result.GiftIconFilePath);
+            }
+
             return results.AsReadOnly();
         }
 
@@ -1540,14 +1632,14 @@ namespace TwolipsDating.Business
                                              .Contains(profiles.Id)
                                      select new PersonYouMightAlsoLikeViewModel()
                                      {
-                                        UserName = profiles.ApplicationUser.UserName,
-                                        Birthday = profiles.Birthday,
-                                        LocationCityName = profiles.GeoCity.Name,
-                                        LocationStateAbbreviation = profiles.GeoCity.GeoState.Abbreviation,
-                                        LocationCountryName = profiles.GeoCity.GeoState.GeoCountry.Name,
-                                        ProfileId = profiles.Id,
-                                        ProfileThumbnailImagePath = profiles.UserImage.FileName,
-                                        ProfileUserId = profiles.ApplicationUser.Id
+                                         UserName = profiles.ApplicationUser.UserName,
+                                         Birthday = profiles.Birthday,
+                                         LocationCityName = profiles.GeoCity.Name,
+                                         LocationStateAbbreviation = profiles.GeoCity.GeoState.Abbreviation,
+                                         LocationCountryName = profiles.GeoCity.GeoState.GeoCountry.Name,
+                                         ProfileId = profiles.Id,
+                                         ProfileThumbnailImagePath = profiles.UserImage.FileName,
+                                         ProfileUserId = profiles.ApplicationUser.Id
                                      })
                                      .ToDictionaryAsync(d => d.ProfileId, d => d);
 

@@ -88,7 +88,7 @@ namespace TwolipsDating.Controllers
 
                 viewModel.Days = CalendarHelper.GetDaysOfMonth(birthDate.Month).ToDictionary(m => m, m => m);
 
-                viewModel.CurrentLocation = profile.GeoCity.ToFullLocationString();
+                viewModel.CurrentLocation = profile.Location;
 
                 viewModel.DoesUserHaveProfile = true;
             }

@@ -47,7 +47,7 @@ namespace TwolipsDating.Utilities
             }
         }
 
-        private static string GetImagePath(string fileName)
+        public static string GetImagePath(string fileName)
         {
             if (String.IsNullOrEmpty(fileName))
             {

@@ -36,7 +36,7 @@ namespace TwolipsDating.Business
 
         System.Threading.Tasks.Task<int> GetImagesUploadedCountByUserAsync(string userId);
 
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.InventoryItem>> GetInventoryAsync(string userId);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.InventoryItemViewModel>> GetInventoryAsync(string userId);
 
         System.Threading.Tasks.Task<int> GetInventoryCountAsync(string userId);
 
@@ -58,9 +58,9 @@ namespace TwolipsDating.Business
 
         System.Threading.Tasks.Task<int> GetLifetimePointsForUserAsync(string userId);
 
-        System.Threading.Tasks.Task<TwolipsDating.Models.Profile> GetProfileAsync(int profileId);
+        System.Threading.Tasks.Task<TwolipsDating.ViewModels.ProfileViewModel> GetProfileAsync(int profileId);
 
-        System.Threading.Tasks.Task<TwolipsDating.Models.Profile> GetProfileAsync(string userId);
+        System.Threading.Tasks.Task<TwolipsDating.ViewModels.ProfileViewModel> GetProfileAsync(string userId);
 
         System.Threading.Tasks.Task<int> GetPurchasedItemCountForUserAsync(string userId, int storeItemTypeId);
 

@@ -49,6 +49,28 @@ namespace TwolipsDating.Business
         }
 
         /// <summary>
+        /// Returns a boolean indicating if a user has ignored another user.
+        /// </summary>
+        /// <param name="sourceUserId"></param>
+        /// <param name="targetUserId"></param>
+        /// <returns></returns>
+        public async Task<bool> IsUserFavoritedByUserAsync(string sourceUserId, string targetUserId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(sourceUserId));
+            Debug.Assert(!String.IsNullOrEmpty(targetUserId));
+
+            var favoriteProfileEntity = from favoriteProfile in db.FavoriteProfiles
+                                    where favoriteProfile.UserId == sourceUserId
+                                    where favoriteProfile.Profile.ApplicationUser.Id == targetUserId
+                                    select favoriteProfile;
+
+            var result = await favoriteProfileEntity.FirstOrDefaultAsync();
+
+            return result != null;
+        }
+
+        
+        /// <summary>
         /// Returns a collection of all store transactions for a user.
         /// </summary>
         /// <param name="userId"></param>

@@ -31,5 +31,7 @@ namespace TwolipsDating.Business
         Task IncreaseNotificationCountAsync(string userId);
 
         Task ClearNotificationsAsync(string userId);
+
+        Task<bool> IsUserFavoritedByUserAsync(string sourceUserId, string targetUserId);
     }
 }

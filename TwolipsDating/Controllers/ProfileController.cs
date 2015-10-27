@@ -492,9 +492,9 @@ namespace TwolipsDating.Controllers
                     if (i == 0 || replaceCurrentProfileImage)
                     {
                         var profile = await ProfileService.GetProfileAsync(currentUserId);
-                        if (profile != null && (profile.UserImage == null || replaceCurrentProfileImage))
+                        if (profile != null && (!String.IsNullOrEmpty(profile.ProfileImagePath) || replaceCurrentProfileImage))
                         {
-                            await ProfileService.ChangeProfileUserImageAsync(profile.Id, result.UploadedImageId);
+                            await ProfileService.ChangeProfileUserImageAsync(profile.ProfileId, result.UploadedImageId);
                         }
                     }
                 }
@@ -571,13 +571,16 @@ namespace TwolipsDating.Controllers
         {
             string currentUserId = User.Identity.GetUserId();
 
-            var profile = await ProfileService.GetProfileAsync(profileUserId);
+            var profileId = await UserService.GetProfileIdAsync(profileUserId);
 
-            int changes = await ProfileService.SetBannerImagePositionAsync(profile.Id, bannerPositionX, bannerPositionY);
-
-            if (changes > 0)
+            if (profileId.HasValue)
             {
-                return Json(new { success = true });
+                int changes = await ProfileService.SetBannerImagePositionAsync(profileId.Value, bannerPositionX, bannerPositionY);
+
+                if (changes > 0)
+                {
+                    return Json(new { success = true });
+                }
             }
 
             return Json(new { success = false });
@@ -612,13 +615,13 @@ namespace TwolipsDating.Controllers
 
                     if (profile != null)
                     {
-                        if (profile.BannerImage != null)
+                        if (!String.IsNullOrEmpty(profile.BannerImagePath))
                         {
-                            string previousBannerFileName = profile.BannerImage.FileName;
+                            string previousBannerFileName = profile.BannerImagePath;
 
                             // TODO: ATOMIC?
                             // remove the previous banner from database
-                            var deleteResult = await ProfileService.DeleteBannerImageAsync(profile.BannerImage.Id);
+                            var deleteResult = await ProfileService.DeleteBannerImageAsync(profile.BannerImageId);
 
                             if (deleteResult.Succeeded)
                             {
@@ -628,7 +631,7 @@ namespace TwolipsDating.Controllers
                         }
 
                         // change the user's profile to use the new banner
-                        await ProfileService.ChangeProfileBannerImageAsync(profile.Id, uploadResult.UploadedImageId);
+                        await ProfileService.ChangeProfileBannerImageAsync(profile.ProfileId, uploadResult.UploadedImageId);
                     }
 
                     return Json(new { success = true, bannerImagePath = UserImageExtensions.GetPath(newImage.FileName) });
@@ -672,9 +675,9 @@ namespace TwolipsDating.Controllers
                 var profileToBeViewed = await ProfileService.GetProfileAsync(id.Value);
 
                 // if the user has a profile and that user isn't inactive, show the profile
-                if (profileToBeViewed != null && profileToBeViewed.ApplicationUser.IsActive)
+                if (profileToBeViewed != null && profileToBeViewed.IsUserActive)
                 {
-                    string expectedSeoName = ProfileExtensions.ToSEOName(profileToBeViewed.ApplicationUser.UserName);
+                    string expectedSeoName = ProfileExtensions.ToSEOName(profileToBeViewed.UserName);
                     if (seoName != expectedSeoName)
                     {
                         return RedirectToAction("index", new { id = id, seoName = expectedSeoName });
@@ -721,11 +724,8 @@ namespace TwolipsDating.Controllers
         /// <param name="currentUserId"></param>
         /// <param name="profile"></param>
         /// <returns></returns>
-        private async Task<ActionResult> ShowUserProfileAsync(string tab, string currentUserId, Models.Profile profile, int? page)
+        private async Task<ActionResult> ShowUserProfileAsync(string tab, string currentUserId, ProfileViewModel viewModel, int? page)
         {
-            // first transform what we can to the view model
-            var viewModel = Mapper.Map<TwolipsDating.Models.Profile, ProfileViewModel>(profile);
-
             // check if user's email address is confirmed
             viewModel.IsCurrentUserEmailConfirmed = !User.Identity.IsAuthenticated ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
@@ -733,7 +733,7 @@ namespace TwolipsDating.Controllers
             viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "about";
 
             // handle review stuff
-            var reviews = await ProfileService.GetReviewsWrittenForUserAsync(profile.ApplicationUser.Id);
+            var reviews = await ProfileService.GetReviewsWrittenForUserAsync(viewModel.ProfileUserId);
             viewModel.AverageRatingValue = reviews.AverageRating();
             viewModel.ReviewCount = reviews.Count;
 
@@ -741,12 +741,11 @@ namespace TwolipsDating.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 // setup favorites and ignores
-                viewModel.IsFavoritedByCurrentUser = profile.FavoritedBy.Any(f => f.UserId == currentUserId);
-                viewModel.IsIgnoredByCurrentUser = await UserService.IsUserIgnoredByUserAsync(currentUserId, profile.ApplicationUser.Id);
+                viewModel.IsFavoritedByCurrentUser = await UserService.IsUserFavoritedByUserAsync(currentUserId, viewModel.ProfileUserId);
+                viewModel.IsIgnoredByCurrentUser = await UserService.IsUserIgnoredByUserAsync(currentUserId, viewModel.ProfileUserId);
 
                 // setup inventory for the viewer of the profile
-                var viewerInventoryItems = await ProfileService.GetInventoryAsync(currentUserId);
-                viewModel.ViewerInventoryItems = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(viewerInventoryItems);
+                viewModel.ViewerInventoryItems = await ProfileService.GetInventoryAsync(currentUserId);
 
                 // setup violation types
                 var violationTypes = await ViolationService.GetViolationTypesAsync();
@@ -755,7 +754,7 @@ namespace TwolipsDating.Controllers
 
                 // setup user titles to select (only if the user is viewing their own profile)
                 // TODO: optimize this
-                if (currentUserId == profile.ApplicationUser.Id)
+                if (currentUserId == viewModel.ProfileUserId)
                 {
                     var titles = await UserService.GetTitlesOwnedByUserAsync(currentUserId);
                     var titlesViewModel = titles.Select(t => new TitleViewModel()
@@ -771,18 +770,18 @@ namespace TwolipsDating.Controllers
             }
 
             // setup viewmodel specific to the actively selected tab
-            await SetViewModelBasedOnActiveTabAsync(profile, viewModel, reviews, currentUserId, page);
+            await SetViewModelBasedOnActiveTabAsync(viewModel, reviews, currentUserId, page);
 
             //viewModel.FeedCount = ProfileService.GetFeedCountAsync(profile.Id);
-            viewModel.PictureCount = await ProfileService.GetImagesUploadedCountByUserAsync(profile.ApplicationUser.Id);
-            viewModel.TagCount = await ProfileService.GetTagCountAsync(profile.ApplicationUser.Id);
-            viewModel.InventoryCount = await ProfileService.GetInventoryCountAsync(profile.ApplicationUser.Id);
-            viewModel.CompletedAchievementCount = await MilestoneService.GetCompletedAchievementCount(profile.ApplicationUser.Id);
+            viewModel.PictureCount = await ProfileService.GetImagesUploadedCountByUserAsync(viewModel.ProfileUserId);
+            viewModel.TagCount = await ProfileService.GetTagCountAsync(viewModel.ProfileUserId);
+            viewModel.InventoryCount = await ProfileService.GetInventoryCountAsync(viewModel.ProfileUserId);
+            viewModel.CompletedAchievementCount = await MilestoneService.GetCompletedAchievementCount(viewModel.ProfileUserId);
             viewModel.PossibleAchievementCount = await MilestoneService.GetPossibleAchievementCount();
             viewModel.SimilarUsers = await ProfileService.GetSimilarProfilesAsync(viewModel.ProfileId);
 
-            viewModel.Followers = await ProfileService.GetFollowersAsync(profile.Id, currentUserId);
-            viewModel.Following = await ProfileService.GetFollowingAsync(profile.Id, currentUserId);
+            viewModel.Followers = await ProfileService.GetFollowersAsync(viewModel.ProfileId, currentUserId);
+            viewModel.Following = await ProfileService.GetFollowingAsync(viewModel.ProfileId, currentUserId);
 
             viewModel.FollowerCount = viewModel.Followers.Count;
             viewModel.FollowingCount = viewModel.Following.Count;
@@ -824,8 +823,7 @@ namespace TwolipsDating.Controllers
         /// <param name="reviews"></param>
         /// <param name="currentUserId"></param>
         /// <returns></returns>
-        private async Task SetViewModelBasedOnActiveTabAsync(Models.Profile profile,
-            ProfileViewModel viewModel,
+        private async Task SetViewModelBasedOnActiveTabAsync(ProfileViewModel viewModel,
             IReadOnlyCollection<Review> reviews,
             string currentUserId,
             int? page)
@@ -845,21 +843,21 @@ namespace TwolipsDating.Controllers
 
             if (viewModel.ActiveTab == "feed")
             {
-                var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);
+                var userImages = await ProfileService.GetUserImagesAsync(viewModel.ProfileUserId);
                 viewModel.UploadImage = new UploadImageViewModel();
                 viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
-                viewModel.Feed = await GetUserFeedAsync(profile, reviews, page);
+                viewModel.Feed = await GetUserFeedAsync(viewModel, reviews, page);
                 viewModel.Feed.CurrentUserId = currentUserId;
-                viewModel.Feed.ProfileUserId = profile.ApplicationUser.Id;
-                viewModel.Feed.ProfileUserName = profile.ApplicationUser.UserName;
-                viewModel.Feed.ProfileId = profile.Id;
+                viewModel.Feed.ProfileUserId = viewModel.ProfileUserId;
+                viewModel.Feed.ProfileUserName = viewModel.UserName;
+                viewModel.Feed.ProfileId = viewModel.ProfileId;
             }
-            if (viewModel.ActiveTab == "pictures" || currentUserId == profile.ApplicationUser.Id)
+            if (viewModel.ActiveTab == "pictures" || currentUserId == viewModel.ProfileUserId)
             {
-                var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);
+                var userImages = await ProfileService.GetUserImagesAsync(viewModel.ProfileUserId);
                 viewModel.UploadImage = new UploadImageViewModel();
                 viewModel.UploadImage.CurrentUserId = currentUserId;
-                viewModel.UploadImage.ProfileUserId = profile.ApplicationUser.Id;
+                viewModel.UploadImage.ProfileUserId = viewModel.ProfileUserId;
                 viewModel.UploadImage.IsCurrentUserEmailConfirmed = String.IsNullOrEmpty(currentUserId) ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
                 viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
             }
@@ -868,47 +866,46 @@ namespace TwolipsDating.Controllers
                 viewModel.Reviews = new ProfileReviewsViewModel();
                 viewModel.Reviews.Items = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewViewModel>>(reviews);
                 viewModel.Reviews.CurrentUserId = currentUserId;
-                viewModel.Reviews.ProfileUserId = profile.ApplicationUser.Id;
-                viewModel.Reviews.ProfileUserName = profile.ApplicationUser.UserName;
-                viewModel.Reviews.ProfileId = profile.Id;
+                viewModel.Reviews.ProfileUserId = viewModel.ProfileUserId;
+                viewModel.Reviews.ProfileUserName = viewModel.UserName;
+                viewModel.Reviews.ProfileId = viewModel.ProfileId;
             }
             if (viewModel.ActiveTab == "achievements")
             {
-                var achievements = await MilestoneService.GetAchievementsAndStatusForUserAsync(profile.ApplicationUser.Id);
+                var achievements = await MilestoneService.GetAchievementsAndStatusForUserAsync(viewModel.ProfileUserId);
                 viewModel.Achievements = achievements;
             }
             if (viewModel.ActiveTab == "tags")
             {
-                var tagsSuggestedForProfile = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, profile.Id);
+                var tagsSuggestedForProfile = await ProfileService.GetTagsSuggestedForProfileAsync(currentUserId, viewModel.ProfileId);
                 viewModel.SuggestedTags = tagsSuggestedForProfile; // these are the tag suggestions that will be displayed at the profile screen
                 viewModel.AllTags = await GetAllTagsAndCountsInSystemAsync(tagsSuggestedForProfile); // these are all tags to be displayed in the "suggest" popup
-                viewModel.AwardedTags = await ProfileService.GetTagsAwardedToProfileAsync(profile.Id);
+                viewModel.AwardedTags = await ProfileService.GetTagsAwardedToProfileAsync(viewModel.ProfileId);
             }
             if (viewModel.ActiveTab == "inventory")
             {
-                var profileInventoryItems = await ProfileService.GetInventoryAsync(profile.ApplicationUser.Id);
                 viewModel.Inventory = new ProfileInventoryViewModel();
-                viewModel.Inventory.Items = Mapper.Map<IReadOnlyCollection<InventoryItem>, IReadOnlyCollection<InventoryItemViewModel>>(profileInventoryItems);
+                viewModel.Inventory.Items = await ProfileService.GetInventoryAsync(viewModel.ProfileUserId);
                 viewModel.Inventory.CurrentUserId = currentUserId;
-                viewModel.Inventory.ProfileUserId = profile.ApplicationUser.Id;
+                viewModel.Inventory.ProfileUserId = viewModel.ProfileUserId;
             }
-            if(viewModel.ActiveTab == "stats")
+            if (viewModel.ActiveTab == "stats")
             {
                 var completedQuizzes = await TriviaService.GetRecentlyCompletedQuizzesByUserAsync(currentUserId);
                 var completedQuizIds = completedQuizzes.Select(x => x.Id);
 
-                viewModel.RecentlyCompletedQuizzes = await TriviaService.GetUserQuizStatsAsync(profile.ApplicationUser.Id, completedQuizIds);
+                viewModel.RecentlyCompletedQuizzes = await TriviaService.GetUserQuizStatsAsync(viewModel.ProfileUserId, completedQuizIds);
             }
         }
 
         /// <summary>
         /// Returns the profile feed view model which is used to display all feed items that have occurred for a profile including reviews, messages, and uploaded images.
         /// </summary>
-        /// <param name="profile"></param>
+        /// <param name="viewModel"></param>
         /// <param name="reviews"></param>
         /// <param name="uploadedImages"></param>
         /// <returns></returns>
-        private async Task<ProfileFeedViewModel> GetUserFeedAsync(Models.Profile profile,
+        private async Task<ProfileFeedViewModel> GetUserFeedAsync(ProfileViewModel viewModel,
             IReadOnlyCollection<Review> reviews,
             int? page)
         {
@@ -916,24 +913,24 @@ namespace TwolipsDating.Controllers
 
             AddReviewsToFeed(reviews, feedItems);
 
-            await AddUploadedImagesToFeed(profile.ApplicationUser.Id, feedItems);
+            await AddUploadedImagesToFeed(viewModel.ProfileUserId, feedItems);
 
-            await AddGiftTransactionsToFeedAsync(profile.ApplicationUser.Id, feedItems);
+            await AddGiftTransactionsToFeedAsync(viewModel.ProfileUserId, feedItems);
 
-            await AddCompletedQuizzesToFeedAsync(profile.ApplicationUser.Id, feedItems);
+            await AddCompletedQuizzesToFeedAsync(viewModel.ProfileUserId, feedItems);
 
-            await AddTagSuggestionsToFeedAsync(profile.ApplicationUser.Id, feedItems);
+            await AddTagSuggestionsToFeedAsync(viewModel.ProfileUserId, feedItems);
 
-            await AddAchievementsToFeedAsync(profile.ApplicationUser.Id, feedItems);
+            await AddAchievementsToFeedAsync(viewModel.ProfileUserId, feedItems);
 
             var orderedFeed = feedItems.OrderByDescending(v => v.DateOccurred).ToList().AsReadOnly();
 
-            ProfileFeedViewModel viewModel = new ProfileFeedViewModel()
+            ProfileFeedViewModel viewModel2 = new ProfileFeedViewModel()
             {
                 Items = orderedFeed.ToPagedList(page ?? 1, 20)
             };
 
-            return viewModel;
+            return viewModel2;
         }
 
         private async Task AddUploadedImagesToFeed(string userId, List<ProfileFeedItemViewModel> feedItems)
@@ -1302,6 +1299,8 @@ namespace TwolipsDating.Controllers
 
         #endregion Self Summary Stuff
 
+        #region Quick Match
+
         [AllowAnonymous, RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
         public async Task<ActionResult> Quick()
         {
@@ -1320,5 +1319,7 @@ namespace TwolipsDating.Controllers
 
             return View(viewModel);
         }
+
+        #endregion
     }
 }

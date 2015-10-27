@@ -73,7 +73,7 @@ namespace TwolipsDating.Controllers
                 return new HttpNotFoundResult();
             }
 
-            viewModel.IsCurrentUserFollowingTarget = profileForOtherUser.FavoritedBy.Any(x => x.UserId == currentUserId);
+            viewModel.IsCurrentUserFollowingTarget = await UserService.IsUserFavoritedByUserAsync(currentUserId, profileForOtherUser.ProfileUserId);
 
             // look up conversations between the current user and the selected id
             var messagesBetweenUsers = await ProfileService.GetMessagesBetweenUsersAsync(currentUserId, id);
@@ -81,13 +81,13 @@ namespace TwolipsDating.Controllers
             viewModel.ConversationMessages = conversationMessagesBetweenUsers.ToPagedList(page ?? 1, 20);
 
             // setup targetted user for which conversations are being looked
-            viewModel.TargetUserName = profileForOtherUser.ApplicationUser.UserName;
+            viewModel.TargetUserName = profileForOtherUser.UserName;
             viewModel.TargetUserAge = profileForOtherUser.Birthday.GetAge();
-            viewModel.TargetUserLocation = profileForOtherUser.GeoCity.ToFullLocationString();
-            viewModel.TargetUserGender = profileForOtherUser.Gender.Name;
-            viewModel.TargetProfileId = profileForOtherUser.Id;
+            viewModel.TargetUserLocation = profileForOtherUser.Location;
+            viewModel.TargetUserGender = profileForOtherUser.Gender;
+            viewModel.TargetProfileId = profileForOtherUser.ProfileId;
             viewModel.TargetUserId = id;
-            viewModel.TargetProfileImagePath = profileForOtherUser.GetThumbnailImagePath();
+            viewModel.TargetProfileImagePath = profileForOtherUser.ProfileThumbnailImagePath;
             viewModel.TargetApplicationUserId = id;
 
             return View(viewModel);
