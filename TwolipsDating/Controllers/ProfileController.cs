@@ -938,7 +938,7 @@ namespace TwolipsDating.Controllers
 
         private async Task AddUploadedImagesToFeed(string userId, List<ProfileFeedItemViewModel> feedItems)
         {
-            var uploadedImages = await DashboardService.GetImagesForUserFeedAsync(userId);
+            var uploadedImages = await DashboardService.GetUploadedImagesForUserFeedAsync(userId);
             var uploadedImagesConsolidated = uploadedImages.GetConsolidatedImages();
 
             foreach (var uploadedImage in uploadedImagesConsolidated)

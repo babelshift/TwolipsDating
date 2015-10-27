@@ -14,20 +14,20 @@ namespace TwolipsDating.Business
 
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.CompletedQuizFeedViewModel>> GetQuizCompletionsForUserAsync(string userId);
 
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.MilestoneAchievement>> GetRecentFollowerAchievementsAsync(string userId);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.MilestoneAchievement>> GetFollowerAchievementsAsync(string userId);
 
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.GiftReceivedFeedViewModel>> GetRecentFollowerGiftTransactionsAsync(string userId, FeedItemQueryType queryType);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.GiftReceivedFeedViewModel>> GetFollowerGiftTransactionsAsync(string userId, FeedItemQueryType queryType);
 
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.UploadedImageFeedViewModel>> GetRecentFollowerImagesAsync(string userId);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.UploadedImageFeedViewModel>> GetFollowerUploadedImagesAsync(string userId);
 
-        Task<IReadOnlyCollection<UploadedImageFeedViewModel>> GetImagesForUserFeedAsync(string userId);
+        Task<IReadOnlyCollection<UploadedImageFeedViewModel>> GetUploadedImagesForUserFeedAsync(string userId);
 
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.CompletedQuizFeedViewModel>> GetRecentFollowerQuizCompletionsAsync(string userId);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.CompletedQuizFeedViewModel>> GetFollowerQuizCompletionsAsync(string userId);
 
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.ReviewWrittenFeedViewModel>> GetRecentReviewsFeedAsync(string userId, FeedItemQueryType queryType);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.ReviewWrittenFeedViewModel>> GetReviewsForFeedAsync(string userId, FeedItemQueryType queryType);
 
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.FavoriteProfile>> GetRecentFollowersAsync(string currentUserId);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.FavoriteProfile>> GetFollowersAsync(string currentUserId);
 
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.TagSuggestion>> GetRecentFollowerTagSuggestionsAsync(string userId);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.TagSuggestion>> GetFollowerTagSuggestionsAsync(string userId);
     }
 }

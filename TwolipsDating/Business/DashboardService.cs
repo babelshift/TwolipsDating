@@ -32,7 +32,7 @@ namespace TwolipsDating.Business
             return service;
         }
 
-        public async Task<IReadOnlyCollection<UploadedImageFeedViewModel>> GetImagesForUserFeedAsync(string userId)
+        public async Task<IReadOnlyCollection<UploadedImageFeedViewModel>> GetUploadedImagesForUserFeedAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -69,7 +69,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<UploadedImageFeedViewModel>> GetRecentFollowerImagesAsync(string userId)
+        public async Task<IReadOnlyCollection<UploadedImageFeedViewModel>> GetFollowerUploadedImagesAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -108,7 +108,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<ReviewWrittenFeedViewModel>> GetRecentReviewsFeedAsync(string userId, FeedItemQueryType queryType)
+        public async Task<IReadOnlyCollection<ReviewWrittenFeedViewModel>> GetReviewsForFeedAsync(string userId, FeedItemQueryType queryType)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
@@ -175,7 +175,7 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<GiftReceivedFeedViewModel>> GetRecentFollowerGiftTransactionsAsync(string userId, FeedItemQueryType queryType)
+        public async Task<IReadOnlyCollection<GiftReceivedFeedViewModel>> GetFollowerGiftTransactionsAsync(string userId, FeedItemQueryType queryType)
         {
             List<GiftReceivedFeedViewModel> results = new List<GiftReceivedFeedViewModel>();
 
@@ -243,7 +243,7 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<CompletedQuizFeedViewModel>> GetRecentFollowerQuizCompletionsAsync(string userId)
+        public async Task<IReadOnlyCollection<CompletedQuizFeedViewModel>> GetFollowerQuizCompletionsAsync(string userId)
         {
             string sql = @"
 select
@@ -313,7 +313,7 @@ where
             return results.ToList().AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<TagSuggestion>> GetRecentFollowerTagSuggestionsAsync(string userId)
+        public async Task<IReadOnlyCollection<TagSuggestion>> GetFollowerTagSuggestionsAsync(string userId)
         {
             var tagSuggestionSent = (from tagSuggestion in db.TagSuggestions
                                      from favoritedProfiles in db.FavoriteProfiles
@@ -333,7 +333,7 @@ where
             return (await tagSuggestionSent.ToListAsync()).AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<MilestoneAchievement>> GetRecentFollowerAchievementsAsync(string userId)
+        public async Task<IReadOnlyCollection<MilestoneAchievement>> GetFollowerAchievementsAsync(string userId)
         {
             var achievements = (from achievement in db.MilestoneAchievements
                                 join favoritedProfiles in db.FavoriteProfiles on achievement.User.Profile.Id equals favoritedProfiles.ProfileId
@@ -349,7 +349,7 @@ where
             return results.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<FavoriteProfile>> GetRecentFollowersAsync(string currentUserId)
+        public async Task<IReadOnlyCollection<FavoriteProfile>> GetFollowersAsync(string currentUserId)
         {
             var followers = (from favorite in db.FavoriteProfiles
                              where favorite.Profile.ApplicationUser.Id == currentUserId
@@ -404,6 +404,7 @@ select
 	ui.FileName SourceProfileImagePath,
 	q.Name QuizName,
 	q.Id QuizId,
+    q.ImageFileName as QuizThumbnailImagePath,
 	cq.DateCompleted DateCompleted,
 	(
         case
@@ -457,6 +458,7 @@ where
             foreach (var result in results)
             {
                 result.SourceProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.SourceProfileImagePath);
+                result.QuizThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(result.QuizThumbnailImagePath);
             }
 
             return results.ToList().AsReadOnly();
