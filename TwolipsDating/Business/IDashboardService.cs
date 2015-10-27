@@ -12,7 +12,7 @@ namespace TwolipsDating.Business
 
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.GiftReceivedFeedViewModel>> GetGiftTransactionsForUserFeedAsync(string userId);
 
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.CompletedQuizFeedViewModel>> GetQuizCompletionsForUserAsync(string userId);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.CompletedQuizFeedViewModel>> GetQuizCompletionsForUserFeedAsync(string userId);
 
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.AchievementFeedViewModel>> GetFollowerAchievementsAsync(string userId);
 

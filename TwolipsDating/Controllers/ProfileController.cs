@@ -985,7 +985,7 @@ namespace TwolipsDating.Controllers
 
         private async Task AddCompletedQuizzesToFeedAsync(string userId, IList<ProfileFeedItemViewModel> feedItems)
         {
-            var completedQuizzes = await DashboardService.GetQuizCompletionsForUserAsync(userId);
+            var completedQuizzes = await DashboardService.GetQuizCompletionsForUserFeedAsync(userId);
 
             foreach (var quizCompletionViewModel in completedQuizzes)
             {
