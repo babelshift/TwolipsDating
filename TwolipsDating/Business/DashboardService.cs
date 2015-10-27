@@ -313,24 +313,38 @@ where
             return results.ToList().AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<TagSuggestion>> GetFollowerTagSuggestionsAsync(string userId)
+        public async Task<IReadOnlyCollection<TagSuggestionReceivedFeedViewModel>> GetFollowerTagSuggestionsAsync(string userId)
         {
-            var tagSuggestionSent = (from tagSuggestion in db.TagSuggestions
+            var tagSuggestionsSent = (from tagSuggestion in db.TagSuggestions
                                      from favoritedProfiles in db.FavoriteProfiles
                                      where tagSuggestion.Profile.Id == favoritedProfiles.ProfileId
                                      || tagSuggestion.SuggestingUser.Profile.Id == favoritedProfiles.ProfileId
                                      where favoritedProfiles.UserId == userId
                                      where tagSuggestion.SuggestingUser.IsActive
                                      where tagSuggestion.Profile.ApplicationUser.IsActive
-                                     select tagSuggestion)
-                                        .Include(t => t.Profile)
-                                        .Include(t => t.Profile.ApplicationUser)
-                                        .Include(t => t.SuggestingUser)
-                                        .Include(t => t.SuggestingUser.Profile)
-                                        .Include(t => t.Tag)
-                                        .Distinct();
+                                     select new TagSuggestionReceivedFeedViewModel()
+                                     {
+                                         DateSuggested = tagSuggestion.DateSuggested,
+                                         ReceiverProfileId = tagSuggestion.ProfileId,
+                                         ReceiverUserName = tagSuggestion.Profile.ApplicationUser.UserName,
+                                         SuggestProfileId = tagSuggestion.SuggestingUser.Profile.Id,
+                                         SuggestProfileImagePath = tagSuggestion.SuggestingUser.Profile.UserImage.FileName,
+                                         SuggestUserId = tagSuggestion.SuggestingUserId,
+                                         SuggestUserName = tagSuggestion.SuggestingUser.UserName,
+                                         TagName = tagSuggestion.Tag.Name
+                                     })
+                                     .Distinct();
 
-            return (await tagSuggestionSent.ToListAsync()).AsReadOnly();
+            var results = await tagSuggestionsSent.ToListAsync();
+
+            foreach (var result in results)
+            {
+                result.SuggestProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.SuggestProfileImagePath);
+                result.Tags = new List<string>();
+                result.Tags.Add(result.TagName);
+            }
+
+            return results.AsReadOnly();
         }
 
         public async Task<IReadOnlyCollection<MilestoneAchievement>> GetFollowerAchievementsAsync(string userId)
@@ -464,17 +478,33 @@ where
             return results.ToList().AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<TagSuggestion>> GetFollowerTagSuggestionsForUserAsync(string userId)
+        public async Task<IReadOnlyCollection<TagSuggestionReceivedFeedViewModel>> GetFollowerTagSuggestionsForUserFeedAsync(string userId)
         {
             var tagSuggestionsForUser = from tagSuggestion in db.TagSuggestions
-                                           .Include(t => t.Profile)
-                                           .Include(t => t.SuggestingUser)
                                         where (tagSuggestion.SuggestingUserId == userId || tagSuggestion.Profile.ApplicationUser.Id == userId)
                                         where tagSuggestion.SuggestingUser.IsActive
                                         where tagSuggestion.Profile.ApplicationUser.IsActive
-                                        select tagSuggestion;
+                                        select new TagSuggestionReceivedFeedViewModel()
+                                        {
+                                            DateSuggested = tagSuggestion.DateSuggested,
+                                            ReceiverProfileId = tagSuggestion.ProfileId,
+                                            ReceiverUserName = tagSuggestion.Profile.ApplicationUser.UserName,
+                                            SuggestProfileId = tagSuggestion.SuggestingUser.Profile.Id,
+                                            SuggestProfileImagePath = tagSuggestion.SuggestingUser.Profile.UserImage.FileName,
+                                            SuggestUserId = tagSuggestion.SuggestingUserId,
+                                            SuggestUserName = tagSuggestion.SuggestingUser.UserName,
+                                            TagName = tagSuggestion.Tag.Name
+                                        };
 
             var results = await tagSuggestionsForUser.ToListAsync();
+
+            foreach (var result in results)
+            {
+                result.SuggestProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.SuggestProfileImagePath);
+                result.Tags = new List<string>();
+                result.Tags.Add(result.TagName);
+            }
+
             return results.AsReadOnly();
         }
 

@@ -8,7 +8,7 @@ namespace TwolipsDating.Business
     {
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.MilestoneAchievement>> GetFollowerAchievementsForUserAsync(string userId);
 
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.TagSuggestion>> GetFollowerTagSuggestionsForUserAsync(string userId);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.TagSuggestionReceivedFeedViewModel>> GetFollowerTagSuggestionsForUserFeedAsync(string userId);
 
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.GiftReceivedFeedViewModel>> GetGiftTransactionsForUserFeedAsync(string userId);
 
@@ -28,6 +28,6 @@ namespace TwolipsDating.Business
 
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.FavoriteProfile>> GetFollowersAsync(string currentUserId);
 
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.TagSuggestion>> GetFollowerTagSuggestionsAsync(string userId);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.TagSuggestionReceivedFeedViewModel>> GetFollowerTagSuggestionsAsync(string userId);
     }
 }

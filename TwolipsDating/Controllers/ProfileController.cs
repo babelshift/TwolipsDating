@@ -1000,7 +1000,7 @@ namespace TwolipsDating.Controllers
 
         private async Task AddTagSuggestionsToFeedAsync(string userId, IList<ProfileFeedItemViewModel> feedItems)
         {
-            var tagsSuggested = await DashboardService.GetFollowerTagSuggestionsForUserAsync(userId);
+            var tagsSuggested = await DashboardService.GetFollowerTagSuggestionsForUserFeedAsync(userId);
             var tagsSuggestedConsolidated = tagsSuggested.GetConsolidatedTagsSuggested();
 
             foreach (var tagsSuggestedViewModel in tagsSuggestedConsolidated)

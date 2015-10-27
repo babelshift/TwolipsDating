@@ -793,7 +793,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ErrorMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\GiftExtensions.cs" />
     <Compile Include="Utilities\LogHelper.cs" />
     <Compile Include="Utilities\ProfileExtensions.cs" />
     <Compile Include="Utilities\ReviewExtensions.cs" />

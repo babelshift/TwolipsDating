@@ -18,6 +18,7 @@ namespace TwolipsDating.ViewModels
         public int ReceiverProfileId { get; set; }
         public DateTime DateSuggested { get; set; }
         public string TimeAgo { get { return DateSuggested.GetTimeAgo(); } }
+        public string TagName { get; set; }
         public IList<string> Tags { get; set; }
     }
 }

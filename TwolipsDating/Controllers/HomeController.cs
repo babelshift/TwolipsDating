@@ -16,33 +16,7 @@ namespace TwolipsDating.Controllers
 {
     public class HomeController : BaseController
     {
-        [RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
-        public async Task<ActionResult> Notifications(int? page)
-        {
-            await ClearNotificationsAsync();
-            await SetNotificationsAsync();
-
-            string currentUserId = User.Identity.GetUserId();
-
-            NotificationsViewModel viewModel = new NotificationsViewModel();
-            viewModel.UsersToFollow = await GetUsersToFollowAsync(currentUserId);
-
-            List<DashboardItemViewModel> notificationItems = new List<DashboardItemViewModel>();
-            await AddReceivedMessagesToFeedAsync(currentUserId, notificationItems);
-            await AddReviewsToFeedAsync(currentUserId, notificationItems, FeedItemQueryType.Self);
-            await AddGiftTransactionsToFeedAsync(currentUserId, notificationItems, FeedItemQueryType.Self);
-            await AddFollowersToFeedAsync(currentUserId, notificationItems);
-
-            int pageSize = 20;
-            int pageNumber = page ?? 1;
-
-            viewModel.Items = notificationItems
-                .OrderByDescending(v => v.DateOccurred)
-                .ToList()
-                .ToPagedList(pageNumber, pageSize);
-
-            return View(viewModel);
-        }
+        #region Dashboard
 
         [AllowAnonymous, RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
         public async Task<ActionResult> Index(int? page)
@@ -104,6 +78,40 @@ namespace TwolipsDating.Controllers
                 return View(String.Empty, "~/Views/Shared/_LayoutSplash.cshtml", viewModel);
             }
         }
+
+        #endregion
+
+        #region Notifications
+
+        [RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
+        public async Task<ActionResult> Notifications(int? page)
+        {
+            await ClearNotificationsAsync();
+            await SetNotificationsAsync();
+
+            string currentUserId = User.Identity.GetUserId();
+
+            NotificationsViewModel viewModel = new NotificationsViewModel();
+            viewModel.UsersToFollow = await GetUsersToFollowAsync(currentUserId);
+
+            List<DashboardItemViewModel> notificationItems = new List<DashboardItemViewModel>();
+            await AddReceivedMessagesToFeedAsync(currentUserId, notificationItems);
+            await AddReviewsToFeedAsync(currentUserId, notificationItems, FeedItemQueryType.Self);
+            await AddGiftTransactionsToFeedAsync(currentUserId, notificationItems, FeedItemQueryType.Self);
+            await AddFollowersToFeedAsync(currentUserId, notificationItems);
+
+            int pageSize = 20;
+            int pageNumber = page ?? 1;
+
+            viewModel.Items = notificationItems
+                .OrderByDescending(v => v.DateOccurred)
+                .ToList()
+                .ToPagedList(pageNumber, pageSize);
+
+            return View(viewModel);
+        }
+
+        #endregion
 
         private async Task<IReadOnlyCollection<PersonYouMightAlsoLikeViewModel>> GetUsersToFollowAsync(string currentUserId)
         {

@@ -8,16 +8,13 @@ namespace TwolipsDating.Utilities
 {
     public static class FeedItemExtensions
     {
-        public static IReadOnlyCollection<TagSuggestionReceivedFeedViewModel> GetConsolidatedTagsSuggested(this IReadOnlyCollection<TagSuggestion> tagSuggestions)
+        public static IReadOnlyCollection<TagSuggestionReceivedFeedViewModel> GetConsolidatedTagsSuggested(this IReadOnlyCollection<TagSuggestionReceivedFeedViewModel> tagSuggestions)
         {
-            // translates the collection of entities into the view models that we want to work with
-            var tagSuggestionViewModels = Mapper.Map<IReadOnlyCollection<TagSuggestion>, IReadOnlyCollection<TagSuggestionReceivedFeedViewModel>>(tagSuggestions);
-
             // a dictionary containing the unique transactions
             var consolidatedTagSuggestionViewModels = new Dictionary<TagSuggestionFeedItemKey, TagSuggestionReceivedFeedViewModel>();
 
             // for every transaction, loop and consolidate
-            foreach (var tagSuggestionViewModel in tagSuggestionViewModels)
+            foreach (var tagSuggestionViewModel in tagSuggestions)
             {
                 UpdateTagSuggestionCollection(consolidatedTagSuggestionViewModels, tagSuggestionViewModel);
             }
