@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using TwolipsDating.Utilities;
 
 namespace TwolipsDating.ViewModels
@@ -20,11 +18,8 @@ namespace TwolipsDating.ViewModels
         public DateTime DateSent { get; set; }
         public string TimeAgo { get { return DateSent.GetTimeAgo(); } }
         public IDictionary<int, GiftReceivedFeedItemViewModel> Gifts { get; set; }
-
         public int StoreItemId { get; set; }
-
         public string StoreItemIconPath { get; set; }
-
         public int ItemCount { get; set; }
     }
 }

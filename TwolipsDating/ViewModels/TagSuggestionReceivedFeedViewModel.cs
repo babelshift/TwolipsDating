@@ -9,12 +9,12 @@ namespace TwolipsDating.ViewModels
     public class TagSuggestionReceivedFeedViewModel
     {
         public string SuggestUserName { get; set; }
-        public string SuggestSEOName { get; set; }
+        public string SuggestSEOName { get { return ProfileExtensions.GetProfileSEOName(SuggestUserName); } }
         public int SuggestProfileId { get; set; }
         public string SuggestProfileImagePath { get; set; }
         public string SuggestUserId { get; set; }
         public string ReceiverUserName { get; set; }
-        public string ReceiverSEOName { get; set; }
+        public string ReceiverSEOName { get { return ProfileExtensions.GetProfileSEOName(ReceiverUserName); } }
         public int ReceiverProfileId { get; set; }
         public DateTime DateSuggested { get; set; }
         public string TimeAgo { get { return DateSuggested.GetTimeAgo(); } }

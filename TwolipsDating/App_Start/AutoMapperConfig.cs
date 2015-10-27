@@ -79,7 +79,6 @@ namespace TwolipsDating
             Mapper.CreateMap<UserImage, UploadedImageFeedViewModel>()
                 .ForMember(dest => dest.UploaderProfileImagePath, opts => opts.MapFrom(source => source.ApplicationUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.UploaderUserName, opts => opts.MapFrom(source => source.ApplicationUser.UserName))
-                .ForMember(dest => dest.UploaderSEOName, opts => opts.MapFrom(source => source.ApplicationUser.GetSEOName()))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateUploaded.GetTimeAgo()))
                 .ForMember(dest => dest.DateOccurred, opts => opts.MapFrom(source => source.DateUploaded))
                 .ForMember(dest => dest.UploaderProfileId, opts => opts.MapFrom(source => source.ApplicationUser.Profile.Id))
@@ -105,15 +104,13 @@ namespace TwolipsDating
                 .ForMember(dest => dest.TargetUserName, opts => opts.MapFrom(source => source.TargetUser.UserName))
                 .ForMember(dest => dest.TargetProfileImagePath, opts => opts.MapFrom(source => source.TargetUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.AuthorUserName, opts => opts.MapFrom(source => source.AuthorUser.UserName))
-                .ForMember(dest => dest.AuthorSEOName, opts => opts.MapFrom(source => source.AuthorUser.GetSEOName()))
                 .ForMember(dest => dest.ReviewContent, opts => opts.MapFrom(source => source.Content))
                 .ForMember(dest => dest.ReviewRatingValue, opts => opts.MapFrom(source => source.RatingValue))
                 .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateCreated.GetTimeAgo()))
                 .ForMember(dest => dest.AuthorProfileImagePath, opts => opts.MapFrom(source => source.AuthorUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.DateOccurred, opts => opts.MapFrom(source => source.DateCreated))
                 .ForMember(dest => dest.AuthorProfileId, opts => opts.MapFrom(source => source.AuthorUser.Profile.Id))
-                .ForMember(dest => dest.TargetProfileId, opts => opts.MapFrom(source => source.TargetUser.Profile.Id))
-                .ForMember(dest => dest.TargetSEOName, opts => opts.MapFrom(source => source.TargetUser.GetSEOName()));
+                .ForMember(dest => dest.TargetProfileId, opts => opts.MapFrom(source => source.TargetUser.Profile.Id));
 
             Mapper.CreateMap<GiftTransactionLog, GiftReceivedFeedViewModel>()
                 .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateTransactionOccurred))
@@ -121,11 +118,9 @@ namespace TwolipsDating
                 .ForMember(dest => dest.ReceiverUserName, opts => opts.MapFrom(source => source.ToUser.UserName))
                 .ForMember(dest => dest.ReceiverProfileImagePath, opts => opts.MapFrom(source => source.ToUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.ReceiverProfileId, opts => opts.MapFrom(source => source.ToUser.Profile.Id))
-                .ForMember(dest => dest.ReceiverSEOName, opts => opts.MapFrom(source => source.ToUser.Profile.GetProfileSEOName()))
                 .ForMember(dest => dest.SenderUserName, opts => opts.MapFrom(source => source.FromUser.UserName))
                 .ForMember(dest => dest.SenderUserId, opts => opts.MapFrom(source => source.FromUser.Id))
                 .ForMember(dest => dest.SenderProfileId, opts => opts.MapFrom(source => source.FromUser.Profile.Id))
-                .ForMember(dest => dest.SenderSEOName, opts => opts.MapFrom(source => source.FromUser.Profile.GetProfileSEOName()))
                 .ForMember(dest => dest.SenderProfileId, opts => opts.MapFrom(source => source.FromUser.Profile.Id))
                 .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.FromUser.Profile.GetProfileThumbnailImagePath()));
 
@@ -146,8 +141,6 @@ namespace TwolipsDating
                 .ForMember(dest => dest.SuggestProfileImagePath, opts => opts.MapFrom(source => source.SuggestingUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.SuggestUserId, opts => opts.MapFrom(source => source.SuggestingUserId))
                 .ForMember(dest => dest.SuggestUserName, opts => opts.MapFrom(source => source.SuggestingUser.UserName))
-                .ForMember(dest => dest.SuggestSEOName, opts => opts.MapFrom(source => source.SuggestingUser.GetSEOName()))
-                .ForMember(dest => dest.ReceiverSEOName, opts => opts.MapFrom(source => source.Profile.GetProfileSEOName()))
                 .ForMember(dest => dest.Tags, opts => opts.UseValue(new List<string>()))
                 .AfterMap((source, dest) => dest.Tags.Add(source.Tag.Name));
 
@@ -164,11 +157,9 @@ namespace TwolipsDating
 
             Mapper.CreateMap<FavoriteProfile, FollowerFeedViewModel>()
                 .ForMember(dest => dest.DateFollowed, opts => opts.MapFrom(source => source.DateFavorited))
-                .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateFavorited.GetTimeAgo()))
                 .ForMember(dest => dest.FollowerProfileImagePath, opts => opts.MapFrom(source => source.User.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.FollowerName, opts => opts.MapFrom(source => source.User.UserName))
-                .ForMember(dest => dest.FollowerProfileId, opts => opts.MapFrom(source => source.User.Profile.Id))
-                .ForMember(dest => dest.FollowerSEOName, opts => opts.MapFrom(source => source.User.GetSEOName()));
+                .ForMember(dest => dest.FollowerProfileId, opts => opts.MapFrom(source => source.User.Profile.Id));
 
             Mapper.CreateMap<Tag, TagViewModel>();
 
@@ -248,7 +239,6 @@ namespace TwolipsDating
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(source => source.Id))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(source => source.Name))
                 .ForMember(dest => dest.QuizCategoryName, opts => opts.MapFrom(source => source.QuizCategory.Name))
-                .ForMember(dest => dest.QuizCategorySEOName, opts => opts.MapFrom(source => source.QuizCategory.GetSEOName()))
                 .ForMember(dest => dest.QuizCategoryId, opts => opts.MapFrom(source => source.QuizCategoryId))
                 .ForMember(dest => dest.ThumbnailImagePath, opts => opts.MapFrom(source => source.GetThumbnailImagePath()))
                 .ForMember(dest => dest.AveragePoints, opts => opts.ResolveUsing(source =>
@@ -326,7 +316,6 @@ namespace TwolipsDating
 
             Mapper.CreateMap<QuizCategory, QuizCategoryViewModel>()
                 .ForMember(dest => dest.QuizCategoryId, opts => opts.MapFrom(source => source.Id))
-                .ForMember(dest => dest.QuizSEOName, opts => opts.MapFrom(source => source.GetSEOName()))
                 .ForMember(dest => dest.QuizIcon, opts => opts.MapFrom(source => source.FontAwesomeIconName))
                 .ForMember(dest => dest.QuizName, opts => opts.MapFrom(source => source.Name));
         }
