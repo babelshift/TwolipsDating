@@ -1016,10 +1016,9 @@ namespace TwolipsDating.Controllers
 
         private async Task AddAchievementsToFeedAsync(string userId, IList<ProfileFeedItemViewModel> feedItems)
         {
-            var achievements = await DashboardService.GetFollowerAchievementsForUserAsync(userId);
-            var achievementFeedViewModels = Mapper.Map<IReadOnlyCollection<MilestoneAchievement>, IReadOnlyCollection<AchievementFeedViewModel>>(achievements);
+            var achievements = await DashboardService.GetFollowerAchievementsForUserFeedAsync(userId);
 
-            foreach (var achievementFeedViewModel in achievementFeedViewModels)
+            foreach (var achievementFeedViewModel in achievements)
             {
                 feedItems.Add(new ProfileFeedItemViewModel()
                 {

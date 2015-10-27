@@ -316,23 +316,23 @@ where
         public async Task<IReadOnlyCollection<TagSuggestionReceivedFeedViewModel>> GetFollowerTagSuggestionsAsync(string userId)
         {
             var tagSuggestionsSent = (from tagSuggestion in db.TagSuggestions
-                                     from favoritedProfiles in db.FavoriteProfiles
-                                     where tagSuggestion.Profile.Id == favoritedProfiles.ProfileId
-                                     || tagSuggestion.SuggestingUser.Profile.Id == favoritedProfiles.ProfileId
-                                     where favoritedProfiles.UserId == userId
-                                     where tagSuggestion.SuggestingUser.IsActive
-                                     where tagSuggestion.Profile.ApplicationUser.IsActive
-                                     select new TagSuggestionReceivedFeedViewModel()
-                                     {
-                                         DateSuggested = tagSuggestion.DateSuggested,
-                                         ReceiverProfileId = tagSuggestion.ProfileId,
-                                         ReceiverUserName = tagSuggestion.Profile.ApplicationUser.UserName,
-                                         SuggestProfileId = tagSuggestion.SuggestingUser.Profile.Id,
-                                         SuggestProfileImagePath = tagSuggestion.SuggestingUser.Profile.UserImage.FileName,
-                                         SuggestUserId = tagSuggestion.SuggestingUserId,
-                                         SuggestUserName = tagSuggestion.SuggestingUser.UserName,
-                                         TagName = tagSuggestion.Tag.Name
-                                     })
+                                      from favoritedProfiles in db.FavoriteProfiles
+                                      where tagSuggestion.Profile.Id == favoritedProfiles.ProfileId
+                                      || tagSuggestion.SuggestingUser.Profile.Id == favoritedProfiles.ProfileId
+                                      where favoritedProfiles.UserId == userId
+                                      where tagSuggestion.SuggestingUser.IsActive
+                                      where tagSuggestion.Profile.ApplicationUser.IsActive
+                                      select new TagSuggestionReceivedFeedViewModel()
+                                      {
+                                          DateSuggested = tagSuggestion.DateSuggested,
+                                          ReceiverProfileId = tagSuggestion.ProfileId,
+                                          ReceiverUserName = tagSuggestion.Profile.ApplicationUser.UserName,
+                                          SuggestProfileId = tagSuggestion.SuggestingUser.Profile.Id,
+                                          SuggestProfileImagePath = tagSuggestion.SuggestingUser.Profile.UserImage.FileName,
+                                          SuggestUserId = tagSuggestion.SuggestingUserId,
+                                          SuggestUserName = tagSuggestion.SuggestingUser.UserName,
+                                          TagName = tagSuggestion.Tag.Name
+                                      })
                                      .Distinct();
 
             var results = await tagSuggestionsSent.ToListAsync();
@@ -347,32 +347,54 @@ where
             return results.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<MilestoneAchievement>> GetFollowerAchievementsAsync(string userId)
+        public async Task<IReadOnlyCollection<AchievementFeedViewModel>> GetFollowerAchievementsAsync(string userId)
         {
-            var achievements = (from achievement in db.MilestoneAchievements
-                                join favoritedProfiles in db.FavoriteProfiles on achievement.User.Profile.Id equals favoritedProfiles.ProfileId
-                                where favoritedProfiles.UserId == userId
-                                where achievement.User.IsActive
-                                select achievement)
-                               .Include(a => a.Milestone)
-                               .Include(a => a.User)
-                               .Include(a => a.User.Profile)
-                               .Include(a => a.User.Profile.UserImage);
+            var achievements = from achievement in db.MilestoneAchievements
+                               join favoritedProfiles in db.FavoriteProfiles on achievement.User.Profile.Id equals favoritedProfiles.ProfileId
+                               where favoritedProfiles.UserId == userId
+                               where achievement.User.IsActive
+                               select new AchievementFeedViewModel()
+                               {
+                                   AchievementIconPath = achievement.Milestone.IconFileName,
+                                   MilestoneAmountRequired = achievement.Milestone.AmountRequired,
+                                   MilestoneTypeName = achievement.Milestone.MilestoneType.Name,
+                                   DateAchieved = achievement.DateAchieved,
+                                   ProfileId = achievement.User.Profile.Id,
+                                   UserName = achievement.User.UserName,
+                                   UserProfileImagePath = achievement.User.Profile.UserImage.FileName
+                               };
 
             var results = await achievements.ToListAsync();
+
+            foreach(var result in results)
+            {
+                result.UserProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.UserProfileImagePath);
+                result.AchievementIconPath = MilestoneExtensions.GetImagePath(result.AchievementIconPath);
+            }
+
             return results.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<FavoriteProfile>> GetFollowersAsync(string currentUserId)
+        public async Task<IReadOnlyCollection<FollowerFeedViewModel>> GetFollowersAsync(string currentUserId)
         {
-            var followers = (from favorite in db.FavoriteProfiles
+            var followers = from favorite in db.FavoriteProfiles
                              where favorite.Profile.ApplicationUser.Id == currentUserId
-                             select favorite)
-                            .Include(a => a.User)
-                            .Include(a => a.User.Profile);
+                             select new FollowerFeedViewModel()
+                             {
+                                    DateFollowed = favorite.DateFavorited,
+                                    FollowerName = favorite.User.UserName,
+                                    FollowerProfileId = favorite.User.Profile.Id,
+                                    FollowerProfileImagePath = favorite.User.Profile.UserImage.FileName
+                             };
 
-            var result = await followers.ToListAsync();
-            return result.AsReadOnly();
+            var results = await followers.ToListAsync();
+
+            foreach(var result in results)
+            {
+                result.FollowerProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.FollowerProfileImagePath);
+            }
+
+            return results.AsReadOnly();
         }
 
         public async Task<IReadOnlyCollection<GiftReceivedFeedViewModel>> GetGiftTransactionsForUserFeedAsync(string userId)
@@ -508,16 +530,30 @@ where
             return results.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<MilestoneAchievement>> GetFollowerAchievementsForUserAsync(string userId)
+        public async Task<IReadOnlyCollection<AchievementFeedViewModel>> GetFollowerAchievementsForUserFeedAsync(string userId)
         {
             var achievements = from achievement in db.MilestoneAchievements
-                               .Include(a => a.Milestone)
-                               .Include(a => a.User)
                                where achievement.UserId == userId
                                where achievement.User.IsActive
-                               select achievement;
+                               select new AchievementFeedViewModel()
+                               {
+                                   AchievementIconPath = achievement.Milestone.IconFileName,
+                                   MilestoneAmountRequired = achievement.Milestone.AmountRequired,
+                                   MilestoneTypeName = achievement.Milestone.MilestoneType.Name,
+                                   DateAchieved = achievement.DateAchieved,
+                                   ProfileId = achievement.User.Profile.Id,
+                                   UserName = achievement.User.UserName,
+                                   UserProfileImagePath = achievement.User.Profile.UserImage.FileName
+                               };
 
             var results = await achievements.ToListAsync();
+
+            foreach (var result in results)
+            {
+                result.UserProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.UserProfileImagePath);
+                result.AchievementIconPath = MilestoneExtensions.GetImagePath(result.AchievementIconPath);
+            }
+
             return results.AsReadOnly();
         }
     }

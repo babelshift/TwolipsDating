@@ -280,9 +280,8 @@ namespace TwolipsDating.Controllers
         private async Task AddAchievementsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
             var achievements = await DashboardService.GetFollowerAchievementsAsync(currentUserId);
-            var achievementFeedViewModels = Mapper.Map<IReadOnlyCollection<MilestoneAchievement>, IReadOnlyCollection<AchievementFeedViewModel>>(achievements);
 
-            foreach (var achievementFeedViewModel in achievementFeedViewModels)
+            foreach (var achievementFeedViewModel in achievements)
             {
                 dashboardItems.Add(new DashboardItemViewModel()
                 {
@@ -296,9 +295,8 @@ namespace TwolipsDating.Controllers
         private async Task AddFollowersToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
             var followers = await DashboardService.GetFollowersAsync(currentUserId);
-            var followerFeedViewModels = Mapper.Map<IReadOnlyCollection<FavoriteProfile>, IReadOnlyCollection<FollowerFeedViewModel>>(followers);
 
-            foreach (var followerFeedViewModel in followerFeedViewModels)
+            foreach (var followerFeedViewModel in followers)
             {
                 dashboardItems.Add(new DashboardItemViewModel()
                 {

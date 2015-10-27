@@ -8,7 +8,7 @@ namespace TwolipsDating.ViewModels
 {
     public class AchievementFeedViewModel
     {
-        public string ProfileId { get; set; }
+        public int ProfileId { get; set; }
         public string ProfileSEOName
         {
             get
@@ -20,7 +20,15 @@ namespace TwolipsDating.ViewModels
         public string UserProfileImagePath { get; set; }
         public DateTime DateAchieved { get; set; }
         public string TimeAgo { get { return DateAchieved.GetTimeAgo(); } }
-        public string AchievementName { get; set; }
+        public string AchievementName
+        {
+            get
+            {
+                return MilestoneAmountRequired > 1 ? String.Format("{0} ({1})", MilestoneTypeName, MilestoneAmountRequired) : MilestoneTypeName;
+            }
+        }
         public string AchievementIconPath { get; set; }
+        public string MilestoneTypeName { get; set; }
+        public int MilestoneAmountRequired { get; set; }
     }
 }
