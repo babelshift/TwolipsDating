@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.ViewModels
 {
@@ -10,8 +11,10 @@ namespace TwolipsDating.ViewModels
         public int UploaderProfileId { get; set; }
         public string UploaderUserName { get; set; }
         public string UploaderProfileImagePath { get; set; }
-        public string UploaderSEOName { get; set; }
-        public string TimeAgo { get; set; }
+        public string UploaderSEOName { get { return ProfileExtensions.GetProfileSEOName(UploaderUserName); } }
+        public string TimeAgo { get { return DateOccurred.GetTimeAgo(); } }
+        public string Path { get; set; }
+        public string ThumbnailPath { get { return UserImageExtensions.GetThumbnailPath(Path); } }
         public IList<UploadedImageViewModel> UploadedImagesPaths { get; set; }
     }
 }

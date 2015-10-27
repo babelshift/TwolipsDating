@@ -39,5 +39,18 @@ namespace TwolipsDating.Utilities
 
             return String.Format("{0}/{1}_{2}{3}", cdn, realFileName, "thumb", fileType);
         }
+
+        public static string GetThumbnailPath(string fileName)
+        {
+            if (!String.IsNullOrEmpty(fileName))
+            {
+                string realFileName = Path.GetFileNameWithoutExtension(fileName);
+                string fileType = Path.GetExtension(fileName);
+
+                return String.Format("{0}/{1}_{2}{3}", cdn, realFileName, "thumb", fileType);
+            }
+
+            return String.Empty;
+        }
     }
 }

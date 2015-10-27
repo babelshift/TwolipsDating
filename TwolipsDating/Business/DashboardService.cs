@@ -32,23 +32,74 @@ namespace TwolipsDating.Business
             return service;
         }
 
+        public async Task<IReadOnlyCollection<UploadedImageFeedViewModel>> GetImagesForUserFeedAsync(string userId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            var imagesUploaded = (from userImages in db.UserImages
+                                  where userImages.ApplicationUserId == userId
+                                  where userImages.IsBanner == false
+                                  select new UploadedImageFeedViewModel()
+                                  {
+                                      DateOccurred = userImages.DateUploaded,
+                                      UploaderProfileId = userImages.ApplicationUser.Profile.Id,
+                                      UploaderProfileImagePath = userImages.ApplicationUser.Profile.UserImage.FileName,
+                                      UploaderUserId = userImages.ApplicationUserId,
+                                      UploaderUserName = userImages.ApplicationUser.UserName,
+                                      Path = userImages.FileName
+                                  });
+
+            var results = await imagesUploaded.ToListAsync();
+
+            foreach (var image in results)
+            {
+                image.UploaderProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(image.UploaderProfileImagePath);
+                image.UploadedImagesPaths = new List<UploadedImageViewModel>();
+                image.UploadedImagesPaths.Add(new UploadedImageViewModel()
+                {
+                    Path = UserImageExtensions.GetPath(image.Path)
+                });
+            }
+
+            return results.AsReadOnly();
+        }
+
         /// <summary>
         /// Returns all uploaded images for profiles that the passed user id has marked as "favorite"
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<UserImage>> GetRecentFollowerImagesAsync(string userId)
+        public async Task<IReadOnlyCollection<UploadedImageFeedViewModel>> GetRecentFollowerImagesAsync(string userId)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
-            var imagesUploadedByFavorites = from userImages in db.UserImages
-                                            join favoritedProfiles in db.FavoriteProfiles on userImages.ApplicationUser.Profile.Id equals favoritedProfiles.ProfileId
-                                            where favoritedProfiles.UserId == userId
-                                            where userImages.ApplicationUser.IsActive
-                                            where userImages.IsBanner == false
-                                            select userImages;
+            var imagesUploadedByFavorites = (from userImages in db.UserImages
+                                             join favoritedProfiles in db.FavoriteProfiles on userImages.ApplicationUser.Profile.Id equals favoritedProfiles.ProfileId
+                                             where favoritedProfiles.UserId == userId
+                                             where userImages.ApplicationUser.IsActive
+                                             where userImages.IsBanner == false
+                                             select new UploadedImageFeedViewModel()
+                                             {
+                                                 DateOccurred = userImages.DateUploaded,
+                                                 UploaderProfileId = userImages.ApplicationUser.Profile.Id,
+                                                 UploaderProfileImagePath = userImages.ApplicationUser.Profile.UserImage.FileName,
+                                                 UploaderUserId = userImages.ApplicationUserId,
+                                                 UploaderUserName = userImages.ApplicationUser.UserName,
+                                                 Path = userImages.FileName
+                                             });
 
             var results = await imagesUploadedByFavorites.ToListAsync();
+
+            foreach (var image in results)
+            {
+                image.UploaderProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(image.UploaderProfileImagePath);
+                image.UploadedImagesPaths = new List<UploadedImageViewModel>();
+                image.UploadedImagesPaths.Add(new UploadedImageViewModel()
+                    {
+                        Path = UserImageExtensions.GetPath(image.Path)
+                    });
+            }
+
             return results.AsReadOnly();
         }
 
@@ -57,32 +108,39 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<Review>> GetRecentReviewsAsync(string userId, FeedItemQueryType queryType)
+        public async Task<IReadOnlyCollection<ReviewWrittenFeedViewModel>> GetRecentReviewsFeedAsync(string userId, FeedItemQueryType queryType)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            List<ReviewWrittenFeedViewModel> results = new List<ReviewWrittenFeedViewModel>();
 
             // get all reviews written by or for anyone that we are following
             if (queryType == FeedItemQueryType.All)
             {
-                // get the reviews that were authored by favorited users
-                var reviewsWrittenByFavorites = from reviews in db.Reviews
-                                                join favoritedProfiles in db.FavoriteProfiles on reviews.AuthorUser.Profile.Id equals favoritedProfiles.ProfileId
-                                                where favoritedProfiles.UserId == userId
-                                                where reviews.TargetUser.IsActive
-                                                where reviews.AuthorUser.IsActive
-                                                select reviews;
-
                 // get the reviews that were written for the favorited users
-                var reviewsWrittenAboutFavorites = from reviews in db.Reviews
-                                                   join favoritedProfiles in db.FavoriteProfiles on reviews.TargetUser.Profile.Id equals favoritedProfiles.ProfileId
-                                                   where favoritedProfiles.UserId == userId
-                                                   where reviews.TargetUser.IsActive
-                                                   where reviews.AuthorUser.IsActive
-                                                   select reviews;
+                var reviewsWritten = (from reviews in db.Reviews
+                                      from favoritedProfiles in db.FavoriteProfiles
+                                      where reviews.TargetUser.Profile.Id == favoritedProfiles.ProfileId
+                                      || reviews.AuthorUser.Profile.Id == favoritedProfiles.ProfileId
+                                      where favoritedProfiles.UserId == userId
+                                      where reviews.TargetUser.IsActive
+                                      where reviews.AuthorUser.IsActive
+                                      select new ReviewWrittenFeedViewModel()
+                                      {
+                                          AuthorProfileId = reviews.AuthorUser.Profile.Id,
+                                          AuthorProfileImagePath = reviews.AuthorUser.Profile.UserImage.FileName,
+                                          AuthorUserName = reviews.AuthorUser.UserName,
+                                          DateOccurred = reviews.DateCreated,
+                                          ReviewContent = reviews.Content,
+                                          ReviewId = reviews.Id,
+                                          ReviewRatingValue = reviews.RatingValue,
+                                          TargetProfileId = reviews.TargetUser.Profile.Id,
+                                          TargetProfileImagePath = reviews.TargetUser.Profile.UserImage.FileName,
+                                          TargetUserName = reviews.TargetUser.UserName
+                                      })
+                                      .Distinct();
 
-                // union the two sets together and return them
-                var results = await reviewsWrittenByFavorites.Union(reviewsWrittenAboutFavorites).ToListAsync();
-                return results.AsReadOnly();
+                results = await reviewsWritten.ToListAsync();
             }
             // get only reviews that were written about our self
             else
@@ -91,36 +149,62 @@ namespace TwolipsDating.Business
                                             where reviews.TargetUserId == userId
                                             where reviews.TargetUser.IsActive
                                             where reviews.AuthorUser.IsActive
-                                            select reviews;
-                var results = await reviewsWrittenForSelf.ToListAsync();
-                return results;
+                                            select new ReviewWrittenFeedViewModel()
+                                            {
+                                                AuthorProfileId = reviews.AuthorUser.Profile.Id,
+                                                AuthorProfileImagePath = reviews.AuthorUser.Profile.UserImage.FileName,
+                                                AuthorUserName = reviews.AuthorUser.UserName,
+                                                DateOccurred = reviews.DateCreated,
+                                                ReviewContent = reviews.Content,
+                                                ReviewId = reviews.Id,
+                                                ReviewRatingValue = reviews.RatingValue,
+                                                TargetProfileId = reviews.TargetUser.Profile.Id,
+                                                TargetProfileImagePath = reviews.TargetUser.Profile.UserImage.FileName,
+                                                TargetUserName = reviews.TargetUser.UserName
+                                            };
+
+                results = await reviewsWrittenForSelf.ToListAsync();
             }
+
+            foreach (var result in results)
+            {
+                result.AuthorProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.AuthorProfileImagePath);
+                result.TargetProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.TargetProfileImagePath);
+            }
+
+            return results.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<GiftTransactionLog>> GetRecentFollowerGiftTransactionsAsync(string userId, FeedItemQueryType queryType)
+        public async Task<IReadOnlyCollection<GiftReceivedFeedViewModel>> GetRecentFollowerGiftTransactionsAsync(string userId, FeedItemQueryType queryType)
         {
+            List<GiftReceivedFeedViewModel> results = new List<GiftReceivedFeedViewModel>();
+
             if (queryType == FeedItemQueryType.All)
             {
-                var giftsFromUser = from gifts in db.GiftTransactions
-                                    .Include(g => g.StoreItem)
-                                    .Include(g => g.FromUser)
-                                    join favoritedProfiles in db.FavoriteProfiles on gifts.FromUser.Profile.Id equals favoritedProfiles.ProfileId
-                                    where favoritedProfiles.UserId == userId
-                                    where gifts.FromUser.IsActive
-                                    where gifts.ToUser.IsActive
-                                    select gifts;
+                var giftsSent = (from gifts in db.GiftTransactions
+                                 from favoritedProfiles in db.FavoriteProfiles
+                                 where gifts.FromUser.Profile.Id == favoritedProfiles.ProfileId
+                                 || gifts.ToUser.Profile.Id == favoritedProfiles.ProfileId
+                                 where favoritedProfiles.UserId == userId
+                                 where gifts.FromUser.IsActive
+                                 where gifts.ToUser.IsActive
+                                 select new GiftReceivedFeedViewModel()
+                                 {
+                                     DateSent = gifts.DateTransactionOccurred,
+                                     ReceiverUserName = gifts.ToUser.UserName,
+                                     ReceiverProfileImagePath = gifts.ToUser.Profile.UserImage.FileName,
+                                     ReceiverProfileId = gifts.ToUser.Profile.Id,
+                                     SenderProfileId = gifts.FromUser.Profile.Id,
+                                     SenderProfileImagePath = gifts.FromUser.Profile.UserImage.FileName,
+                                     SenderUserId = gifts.FromUser.Id,
+                                     SenderUserName = gifts.FromUser.UserName,
+                                     StoreItemId = gifts.StoreItemId,
+                                     ItemCount = gifts.ItemCount,
+                                     StoreItemIconPath = gifts.StoreItem.IconFileName
+                                 })
+                                 .Distinct();
 
-                var giftsToUser = from gifts in db.GiftTransactions
-                                  .Include(g => g.StoreItem)
-                                  .Include(g => g.FromUser)
-                                  join favoritedProfiles in db.FavoriteProfiles on gifts.ToUser.Profile.Id equals favoritedProfiles.ProfileId
-                                  where favoritedProfiles.UserId == userId
-                                  where gifts.FromUser.IsActive
-                                  where gifts.ToUser.IsActive
-                                  select gifts;
-
-                var results = await giftsFromUser.Union(giftsToUser).ToListAsync();
-                return results.AsReadOnly();
+                results = await giftsSent.ToListAsync();
             }
             else
             {
@@ -130,11 +214,33 @@ namespace TwolipsDating.Business
                                   where gifts.ToUserId == userId
                                   where gifts.FromUser.IsActive
                                   where gifts.ToUser.IsActive
-                                  select gifts;
+                                  select new GiftReceivedFeedViewModel()
+                                  {
+                                      DateSent = gifts.DateTransactionOccurred,
+                                      ReceiverUserName = gifts.ToUser.UserName,
+                                      ReceiverProfileImagePath = gifts.ToUser.Profile.UserImage.FileName,
+                                      ReceiverProfileId = gifts.ToUser.Profile.Id,
+                                      SenderProfileId = gifts.FromUser.Profile.Id,
+                                      SenderProfileImagePath = gifts.FromUser.Profile.UserImage.FileName,
+                                      SenderUserId = gifts.FromUser.Id,
+                                      SenderUserName = gifts.FromUser.UserName,
+                                      StoreItemId = gifts.StoreItemId,
+                                      ItemCount = gifts.ItemCount,
+                                      StoreItemIconPath = gifts.StoreItem.IconFileName
+                                  };
 
-                var results = await giftsToSelf.ToListAsync();
-                return results.AsReadOnly();
+                results = await giftsToSelf.ToListAsync();
             }
+
+            foreach (var result in results)
+            {
+                result.ReceiverProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.ReceiverProfileImagePath);
+                result.SenderProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.SenderProfileImagePath);
+                result.StoreItemIconPath = GiftExtensions.GetIconPath(result.StoreItemIconPath);
+                result.Gifts = new Dictionary<int, GiftReceivedFeedItemViewModel>();
+            }
+
+            return results.AsReadOnly();
         }
 
         public async Task<IReadOnlyCollection<CompletedQuizFeedViewModel>> GetRecentFollowerQuizCompletionsAsync(string userId)
@@ -209,37 +315,35 @@ where
 
         public async Task<IReadOnlyCollection<TagSuggestion>> GetRecentFollowerTagSuggestionsAsync(string userId)
         {
-            var tagSuggestionForFavorite = from tagSuggestion in db.TagSuggestions
-                                           .Include(t => t.Profile)
-                                           .Include(t => t.SuggestingUser)
-                                           join favoritedProfiles in db.FavoriteProfiles on tagSuggestion.Profile.Id equals favoritedProfiles.ProfileId
-                                           where favoritedProfiles.UserId == userId
-                                           where tagSuggestion.SuggestingUser.IsActive
-                                           where tagSuggestion.Profile.ApplicationUser.IsActive
-                                           select tagSuggestion;
+            var tagSuggestionSent = (from tagSuggestion in db.TagSuggestions
+                                     from favoritedProfiles in db.FavoriteProfiles
+                                     where tagSuggestion.Profile.Id == favoritedProfiles.ProfileId
+                                     || tagSuggestion.SuggestingUser.Profile.Id == favoritedProfiles.ProfileId
+                                     where favoritedProfiles.UserId == userId
+                                     where tagSuggestion.SuggestingUser.IsActive
+                                     where tagSuggestion.Profile.ApplicationUser.IsActive
+                                     select tagSuggestion)
+                                        .Include(t => t.Profile)
+                                        .Include(t => t.Profile.ApplicationUser)
+                                        .Include(t => t.SuggestingUser)
+                                        .Include(t => t.SuggestingUser.Profile)
+                                        .Include(t => t.Tag)
+                                        .Distinct();
 
-            var tagSuggestionByFavorite = from tagSuggestion in db.TagSuggestions
-                                           .Include(t => t.Profile)
-                                           .Include(t => t.SuggestingUser)
-                                          join favoritedProfiles in db.FavoriteProfiles on tagSuggestion.SuggestingUser.Profile.Id equals favoritedProfiles.ProfileId
-                                          where favoritedProfiles.UserId == userId
-                                          where tagSuggestion.SuggestingUser.IsActive
-                                          where tagSuggestion.Profile.ApplicationUser.IsActive
-                                          select tagSuggestion;
-
-            var results = await tagSuggestionForFavorite.Union(tagSuggestionByFavorite).ToListAsync();
-            return results.AsReadOnly();
+            return (await tagSuggestionSent.ToListAsync()).AsReadOnly();
         }
 
         public async Task<IReadOnlyCollection<MilestoneAchievement>> GetRecentFollowerAchievementsAsync(string userId)
         {
-            var achievements = from achievement in db.MilestoneAchievements
+            var achievements = (from achievement in db.MilestoneAchievements
+                                join favoritedProfiles in db.FavoriteProfiles on achievement.User.Profile.Id equals favoritedProfiles.ProfileId
+                                where favoritedProfiles.UserId == userId
+                                where achievement.User.IsActive
+                                select achievement)
                                .Include(a => a.Milestone)
                                .Include(a => a.User)
-                               join favoritedProfiles in db.FavoriteProfiles on achievement.User.Profile.Id equals favoritedProfiles.ProfileId
-                               where favoritedProfiles.UserId == userId
-                               where achievement.User.IsActive
-                               select achievement;
+                               .Include(a => a.User.Profile)
+                               .Include(a => a.User.Profile.UserImage);
 
             var results = await achievements.ToListAsync();
             return results.AsReadOnly();
@@ -247,27 +351,47 @@ where
 
         public async Task<IReadOnlyCollection<FavoriteProfile>> GetRecentFollowersAsync(string currentUserId)
         {
-            var followers = from favorite in db.FavoriteProfiles
+            var followers = (from favorite in db.FavoriteProfiles
+                             where favorite.Profile.ApplicationUser.Id == currentUserId
+                             select favorite)
                             .Include(a => a.User)
-                            .Include(a => a.User.Profile)
-                            where favorite.Profile.ApplicationUser.Id == currentUserId
-                            select favorite;
+                            .Include(a => a.User.Profile);
 
             var result = await followers.ToListAsync();
             return result.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<GiftTransactionLog>> GetGiftTransactionsForUserAsync(string userId)
+        public async Task<IReadOnlyCollection<GiftReceivedFeedViewModel>> GetGiftTransactionsForUserFeedAsync(string userId)
         {
             var giftTransactions = from gifts in db.GiftTransactions
-                                .Include(g => g.StoreItem)
-                                .Include(g => g.FromUser)
                                    where (gifts.FromUserId == userId || gifts.ToUserId == userId)
                                    where gifts.FromUser.IsActive
                                    where gifts.ToUser.IsActive
-                                   select gifts;
+                                   select new GiftReceivedFeedViewModel()
+                                   {
+                                       DateSent = gifts.DateTransactionOccurred,
+                                       ReceiverUserName = gifts.ToUser.UserName,
+                                       ReceiverProfileImagePath = gifts.ToUser.Profile.UserImage.FileName,
+                                       ReceiverProfileId = gifts.ToUser.Profile.Id,
+                                       SenderProfileId = gifts.FromUser.Profile.Id,
+                                       SenderProfileImagePath = gifts.FromUser.Profile.UserImage.FileName,
+                                       SenderUserId = gifts.FromUser.Id,
+                                       SenderUserName = gifts.FromUser.UserName,
+                                       StoreItemId = gifts.StoreItemId,
+                                       ItemCount = gifts.ItemCount,
+                                       StoreItemIconPath = gifts.StoreItem.IconFileName
+                                   };
 
             var results = await giftTransactions.ToListAsync();
+
+            foreach (var result in results)
+            {
+                result.ReceiverProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.ReceiverProfileImagePath);
+                result.SenderProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.SenderProfileImagePath);
+                result.StoreItemIconPath = GiftExtensions.GetIconPath(result.StoreItemIconPath);
+                result.Gifts = new Dictionary<int, GiftReceivedFeedItemViewModel>();
+            }
+
             return results.AsReadOnly();
         }
 

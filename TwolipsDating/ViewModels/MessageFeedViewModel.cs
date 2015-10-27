@@ -1,4 +1,5 @@
 ﻿using System;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.ViewModels
 {
@@ -6,7 +7,7 @@ namespace TwolipsDating.ViewModels
     {
         public DateTime DateOccurred { get; set; }
         public string SenderUserId { get; set; }
-        public string SenderSEOName { get; set; }
+        public string SenderSEOName { get { return ProfileExtensions.GetProfileSEOName(SenderUserName); } }
         public string SenderUserName { get; set; }
         public int SenderProfileId { get; set; }
         public string SenderProfileImagePath { get; set; }
@@ -14,7 +15,7 @@ namespace TwolipsDating.ViewModels
         public string ReceiverUserName { get; set; }
         public int ReceiverProfileId { get; set; }
         public string ReceiverProfileImagePath { get; set; }
-        public string TimeAgo { get; set; }
+        public string TimeAgo { get { return DateOccurred.GetTimeAgo(); } }
         public string MessageContent { get; set; }
     }
 }

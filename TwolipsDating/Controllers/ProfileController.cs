@@ -848,7 +848,7 @@ namespace TwolipsDating.Controllers
                 var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);
                 viewModel.UploadImage = new UploadImageViewModel();
                 viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
-                viewModel.Feed = await GetUserFeedAsync(profile, reviews, userImages, page);
+                viewModel.Feed = await GetUserFeedAsync(profile, reviews, page);
                 viewModel.Feed.CurrentUserId = currentUserId;
                 viewModel.Feed.ProfileUserId = profile.ApplicationUser.Id;
                 viewModel.Feed.ProfileUserName = profile.ApplicationUser.UserName;
@@ -910,14 +910,13 @@ namespace TwolipsDating.Controllers
         /// <returns></returns>
         private async Task<ProfileFeedViewModel> GetUserFeedAsync(Models.Profile profile,
             IReadOnlyCollection<Review> reviews,
-            IReadOnlyCollection<UserImage> uploadedImages,
             int? page)
         {
             List<ProfileFeedItemViewModel> feedItems = new List<ProfileFeedItemViewModel>();
 
             AddReviewsToFeed(reviews, feedItems);
 
-            AddUploadedImagesToFeed(uploadedImages, feedItems);
+            await AddUploadedImagesToFeed(profile.ApplicationUser.Id, feedItems);
 
             await AddGiftTransactionsToFeedAsync(profile.ApplicationUser.Id, feedItems);
 
@@ -937,8 +936,9 @@ namespace TwolipsDating.Controllers
             return viewModel;
         }
 
-        private static void AddUploadedImagesToFeed(IReadOnlyCollection<UserImage> uploadedImages, List<ProfileFeedItemViewModel> feedItems)
+        private async Task AddUploadedImagesToFeed(string userId, List<ProfileFeedItemViewModel> feedItems)
         {
+            var uploadedImages = await DashboardService.GetImagesForUserFeedAsync(userId);
             var uploadedImagesConsolidated = uploadedImages.GetConsolidatedImages();
 
             foreach (var uploadedImage in uploadedImagesConsolidated)
@@ -967,14 +967,14 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private async Task AddGiftTransactionsToFeedAsync(string currentUserId, IList<ProfileFeedItemViewModel> profileFeedItems)
+        private async Task AddGiftTransactionsToFeedAsync(string userId, IList<ProfileFeedItemViewModel> feedItems)
         {
-            var giftTransactions = await DashboardService.GetGiftTransactionsForUserAsync(currentUserId);
+            var giftTransactions = await DashboardService.GetGiftTransactionsForUserFeedAsync(userId);
             var giftTransactionsConsolidated = giftTransactions.GetConsolidatedGiftTransactions();
 
             foreach (var giftTransactionViewModel in giftTransactionsConsolidated)
             {
-                profileFeedItems.Add(new ProfileFeedItemViewModel()
+                feedItems.Add(new ProfileFeedItemViewModel()
                 {
                     ItemType = DashboardFeedItemType.GiftTransaction,
                     DateOccurred = giftTransactionViewModel.DateSent,
@@ -983,13 +983,13 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private async Task AddCompletedQuizzesToFeedAsync(string currentUserId, IList<ProfileFeedItemViewModel> profileFeedItems)
+        private async Task AddCompletedQuizzesToFeedAsync(string userId, IList<ProfileFeedItemViewModel> feedItems)
         {
-            var completedQuizzes = await DashboardService.GetQuizCompletionsForUserAsync(currentUserId);
+            var completedQuizzes = await DashboardService.GetQuizCompletionsForUserAsync(userId);
 
             foreach (var quizCompletionViewModel in completedQuizzes)
             {
-                profileFeedItems.Add(new ProfileFeedItemViewModel()
+                feedItems.Add(new ProfileFeedItemViewModel()
                 {
                     ItemType = DashboardFeedItemType.QuizCompletion,
                     DateOccurred = quizCompletionViewModel.DateCompleted,
@@ -998,14 +998,14 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private async Task AddTagSuggestionsToFeedAsync(string currentUserId, IList<ProfileFeedItemViewModel> profileFeedItems)
+        private async Task AddTagSuggestionsToFeedAsync(string userId, IList<ProfileFeedItemViewModel> feedItems)
         {
-            var tagsSuggested = await DashboardService.GetFollowerTagSuggestionsForUserAsync(currentUserId);
+            var tagsSuggested = await DashboardService.GetFollowerTagSuggestionsForUserAsync(userId);
             var tagsSuggestedConsolidated = tagsSuggested.GetConsolidatedTagsSuggested();
 
             foreach (var tagsSuggestedViewModel in tagsSuggestedConsolidated)
             {
-                profileFeedItems.Add(new ProfileFeedItemViewModel()
+                feedItems.Add(new ProfileFeedItemViewModel()
                 {
                     ItemType = DashboardFeedItemType.TagSuggestion,
                     DateOccurred = tagsSuggestedViewModel.DateSuggested,
@@ -1014,14 +1014,14 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private async Task AddAchievementsToFeedAsync(string currentUserId, IList<ProfileFeedItemViewModel> profileFeedItems)
+        private async Task AddAchievementsToFeedAsync(string userId, IList<ProfileFeedItemViewModel> feedItems)
         {
-            var achievements = await DashboardService.GetFollowerAchievementsForUserAsync(currentUserId);
+            var achievements = await DashboardService.GetFollowerAchievementsForUserAsync(userId);
             var achievementFeedViewModels = Mapper.Map<IReadOnlyCollection<MilestoneAchievement>, IReadOnlyCollection<AchievementFeedViewModel>>(achievements);
 
             foreach (var achievementFeedViewModel in achievementFeedViewModels)
             {
-                profileFeedItems.Add(new ProfileFeedItemViewModel()
+                feedItems.Add(new ProfileFeedItemViewModel()
                 {
                     ItemType = DashboardFeedItemType.AchievementObtained,
                     DateOccurred = achievementFeedViewModel.DateAchieved,

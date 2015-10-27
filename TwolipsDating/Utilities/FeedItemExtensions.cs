@@ -68,7 +68,7 @@ namespace TwolipsDating.Utilities
         /// </summary>
         /// <param name="giftTransactions"></param>
         /// <returns></returns>
-        public static IReadOnlyCollection<GiftReceivedFeedViewModel> GetConsolidatedGiftTransactions(this IReadOnlyCollection<GiftTransactionLog> giftTransactions)
+        public static IReadOnlyCollection<GiftReceivedFeedViewModel> GetConsolidatedGiftTransactions(this IReadOnlyCollection<GiftReceivedFeedViewModel> giftTransactions)
         {
             Dictionary<FeedItemKey, GiftReceivedFeedViewModel> consolidatedGiftTransactionViewModels = new Dictionary<FeedItemKey, GiftReceivedFeedViewModel>();
 
@@ -81,9 +81,9 @@ namespace TwolipsDating.Utilities
                 bool alreadyExists = consolidatedGiftTransactionViewModels.TryGetValue(key, out existingGiftReceivedFeedViewModel);
                 if (!alreadyExists)
                 {
-                    var newGiftReceivedFeedViewModel = Mapper.Map<GiftTransactionLog, GiftReceivedFeedViewModel>(giftTransaction);
-                    AddGiftReceivedFeedItem(newGiftReceivedFeedViewModel, giftTransaction);
-                    consolidatedGiftTransactionViewModels.Add(key, newGiftReceivedFeedViewModel);
+                    //var newGiftReceivedFeedViewModel = Mapper.Map<GiftTransactionLog, GiftReceivedFeedViewModel>(giftTransaction);
+                    AddGiftReceivedFeedItem(giftTransaction);
+                    consolidatedGiftTransactionViewModels.Add(key, giftTransaction);
                 }
                 else
                 {
@@ -91,7 +91,7 @@ namespace TwolipsDating.Utilities
                     alreadyExists = existingGiftReceivedFeedViewModel.Gifts.TryGetValue(giftTransaction.StoreItemId, out existingGiftReceivedFeedItemViewModel);
                     if (!alreadyExists)
                     {
-                        AddGiftReceivedFeedItem(existingGiftReceivedFeedViewModel, giftTransaction);
+                        AddGiftReceivedFeedItem(giftTransaction);
                     }
                     else
                     {
@@ -103,21 +103,21 @@ namespace TwolipsDating.Utilities
             return consolidatedGiftTransactionViewModels.Values.ToList().AsReadOnly();
         }
 
-        private static void AddGiftReceivedFeedItem(GiftReceivedFeedViewModel giftReceivedFeedViewModel, GiftTransactionLog giftTransaction)
+        private static void AddGiftReceivedFeedItem(GiftReceivedFeedViewModel giftReceivedFeedViewModel)
         {
-            giftReceivedFeedViewModel.Gifts.Add(giftTransaction.StoreItemId, new GiftReceivedFeedItemViewModel()
+            giftReceivedFeedViewModel.Gifts.Add(giftReceivedFeedViewModel.StoreItemId, new GiftReceivedFeedItemViewModel()
             {
-                GiftImagePath = giftTransaction.StoreItem.GetIconPath(),
-                GiftSentCount = giftTransaction.ItemCount
+                GiftImagePath = giftReceivedFeedViewModel.StoreItemIconPath,
+                GiftSentCount = giftReceivedFeedViewModel.ItemCount
             });
         }
 
-        private static FeedItemKey GetFeedItemKey(GiftTransactionLog giftTransaction)
+        private static FeedItemKey GetFeedItemKey(GiftReceivedFeedViewModel giftTransaction)
         {
             FeedItemKey key = new FeedItemKey()
             {
-                UserId = giftTransaction.FromUserId,
-                TimeAgo = giftTransaction.DateTransactionOccurred.GetTimeAgo()
+                UserId = giftTransaction.SenderUserId,
+                TimeAgo = giftTransaction.TimeAgo
             };
             return key;
         }
@@ -129,10 +129,10 @@ namespace TwolipsDating.Utilities
         /// </summary>
         /// <param name="giftTransactions"></param>
         /// <returns></returns>
-        public static IReadOnlyCollection<UploadedImageFeedViewModel> GetConsolidatedImages(this IReadOnlyCollection<UserImage> uploadedImages)
+        public static IReadOnlyCollection<UploadedImageFeedViewModel> GetConsolidatedImages(this IReadOnlyCollection<UploadedImageFeedViewModel> uploadedImageViewModels)
         {
             // translates the collection of entities into the view models that we want to work with
-            var uploadedImageViewModels = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UploadedImageFeedViewModel>>(uploadedImages);
+            //var uploadedImageViewModels = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UploadedImageFeedViewModel>>(uploadedImages);
 
             // a dictionary containing the unique transactions
             Dictionary<FeedItemKey, UploadedImageFeedViewModel> consolidatedUploadedImageViewModels = new Dictionary<FeedItemKey, UploadedImageFeedViewModel>();

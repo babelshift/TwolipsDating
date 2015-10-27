@@ -7,8 +7,6 @@ namespace TwolipsDating.ViewModels
     {
         public string CurrentUserId { get; set; }
 
-        public bool IsCurrentUserEmailConfirmed { get; set; }
-
         public WriteReviewViolationViewModel WriteReviewViolation { get; set; }
 
         public QuestionViewModel RandomQuestion { get; set; }
@@ -17,6 +15,6 @@ namespace TwolipsDating.ViewModels
 
         public IReadOnlyCollection<QuizOverviewViewModel> Quizzes { get; set; }
 
-        public IReadOnlyCollection<ProfileViewModel> UsersToFollow { get; set; }
+        public IReadOnlyCollection<PersonYouMightAlsoLikeViewModel> UsersToFollow { get; set; }
     }
 }

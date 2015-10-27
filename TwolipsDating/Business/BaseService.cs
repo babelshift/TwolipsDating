@@ -29,6 +29,8 @@ namespace TwolipsDating.Business
             Log = new LogHelper(GetType().FullName);
 #if DEBUG
             this.db.Database.Log = s => { Debug.WriteLine(s); };
+#else
+            //this.db.Database.Log = s => { Log.Info(s); };
 #endif
 
             EmailService = emailService;

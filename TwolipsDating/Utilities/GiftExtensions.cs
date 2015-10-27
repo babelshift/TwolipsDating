@@ -33,5 +33,10 @@ namespace TwolipsDating.Utilities
         {
             return String.Format("{0}/{1}", cdn, fileName);
         }
+
+        public static string GetIconPath(string fileName)
+        {
+            return GetImagePath(fileName);
+        }
     }
 }

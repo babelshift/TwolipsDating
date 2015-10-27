@@ -106,173 +106,160 @@
     }
 }
 <div class="row">
-    @if (Model.IsCurrentUserEmailConfirmed)
-    {
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                @if (Model.RandomQuestion != null)
-                {
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><i class="fa fa-bullseye fa-lg fa-fw"></i> Improve your matches</h4>
-                    </div>
-                    <div class="panel-body">
-                        <h5 style="margin-top: 0;" id="random-question-content">@Model.RandomQuestion.Content</h5>
-                        @Html.Partial("_QuestionRatingBarPartial", Model.RandomQuestion.Points)
-                    </div>
-                    <div class="list-group">
-                        <div id="answers">
-                            @foreach (var answer in Model.RandomQuestion.Answers)
-                            {
-                                <a href="#" id="@String.Format("answer-{0}", answer.AnswerId)" class="answer-link list-group-item" data-answer-id="@answer.AnswerId">
-                                    @answer.Content
-                                    <span id="@String.Format("icon-correct-{0}", answer.AnswerId)" class="icon-correct pull-right hidden"><i class="fa fa-check"></i></span>
-                                    <span id="@String.Format("icon-incorrect-{0}", answer.AnswerId)" class="icon-incorrect pull-right hidden"><i class="fa fa-remove"></i></span>
-                                </a>
-                            }
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div id="result-alert" class="alert alert-success hidden"></div>
-                        <button id="button-skip" type="button" class="btn btn-default btn-sm" title="Skip this question">Skip <i class="fa fa-chevron-right"></i></button>
-                        <button id="button-next" type="button" class="btn btn-primary btn-sm hidden" onclick="onNextQuestion(event, this)" title="Get next question"><i class="fa fa-random"></i> Next</button>
-                        @Html.HiddenFor(m => m.RandomQuestion.QuestionId)
-                        <input id="question-points-value" type="hidden" value="@Model.RandomQuestion.Points" />
-                        <div id="trivia-panel-no-questions" class="hidden">
-                            <p>You've answered all the random questions for now. <a href="@Url.Action("index", "trivia")">Want more?</a></p>
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <div class="panel-body">
-                        <p style="margin: 0;">You've answered all the random questions for now. <a href="@Url.Action("index", "trivia")">Want more?</a></p>
-                    </div>
-                }
-                <div class="panel-footer">
-                    <div class="text-center">
-                        <a href="@Url.Action("random", "trivia")"><small>See more questions</small></a>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            @if (Model.RandomQuestion != null)
+            {
+                <div class="panel-heading">
+                    <h4 class="panel-title"><i class="fa fa-bullseye fa-lg fa-fw"></i> Improve your matches</h4>
+                </div>
+                <div class="panel-body">
+                    <h5 style="margin-top: 0;" id="random-question-content">@Model.RandomQuestion.Content</h5>
+                    @Html.Partial("_QuestionRatingBarPartial", Model.RandomQuestion.Points)
+                </div>
+                <div class="list-group">
+                    <div id="answers">
+                        @foreach (var answer in Model.RandomQuestion.Answers)
+                        {
+                            <a href="#" id="@String.Format("answer-{0}", answer.AnswerId)" class="answer-link list-group-item" data-answer-id="@answer.AnswerId">
+                                @answer.Content
+                                <span id="@String.Format("icon-correct-{0}", answer.AnswerId)" class="icon-correct pull-right hidden"><i class="fa fa-check"></i></span>
+                                <span id="@String.Format("icon-incorrect-{0}", answer.AnswerId)" class="icon-incorrect pull-right hidden"><i class="fa fa-remove"></i></span>
+                            </a>
+                        }
                     </div>
                 </div>
-            </div>
-            @if (Model.UsersToFollow != null && Model.UsersToFollow.Count > 0)
-            {
-                @Html.Partial("_SidebarYouMightAlsoLikePeoplePartial", Model.UsersToFollow)
-            }
-            @if (HttpContext.Current.AreAdsEnabled())
-            {
-                if (!HttpContext.Current.IsDebuggingEnabled)
-                {
-                    <div class="ad">
-                        <!-- Dashboard - Sidebar - 1 -->
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-client="ca-pub-1823005717277864"
-                             data-ad-slot="8267337038"
-                             data-ad-format="auto"></ins>
-                        <script>
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
+                <div class="panel-body">
+                    <div id="result-alert" class="alert alert-success hidden"></div>
+                    <button id="button-skip" type="button" class="btn btn-default btn-sm" title="Skip this question">Skip <i class="fa fa-chevron-right"></i></button>
+                    <button id="button-next" type="button" class="btn btn-primary btn-sm hidden" onclick="onNextQuestion(event, this)" title="Get next question"><i class="fa fa-random"></i> Next</button>
+                    @Html.HiddenFor(m => m.RandomQuestion.QuestionId)
+                    <input id="question-points-value" type="hidden" value="@Model.RandomQuestion.Points" />
+                    <div id="trivia-panel-no-questions" class="hidden">
+                        <p>You've answered all the random questions for now. <a href="@Url.Action("index", "trivia")">Want more?</a></p>
                     </div>
-                }
-                else
-                {
-                    <div style="width: 350px; margin: 5px auto;">
-                        <img src="http://placehold.it/350x250" />
-                    </div>
-                }
-            }
-        </div>
-        <div class="col-md-8">
-            @if (Model.Items.Count > 0)
-            {
-                for (int i = 0; i < Model.Items.Count; i++)
-                {
-                    var feedItem = Model.Items[i];
-
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            @if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.Message)
-                            {
-                                Html.RenderPartial("_FeedItemMessagesPartial", feedItem.MessageFeedItem);
-                            }
-                            else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.UploadedPictures)
-                            {
-                                Html.RenderPartial("_FeedItemUploadedPicturesPartial", feedItem.UploadedImageFeedItem);
-                            }
-                            else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.ReviewWritten)
-                            {
-                                Html.RenderPartial("_FeedItemReviewWrittenPartial", feedItem.ReviewWrittenFeedItem);
-                            }
-                            else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.GiftTransaction)
-                            {
-                                Html.RenderPartial("_FeedItemGiftTransactionPartial", feedItem.GiftReceivedFeedItem);
-                            }
-                            else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.QuizCompletion)
-                            {
-                                Html.RenderPartial("_FeedItemCompletedQuizPartial", feedItem.CompletedQuizFeedItem);
-                            }
-                            else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.TagSuggestion)
-                            {
-                                Html.RenderPartial("_FeedItemTagSuggestionPartial", feedItem.TagSuggestionReceivedFeedItem);
-                            }
-                            else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.AchievementObtained)
-                            {
-                                Html.RenderPartial("_FeedItemAchievementPartial", feedItem.AchievementFeedItem);
-                            }
-                            else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.NewFollower)
-                            {
-                                Html.RenderPartial("_FeedItemNewFollowerPartial", feedItem.FollowerFeedItem);
-                            }
-                        </div>
-                    </div>
-                }
-
-                if (Model.Items.PageCount > 1)
-                {
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            @Html.PagedListPager(Model.Items, page => Url.Action("Index", new { page }))
-                        </div>
-                    </div>
-                }
+                </div>
             }
             else
             {
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <h4>You will start seeing updates here when you send and receive messages or follow user profiles.</h4>
-                    </div>
+                <div class="panel-body">
+                    <p style="margin: 0;">You've answered all the random questions for now. <a href="@Url.Action("index", "trivia")">Want more?</a></p>
                 </div>
             }
-            @*
-                <p>
-                    <a href="#">jskiles1</a> completed the challenge <a href="#" class="label label-primary">Bring Out Your Dead</a>
-                    <br />
-                    <small>3 minutes ago</small>
-                </p>
-                <p>
-                    <a href="#">jskiles1</a> defeated <a href="#">joanne123</a> in a game of <a href="#" class="label label-primary">Chicken</a>
-                    <br />
-                    <small>5 hours ago</small>
-                </p>
-                <p>
-                    <a href="#">jskiles1</a> made an announcement: <strong>all I do is win!</strong>
-                    <br />
-                    <small>7 hours ago</small>
-                </p>
-            *@
-        </div>
-    }
-    else
-    {
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <h4>Before you can view your dashboard, you must confirm your email address.</h4>
+            <div class="panel-footer">
+                <div class="text-center">
+                    <a href="@Url.Action("random", "trivia")"><small>See more questions</small></a>
                 </div>
             </div>
         </div>
-    }
+        @if (Model.UsersToFollow != null && Model.UsersToFollow.Count > 0)
+        {
+            @Html.Partial("_SidebarYouMightAlsoLikePeoplePartial", Model.UsersToFollow)
+        }
+        @if (HttpContext.Current.AreAdsEnabled())
+        {
+            if (!HttpContext.Current.IsDebuggingEnabled)
+            {
+                <div class="ad">
+                    <!-- Dashboard - Sidebar - 1 -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1823005717277864"
+                         data-ad-slot="8267337038"
+                         data-ad-format="auto"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div style="width: 350px; margin: 5px auto;">
+                    <img src="http://placehold.it/350x250" />
+                </div>
+            }
+        }
+    </div>
+    <div class="col-md-8">
+        @if (Model.Items.Count > 0)
+        {
+            for (int i = 0; i < Model.Items.Count; i++)
+            {
+                var feedItem = Model.Items[i];
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.Message)
+                        {
+                            Html.RenderPartial("_FeedItemMessagesPartial", feedItem.MessageFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.UploadedPictures)
+                        {
+                            Html.RenderPartial("_FeedItemUploadedPicturesPartial", feedItem.UploadedImageFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.ReviewWritten)
+                        {
+                            Html.RenderPartial("_FeedItemReviewWrittenPartial", feedItem.ReviewWrittenFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.GiftTransaction)
+                        {
+                            Html.RenderPartial("_FeedItemGiftTransactionPartial", feedItem.GiftReceivedFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.QuizCompletion)
+                        {
+                            Html.RenderPartial("_FeedItemCompletedQuizPartial", feedItem.CompletedQuizFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.TagSuggestion)
+                        {
+                            Html.RenderPartial("_FeedItemTagSuggestionPartial", feedItem.TagSuggestionReceivedFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.AchievementObtained)
+                        {
+                            Html.RenderPartial("_FeedItemAchievementPartial", feedItem.AchievementFeedItem);
+                        }
+                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.NewFollower)
+                        {
+                            Html.RenderPartial("_FeedItemNewFollowerPartial", feedItem.FollowerFeedItem);
+                        }
+                    </div>
+                </div>
+            }
+
+            if (Model.Items.PageCount > 1)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @Html.PagedListPager(Model.Items, page => Url.Action("Index", new { page }))
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>You will start seeing updates here when you send and receive messages or follow user profiles.</h4>
+                </div>
+            </div>
+        }
+        @*
+            <p>
+                <a href="#">jskiles1</a> completed the challenge <a href="#" class="label label-primary">Bring Out Your Dead</a>
+                <br />
+                <small>3 minutes ago</small>
+            </p>
+            <p>
+                <a href="#">jskiles1</a> defeated <a href="#">joanne123</a> in a game of <a href="#" class="label label-primary">Chicken</a>
+                <br />
+                <small>5 hours ago</small>
+            </p>
+            <p>
+                <a href="#">jskiles1</a> made an announcement: <strong>all I do is win!</strong>
+                <br />
+                <small>7 hours ago</small>
+            </p>
+        *@
+    </div>
 </div>
 @if (HttpContext.Current.AreAdsEnabled())
 {

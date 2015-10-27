@@ -966,11 +966,53 @@ namespace TwolipsDating.Business
             var userMessages = from messages in db.Messages
                                .Include(m => m.ReceiverApplicationUser)
                                .Include(m => m.SenderApplicationUser)
+                               .Include(m => m.ReceiverApplicationUser.Profile)
+                               .Include(m => m.SenderApplicationUser.Profile)
+                               .Include(m => m.ReceiverApplicationUser.Profile.UserImage)
+                               .Include(m => m.SenderApplicationUser.Profile.UserImage)
                                where messages.ReceiverApplicationUserId == userId
                                where messages.ReceiverApplicationUser.IsActive
                                where messages.SenderApplicationUser.IsActive
                                select messages;
             var results = await userMessages.ToListAsync();
+            return results.AsReadOnly();
+        }
+
+        /// <summary>
+        /// Returns a collection of messages sent to and from a user. Returns only messages to and from active users.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<IReadOnlyCollection<MessageFeedViewModel>> GetMessagesReceivedByUserFeedAsync(string userId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            var userMessages = from messages in db.Messages
+                               where messages.ReceiverApplicationUserId == userId
+                               where messages.ReceiverApplicationUser.IsActive
+                               where messages.SenderApplicationUser.IsActive
+                               select new MessageFeedViewModel()
+                               {
+                                    DateOccurred = messages.DateSent,
+                                    MessageContent = messages.Body,
+                                    ReceiverProfileId = messages.ReceiverApplicationUser.Profile.Id,
+                                    ReceiverProfileImagePath = messages.ReceiverApplicationUser.Profile.UserImage.FileName,
+                                    ReceiverUserId = messages.ReceiverApplicationUserId,
+                                    ReceiverUserName = messages.ReceiverApplicationUser.UserName,
+                                    SenderProfileId = messages.SenderApplicationUser.Profile.Id,
+                                    SenderProfileImagePath = messages.SenderApplicationUser.Profile.UserImage.FileName,
+                                    SenderUserId = messages.SenderApplicationUserId,
+                                    SenderUserName = messages.SenderApplicationUser.UserName
+                               };
+
+            var results = await userMessages.ToListAsync();
+
+            foreach (var result in results)
+            {
+                result.ReceiverProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.ReceiverProfileImagePath);
+                result.SenderProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.SenderProfileImagePath);
+            }
+
             return results.AsReadOnly();
         }
 
@@ -1487,7 +1529,7 @@ namespace TwolipsDating.Business
         /// </summary>
         /// <param name="numberOfProfilesToRetrieve"></param>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<Profile>> GetRandomProfilesForDashboardAsync(string currentUserId, int numberOfProfilesToRetrieve)
+        public async Task<IReadOnlyCollection<PersonYouMightAlsoLikeViewModel>> GetRandomProfilesForDashboardAsync(string currentUserId, int numberOfProfilesToRetrieve)
         {
             var allProfiles = await (from profiles in db.Profiles
                                      where profiles.ApplicationUser.IsActive
@@ -1496,9 +1538,20 @@ namespace TwolipsDating.Business
                                              where favorite.UserId == currentUserId
                                              select favorite.ProfileId)
                                              .Contains(profiles.Id)
-                                     select profiles).ToDictionaryAsync(d => d.Id, d => d);
+                                     select new PersonYouMightAlsoLikeViewModel()
+                                     {
+                                        UserName = profiles.ApplicationUser.UserName,
+                                        Birthday = profiles.Birthday,
+                                        LocationCityName = profiles.GeoCity.Name,
+                                        LocationStateAbbreviation = profiles.GeoCity.GeoState.Abbreviation,
+                                        LocationCountryName = profiles.GeoCity.GeoState.GeoCountry.Name,
+                                        ProfileId = profiles.Id,
+                                        ProfileThumbnailImagePath = profiles.UserImage.FileName,
+                                        ProfileUserId = profiles.ApplicationUser.Id
+                                     })
+                                     .ToDictionaryAsync(d => d.ProfileId, d => d);
 
-            List<Profile> randomProfiles = new List<Profile>();
+            List<PersonYouMightAlsoLikeViewModel> randomProfiles = new List<PersonYouMightAlsoLikeViewModel>();
 
             // if there are no profiles, don't do anything
             if (allProfiles == null || allProfiles.Count == 0)
@@ -1515,6 +1568,7 @@ namespace TwolipsDating.Business
             Random random = new Random();
             foreach (var profile in DictionaryHelper.UniqueRandomValues(allProfiles).Take(numberOfProfilesToRetrieve))
             {
+                profile.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(profile.ProfileThumbnailImagePath);
                 randomProfiles.Add(profile);
             }
 

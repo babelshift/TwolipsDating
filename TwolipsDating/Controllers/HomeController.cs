@@ -74,7 +74,6 @@ namespace TwolipsDating.Controllers
 
                 DashboardViewModel viewModel = new DashboardViewModel();
                 viewModel.CurrentUserId = currentUserId;
-                viewModel.IsCurrentUserEmailConfirmed = await UserManager.IsEmailConfirmedAsync(currentUserId);
 
                 int pageSize = 20;
                 int pageNumber = page ?? 1;
@@ -106,11 +105,11 @@ namespace TwolipsDating.Controllers
             }
         }
 
-        private async Task<IReadOnlyCollection<ProfileViewModel>> GetUsersToFollowAsync(string currentUserId)
+        private async Task<IReadOnlyCollection<PersonYouMightAlsoLikeViewModel>> GetUsersToFollowAsync(string currentUserId)
         {
             int profilesToRetrieve = 8;
             var profiles = await ProfileService.GetRandomProfilesForDashboardAsync(currentUserId, profilesToRetrieve);
-            return Mapper.Map<IReadOnlyCollection<Models.Profile>, IReadOnlyCollection<ProfileViewModel>>(profiles);
+            return profiles;
         }
 
         /// <summary>
@@ -189,10 +188,9 @@ namespace TwolipsDating.Controllers
         /// <returns></returns>
         private async Task AddReviewsToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems, FeedItemQueryType queryType)
         {
-            var reviews = await DashboardService.GetRecentReviewsAsync(currentUserId, queryType);
-            var reviewFeedViewModel = Mapper.Map<IReadOnlyCollection<Review>, IReadOnlyCollection<ReviewWrittenFeedViewModel>>(reviews);
+            var reviews = await DashboardService.GetRecentReviewsFeedAsync(currentUserId, queryType);
 
-            foreach (var reviewFeed in reviewFeedViewModel)
+            foreach (var reviewFeed in reviews)
             {
                 dashboardItems.Add(new DashboardItemViewModel()
                 {
@@ -211,10 +209,9 @@ namespace TwolipsDating.Controllers
         /// <returns></returns>
         private async Task AddReceivedMessagesToFeedAsync(string currentUserId, List<DashboardItemViewModel> dashboardItems)
         {
-            var messages = await ProfileService.GetMessagesReceivedByUserAsync(currentUserId);
-            var messageFeedViewModel = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyCollection<MessageFeedViewModel>>(messages);
+            var messages = await ProfileService.GetMessagesReceivedByUserFeedAsync(currentUserId);
 
-            foreach (var messageFeed in messageFeedViewModel)
+            foreach (var messageFeed in messages)
             {
                 dashboardItems.Add(new DashboardItemViewModel()
                 {

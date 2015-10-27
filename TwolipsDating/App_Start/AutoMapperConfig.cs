@@ -85,11 +85,10 @@ namespace TwolipsDating
                 .ForMember(dest => dest.UploaderProfileId, opts => opts.MapFrom(source => source.ApplicationUser.Profile.Id))
                 .ForMember(dest => dest.UploaderUserId, opts => opts.MapFrom(source => source.ApplicationUser.Id))
                 .ForMember(dest => dest.UploadedImagesPaths, opts => opts.UseValue(new List<UploadedImageViewModel>()))
-                .AfterMap((source, dest) => dest.UploadedImagesPaths.Add(new UploadedImageViewModel() { Path = source.GetPath(), ThumbnailPath = source.GetThumbnailPath() }));
+                .AfterMap((source, dest) => dest.UploadedImagesPaths.Add(new UploadedImageViewModel() { Path = source.GetPath() }));
 
             Mapper.CreateMap<Message, MessageFeedViewModel>()
                 .ForMember(dest => dest.SenderUserName, opts => opts.MapFrom(source => source.SenderApplicationUser.UserName))
-                .ForMember(dest => dest.SenderSEOName, opts => opts.MapFrom(source => source.SenderApplicationUser.GetSEOName()))
                 .ForMember(dest => dest.SenderProfileImagePath, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.GetProfileThumbnailImagePath()))
                 .ForMember(dest => dest.ReceiverUserName, opts => opts.MapFrom(source => source.ReceiverApplicationUser.UserName))
                 .ForMember(dest => dest.ReceiverProfileImagePath, opts => opts.MapFrom(source => source.ReceiverApplicationUser.Profile.GetProfileThumbnailImagePath()))

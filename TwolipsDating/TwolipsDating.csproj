@@ -536,6 +536,7 @@
     <Compile Include="ViewModels\MinefieldQuestionViewModel.cs" />
     <Compile Include="ViewModels\MostPopularQuizViewModel.cs" />
     <Compile Include="ViewModels\NotificationsViewModel.cs" />
+    <Compile Include="ViewModels\PersonYouMightAlsoLikeViewModel.cs" />
     <Compile Include="ViewModels\QuizCategoryViewModel.cs" />
     <Compile Include="ViewModels\RecentBuyerViewModel.cs" />
     <Compile Include="ViewModels\SearchResultProfileViewModel.cs" />

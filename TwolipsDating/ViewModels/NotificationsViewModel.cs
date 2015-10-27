@@ -10,6 +10,6 @@ namespace TwolipsDating.ViewModels
     {
         public IPagedList<DashboardItemViewModel> Items { get; set; }
 
-        public IReadOnlyCollection<ProfileViewModel> UsersToFollow { get; set; }
+        public IReadOnlyCollection<PersonYouMightAlsoLikeViewModel> UsersToFollow { get; set; }
     }
 }

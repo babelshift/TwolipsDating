@@ -89,13 +89,13 @@ namespace TwolipsDating.Business
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
 
-            var profile = (from profiles in db.Profiles
+            var profileId = (from profiles in db.Profiles
                            where profiles.ApplicationUser.Id == userId
-                           select profiles).FirstOrDefault();
+                           select profiles.Id).FirstOrDefault();
 
-            if (profile != null)
+            if (profileId > 0)
             {
-                return profile.Id;
+                return profileId;
             }
             else
             {
