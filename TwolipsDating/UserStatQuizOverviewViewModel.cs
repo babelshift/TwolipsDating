@@ -14,7 +14,7 @@ namespace TwolipsDating
         {
             get
             {
-                return QuizExtensions.GetQuizSEOName(Name);
+                return QuizExtensions.ToSEOName(Name);
             }
         }
         public string ThumbnailImagePath { get; set; }

@@ -53,7 +53,7 @@ namespace TwolipsDating.Business
 
             foreach (var image in results)
             {
-                image.UploaderProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(image.UploaderProfileImagePath);
+                image.UploaderProfileImagePath = ProfileExtensions.GetThumbnailImagePath(image.UploaderProfileImagePath);
                 image.UploadedImagesPaths = new List<UploadedImageViewModel>();
                 image.UploadedImagesPaths.Add(new UploadedImageViewModel()
                 {
@@ -92,7 +92,7 @@ namespace TwolipsDating.Business
 
             foreach (var image in results)
             {
-                image.UploaderProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(image.UploaderProfileImagePath);
+                image.UploaderProfileImagePath = ProfileExtensions.GetThumbnailImagePath(image.UploaderProfileImagePath);
                 image.UploadedImagesPaths = new List<UploadedImageViewModel>();
                 image.UploadedImagesPaths.Add(new UploadedImageViewModel()
                     {
@@ -168,8 +168,8 @@ namespace TwolipsDating.Business
 
             foreach (var result in results)
             {
-                result.AuthorProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.AuthorProfileImagePath);
-                result.TargetProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.TargetProfileImagePath);
+                result.AuthorProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.AuthorProfileImagePath);
+                result.TargetProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.TargetProfileImagePath);
             }
 
             return results.AsReadOnly();
@@ -234,9 +234,9 @@ namespace TwolipsDating.Business
 
             foreach (var result in results)
             {
-                result.ReceiverProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.ReceiverProfileImagePath);
-                result.SenderProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.SenderProfileImagePath);
-                result.StoreItemIconPath = GiftExtensions.GetIconPath(result.StoreItemIconPath);
+                result.ReceiverProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.ReceiverProfileImagePath);
+                result.SenderProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.SenderProfileImagePath);
+                result.StoreItemIconPath = StoreItemExtensions.GetImagePath(result.StoreItemIconPath);
                 result.Gifts = new Dictionary<int, GiftReceivedFeedItemViewModel>();
             }
 
@@ -306,7 +306,7 @@ where
 
             foreach (var result in results)
             {
-                result.SourceProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.SourceProfileImagePath);
+                result.SourceProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.SourceProfileImagePath);
                 result.QuizThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(result.QuizThumbnailImagePath);
             }
 
@@ -386,9 +386,9 @@ where
 
             foreach (var result in results)
             {
-                result.ReceiverProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.ReceiverProfileImagePath);
-                result.SenderProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.SenderProfileImagePath);
-                result.StoreItemIconPath = GiftExtensions.GetIconPath(result.StoreItemIconPath);
+                result.ReceiverProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.ReceiverProfileImagePath);
+                result.SenderProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.SenderProfileImagePath);
+                result.StoreItemIconPath = StoreItemExtensions.GetImagePath(result.StoreItemIconPath);
                 result.Gifts = new Dictionary<int, GiftReceivedFeedItemViewModel>();
             }
 
@@ -457,7 +457,7 @@ where
 
             foreach (var result in results)
             {
-                result.SourceProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.SourceProfileImagePath);
+                result.SourceProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.SourceProfileImagePath);
                 result.QuizThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(result.QuizThumbnailImagePath);
             }
 

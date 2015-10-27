@@ -9,7 +9,7 @@ namespace TwolipsDating.ViewModels
     public class QuizCategoryViewModel
     {
         public int QuizCategoryId { get; set; }
-        public string QuizSEOName { get { return QuizExtensions.GetQuizSEOName(QuizName); } }
+        public string QuizSEOName { get { return QuizExtensions.ToSEOName(QuizName); } }
         public string QuizIcon { get; set; }
         public string QuizName { get; set; }
     }

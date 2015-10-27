@@ -79,7 +79,7 @@ namespace TwolipsDating.Business
             // we couldn't execute these custom formatting functions in the LINQ query, so we loop and do it here
             foreach (var item in results)
             {
-                item.ItemImagePath = item.GetIconPath();
+                item.ItemImagePath = StoreItemExtensions.GetImagePath(item.ItemImagePath);
             }
 
             return results;
@@ -332,7 +332,7 @@ namespace TwolipsDating.Business
 
             foreach (var recentBuyer in recentBuyers)
             {
-                recentBuyer.ProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(recentBuyer.ProfileImagePath);
+                recentBuyer.ProfileImagePath = ProfileExtensions.GetThumbnailImagePath(recentBuyer.ProfileImagePath);
                 recentBuyer.Age = DateTimeExtensions.GetAge(recentBuyer.Birthday);
                 recentBuyer.Location = CityExtensions.ToFullLocationString(recentBuyer.CityName, recentBuyer.StateName);
             }

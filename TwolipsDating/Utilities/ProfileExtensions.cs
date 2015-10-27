@@ -8,27 +8,60 @@ namespace TwolipsDating.Utilities
 {
     public static class ProfileExtensions
     {
-        private static readonly string cdn = ConfigurationManager.AppSettings["cdnUrl"];
-        private const string placeholderFileName = "Placeholder.png";
+        private static readonly string cdn = ConfigurationManager.AppSettings["cdnUrl"];    // URL to the image CDN
+        private const int imageVersion = 2;                                                 // version of the image to display from the CDN
+        private const int thumbnailImageVersion = 2;                                        // version of the thumbnail to display from the CDN
+        private const string thumbnailSuffix = "thumb";                                     // string to append to end of image to get thumbnail
+        private const string placeholderFileName = "Placeholder.png";                       // if the profile has no image, this is displayed
 
-        public static string GetProfileThumbnailImagePath(string fileName)
+        #region SEO
+
+        public static string ToSEOName(this Profile profile)
         {
-            return GetThumbnailImagePath(fileName);
+            if (profile == null || profile.ApplicationUser == null)
+            {
+                return String.Empty;
+            }
+
+            return ToSEOName(profile.ApplicationUser.UserName);
         }
 
-        public static string GetProfileImagePath(this Profile profile)
+        public static string ToSEOName(string userName)
+        {
+            return userName.ToSEOFriendlyString();
+        }
+
+        #endregion SEO
+
+        #region Image Path
+
+        public static string GetImagePath(this Profile profile)
         {
             if (profile != null && profile.UserImage != null)
             {
-                return GetProfileImagePath(profile.UserImage.FileName);
+                return GetImagePath(profile.UserImage.FileName);
             }
             else
             {
-                return GetProfileImagePath(placeholderFileName);
+                return GetImagePath(placeholderFileName);
             }
         }
 
-        public static string GetProfileThumbnailImagePath(this Profile profile)
+        private static string GetImagePath(string fileName)
+        {
+            if (String.IsNullOrEmpty(fileName))
+            {
+                fileName = placeholderFileName;
+            }
+
+            return String.Format("{0}/{1}", cdn, fileName);
+        }
+
+        #endregion
+
+        #region Thumbnail Image Path
+
+        public static string GetThumbnailImagePath(this Profile profile)
         {
             if (profile != null && profile.UserImage != null)
             {
@@ -40,41 +73,7 @@ namespace TwolipsDating.Utilities
             }
         }
 
-        public static string GetSenderProfileImagePath(this MessageConversation messageConversation)
-        {
-            if (messageConversation != null && !String.IsNullOrEmpty(messageConversation.SenderProfileImageFileName))
-            {
-                return GetThumbnailImagePath(messageConversation.SenderProfileImageFileName);
-            }
-            else
-            {
-                return GetThumbnailImagePath(placeholderFileName);
-            }
-        }
-
-        public static string GetReceiverProfileImagePath(this MessageConversation messageConversation)
-        {
-            if (messageConversation != null && !String.IsNullOrEmpty(messageConversation.ReceiverProfileImageFileName))
-            {
-                return GetThumbnailImagePath(messageConversation.ReceiverProfileImageFileName);
-            }
-            else
-            {
-                return GetThumbnailImagePath(placeholderFileName);
-            }
-        }
-
-        private static string GetProfileImagePath(string fileName)
-        {
-            if (String.IsNullOrEmpty(fileName))
-            {
-                fileName = placeholderFileName;
-            }
-
-            return String.Format("{0}/{1}", cdn, fileName);
-        }
-
-        private static string GetThumbnailImagePath(string fileName)
+        public static string GetThumbnailImagePath(string fileName)
         {
             if (String.IsNullOrEmpty(fileName))
             {
@@ -84,40 +83,9 @@ namespace TwolipsDating.Utilities
             string realFileName = Path.GetFileNameWithoutExtension(fileName);
             string fileType = Path.GetExtension(fileName);
 
-            return String.Format("{0}/{1}_{2}{3}?2", cdn, realFileName, "thumb", fileType);
+            return String.Format("{0}/{1}_{2}{3}?{4}", cdn, realFileName, thumbnailSuffix, fileType, thumbnailImageVersion);
         }
 
-        public static string GetProfileSEOName(this Profile profile)
-        {
-            if (profile != null && profile.ApplicationUser != null)
-            {
-                return GetProfileSEOName(profile.ApplicationUser.UserName);
-            }
-            else
-            {
-                return String.Empty;
-            }
-        }
-
-        public static string GetProfileSEOName(string userName)
-        {
-            if (String.IsNullOrEmpty(userName))
-            {
-                return String.Empty;
-            }
-
-            string root = String.Format("{0}", userName);
-            return Regex.Replace(root.ToLower().Replace(@"'", String.Empty), @"[^\w]+", "-");
-        }
-
-        public static string ToSEOString(this string s)
-        {
-            if (String.IsNullOrEmpty(s))
-            {
-                return s;
-            }
-
-            return Regex.Replace(s.ToLower().Replace(@"'", String.Empty), @"[^\w]+", "-");
-        }
+        #endregion
     }
 }

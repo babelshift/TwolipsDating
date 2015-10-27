@@ -350,7 +350,7 @@ namespace TwolipsDating.Business
 
             foreach (var user in results)
             {
-                user.UserProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(user.UserProfileImagePath);
+                user.UserProfileImagePath = ProfileExtensions.GetThumbnailImagePath(user.UserProfileImagePath);
             }
 
             return results;
@@ -613,7 +613,7 @@ namespace TwolipsDating.Business
                 await AwardAchievedMilestonesForUserAsync(authorUserId, (int)MilestoneTypeValues.ProfileReviewsWritten);
 
                 var authorUser = db.Users.Find(authorUserId);
-                string authorUserProfileImagePath = authorUser.Profile.GetProfileThumbnailImagePath();
+                string authorUserProfileImagePath = authorUser.Profile.GetThumbnailImagePath();
                 string authorUserName = authorUser.UserName;
                 string authorProfileUrl = String.Format("{0}/{1}", authorProfileUrlRoot, authorUser.Profile.Id);
 
@@ -671,7 +671,7 @@ namespace TwolipsDating.Business
                         // message was sent successfully, send email notification
                         if (success)
                         {
-                            string senderProfileImagePath = senderUser.Profile.GetProfileThumbnailImagePath();
+                            string senderProfileImagePath = senderUser.Profile.GetThumbnailImagePath();
                             string senderUserName = senderUser.UserName;
 
                             var receiverUser = db.Users.Find(receiverUserId);
@@ -1009,8 +1009,8 @@ namespace TwolipsDating.Business
 
             foreach (var result in results)
             {
-                result.ReceiverProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.ReceiverProfileImagePath);
-                result.SenderProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.SenderProfileImagePath);
+                result.ReceiverProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.ReceiverProfileImagePath);
+                result.SenderProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.SenderProfileImagePath);
             }
 
             return results.AsReadOnly();
@@ -1137,7 +1137,7 @@ namespace TwolipsDating.Business
 
                 // send out email notification
                 var senderUser = db.Users.Find(fromUserId);
-                string senderProfileImagePath = senderUser.Profile.GetProfileThumbnailImagePath();
+                string senderProfileImagePath = senderUser.Profile.GetThumbnailImagePath();
                 string senderUserName = senderUser.UserName;
                 string senderProfileUrl = String.Format("{0}/{1}", senderProfileUrlRoot, senderUser.Profile.Id);
 
@@ -1149,7 +1149,7 @@ namespace TwolipsDating.Business
 
                 await UserService.SendGiftEmailNotificationAsync(
                     senderUserName, senderProfileImagePath, senderProfileUrl,
-                    gift.Name, gift.GetIconPath(),
+                    gift.Name, gift.GetImagePath(),
                     toUserId, receiverUserName, receiverEmail
                 );
 
@@ -1347,7 +1347,7 @@ namespace TwolipsDating.Business
 
             // the follower is the person who did the follow action
             var followerProfile = await db.Profiles.FirstAsync(p => p.ApplicationUser.Id == followerUserId);
-            string followerProfileImagePath = followerProfile.GetProfileThumbnailImagePath();
+            string followerProfileImagePath = followerProfile.GetThumbnailImagePath();
             string followerProfileUrl = String.Format("{0}/{1}", profileIndexUrlRoot, followerProfile.Id);
             string followerUserName = followerProfile.ApplicationUser.UserName;
 
@@ -1568,7 +1568,7 @@ namespace TwolipsDating.Business
             Random random = new Random();
             foreach (var profile in DictionaryHelper.UniqueRandomValues(allProfiles).Take(numberOfProfilesToRetrieve))
             {
-                profile.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(profile.ProfileThumbnailImagePath);
+                profile.ProfileThumbnailImagePath = ProfileExtensions.GetThumbnailImagePath(profile.ProfileThumbnailImagePath);
                 randomProfiles.Add(profile);
             }
 
@@ -1765,7 +1765,7 @@ order by count(t.profileid) desc";
 
             foreach (var result in results)
             {
-                result.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.ProfileThumbnailImagePath);
+                result.ProfileThumbnailImagePath = ProfileExtensions.GetThumbnailImagePath(result.ProfileThumbnailImagePath);
             }
 
             return results.ToList().AsReadOnly();
@@ -1796,7 +1796,7 @@ order by count(t.profileid) desc";
             foreach (var follower in result)
             {
                 follower.BannerImagePath = UserImageExtensions.GetPath(follower.BannerImagePath);
-                follower.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(follower.ProfileThumbnailImagePath);
+                follower.ProfileThumbnailImagePath = ProfileExtensions.GetThumbnailImagePath(follower.ProfileThumbnailImagePath);
             }
 
             return result.AsReadOnly();
@@ -1827,7 +1827,7 @@ order by count(t.profileid) desc";
             foreach (var follower in result)
             {
                 follower.BannerImagePath = UserImageExtensions.GetPath(follower.BannerImagePath);
-                follower.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(follower.ProfileThumbnailImagePath);
+                follower.ProfileThumbnailImagePath = ProfileExtensions.GetThumbnailImagePath(follower.ProfileThumbnailImagePath);
             }
 
             return result.AsReadOnly();

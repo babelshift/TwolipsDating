@@ -9,7 +9,7 @@ namespace TwolipsDating.ViewModels
     public class FollowerFeedViewModel
     {
         public int FollowerProfileId { get; set; }
-        public string FollowerSEOName { get { return ProfileExtensions.GetProfileSEOName(FollowerName); } }
+        public string FollowerSEOName { get { return ProfileExtensions.ToSEOName(FollowerName); } }
         public string FollowerProfileImagePath { get; set; }
         public string FollowerName { get; set; }
         public DateTime DateFollowed { get; set; }

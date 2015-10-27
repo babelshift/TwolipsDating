@@ -136,7 +136,7 @@ namespace TwolipsDating.Controllers
                 return new HttpNotFoundResult();
             }
 
-            string expectedSeoName = quizCategory.GetSEOName();
+            string expectedSeoName = quizCategory.ToSEOName();
             if (seoName != expectedSeoName)
             {
                 return RedirectToAction("category", new { id = id, seoName = expectedSeoName });
@@ -400,7 +400,7 @@ namespace TwolipsDating.Controllers
             }
 
             // redirect to the SEO name if not provided
-            string expectedSeoName = quiz.GetSEOName();
+            string expectedSeoName = quiz.ToSEOName();
             if (seoName != expectedSeoName)
             {
                 return RedirectToAction("quiz", new { id = id, seoName = expectedSeoName });

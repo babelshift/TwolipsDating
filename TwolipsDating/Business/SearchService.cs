@@ -84,7 +84,7 @@ namespace TwolipsDating.Business
             foreach (var profile in profiles)
             {
                 profile.BannerImagePath = UserImageExtensions.GetPath(profile.BannerImagePath);
-                profile.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(profile.ProfileThumbnailImagePath);
+                profile.ProfileThumbnailImagePath = ProfileExtensions.GetThumbnailImagePath(profile.ProfileThumbnailImagePath);
             }
 
             return profiles.AsReadOnly();
@@ -164,7 +164,7 @@ namespace TwolipsDating.Business
             foreach (var profile in result)
             {
                 profile.BannerImagePath = UserImageExtensions.GetPath(profile.BannerImagePath);
-                profile.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(profile.ProfileThumbnailImagePath);
+                profile.ProfileThumbnailImagePath = ProfileExtensions.GetThumbnailImagePath(profile.ProfileThumbnailImagePath);
             }
 
             return result.AsReadOnly();

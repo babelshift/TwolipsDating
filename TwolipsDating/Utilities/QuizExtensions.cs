@@ -1,81 +1,71 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
-using System.Text.RegularExpressions;
 using TwolipsDating.Models;
 
 namespace TwolipsDating.Utilities
 {
     internal static class QuizExtensions
     {
-        private static readonly string cdn = ConfigurationManager.AppSettings["cdnUrl"];
-        private const string placeholderFileName = "PlaceholderQuiz.jpg";
-        
-        internal static string GetSEOName(this QuizCategory quizCategory)
+        private static readonly string cdn = ConfigurationManager.AppSettings["cdnUrl"];    // URL to the image CDN
+        private const int imageVersion = 1;                                                 // version of the image to display from the CDN
+        private const int thumbnailImageVersion = 1;                                        // version of the thumbnail to display from the CDN
+        private const string thumbnailSuffix = "thumb";                                     // string to append to end of image to get thumbnail
+        private const string placeholderFileName = "PlaceholderQuiz.jpg";                   // if the quiz has no image, this is displayed
+
+        #region SEO Name
+
+        /// <summary>
+        /// Returns an SEO / URL friendly string based on the passed quiz name. For example, "The Squares" would return "the-squares".
+        /// </summary>
+        /// <param name="quizName"></param>
+        /// <returns></returns>
+        internal static string ToSEOName(string quizName)
         {
-            if (String.IsNullOrEmpty(quizCategory.Name))
+            return quizName.ToSEOFriendlyString();
+        }
+
+        internal static string ToSEOName(this Quiz quiz)
+        {
+            if (quiz == null)
             {
                 return String.Empty;
             }
 
-            string root = String.Format("{0}", quizCategory.Name);
-            return Regex.Replace(root.ToLower().Replace(@"'", String.Empty), @"[^\w]+", "-");
+            return ToSEOName(quiz.Name);
         }
 
-        internal static string GetCategorySEOName(string categoryName)
-        {
-            if (String.IsNullOrEmpty(categoryName))
-            {
-                return String.Empty;
-            }
+        #endregion SEO Name
 
-            string root = String.Format("{0}", categoryName);
-            return Regex.Replace(root.ToLower().Replace(@"'", String.Empty), @"[^\w]+", "-");
-        }
-
-        internal static string GetQuizSEOName(string quizName)
-        {
-            if (String.IsNullOrEmpty(quizName))
-            {
-                return String.Empty;
-            }
-
-            string root = String.Format("{0}", quizName);
-            return Regex.Replace(root.ToLower().Replace(@"'", String.Empty), @"[^\w]+", "-");
-        }
-
-        internal static string GetSEOName(this Quiz quiz)
-        {
-            if (String.IsNullOrEmpty(quiz.Name))
-            {
-                return String.Empty;
-            }
-
-            string root = String.Format("{0}", quiz.Name);
-            return Regex.Replace(root.ToLower().Replace(@"'", String.Empty), @"[^\w]+", "-");
-        }
+        #region Image Path
 
         internal static string GetImagePath(this Quiz quiz)
         {
-            if (quiz != null && quiz.ImageFileName != null)
+            if (quiz != null)
             {
                 return GetImagePath(quiz.ImageFileName);
             }
-
-            return String.Empty;
+            else
+            {
+                return GetImagePath(placeholderFileName);
+            }
         }
 
         internal static string GetImagePath(string fileName)
         {
-            return String.Format("{0}/{1}?1", cdn, fileName);
+            if (String.IsNullOrEmpty(fileName))
+            {
+                fileName = placeholderFileName;
+            }
+
+            return String.Format("{0}/{1}?{2}", cdn, fileName, imageVersion);
         }
 
-        public static string GetThumbnailImagePath(string fileName)
-        {
-            return GetActualThumbnailImagePath(fileName);
-        }
+        #endregion Image Path
 
-        private static string GetActualThumbnailImagePath(string fileName)
+        #region Thumbnail Image Path
+
+        internal static string GetThumbnailImagePath(string fileName)
         {
             if (String.IsNullOrEmpty(fileName))
             {
@@ -85,19 +75,21 @@ namespace TwolipsDating.Utilities
             string realFileName = Path.GetFileNameWithoutExtension(fileName);
             string fileType = Path.GetExtension(fileName);
 
-            return String.Format("{0}/{1}_{2}{3}?1", cdn, realFileName, "thumb", fileType);
+            return String.Format("{0}/{1}_{2}{3}?{4}", cdn, realFileName, thumbnailSuffix, fileType, thumbnailImageVersion);
         }
 
-        public static string GetThumbnailImagePath(this Quiz quiz)
+        internal static string GetThumbnailImagePath(this Quiz quiz)
         {
-            if (quiz != null && quiz.ImageFileName != null)
+            if (quiz != null)
             {
-                return GetActualThumbnailImagePath(quiz.ImageFileName);
+                return GetThumbnailImagePath(quiz.ImageFileName);
             }
             else
             {
-                return GetActualThumbnailImagePath(placeholderFileName);
+                return GetThumbnailImagePath(placeholderFileName);
             }
         }
+
+        #endregion Thumbnail Image Path
     }
 }

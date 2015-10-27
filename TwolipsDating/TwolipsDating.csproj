@@ -503,11 +503,14 @@
     <Compile Include="Utilities\CalendarHelper.cs" />
     <Compile Include="Utilities\DictionaryHelper.cs" />
     <Compile Include="Utilities\HttpContextExtensions.cs" />
+    <Compile Include="Utilities\MessageExtensions.cs" />
     <Compile Include="Utilities\MilestoneExtensions.cs" />
     <Compile Include="Utilities\ModelStateTransfer.cs" />
+    <Compile Include="Utilities\QuizCategoryExtensions.cs" />
     <Compile Include="Utilities\RequireConfirmedEmail.cs" />
     <Compile Include="Utilities\RequireProfile.cs" />
     <Compile Include="Utilities\RequireValidCaptcha.cs" />
+    <Compile Include="Utilities\StringExtensions.cs" />
     <Compile Include="Utilities\TagSuggestionFeedItemKey.cs" />
     <Compile Include="Utilities\QuizExtensions.cs" />
     <Compile Include="Utilities\StoreItemExtensions.cs" />

@@ -11,7 +11,7 @@ namespace TwolipsDating.ViewModels
         public int UploaderProfileId { get; set; }
         public string UploaderUserName { get; set; }
         public string UploaderProfileImagePath { get; set; }
-        public string UploaderSEOName { get { return ProfileExtensions.GetProfileSEOName(UploaderUserName); } }
+        public string UploaderSEOName { get { return ProfileExtensions.ToSEOName(UploaderUserName); } }
         public string TimeAgo { get { return DateOccurred.GetTimeAgo(); } }
         public string Path { get; set; }
         public string ThumbnailPath { get { return UserImageExtensions.GetThumbnailPath(Path); } }

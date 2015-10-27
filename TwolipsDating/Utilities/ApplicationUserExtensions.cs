@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using TwolipsDating.Models;
+using TwolipsDating.Utilities;
 
 namespace TwolipsDating.Utilities
 {
@@ -18,27 +19,19 @@ namespace TwolipsDating.Utilities
             }
         }
 
-        public static string GetSEOName(this ApplicationUser user)
+        public static string ToSEOName(this ApplicationUser user)
         {
-            if (user != null)
-            {
-                return GetSEOName(user.UserName);
-            }
-            else
+            if (user == null)
             {
                 return String.Empty;
             }
+
+            return ToSEOName(user.UserName);
         }
 
-        public static string GetSEOName(string userName)
+        public static string ToSEOName(string userName)
         {
-            if (String.IsNullOrEmpty(userName))
-            {
-                return String.Empty;
-            }
-
-            string root = String.Format("{0}", userName);
-            return Regex.Replace(root.ToLower().Replace(@"'", String.Empty), @"[^\w]+", "-");
+            return userName.ToSEOFriendlyString();
         }
     }
 }

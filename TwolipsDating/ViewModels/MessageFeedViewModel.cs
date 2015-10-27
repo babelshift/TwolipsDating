@@ -7,7 +7,7 @@ namespace TwolipsDating.ViewModels
     {
         public DateTime DateOccurred { get; set; }
         public string SenderUserId { get; set; }
-        public string SenderSEOName { get { return ProfileExtensions.GetProfileSEOName(SenderUserName); } }
+        public string SenderSEOName { get { return ProfileExtensions.ToSEOName(SenderUserName); } }
         public string SenderUserName { get; set; }
         public int SenderProfileId { get; set; }
         public string SenderProfileImagePath { get; set; }

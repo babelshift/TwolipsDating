@@ -14,7 +14,7 @@ namespace TwolipsDating.ViewModels
         {
             get
             {
-                return QuizExtensions.GetQuizSEOName(QuizName);
+                return QuizExtensions.ToSEOName(QuizName);
             }
         }
         public int CompletedCount { get; set; }

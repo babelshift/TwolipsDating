@@ -823,7 +823,7 @@ namespace TwolipsDating.Business
                 }
 
                 quiz.ThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(quiz.ThumbnailImagePath);
-                quiz.QuizCategorySEOName = QuizExtensions.GetCategorySEOName(quiz.QuizCategoryName);
+                quiz.QuizCategorySEOName = QuizCategoryExtensions.ToSEOName(quiz.QuizCategoryName);
             }
 
             return quizDetails.AsReadOnly();
@@ -947,7 +947,7 @@ namespace TwolipsDating.Business
 
             foreach (var viewModel in results)
             {
-                viewModel.ProfileImagePath = ProfileExtensions.GetProfileThumbnailImagePath(viewModel.ProfileImagePath);
+                viewModel.ProfileImagePath = ProfileExtensions.GetThumbnailImagePath(viewModel.ProfileImagePath);
                 viewModel.Age = DateTimeExtensions.GetAge(viewModel.Birthday);
                 viewModel.Location = CityExtensions.ToFullLocationString(viewModel.CityName, viewModel.StateName);
             }
@@ -1293,7 +1293,7 @@ namespace TwolipsDating.Business
             // we have to do this outside of the query because Linq to Entities doesn't support custom extensions
             foreach (var result in results)
             {
-                result.ProfileThumbnailImagePath = ProfileExtensions.GetProfileThumbnailImagePath(result.ProfileThumbnailImagePath);
+                result.ProfileThumbnailImagePath = ProfileExtensions.GetThumbnailImagePath(result.ProfileThumbnailImagePath);
             }
 
             return results.AsReadOnly();

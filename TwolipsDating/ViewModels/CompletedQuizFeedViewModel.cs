@@ -14,7 +14,7 @@ namespace TwolipsDating.ViewModels
         {
             get
             {
-                return ProfileExtensions.GetProfileSEOName(SourceUserName);
+                return ProfileExtensions.ToSEOName(SourceUserName);
             }
         }
         public string SourceProfileImagePath { get; set; }
@@ -26,7 +26,7 @@ namespace TwolipsDating.ViewModels
         {
             get
             {
-                return QuizExtensions.GetQuizSEOName(QuizName);
+                return QuizExtensions.ToSEOName(QuizName);
             }
         }
         public int QuizId { get; set; }

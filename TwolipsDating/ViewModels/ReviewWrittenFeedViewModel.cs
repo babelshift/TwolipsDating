@@ -7,11 +7,11 @@ namespace TwolipsDating.ViewModels
     {
         public int ReviewId { get; set; }
         public string AuthorUserName { get; set; }
-        public string AuthorSEOName { get { return ProfileExtensions.GetProfileSEOName(AuthorUserName); } }
+        public string AuthorSEOName { get { return ProfileExtensions.ToSEOName(AuthorUserName); } }
         public int AuthorProfileId { get; set; }
         public string AuthorProfileImagePath { get; set; }
         public string TargetUserName { get; set; }
-        public string TargetSEOName { get { return ProfileExtensions.GetProfileSEOName(TargetUserName); } }
+        public string TargetSEOName { get { return ProfileExtensions.ToSEOName(TargetUserName); } }
         public int TargetProfileId { get; set; }
         public string TargetProfileImagePath { get; set; }
         public int? ReviewRatingValue { get; set; }

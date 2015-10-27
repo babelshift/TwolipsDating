@@ -464,7 +464,7 @@ namespace TwolipsDating.Business
                 // this will always only be a single item for solo achievements
                 foreach (var achievementStatus in achievementOverview.AchievementStatuses)
                 {
-                    achievementStatus.AchievementIconPath = MilestoneExtensions.GetIconPath(achievementStatus.AchievementIconPath);
+                    achievementStatus.AchievementIconPath = MilestoneExtensions.GetImagePath(achievementStatus.AchievementIconPath);
                 }
             }
 
@@ -527,7 +527,7 @@ namespace TwolipsDating.Business
                 {
                     RequiredCount = milestone.AmountRequired,
                     AchievedCount = amountAchieved <= milestone.AmountRequired ? amountAchieved : milestone.AmountRequired,
-                    AchievementIconPath = milestone.GetIconPath()
+                    AchievementIconPath = milestone.GetImagePath()
                 });
 
                 previousMilestone = milestone;
@@ -572,7 +572,7 @@ namespace TwolipsDating.Business
             foreach (var milestone in results)
             {
                 v.AchievedCount = await GetAchievedAmountForUserAsync(userId, milestoneTypeId);
-                v.AchievementIconPath = MilestoneExtensions.GetIconPath(milestone.IconFileName);
+                v.AchievementIconPath = MilestoneExtensions.GetImagePath(milestone.IconFileName);
                 v.RequiredCount = milestone.AmountRequired;
 
                 // if the user has not achieved this milestone, break and use it
@@ -598,7 +598,7 @@ namespace TwolipsDating.Business
             var result = await milestones.ToListAsync();
             foreach(var milestone in result)
             {
-                milestone.AchievementIconPath = MilestoneExtensions.GetIconPath(milestone.AchievementIconPath);
+                milestone.AchievementIconPath = MilestoneExtensions.GetImagePath(milestone.AchievementIconPath);
             }
 
             return result.AsReadOnly();

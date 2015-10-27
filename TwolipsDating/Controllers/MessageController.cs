@@ -87,7 +87,7 @@ namespace TwolipsDating.Controllers
             viewModel.TargetUserGender = profileForOtherUser.Gender.Name;
             viewModel.TargetProfileId = profileForOtherUser.Id;
             viewModel.TargetUserId = id;
-            viewModel.TargetProfileImagePath = profileForOtherUser.GetProfileThumbnailImagePath();
+            viewModel.TargetProfileImagePath = profileForOtherUser.GetThumbnailImagePath();
             viewModel.TargetApplicationUserId = id;
 
             return View(viewModel);
@@ -163,14 +163,14 @@ namespace TwolipsDating.Controllers
             {
                 conversationItem.TargetUserId = message.SenderApplicationUserId;
                 conversationItem.TargetName = message.SenderName;
-                conversationItem.TargetProfileImagePath = message.GetSenderProfileImagePath();
+                conversationItem.TargetProfileImagePath = message.GetSenderProfileThumbnailImagePath();
                 conversationItem.TargetProfileId = message.SenderProfileId;
             }
             else if (message.SenderApplicationUserId == currentUserId)
             {
                 conversationItem.TargetUserId = message.ReceiverApplicationUserId;
                 conversationItem.TargetName = message.ReceiverName;
-                conversationItem.TargetProfileImagePath = message.GetReceiverProfileImagePath();
+                conversationItem.TargetProfileImagePath = message.GetReceiverProfileThumbnailImagePath();
                 conversationItem.TargetProfileId = message.ReceiverProfileId;
             }
 
