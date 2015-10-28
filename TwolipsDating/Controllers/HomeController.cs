@@ -10,7 +10,6 @@ using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
 using PagedList;
-using System.Configuration;
 
 namespace TwolipsDating.Controllers
 {
