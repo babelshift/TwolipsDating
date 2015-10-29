@@ -246,13 +246,13 @@ namespace TwolipsDating.Business
                               join tag in db.Tags on tagAward.TagId equals tag.TagId
                               group tagAward by new { tagAward.TagId, tag.Name, tagAward.ProfileId, tag.Description }
                                   into grouping
-                                  select new ProfileTagAwardViewModel()
-                                  {
-                                      TagCount = grouping.Count(),
-                                      TagId = grouping.Key.TagId,
-                                      TagName = grouping.Key.Name,
-                                      TagDescription = grouping.Key.Description
-                                  };
+                              select new ProfileTagAwardViewModel()
+                              {
+                                  TagCount = grouping.Count(),
+                                  TagId = grouping.Key.TagId,
+                                  TagName = grouping.Key.Name,
+                                  TagDescription = grouping.Key.Description
+                              };
 
             var results = await tagsAwarded.ToListAsync();
 
@@ -291,27 +291,27 @@ namespace TwolipsDating.Business
                              where tagSuggestion.SuggestingUser.IsActive // only show suggestions from active users
                              orderby tagSuggestion.DateSuggested descending
                              select new ProfileTagSuggestionViewModel()
-                            {
-                                TagId = tag.TagId,
-                                TagName = tag.Name,
-                                TagDescription = tag.Description,
-                                TagCount = 0,
-                                DidUserSuggest = (!String.IsNullOrEmpty(userId) && tagSuggestion.SuggestingUserId == userId) ? true : false
-                            };
+                             {
+                                 TagId = tag.TagId,
+                                 TagName = tag.Name,
+                                 TagDescription = tag.Description,
+                                 TagCount = 0,
+                                 DidUserSuggest = (!String.IsNullOrEmpty(userId) && tagSuggestion.SuggestingUserId == userId) ? true : false
+                             };
 
             // this will return tag suggestions and the count of the number of that tag's suggestions from the first query
             var secondQuery = from f in firstQuery
                               group f by new { f.TagId, f.TagName, f.TagDescription }
                                   into grouping
-                                  orderby grouping.Count() descending
-                                  select new ProfileTagSuggestionViewModel()
-                                  {
-                                      TagId = grouping.Key.TagId,
-                                      TagName = grouping.Key.TagName,
-                                      TagDescription = grouping.Key.TagDescription,
-                                      TagCount = grouping.Count(),
-                                      DidUserSuggest = false
-                                  };
+                              orderby grouping.Count() descending
+                              select new ProfileTagSuggestionViewModel()
+                              {
+                                  TagId = grouping.Key.TagId,
+                                  TagName = grouping.Key.TagName,
+                                  TagDescription = grouping.Key.TagDescription,
+                                  TagCount = grouping.Count(),
+                                  DidUserSuggest = false
+                              };
 
             var secondResults = await secondQuery.ToListAsync();
 
@@ -697,7 +697,6 @@ namespace TwolipsDating.Business
                     ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.NeedPointsToMessage);
                     return success ? ServiceResult.Success : ServiceResult.Failed(ErrorMessages.NeedPointsToMessage);
                 }
-
             }
             // if the receiver is ignoring the sender, don't send a message, just pretend we succeeded
             else
@@ -1137,7 +1136,7 @@ namespace TwolipsDating.Business
         /// <param name="userId"></param>
         /// <param name="userId2"></param>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<Message>> GetMessagesBetweenUsersAsync(string userId, string userId2)
+        public async Task<IReadOnlyCollection<ConversationItemViewModel>> GetMessagesBetweenUsersAsync(string userId, string userId2)
         {
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(!String.IsNullOrEmpty(userId2));
@@ -1148,20 +1147,38 @@ namespace TwolipsDating.Business
                                        where messages.SenderApplicationUser.IsActive
                                        && messages.ReceiverApplicationUser.IsActive
                                        orderby messages.DateSent descending
-                                       select messages;
+                                       select new ConversationItemViewModel()
+                                       {
+                                            DateSent = messages.DateSent,
+                                            MostRecentMessageBody = messages.Body,
+                                            MostRecentMessageSenderUserId = messages.SenderApplicationUserId,
+                                            MostRecentMessageStatusId = messages.MessageStatusId,
+                                            TargetUserId = messages.ReceiverApplicationUserId,
+                                            TargetProfileId = messages.ReceiverApplicationUser.Profile.Id,
+                                            TargetName = messages.ReceiverApplicationUser.UserName,
+                                            TargetProfileImagePath = messages.ReceiverApplicationUser.Profile.UserImage != null
+                                            ? messages.ReceiverApplicationUser.Profile.UserImage.FileName
+                                            : String.Empty
+                                       };
+
 
             var results = await messagesBetweenUsers.ToListAsync();
 
-            // all messages that this user has received in this collection should be marked as read
-            foreach (var message in results)
+            foreach (var result in results)
             {
-                if (message.ReceiverApplicationUserId == userId)
-                {
-                    message.MessageStatusId = (int)MessageStatusValue.Read;
-                }
+                result.TargetProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.TargetProfileImagePath);
             }
 
-            int changes = await db.SaveChangesAsync();
+            //// all messages that this user has received in this collection should be marked as read
+            //foreach (var message in results)
+            //{
+            //    if (message.TargetUserId == userId)
+            //    {
+            //        message.MostRecentMessageStatusId = (int)MessageStatusValue.Read;
+            //    }
+            //}
+
+            //int changes = await db.SaveChangesAsync();
 
             return results.AsReadOnly();
         }
@@ -1188,7 +1205,7 @@ namespace TwolipsDating.Business
 
             var results = await inventory.ToListAsync();
 
-            foreach(var result in results)
+            foreach (var result in results)
             {
                 result.GiftIconFilePath = StoreItemExtensions.GetImagePath(result.GiftIconFilePath);
             }
@@ -1815,8 +1832,8 @@ t.profileid ProfileId,
 ui.filename ProfileThumbnailImagePath
 from (
 	-- all profiles with tag counts that are within the range of comparing user tag count
-	select 
-	tagid, 
+	select
+	tagid,
 	profileid
 	from dbo.tagawards ta1
 	inner join dbo.Profiles p on ta1.ProfileId = p.Id

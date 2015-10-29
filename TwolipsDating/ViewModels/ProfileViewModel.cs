@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TwolipsDating.Models;
 using System.Linq;
 using System;
 using TwolipsDating.Utilities;
@@ -12,7 +11,6 @@ namespace TwolipsDating.ViewModels
         #region Profile view stuff
 
         public bool IsUserActive { get; set; }
-        public bool IsCurrentUserEmailConfirmed { get; set; }
         public string UserName { get; set; }
         public string SelectedTitle { get; set; }
         public string SelectedTitleImage { get; set; }

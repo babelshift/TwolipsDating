@@ -38,53 +38,76 @@
 
                 @foreach (var conversation in Model.Conversations)
                 {
-                    <div class="conversation-summary-item">
-                        <a href="@Url.Action("conversation", "message", new { id = conversation.TargetUserId })">
-                            @if (conversation.TargetUserId == Model.TargetUserId)
+                <div class="conversation-summary-item">
+                    <a href="@Url.Action("conversation", "message", new { id = conversation.TargetUserId })">
+                        @if (conversation.TargetUserId == Model.TargetUserId)
                             {
-                                <div class="well well-sm overflow-ellipsis" style="border-color: #006181; background-color: #008CBA; line-height: 15px; color: #eee">
-                                    <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
-                                        <img class="circular-image" src="@conversation.TargetProfileImagePath" />
-                                    </div>
-                                    <strong>@conversation.TargetName</strong>
-                                    <br />
-                                    <small>@conversation.TimeAgo</small>
-                                    <br />
-                                    <small>@conversation.MostRecentMessageBody</small>
+                            <div class="well well-sm overflow-ellipsis" style="border-color: #006181; background-color: #008CBA; line-height: 15px; color: #eee">
+                                <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
+                                    <img class="circular-image" src="@conversation.TargetProfileImagePath" />
                                 </div>
+                                <strong>@conversation.TargetName</strong>
+                                <br />
+                                <small>@conversation.TimeAgo</small>
+                                <br />
+                                <small>@conversation.MostRecentMessageBody</small>
+                            </div>
                             }
                             else if (conversation.MostRecentMessageSenderUserId != Model.CurrentUserId
                             && conversation.MostRecentMessageStatusId == (int)TwolipsDating.Models.MessageStatusValue.Unread)
                             {
-                                <div class="well well-sm overflow-ellipsis" style="border-color: #008cba; background-color: #efefef; line-height: 15px">
-                                    <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
-                                        <img class="circular-image" src="@conversation.TargetProfileImagePath" />
-                                    </div>
-                                    <strong>@conversation.TargetName</strong>
-                                    <br />
-                                    <small style="color: #555">@conversation.TimeAgo</small><i class="pull-right glyphicon glyphicon-envelope"></i>
-                                    <br />
-                                    <small>@conversation.MostRecentMessageBody</small>
+                            <div class="well well-sm overflow-ellipsis" style="border-color: #008cba; background-color: #efefef; line-height: 15px">
+                                <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
+                                    <img class="circular-image" src="@conversation.TargetProfileImagePath" />
                                 </div>
+                                <strong>@conversation.TargetName</strong>
+                                <br />
+                                <small style="color: #555">@conversation.TimeAgo</small><i class="pull-right glyphicon glyphicon-envelope"></i>
+                                <br />
+                                <small>@conversation.MostRecentMessageBody</small>
+                            </div>
                             }
                             else
                             {
-                                <div class="well well-sm overflow-ellipsis" style="line-height: 15px">
-                                    <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
-                                        <img class="circular-image" src="@conversation.TargetProfileImagePath" />
-                                    </div>
-                                    <strong>@conversation.TargetName</strong>
-                                    <br />
-                                    <small>@conversation.TimeAgo</small>
-                                    <br />
-                                    <small>@conversation.MostRecentMessageBody</small>
+                            <div class="well well-sm overflow-ellipsis" style="line-height: 15px">
+                                <div class="circular-image-wrapper pull-left" style="margin-right: 7px;">
+                                    <img class="circular-image" src="@conversation.TargetProfileImagePath" />
                                 </div>
+                                <strong>@conversation.TargetName</strong>
+                                <br />
+                                <small>@conversation.TimeAgo</small>
+                                <br />
+                                <small>@conversation.MostRecentMessageBody</small>
+                            </div>
                             }
-                        </a>
-                    </div>
+                    </a>
+                </div>
                 }
             </div>
         </div>
+        @if (HttpContext.Current.AreAdsEnabled())
+        {
+            if (!HttpContext.Current.IsDebuggingEnabled)
+            {
+                <div class="ad">
+                    <!-- Conversation - Sidebar - 1 -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1823005717277864"
+                         data-ad-slot="4336018233"
+                         data-ad-format="auto"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div style="width: 350px; margin: 5px auto;">
+                    <img src="http://placehold.it/350x250" />
+                </div>
+            }
+        }
     </div>
     <div class="col-md-8">
         @if (String.IsNullOrEmpty(Model.TargetUserId))

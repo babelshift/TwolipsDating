@@ -173,15 +173,13 @@ namespace TwolipsDating
                 .ForMember(dest => dest.TargetName, opts => opts.MapFrom(source => source.SenderApplicationUser.UserName))
                 .ForMember(dest => dest.TargetProfileImagePath, opts => opts.MapFrom(source => source.SenderApplicationUser.Profile.GetThumbnailImagePath()))
                 .ForMember(dest => dest.MostRecentMessageBody, opts => opts.MapFrom(source => source.Body))
-                .ForMember(dest => dest.MostRecentMessageStatusId, opts => opts.MapFrom(source => source.MessageStatusId))
-                .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()));
+                .ForMember(dest => dest.MostRecentMessageStatusId, opts => opts.MapFrom(source => source.MessageStatusId));
 
             Mapper.CreateMap<MessageConversation, ConversationItemViewModel>()
                 .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateSent))
                 .ForMember(dest => dest.MostRecentMessageSenderUserId, opts => opts.MapFrom(source => source.SenderApplicationUserId))
                 .ForMember(dest => dest.MostRecentMessageBody, opts => opts.MapFrom(source => source.Body))
-                .ForMember(dest => dest.MostRecentMessageStatusId, opts => opts.MapFrom(source => source.MessageStatusId))
-                .ForMember(dest => dest.TimeAgo, opts => opts.MapFrom(source => source.DateSent.GetTimeAgo()));
+                .ForMember(dest => dest.MostRecentMessageStatusId, opts => opts.MapFrom(source => source.MessageStatusId));
 
             Mapper.CreateMap<Message, ReceivedMessageViewModel>()
                 .ForMember(dest => dest.DateSent, opts => opts.MapFrom(source => source.DateSent))

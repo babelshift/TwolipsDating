@@ -1,17 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.AspNet.Identity;
+using PagedList;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using TwolipsDating.Business;
 using TwolipsDating.Models;
 using TwolipsDating.Utilities;
 using TwolipsDating.ViewModels;
-using PagedList;
 
 namespace TwolipsDating.Controllers
 {
@@ -59,7 +56,7 @@ namespace TwolipsDating.Controllers
             //    id = viewModel.Conversations[0].TargetUserId;
             //}
 
-            if(String.IsNullOrEmpty(id))
+            if (String.IsNullOrEmpty(id))
             {
                 return View(viewModel);
             }
@@ -77,8 +74,7 @@ namespace TwolipsDating.Controllers
 
             // look up conversations between the current user and the selected id
             var messagesBetweenUsers = await ProfileService.GetMessagesBetweenUsersAsync(currentUserId, id);
-            var conversationMessagesBetweenUsers = Mapper.Map<IReadOnlyCollection<Message>, IReadOnlyList<ConversationItemViewModel>>(messagesBetweenUsers);
-            viewModel.ConversationMessages = conversationMessagesBetweenUsers.ToPagedList(page ?? 1, 20);
+            viewModel.ConversationMessages = messagesBetweenUsers.ToPagedList(page ?? 1, 20);
 
             // setup targetted user for which conversations are being looked
             viewModel.TargetUserName = profileForOtherUser.UserName;
@@ -184,7 +180,7 @@ namespace TwolipsDating.Controllers
 
         public async Task<JsonResult> SearchPeopleToMessage(string userName)
         {
-            if(String.IsNullOrEmpty(userName))
+            if (String.IsNullOrEmpty(userName))
             {
                 return Json(new { });
             }

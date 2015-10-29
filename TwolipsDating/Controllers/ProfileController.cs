@@ -727,7 +727,7 @@ namespace TwolipsDating.Controllers
         private async Task<ActionResult> ShowUserProfileAsync(string tab, string currentUserId, ProfileViewModel viewModel, int? page)
         {
             // check if user's email address is confirmed
-            viewModel.IsCurrentUserEmailConfirmed = !User.Identity.IsAuthenticated ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
+            //viewModel.IsCurrentUserEmailConfirmed = !User.Identity.IsAuthenticated ? false : await UserManager.IsEmailConfirmedAsync(currentUserId);
 
             // set the active tab or its default
             viewModel.ActiveTab = !String.IsNullOrEmpty(tab) ? tab : "about";

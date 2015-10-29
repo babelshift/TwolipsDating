@@ -48,7 +48,7 @@ namespace TwolipsDating.Business
 
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.MessageConversation>> GetMessageConversationsAsync(string userId);
 
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Message>> GetMessagesBetweenUsersAsync(string userId, string userId2);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.ConversationItemViewModel>> GetMessagesBetweenUsersAsync(string userId, string userId2);
 
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Message>> GetMessagesReceivedByUserAsync(string userId);
 

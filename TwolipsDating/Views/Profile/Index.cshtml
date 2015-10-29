@@ -7,7 +7,7 @@
     string title = String.Empty;
     if (User.Identity.IsAuthenticated)
     {
-        if (Model.IsCurrentUserEmailConfirmed && !String.IsNullOrEmpty(Model.UserName))
+        if (!String.IsNullOrEmpty(Model.UserName))
         {
             title = String.Format("Profile for {0} ({1})", Model.UserName, !String.IsNullOrEmpty(Model.SelectedTitle) ? Model.SelectedTitle : "Newbie");
         }
