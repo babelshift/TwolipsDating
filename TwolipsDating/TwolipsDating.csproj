@@ -981,7 +981,6 @@
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Properties\PublishProfiles\twolipsdating.pubxml" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\advertisement.js" />
     <Content Include="Scripts\analytics.js" />
