@@ -7,7 +7,7 @@ namespace TwolipsDating.ViewModels
         public string Name { get; set; }
         public string SEOName { get { return QuizExtensions.ToSEOName(Name); } }
         public string Description { get; set; }
-        public int AveragePoints { get; set; }
+        public int? AveragePoints { get; set; }
         public bool IsComplete { get; set; }
         public string ThumbnailImagePath { get; set; }
         public int QuizCategoryId { get; set; }

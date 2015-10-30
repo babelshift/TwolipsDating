@@ -53,7 +53,14 @@ namespace TwolipsDating.Business
                                      })
                                      .Take(4);
 
-            return (await quizzesInCategory.ToListAsync()).AsReadOnly();
+            var results = await quizzesInCategory.ToListAsync();
+
+            foreach (var result in results)
+            {
+                result.ThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(result.ThumbnailImagePath);
+            }
+
+            return results.AsReadOnly();
         }
 
         public async Task<Quiz> GetQuizAsync(int quizId)
