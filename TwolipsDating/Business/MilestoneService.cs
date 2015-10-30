@@ -561,6 +561,7 @@ namespace TwolipsDating.Business
         public async Task<AchievementProgressViewModel> GetAchievementProgressForUserAsync(string userId, int milestoneTypeId)
         {
             var milestones = from milestone in db.Milestones
+                             .Include(x => x.MilestonesAchieved)
                              where milestone.MilestoneTypeId == milestoneTypeId
                              orderby milestone.Id
                              select milestone;
@@ -570,16 +571,23 @@ namespace TwolipsDating.Business
             AchievementProgressViewModel v = new AchievementProgressViewModel();
 
             foreach (var milestone in results)
-            {
+            { 
                 v.AchievedCount = await GetAchievedAmountForUserAsync(userId, milestoneTypeId);
                 v.AchievementIconPath = MilestoneExtensions.GetImagePath(milestone.IconFileName);
                 v.RequiredCount = milestone.AmountRequired;
 
-                // if the user has not achieved this milestone, break and use it
-                if (milestone.MilestonesAchieved == null || (milestone.MilestonesAchieved != null && milestone.MilestonesAchieved.Count == 0))
+                // user hasn't reached the required amount yet to go beyond this milestone, break and use this milestone
+                if (v.AchievedCount < v.RequiredCount)
                 {
                     break;
                 }
+
+                //// if the user has not achieved this milestone, break and use it
+                //bool hasUserAchievedMilestone = milestone.MilestonesAchieved.Any(x => x.UserId == userId);
+                //if (milestone.MilestonesAchieved == null || (milestone.MilestonesAchieved != null && milestone.MilestonesAchieved.Count == 0))
+                //{
+                //    break;
+                //}
             }
 
             return v;
