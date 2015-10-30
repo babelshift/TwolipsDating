@@ -134,6 +134,16 @@
 <div class="row">
     @if (User.Identity.GetUserId() == Model.ProfileUserId)
     {
+        <div id="alert-start-guide" class="hidden">
+            <div class="col-xs-12">
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 style="margin-top: 0; margin-bottom: 10px;">This is your personal profile page! Do you want me to show you around with a guided tour?</h4>
+                    <button type="button" class="btn btn-primary btn-xs" id="button-start-guide"><i class="fa fa-check"></i> Start Guide</button>
+                    <button type="button" class="btn btn-success btn-xs" id="button-end-guide"><i class="fa fa-remove"></i> No Thanks</button>
+                </div>
+            </div>
+        </div>
         <div id="panel-profile-setup" class="col-xs-12 hidden">
             <div class="panel panel-primary">
                 <div class="panel-body">
@@ -203,16 +213,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div id="alert-start-guide" class="hidden">
-            <div class="col-xs-12">
-                <div class="alert alert-success" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 style="margin-top: 0; margin-bottom: 10px;">This is your personal profile page! Do you want me to show you around with a guided tour?</h4>
-                    <button type="button" class="btn btn-primary btn-xs" id="button-start-guide"><i class="fa fa-check"></i> Start Guide</button>
-                    <button type="button" class="btn btn-success btn-xs" id="button-end-guide"><i class="fa fa-remove"></i> No Thanks</button>
                 </div>
             </div>
         </div>
