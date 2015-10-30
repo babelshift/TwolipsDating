@@ -222,17 +222,20 @@
         </div>
     }
     <div class="container body-content">
-        <div class="row">
-            <div class="col-xs-12">
-                <div id="adblocker-warning" class="hidden alert alert-danger alert-dismissable" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h5 style="margin: 0">
-                        You seem to be using an adblocker. I know ads are annoying, but did you know this site is being developed by only a single person?
-                        If you are having fun around here, consider disabling your adblock for this domain. It would really help me out. Thanks!
-                    </h5>
+        @if (HttpContext.Current.AreAdsEnabled())
+        {
+            <div class="row">
+                <div class="col-xs-12">
+                    <div id="adblocker-warning" class="hidden alert alert-danger alert-dismissable" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h5 style="margin: 0">
+                            You seem to be using an adblocker. I know ads are annoying, but did you know this site is being developed by only a single person?
+                            If you are having fun around here, consider disabling your adblock for this domain. It would really help me out. Thanks!
+                        </h5>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
         @RenderBody()
     </div>
     <div class="footer">

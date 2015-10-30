@@ -44,7 +44,7 @@
         </h4>
     </div>
     <div class="panel-body">
-        @if (User.Identity.IsAuthenticated && Model.ProfileUserId != User.Identity.GetUserId() && Model.IsCurrentUserEmailConfirmed)
+        @if (User.Identity.IsAuthenticated && Model.ProfileUserId != User.Identity.GetUserId())
         {
             <a href="#" style="margin-bottom: 5px" class="btn btn-xs btn-default custom-tooltip" title="Suggest tags to be displayed on this profile"
                data-toggle="modal" data-target="#modalSuggestTags" data-keyboard="true">

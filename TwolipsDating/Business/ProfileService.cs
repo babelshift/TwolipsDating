@@ -772,10 +772,14 @@ namespace TwolipsDating.Business
 
             var result = await profile.FirstOrDefaultAsync();
 
-            result.ProfileImagePath = ProfileExtensions.GetImagePath(result.ProfileImagePath);
-            result.ProfileThumbnailImagePath = ProfileExtensions.GetThumbnailImagePath(result.ProfileThumbnailImagePath);
-            result.SelectedTitleImage = StoreItemExtensions.GetImagePath(result.SelectedTitleImage);
-            result.BannerImagePath = UserImageExtensions.GetPath(result.BannerImagePath);
+            // if the profile doesn't exist, we don't want to try to use it
+            if (result != null)
+            {
+                result.ProfileImagePath = ProfileExtensions.GetImagePath(result.ProfileImagePath);
+                result.ProfileThumbnailImagePath = ProfileExtensions.GetThumbnailImagePath(result.ProfileThumbnailImagePath);
+                result.SelectedTitleImage = StoreItemExtensions.GetImagePath(result.SelectedTitleImage);
+                result.BannerImagePath = UserImageExtensions.GetPath(result.BannerImagePath);
+            }
 
             return result;
         }
@@ -1149,14 +1153,14 @@ namespace TwolipsDating.Business
                                        orderby messages.DateSent descending
                                        select new ConversationItemViewModel()
                                        {
-                                            DateSent = messages.DateSent,
-                                            MostRecentMessageBody = messages.Body,
-                                            MostRecentMessageSenderUserId = messages.SenderApplicationUserId,
-                                            MostRecentMessageStatusId = messages.MessageStatusId,
-                                            TargetUserId = messages.ReceiverApplicationUserId,
-                                            TargetProfileId = messages.ReceiverApplicationUser.Profile.Id,
-                                            TargetName = messages.ReceiverApplicationUser.UserName,
-                                            TargetProfileImagePath = messages.ReceiverApplicationUser.Profile.UserImage != null
+                                           DateSent = messages.DateSent,
+                                           MostRecentMessageBody = messages.Body,
+                                           MostRecentMessageSenderUserId = messages.SenderApplicationUserId,
+                                           MostRecentMessageStatusId = messages.MessageStatusId,
+                                           TargetUserId = messages.ReceiverApplicationUserId,
+                                           TargetProfileId = messages.ReceiverApplicationUser.Profile.Id,
+                                           TargetName = messages.ReceiverApplicationUser.UserName,
+                                           TargetProfileImagePath = messages.ReceiverApplicationUser.Profile.UserImage != null
                                             ? messages.ReceiverApplicationUser.Profile.UserImage.FileName
                                             : String.Empty
                                        };

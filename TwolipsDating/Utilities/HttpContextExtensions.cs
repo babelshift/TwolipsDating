@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Web;
 
 namespace TwolipsDating.Utilities
 {
@@ -9,7 +6,7 @@ namespace TwolipsDating.Utilities
     {
         public static bool AreAdsEnabled(this HttpContext context)
         {
-            return true;
+            return false;
         }
     }
 }
