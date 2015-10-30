@@ -11,7 +11,8 @@ namespace TwolipsDating.ViewModels
         TagSuggestion,
         QuizCompletion,
         AchievementObtained,
-        NewFollower
+        NewFollower,
+        ProfileVisit
     }
 
     public class DashboardItemViewModel
@@ -26,5 +27,6 @@ namespace TwolipsDating.ViewModels
         public CompletedQuizFeedViewModel CompletedQuizFeedItem { get; set; }
         public AchievementFeedViewModel AchievementFeedItem { get; set; }
         public FollowerFeedViewModel FollowerFeedItem { get; set; }
+        public ProfileVisitFeedViewModel ProfileVisitFeedItem { get; set; }
     }
 }

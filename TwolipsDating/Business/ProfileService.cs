@@ -1607,7 +1607,7 @@ namespace TwolipsDating.Business
         /// <param name="viewerUserId"></param>
         /// <param name="targetProfileId"></param>
         /// <returns></returns>
-        public async Task<int> LogProfileViewAsync(string viewerUserId, int targetProfileId)
+        public async Task<int> LogProfileViewAsync(string viewerUserId, string targetUserId, int targetProfileId)
         {
             Debug.Assert(!String.IsNullOrEmpty(viewerUserId));
             Debug.Assert(targetProfileId > 0);
@@ -1620,6 +1620,9 @@ namespace TwolipsDating.Business
             };
 
             db.ProfileViews.Add(newView);
+
+            await UserService.IncreaseNotificationCountAsync(targetUserId);
+
             return await db.SaveChangesAsync();
         }
 

@@ -92,7 +92,7 @@ namespace TwolipsDating.Business
 
         System.Threading.Tasks.Task<TwolipsDating.ViewModels.UserStatsViewModel> GetUserStatsAsync(string userId);
 
-        System.Threading.Tasks.Task<int> LogProfileViewAsync(string viewerUserId, int targetProfileId);
+        System.Threading.Tasks.Task<int> LogProfileViewAsync(string viewerUserId, string targetUserId, int targetProfileId);
 
         System.Threading.Tasks.Task<int> RemoveAllGiftNotificationAsync(string userId);
 

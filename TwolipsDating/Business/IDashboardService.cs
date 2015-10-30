@@ -29,5 +29,7 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.FollowerFeedViewModel>> GetFollowersAsync(string currentUserId);
 
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.TagSuggestionReceivedFeedViewModel>> GetFollowerTagSuggestionsAsync(string userId);
+
+        Task<IReadOnlyCollection<ProfileVisitFeedViewModel>> GetProfileVisitsAsync(string userId);
     }
 }

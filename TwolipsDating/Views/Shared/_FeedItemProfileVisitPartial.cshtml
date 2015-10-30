@@ -1,0 +1,18 @@
+﻿@model TwolipsDating.ViewModels.ProfileVisitFeedViewModel
+
+<div class="feed-item-icon pull-left">
+    <i class="fa fa-eye fa-fw fa-lg"></i>
+</div>
+<div style="margin-left: 35px">
+    @if (!String.IsNullOrEmpty(Model.VisitorProfileImagePath))
+    {
+        <div class="circular-image-wrapper">
+            <img class="circular-image" src="@Model.VisitorProfileImagePath" />
+        </div>
+    }
+    <div class="feed-item-headline">
+        <a href="@Url.Action("index", "profile", new { id = Model.VisitorProfileId, seoName = Model.VisitorSEOName })">@Model.VisitorUserName</a> visited your profile
+        <br />
+        <small>@Model.TimeAgo</small>
+    </div>
+</div>

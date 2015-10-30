@@ -588,5 +588,39 @@ where
         }
 
         #endregion Followers
+
+        #region Visitors
+
+        public async Task<IReadOnlyCollection<ProfileVisitFeedViewModel>> GetProfileVisitsAsync(string userId)
+        {
+            var visitors = from visitor in db.ProfileViews
+                           where visitor.Profile.ApplicationUser.Id == userId // only where the profile is the user's profile
+                           where visitor.ViewerUserId != userId // but don't include visits by the user (he doesn't care if he visited himself)
+                           select new ProfileVisitFeedViewModel()
+                           {
+                               DateOccurred = visitor.DateVisited,
+                               VisitorProfileId = visitor.ViewerUser.Profile.Id,
+                               VisitorProfileImagePath = visitor.ViewerUser.Profile.UserImage.FileName,
+                               VisitorUserId = visitor.ViewerUserId,
+                               VisitorUserName = visitor.ViewerUser.UserName
+                           };
+
+            var results = await visitors.ToListAsync();
+
+            // we only want to see a single view for a "time ago"
+            // for example, if someone visited a profile 10 times on "October 6", only show a distinct value for that day so the person isn't spammed with notifications
+            results = results
+                .DistinctBy(x => x.TimeAgo)
+                .ToList();
+
+            foreach (var result in results)
+            {
+                result.VisitorProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.VisitorProfileImagePath);
+            }
+
+            return results;
+        }
+
+        #endregion
     }
 }

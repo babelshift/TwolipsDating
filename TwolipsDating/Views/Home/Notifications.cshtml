@@ -45,37 +45,41 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        @if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.Message)
+                        @if (feedItem.ItemType == DashboardFeedItemType.Message)
                         {
                             Html.RenderPartial("_FeedItemMessagesPartial", feedItem.MessageFeedItem);
                         }
-                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.UploadedPictures)
+                        else if (feedItem.ItemType == DashboardFeedItemType.UploadedPictures)
                         {
                             Html.RenderPartial("_FeedItemUploadedPicturesPartial", feedItem.UploadedImageFeedItem);
                         }
-                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.ReviewWritten)
+                        else if (feedItem.ItemType == DashboardFeedItemType.ReviewWritten)
                         {
                             Html.RenderPartial("_FeedItemReviewWrittenPartial", feedItem.ReviewWrittenFeedItem);
                         }
-                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.GiftTransaction)
+                        else if (feedItem.ItemType == DashboardFeedItemType.GiftTransaction)
                         {
                             Html.RenderPartial("_FeedItemGiftTransactionPartial", feedItem.GiftReceivedFeedItem);
                         }
-                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.QuizCompletion)
+                        else if (feedItem.ItemType == DashboardFeedItemType.QuizCompletion)
                         {
                             Html.RenderPartial("_FeedItemCompletedQuizPartial", feedItem.CompletedQuizFeedItem);
                         }
-                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.TagSuggestion)
+                        else if (feedItem.ItemType == DashboardFeedItemType.TagSuggestion)
                         {
                             Html.RenderPartial("_FeedItemTagSuggestionPartial", feedItem.TagSuggestionReceivedFeedItem);
                         }
-                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.AchievementObtained)
+                        else if (feedItem.ItemType == DashboardFeedItemType.AchievementObtained)
                         {
                             Html.RenderPartial("_FeedItemAchievementPartial", feedItem.AchievementFeedItem);
                         }
-                        else if (feedItem.ItemType == TwolipsDating.ViewModels.DashboardFeedItemType.NewFollower)
+                        else if (feedItem.ItemType == DashboardFeedItemType.NewFollower)
                         {
                             Html.RenderPartial("_FeedItemNewFollowerPartial", feedItem.FollowerFeedItem);
+                        }
+                        else if (feedItem.ItemType == DashboardFeedItemType.ProfileVisit)
+                        {
+                            Html.RenderPartial("_FeedItemProfileVisitPartial", feedItem.ProfileVisitFeedItem);
                         }
                     </div>
                 </div>
@@ -92,7 +96,11 @@
         }
         else
         {
-            <h4><i class="fa fa-smile-o"></i> Nothing to report!</h4>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>You're all caught up on notifications.</h4>
+                </div>
+            </div>
         }
     </div>
     <div class="col-md-4">

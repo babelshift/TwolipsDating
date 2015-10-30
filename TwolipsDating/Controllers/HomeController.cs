@@ -98,6 +98,7 @@ namespace TwolipsDating.Controllers
             await AddReviewsToFeedAsync(currentUserId, notificationItems, FeedItemQueryType.Self);
             await AddGiftTransactionsToFeedAsync(currentUserId, notificationItems, FeedItemQueryType.Self);
             await AddFollowersToFeedAsync(currentUserId, notificationItems);
+            await AddProfileVisitsToFeedAsync(currentUserId, notificationItems);
 
             int pageSize = 20;
             int pageNumber = page ?? 1;
@@ -302,6 +303,21 @@ namespace TwolipsDating.Controllers
                     ItemType = DashboardFeedItemType.NewFollower,
                     DateOccurred = followerFeedViewModel.DateFollowed,
                     FollowerFeedItem = followerFeedViewModel
+                });
+            }
+        }
+
+        private async Task AddProfileVisitsToFeedAsync(string currentUserId, List<DashboardItemViewModel> items)
+        {
+            var visitors = await DashboardService.GetProfileVisitsAsync(currentUserId);
+
+            foreach (var visitorFeedViewModel in visitors)
+            {
+                items.Add(new DashboardItemViewModel()
+                {
+                    ItemType = DashboardFeedItemType.ProfileVisit,
+                    DateOccurred = visitorFeedViewModel.DateOccurred,
+                    ProfileVisitFeedItem = visitorFeedViewModel
                 });
             }
         }

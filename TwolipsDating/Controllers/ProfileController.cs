@@ -766,7 +766,7 @@ namespace TwolipsDating.Controllers
                 }
 
                 // log a visit to the profile
-                await ProfileService.LogProfileViewAsync(currentUserId, viewModel.ProfileId);
+                await ProfileService.LogProfileViewAsync(currentUserId, viewModel.ProfileUserId, viewModel.ProfileId);
             }
 
             // setup viewmodel specific to the actively selected tab
