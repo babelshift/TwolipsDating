@@ -561,7 +561,6 @@ namespace TwolipsDating.Business
         public async Task<AchievementProgressViewModel> GetAchievementProgressForUserAsync(string userId, int milestoneTypeId)
         {
             var milestones = from milestone in db.Milestones
-                             .Include(x => x.MilestonesAchieved)
                              where milestone.MilestoneTypeId == milestoneTypeId
                              orderby milestone.Id
                              select milestone;
