@@ -771,15 +771,8 @@ namespace TwolipsDating.Business
                           };
 
             var result = await profile.FirstOrDefaultAsync();
-
-            // if the profile doesn't exist, we don't want to try to use it
-            if (result != null)
-            {
-                result.ProfileImagePath = ProfileExtensions.GetImagePath(result.ProfileImagePath);
-                result.ProfileThumbnailImagePath = ProfileExtensions.GetThumbnailImagePath(result.ProfileThumbnailImagePath);
-                result.SelectedTitleImage = StoreItemExtensions.GetImagePath(result.SelectedTitleImage);
-                result.BannerImagePath = UserImageExtensions.GetPath(result.BannerImagePath);
-            }
+            
+            SetProfileImagePaths(result);
 
             return result;
         }
@@ -831,12 +824,21 @@ namespace TwolipsDating.Business
 
             var result = await profile.FirstOrDefaultAsync();
 
-            result.ProfileImagePath = ProfileExtensions.GetImagePath(result.ProfileImagePath);
-            result.ProfileThumbnailImagePath = ProfileExtensions.GetThumbnailImagePath(result.ProfileThumbnailImagePath);
-            result.SelectedTitleImage = StoreItemExtensions.GetImagePath(result.SelectedTitleImage);
-            result.BannerImagePath = UserImageExtensions.GetPath(result.BannerImagePath);
+            SetProfileImagePaths(result);
 
             return result;
+        }
+
+        private static void SetProfileImagePaths(ProfileViewModel result)
+        {
+            // if the profile doesn't exist, we don't want to try to use it
+            if (result != null)
+            {
+                result.ProfileImagePath = ProfileExtensions.GetImagePath(result.ProfileImagePath);
+                result.ProfileThumbnailImagePath = ProfileExtensions.GetThumbnailImagePath(result.ProfileThumbnailImagePath);
+                result.SelectedTitleImage = StoreItemExtensions.GetImagePath(result.SelectedTitleImage);
+                result.BannerImagePath = UserImageExtensions.GetPath(result.BannerImagePath);
+            }
         }
 
         /// <summary>
