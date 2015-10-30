@@ -31,17 +31,28 @@ namespace TwolipsDating.Business
             return service;
         }
 
-        public async Task<IReadOnlyCollection<Quiz>> GetSimilarQuizzesAsync(int quizId)
+        public async Task<IReadOnlyCollection<QuizOverviewViewModel>> GetSimilarQuizzesAsync(int quizId, int quizCategoryId)
         {
             Debug.Assert(quizId > 0);
 
-            var thisQuiz = db.Quizzes.Find(quizId);
-            int quizCategoryId = thisQuiz.QuizCategoryId;
             var quizzesInCategory = (from quiz in db.Quizzes
                                      where quiz.QuizCategoryId == quizCategoryId
                                      where quiz.Id != quizId
                                      orderby Guid.NewGuid()
-                                     select quiz).Take(4);
+                                     select new QuizOverviewViewModel()
+                                     {
+                                         Id = quiz.Id,
+                                         Name = quiz.Name,
+                                         QuizCategoryName = quiz.QuizCategory.Name,
+                                         QuizCategoryId = quiz.QuizCategoryId,
+                                         Description = quiz.Description,
+                                         ThumbnailImagePath = quiz.ImageFileName,
+                                         AveragePoints = quiz.QuizTypeId == (int)QuizTypeValues.Individual
+                                         ? (quiz.Questions.Count > 0 ? (int)Math.Round(quiz.Questions.Average(x => x.Points)) : 0)
+                                         : quiz.MinefieldQuestion.Points
+                                     })
+                                     .Take(4);
+
             return (await quizzesInCategory.ToListAsync()).AsReadOnly();
         }
 
@@ -86,31 +97,64 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<Quiz>> GetNewQuizzesAsync(int takeCount = 10)
+        public async Task<IReadOnlyCollection<QuizOverviewViewModel>> GetNewQuizzesAsync(int takeCount = 10)
         {
             var quizzes = (from quiz in db.Quizzes
                            where quiz.IsActive
                            orderby quiz.DateCreated descending
-                           select quiz).Take(takeCount);
+                           select new QuizOverviewViewModel()
+                           {
+                               Id = quiz.Id,
+                               Name = quiz.Name,
+                               QuizCategoryName = quiz.QuizCategory.Name,
+                               QuizCategoryId = quiz.QuizCategoryId,
+                               Description = quiz.Description,
+                               ThumbnailImagePath = quiz.ImageFileName,
+                               AveragePoints = quiz.QuizTypeId == (int)QuizTypeValues.Individual
+                               ? (quiz.Questions.Count > 0 ? (int)Math.Round(quiz.Questions.Average(x => x.Points)) : 0)
+                               : quiz.MinefieldQuestion.Points
+                           })
+                           .Take(takeCount);
 
             var results = await quizzes.ToListAsync();
+
+            foreach (var result in results)
+            {
+                result.ThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(result.ThumbnailImagePath);
+            }
 
             return results.AsReadOnly();
         }
 
-        public async Task<ReadOnlyDictionary<int, IReadOnlyCollection<Quiz>>> GetDailyQuizzesAsync(int daysAgo)
+        public async Task<ReadOnlyDictionary<int, IReadOnlyCollection<QuizOverviewViewModel>>> GetDailyQuizzesAsync(int daysAgo)
         {
-            var quizzes = from quiz in db.Quizzes.Include(x => x.MinefieldQuestion)
+            var quizzes = from quiz in db.Quizzes
                           where quiz.IsActive
-                          select quiz;
+                          select new QuizOverviewViewModel()
+                          {
+                              Id = quiz.Id,
+                              Name = quiz.Name,
+                              QuizCategoryName = quiz.QuizCategory.Name,
+                              QuizCategoryId = quiz.QuizCategoryId,
+                              Description = quiz.Description,
+                              ThumbnailImagePath = quiz.ImageFileName,
+                              AveragePoints = quiz.QuizTypeId == (int)QuizTypeValues.Individual
+                              ? (quiz.Questions.Count > 0 ? (int)Math.Round(quiz.Questions.Average(x => x.Points)) : 0)
+                              : quiz.MinefieldQuestion.Points
+                          };
 
             var allQuizzes = await quizzes.ToDictionaryAsync(x => x.Id, x => x);
 
-            SortedDictionary<int, IReadOnlyCollection<Quiz>> randomQuizzesResult = new SortedDictionary<int, IReadOnlyCollection<Quiz>>();
+            foreach (var quiz in allQuizzes.Values)
+            {
+                quiz.ThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(quiz.ThumbnailImagePath);
+            }
+
+            SortedDictionary<int, IReadOnlyCollection<QuizOverviewViewModel>> randomQuizzesResult = new SortedDictionary<int, IReadOnlyCollection<QuizOverviewViewModel>>();
 
             if (allQuizzes == null || allQuizzes.Count == 0)
             {
-                return new ReadOnlyDictionary<int, IReadOnlyCollection<Quiz>>(randomQuizzesResult);
+                return new ReadOnlyDictionary<int, IReadOnlyCollection<QuizOverviewViewModel>>(randomQuizzesResult);
             }
 
             int numberOfQuizzesToRetrieve = 5;
@@ -122,7 +166,7 @@ namespace TwolipsDating.Business
 
             for (int i = 0; i <= daysAgo; i++)
             {
-                List<Quiz> randomQuizzes = new List<Quiz>();
+                List<QuizOverviewViewModel> randomQuizzes = new List<QuizOverviewViewModel>();
                 int seed = DateTime.Today.AddDays(i * -1).DayOfYear;
                 foreach (var quiz in DictionaryHelper.UniqueRandomValues(allQuizzes, seed).Take(numberOfQuizzesToRetrieve))
                 {
@@ -131,7 +175,7 @@ namespace TwolipsDating.Business
                 randomQuizzesResult.Add(i, randomQuizzes);
             }
 
-            return new ReadOnlyDictionary<int, IReadOnlyCollection<Quiz>>(randomQuizzesResult);
+            return new ReadOnlyDictionary<int, IReadOnlyCollection<QuizOverviewViewModel>>(randomQuizzesResult);
         }
 
         public async Task<IReadOnlyCollection<TrendingQuizViewModel>> GetTrendingQuizzesAsync()
@@ -193,17 +237,17 @@ namespace TwolipsDating.Business
                                ThumbnailImagePath = quiz.ImageFileName
                            }).Take(10);
 
-            var result = await quizzes.ToListAsync();
+            var results = await quizzes.ToListAsync();
 
-            foreach (var quiz in result)
+            foreach (var quiz in results)
             {
                 quiz.ThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(quiz.ThumbnailImagePath);
             }
 
-            return result.AsReadOnly();
+            return results.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<Quiz>> GetUnfinishedQuizzesAsync(string userId)
+        public async Task<IReadOnlyCollection<QuizOverviewViewModel>> GetUnfinishedQuizzesAsync(string userId)
         {
             // get completed for user
             var completedQuizIds = from completedQuiz in db.CompletedQuizzes
@@ -213,10 +257,27 @@ namespace TwolipsDating.Business
             // get from quizzes where not completed by user
             var quizzes = from quiz in db.Quizzes
                           where !completedQuizIds.Contains(quiz.Id)
-                          select quiz;
+                          select new QuizOverviewViewModel()
+                          {
+                              Id = quiz.Id,
+                              Name = quiz.Name,
+                              QuizCategoryName = quiz.QuizCategory.Name,
+                              QuizCategoryId = quiz.QuizCategoryId,
+                              Description = quiz.Description,
+                              ThumbnailImagePath = quiz.ImageFileName,
+                              AveragePoints = quiz.QuizTypeId == (int)QuizTypeValues.Individual
+                              ? (quiz.Questions.Count > 0 ? (int)Math.Round(quiz.Questions.Average(x => x.Points)) : 0)
+                              : quiz.MinefieldQuestion.Points
+                          };
 
-            var result = await quizzes.ToListAsync();
-            return result.AsReadOnly();
+            var results = await quizzes.ToListAsync();
+
+            foreach (var quiz in results)
+            {
+                quiz.ThumbnailImagePath = QuizExtensions.GetThumbnailImagePath(quiz.ThumbnailImagePath);
+            }
+
+            return results.AsReadOnly();
         }
 
         public async Task<IReadOnlyCollection<Question>> GetQuizQuestionsAsync(int quizId)
@@ -633,10 +694,10 @@ namespace TwolipsDating.Business
                             where answers.AnswerId == questions.CorrectAnswerId
                             group completedQuizzes by completedQuizzes.Quiz.Questions.Count
                                 into g
-                                select new
-                                {
-                                    Score = (double)g.Count() / (double)g.Key
-                                };
+                            select new
+                            {
+                                Score = (double)g.Count() / (double)g.Key
+                            };
 
                 var result = await query.FirstOrDefaultAsync();
 
@@ -775,12 +836,12 @@ namespace TwolipsDating.Business
                                            where answer.IsCorrect
                                            group answer by quiz.Id into g
                                            select new PossibleQuizPerformance()
-                                            {
-                                                QuizId = g.Key,
-                                                PossibleCorrectAnswerCount = g.Count(),
-                                                PointsPossible = g.Sum(x => x.MinefieldQuestion.Points),
-                                                PointsAverage = (int)Math.Round(g.Average(x => x.MinefieldQuestion.Points))
-                                            });
+                                           {
+                                               QuizId = g.Key,
+                                               PossibleCorrectAnswerCount = g.Count(),
+                                               PointsPossible = g.Sum(x => x.MinefieldQuestion.Points),
+                                               PointsAverage = (int)Math.Round(g.Average(x => x.MinefieldQuestion.Points))
+                                           });
 
             var bothTotalQuery = individualQuizTotalQuery.Union(minefieldQuizTotalQuery);
 
@@ -979,12 +1040,12 @@ namespace TwolipsDating.Business
                               from tags in questions.Tags
                               group tags by new { tags.TagId, tags.Name, tags.Description }
                                   into g
-                                  select new TagViewModel()
-                                  {
-                                      TagId = g.Key.TagId,
-                                      Name = g.Key.Name,
-                                      Description = g.Key.Description
-                                  };
+                              select new TagViewModel()
+                              {
+                                  TagId = g.Key.TagId,
+                                  Name = g.Key.Name,
+                                  Description = g.Key.Description
+                              };
 
             return await tagsForQuiz.ToListAsync();
         }
@@ -1014,10 +1075,15 @@ namespace TwolipsDating.Business
             return await db.QuizCategories.FindAsync(id);
         }
 
-        public async Task<IReadOnlyCollection<QuizCategory>> GetQuizCategoriesAsync()
+        public async Task<IReadOnlyCollection<QuizCategoryViewModel>> GetQuizCategoriesAsync()
         {
             var categories = from category in db.QuizCategories
-                             select category;
+                             select new QuizCategoryViewModel()
+                             {
+                                 QuizCategoryName = category.Name,
+                                 QuizIcon = category.FontAwesomeIconName,
+                                 QuizCategoryId = category.Id
+                             };
 
             return (await categories.ToListAsync()).AsReadOnly();
         }
@@ -1267,12 +1333,12 @@ namespace TwolipsDating.Business
                                  ProfileThumbnailImagePath = completedQuizzes.User.Profile.UserImage.FileName
                              } into g
                              select new UserWithSimilarQuizScoreViewModel()
-                            {
-                                UserName = g.Key.UserName,
-                                ProfileId = g.Key.ProfileId,
-                                ProfileThumbnailImagePath = g.Key.ProfileThumbnailImagePath,
-                                Score = (double)g.Count() / (double)totalPossibleCorrectAnswerCount
-                            };
+                             {
+                                 UserName = g.Key.UserName,
+                                 ProfileId = g.Key.ProfileId,
+                                 ProfileThumbnailImagePath = g.Key.ProfileThumbnailImagePath,
+                                 Score = (double)g.Count() / (double)totalPossibleCorrectAnswerCount
+                             };
             }
 
             // filter down the results to only include scores in a certain range of the user's score

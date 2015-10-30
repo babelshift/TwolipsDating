@@ -1,4 +1,4 @@
-﻿@model TwolipsDating.ViewModels.ProfileViewModel
+﻿@model TwolipsDating.ViewModels.QuickProfileViewModel
 @using Microsoft.AspNet.Identity;
 @using TwolipsDating.Utilities;
 
@@ -44,19 +44,19 @@
                                 <div style="margin-top: 5px;">
                                     @if (User.Identity.IsAuthenticated && User.Identity.GetUserId() == Model.ProfileUserId)
                                     {
-                                    <a href="#" data-toggle="modal" data-target="#modalProfileImage" data-keyboard="true" title="Change your profile image">
-                                        <div class="circular-image-wrapper">
-                                            <img class="circular-image" src="@Model.ProfileThumbnailImagePath" />
-                                        </div>
-                                    </a>
+                                        <a href="#" data-toggle="modal" data-target="#modalProfileImage" data-keyboard="true" title="Change your profile image">
+                                            <div class="circular-image-wrapper">
+                                                <img class="circular-image" src="@Model.ProfileThumbnailImagePath" />
+                                            </div>
+                                        </a>
                                     }
                                     else
                                     {
-                                    <a href="@Model.ProfileImagePath" data-gallery>
-                                        <div class="circular-image-wrapper">
-                                            <img class="circular-image" src="@Model.ProfileThumbnailImagePath" />
-                                        </div>
-                                    </a>
+                                        <a href="@Model.ProfileThumbnailImagePath" data-gallery>
+                                            <div class="circular-image-wrapper">
+                                                <img class="circular-image" src="@Model.ProfileThumbnailImagePath" />
+                                            </div>
+                                        </a>
                                     }
                                 </div>
                                 <p class="user-name">
@@ -65,11 +65,11 @@
                                 <p class="rating">
                                     @for (int i = 1; i <= Model.AverageRatingValue; i++)
                                     {
-                                    <i class="fa fa-star review-rating-color"></i>
+                                        <i class="fa fa-star review-rating-color"></i>
                                     }
                                     @for (int j = 1; j <= 5 - Model.AverageRatingValue; j++)
                                     {
-                                    <i class="fa fa-star-o review-rating-color"></i>
+                                        <i class="fa fa-star-o review-rating-color"></i>
                                     }
                                     <small>@Model.ReviewCount @(Model.ReviewCount == 1 ? "review" : "reviews")</small>
                                 </p>
@@ -80,8 +80,8 @@
                                 <p class="user-location">
                                     @if (!String.IsNullOrEmpty(Model.Location))
                                     {
-                                    <i class="fa fa-map-marker fa-fw"></i>
-                                    @Model.Location
+                                        <i class="fa fa-map-marker fa-fw"></i>
+                                        @Model.Location
                                     }
                                 </p>
                             </div>

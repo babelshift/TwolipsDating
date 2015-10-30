@@ -49,19 +49,13 @@ namespace TwolipsDating.Controllers
         [AllowAnonymous, RequireProfileIfAuthenticated, RequireConfirmedEmailIfAuthenticated]
         public async Task<ActionResult> Index()
         {
-            await SetNotificationsAsync();
-
             var currentUserId = User.Identity.GetUserId();
 
             TriviaDashboardViewModel viewModel = new TriviaDashboardViewModel();
 
-            var newQuizzes = await TriviaService.GetNewQuizzesAsync();
-            viewModel.NewQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(newQuizzes);
+            viewModel.NewQuizzes = await TriviaService.GetNewQuizzesAsync();
 
-            var dailyQuizzes = await TriviaService.GetDailyQuizzesAsync(5);
-            viewModel.DailyQuizzes = dailyQuizzes.ToDictionary(
-                x => x.Key,
-                x => Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(x.Value));
+            viewModel.DailyQuizzes = await TriviaService.GetDailyQuizzesAsync(5);
 
             viewModel.TrendingQuizzes = await GetTrendingQuizzesAsync();
 
@@ -70,8 +64,7 @@ namespace TwolipsDating.Controllers
             // unauthenticated users don't have any quizzes to track
             if (User.Identity.IsAuthenticated)
             {
-                var unfinishedQuizzes = await TriviaService.GetUnfinishedQuizzesAsync(User.Identity.GetUserId());
-                viewModel.UnfinishedQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(unfinishedQuizzes);
+                viewModel.UnfinishedQuizzes = await TriviaService.GetUnfinishedQuizzesAsync(User.Identity.GetUserId());
             }
 
             // alters the viewmodel's list of quizzes to indicate if the quiz has already been completed by the currently logged in user
@@ -79,8 +72,9 @@ namespace TwolipsDating.Controllers
 
             viewModel.RecentlyCompletedQuizzes = await TriviaService.GetUsersCompletedQuizzesAsync(currentUserId);
 
-            var quizCategories = await TriviaService.GetQuizCategoriesAsync();
-            viewModel.QuizCategories = Mapper.Map<IReadOnlyCollection<QuizCategory>, IReadOnlyCollection<QuizCategoryViewModel>>(quizCategories);
+            viewModel.QuizCategories = await TriviaService.GetQuizCategoriesAsync();
+
+            await SetNotificationsAsync();
 
             return View(viewModel);
         }
@@ -150,8 +144,7 @@ namespace TwolipsDating.Controllers
             var quizzesInCategory = await TriviaService.GetQuizzesInCategoryAsync(id);
             viewModel.Quizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(quizzesInCategory);
 
-            var quizCategories = await TriviaService.GetQuizCategoriesAsync();
-            viewModel.QuizCategories = Mapper.Map<IReadOnlyCollection<QuizCategory>, IReadOnlyCollection<QuizCategoryViewModel>>(quizCategories);
+            viewModel.QuizCategories = await TriviaService.GetQuizCategoriesAsync();
 
             viewModel.TrendingQuizzes = await GetTrendingQuizzesAsync();
             viewModel.PopularQuizzes = await GetPopularQuizzesAsync();
@@ -176,8 +169,7 @@ namespace TwolipsDating.Controllers
             var topPlayers = await TriviaService.GetTopPlayersAsync();
             viewModel.Players = Mapper.Map<IReadOnlyCollection<Models.Profile>, IReadOnlyCollection<ProfileViewModel>>(topPlayers);
 
-            var quizCategories = await TriviaService.GetQuizCategoriesAsync();
-            viewModel.QuizCategories = Mapper.Map<IReadOnlyCollection<QuizCategory>, IReadOnlyCollection<QuizCategoryViewModel>>(quizCategories);
+            viewModel.QuizCategories = await TriviaService.GetQuizCategoriesAsync();
 
             viewModel.TrendingQuizzes = await GetTrendingQuizzesAsync();
             viewModel.PopularQuizzes = await GetPopularQuizzesAsync();
@@ -245,8 +237,7 @@ namespace TwolipsDating.Controllers
                 viewModel.UsersAnsweredCorrectly = new List<UserAnsweredQuestionCorrectlyViewModel>();
             }
 
-            var quizCategories = await TriviaService.GetQuizCategoriesAsync();
-            viewModel.QuizCategories = Mapper.Map<IReadOnlyCollection<QuizCategory>, IReadOnlyCollection<QuizCategoryViewModel>>(quizCategories);
+            viewModel.QuizCategories = await TriviaService.GetQuizCategoriesAsync();
 
             return View(viewModel);
         }
@@ -302,8 +293,7 @@ namespace TwolipsDating.Controllers
                 viewModel.UsersAnsweredCorrectly = new List<UserAnsweredQuestionCorrectlyViewModel>();
             }
 
-            var quizCategories = await TriviaService.GetQuizCategoriesAsync();
-            viewModel.QuizCategories = Mapper.Map<IReadOnlyCollection<QuizCategory>, IReadOnlyCollection<QuizCategoryViewModel>>(quizCategories);
+            viewModel.QuizCategories = await TriviaService.GetQuizCategoriesAsync();
 
             return View(viewModel);
         }
@@ -456,7 +446,7 @@ namespace TwolipsDating.Controllers
             var usersCompletedQuiz = await TriviaService.GetUsersCompletedQuizAsync(id, currentUserId);
             var tagsForQuiz = await GetTagsForQuizAsync(id);
             var questionViolationViewModel = await GetQuestionViolationViewModelAsync();
-            var similarQuizzes = await TriviaService.GetSimilarQuizzesAsync(id);
+            var similarQuizzes = await TriviaService.GetSimilarQuizzesAsync(id, quiz.QuizCategoryId);
             var quizCategories = await TriviaService.GetQuizCategoriesAsync();
             var usersWithSimilarScores = await TriviaService.GetUsersWithSimilarScoresAsync(currentUserId, id, 4);
 
@@ -474,8 +464,8 @@ namespace TwolipsDating.Controllers
                 QuestionViolation = questionViolationViewModel,
                 ThumbnailImageUrl = quiz.GetThumbnailImagePath(),
                 ImageUrl = quiz.GetImagePath(),
-                SimilarQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(similarQuizzes),
-                QuizCategories = Mapper.Map<IReadOnlyCollection<QuizCategory>, IReadOnlyCollection<QuizCategoryViewModel>>(quizCategories),
+                SimilarQuizzes = similarQuizzes,
+                QuizCategories = quizCategories,
                 UsersWithSimilarScores = usersWithSimilarScores
             };
 

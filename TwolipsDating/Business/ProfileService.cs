@@ -1952,15 +1952,38 @@ order by count(t.profileid) desc";
             return await db.FavoriteProfiles.CountAsync(x => x.User.Profile.Id == profileId && x.Profile.ApplicationUser.IsActive);
         }
 
-        public async Task<Models.Profile> GetRandomProfileAsync(string userId)
+        public async Task<QuickProfileViewModel> GetRandomProfileAsync(string userId)
         {
             var profile = await (from profiles in db.Profiles
                                  where profiles.ApplicationUser.Id != userId
                                  where profiles.ApplicationUser.IsActive
                                  orderby Guid.NewGuid()
-                                 select profiles)
+                                 select new QuickProfileViewModel()
+                                 {
+                                     Birthday = profiles.Birthday,
+                                     BannerImagePath = profiles.BannerImage.FileName,
+                                     BannerPositionX = profiles.BannerPositionX.HasValue ? profiles.BannerPositionX.Value : 0,
+                                     BannerPositionY = profiles.BannerPositionY.HasValue ? profiles.BannerPositionY.Value : 0,
+                                     CityName = profiles.GeoCity.Name,
+                                     StateAbbreviation = profiles.GeoCity.GeoState.Abbreviation,
+                                     CountryName = profiles.GeoCity.GeoState.GeoCountry.Name,
+                                     Gender = profiles.Gender.Name,
+                                     ProfileId = profiles.Id,
+                                     ProfileThumbnailImagePath = profiles.UserImage.FileName,
+                                     ProfileUserId = profiles.ApplicationUser.Id,
+                                     ReviewCount = 0,//profiles.ApplicationUser.ReceivedReviews != null ? profiles.ApplicationUser.ReceivedReviews.Count  : 0,
+                                     AverageRatingValue = 0,//profiles.ApplicationUser.ReceivedReviews != null ? (int)Math.Round(profiles.ApplicationUser.ReceivedReviews.Average(x => x.RatingValue)) : 0,
+                                     UserName = profiles.ApplicationUser.UserName
+                                 })
                                  .Take(1)
                                  .FirstOrDefaultAsync();
+
+            profile.BannerImagePath = UserImageExtensions.GetPath(profile.BannerImagePath);
+            profile.ProfileThumbnailImagePath = ProfileExtensions.GetThumbnailImagePath(profile.ProfileThumbnailImagePath);
+
+            var reviews = await GetReviewsWrittenForUserAsync(profile.ProfileUserId);
+            profile.ReviewCount = reviews.Count;
+            profile.AverageRatingValue = reviews.AverageRating();
 
             return profile;
         }

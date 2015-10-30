@@ -315,7 +315,7 @@ namespace TwolipsDating
             Mapper.CreateMap<QuizCategory, QuizCategoryViewModel>()
                 .ForMember(dest => dest.QuizCategoryId, opts => opts.MapFrom(source => source.Id))
                 .ForMember(dest => dest.QuizIcon, opts => opts.MapFrom(source => source.FontAwesomeIconName))
-                .ForMember(dest => dest.QuizName, opts => opts.MapFrom(source => source.Name));
+                .ForMember(dest => dest.QuizCategoryName, opts => opts.MapFrom(source => source.Name));
         }
     }
 }

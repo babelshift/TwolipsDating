@@ -500,7 +500,7 @@
     <Compile Include="Models\UserTitle.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UserStatQuizOverviewViewModel.cs" />
+    <Compile Include="ViewModels\UserStatQuizOverviewViewModel.cs" />
     <Compile Include="Utilities\ApplicationUserExtensions.cs" />
     <Compile Include="Utilities\CalendarHelper.cs" />
     <Compile Include="Utilities\DictionaryHelper.cs" />
@@ -542,6 +542,7 @@
     <Compile Include="ViewModels\MostPopularQuizViewModel.cs" />
     <Compile Include="ViewModels\NotificationsViewModel.cs" />
     <Compile Include="ViewModels\PersonYouMightAlsoLikeViewModel.cs" />
+    <Compile Include="ViewModels\QuickProfileViewModel.cs" />
     <Compile Include="ViewModels\QuizCategoryViewModel.cs" />
     <Compile Include="ViewModels\RecentBuyerViewModel.cs" />
     <Compile Include="ViewModels\SearchResultProfileViewModel.cs" />

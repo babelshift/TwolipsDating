@@ -202,8 +202,7 @@ namespace TwolipsDating.Controllers
 
             viewModel.ShoppingCartItemCount = ShoppingCart.Count;
 
-            var newQuizzes = await TriviaService.GetNewQuizzesAsync(8);
-            viewModel.HighPointsQuizzes = Mapper.Map<IReadOnlyCollection<Quiz>, IReadOnlyCollection<QuizOverviewViewModel>>(newQuizzes);
+            viewModel.HighPointsQuizzes = await TriviaService.GetNewQuizzesAsync(8);
 
             viewModel.RecentBuyers = await StoreService.GetRecentBuyersAsync(currentUserId);
             

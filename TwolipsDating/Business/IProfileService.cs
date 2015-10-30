@@ -136,7 +136,7 @@ namespace TwolipsDating.Business
 
         Task<int> GetFollowingCountAsync(int profileId);
 
-        Task<Models.Profile> GetRandomProfileAsync(string currentUserId);
+        Task<QuickProfileViewModel> GetRandomProfileAsync(string currentUserId);
 
         Task<IReadOnlyCollection<GiftTransactionLog>> GetGiftsSentToUsersFromUserAsync(string userId, IEnumerable<string> userIds, TimeSpan duration);
 

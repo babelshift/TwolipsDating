@@ -1308,14 +1308,13 @@ namespace TwolipsDating.Controllers
 
             var currentUserId = User.Identity.GetUserId();
 
-            var profile = await ProfileService.GetRandomProfileAsync(currentUserId);
-            var viewModel = Mapper.Map<Models.Profile, ProfileViewModel>(profile);
+            var viewModel = await ProfileService.GetRandomProfileAsync(currentUserId);
 
-            var userImages = await ProfileService.GetUserImagesAsync(profile.ApplicationUser.Id);
+            var userImages = await ProfileService.GetUserImagesAsync(viewModel.ProfileUserId);
             viewModel.UploadImage = new UploadImageViewModel();
             viewModel.UploadImage.UserImages = Mapper.Map<IReadOnlyCollection<UserImage>, IReadOnlyCollection<UserImageViewModel>>(userImages);
 
-            viewModel.IsFavoritedByCurrentUser = await ProfileService.IsProfileFavoritedByUserAsync(profile.Id, currentUserId);
+            viewModel.IsFavoritedByCurrentUser = await ProfileService.IsProfileFavoritedByUserAsync(viewModel.ProfileId, currentUserId);
 
             return View(viewModel);
         }

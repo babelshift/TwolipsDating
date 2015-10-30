@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using TwolipsDating.Utilities;
 
-namespace TwolipsDating
+namespace TwolipsDating.ViewModels
 {
     public class UserStatQuizOverviewViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
         public string SEOName
         {
             get
@@ -17,6 +15,7 @@ namespace TwolipsDating
                 return QuizExtensions.ToSEOName(Name);
             }
         }
+
         public string ThumbnailImagePath { get; set; }
         public int QuizCategoryId { get; set; }
         public string QuizCategoryName { get; set; }
@@ -24,6 +23,7 @@ namespace TwolipsDating
         public int AveragePoints { get; set; }
         public int PointsEarned { get; set; }
         public int PointsPossible { get; set; }
+
         public int UserScorePercent
         {
             get
@@ -31,6 +31,7 @@ namespace TwolipsDating
                 return (int)Math.Round(((double)CorrectAnswerCount / (double)PossibleCorrectAnswerCount) * 100);
             }
         }
+
         public int PossibleCorrectAnswerCount { get; set; }
         public int CorrectAnswerCount { get; set; }
         public string CompletedTimeAgo { get { return DateCompleted.GetTimeAgo(); } }

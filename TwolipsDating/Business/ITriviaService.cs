@@ -12,7 +12,7 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<int, TwolipsDating.Models.CompletedQuiz>> GetCompletedQuizzesByUserAsync(string userId);
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Quiz>> GetRecentlyCompletedQuizzesByUserAsync(string userId);
         System.Threading.Tasks.Task<int> GetCorrectAnswerAsync(int questionId, int answerId);
-        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Quiz>> GetNewQuizzesAsync(int takeCount = 10);
+        System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.ViewModels.QuizOverviewViewModel>> GetNewQuizzesAsync(int takeCount = 10);
         System.Threading.Tasks.Task<int> GetQuestionsAnsweredCorrectlyCountAsync(string userId);
         System.Threading.Tasks.Task<TwolipsDating.Models.Quiz> GetQuizAsync(int quizId);
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyCollection<TwolipsDating.Models.Question>> GetQuizQuestionsAsync(int quizId);
@@ -27,17 +27,17 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task<bool> IsQuizCompletedByUserAsync(string userId, int quizId);
         System.Threading.Tasks.Task<AnsweredQuestionServiceResult> RecordAnsweredQuestionAsync(string userId, int questionId, int answerId, int questionTypeId);
         System.Threading.Tasks.Task<int> SetQuizAsCompletedAsync(string userId, int quizId, int numberOfCorrectAnswers);
-        Task<ReadOnlyDictionary<int, IReadOnlyCollection<Quiz>>> GetDailyQuizzesAsync(int daysAgo);
+        Task<ReadOnlyDictionary<int, IReadOnlyCollection<QuizOverviewViewModel>>> GetDailyQuizzesAsync(int daysAgo);
 
         Task<IReadOnlyCollection<TrendingQuizViewModel>> GetTrendingQuizzesAsync();
         Task<IReadOnlyCollection<MostPopularQuizViewModel>> GetPopularQuizzesAsync();
-        Task<IReadOnlyCollection<Quiz>> GetUnfinishedQuizzesAsync(string userId);
-        Task<IReadOnlyCollection<Quiz>> GetSimilarQuizzesAsync(int quizId);
+        Task<IReadOnlyCollection<QuizOverviewViewModel>> GetUnfinishedQuizzesAsync(string userId);
+        Task<IReadOnlyCollection<QuizOverviewViewModel>> GetSimilarQuizzesAsync(int quizId, int quizCategoryId);
 
         Task<IReadOnlyCollection<Quiz>> GetQuizzesInCategoryAsync(int id);
         Task<QuizCategory> GetQuizCategoryAsync(int id);
 
-        Task<IReadOnlyCollection<QuizCategory>> GetQuizCategoriesAsync();
+        Task<IReadOnlyCollection<QuizCategoryViewModel>> GetQuizCategoriesAsync();
 
         Task<IReadOnlyCollection<Models.Profile>> GetTopPlayersAsync();
 
