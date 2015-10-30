@@ -596,6 +596,7 @@ where
             var visitors = from visitor in db.ProfileViews
                            where visitor.Profile.ApplicationUser.Id == userId // only where the profile is the user's profile
                            where visitor.ViewerUserId != userId // but don't include visits by the user (he doesn't care if he visited himself)
+                           where visitor.ViewerUser.IsActive
                            select new ProfileVisitFeedViewModel()
                            {
                                DateOccurred = visitor.DateVisited,
