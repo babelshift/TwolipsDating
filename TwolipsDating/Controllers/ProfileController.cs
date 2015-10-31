@@ -664,7 +664,7 @@ namespace TwolipsDating.Controllers
         /// <param name="seoName"></param>
         /// <param name="tab"></param>
         /// <returns></returns>
-        [AllowAnonymous, RequireConfirmedEmailIfAuthenticated]
+        [AllowAnonymous, RequireConfirmedEmailIfAuthenticated, RequireProfileIfAuthenticated]
         public async Task<ActionResult> Index(int? id = null, string seoName = null, string tab = null, int? page = null)
         {
             string currentUserId = User.Identity.GetUserId();
