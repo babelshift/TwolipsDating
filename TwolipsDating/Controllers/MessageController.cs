@@ -44,19 +44,8 @@ namespace TwolipsDating.Controllers
             viewModel.TargetApplicationUserId = id;
             viewModel.CurrentUserId = currentUserId;
 
-            // there are no recent conversations, return the view with an empty set
-            if (viewModel.Conversations.Count == 0)
-            {
-                return View(viewModel);
-            }
-
-            //// if no id value was provided for the conversation, look up the first one
-            //if (String.IsNullOrEmpty(id))
-            //{
-            //    id = viewModel.Conversations[0].TargetUserId;
-            //}
-
-            if (String.IsNullOrEmpty(id))
+            // there are no recent conversations or we aren't looking for a particular conversation set, return the view with an empty set
+            if (viewModel.Conversations.Count == 0 || String.IsNullOrEmpty(id))
             {
                 return View(viewModel);
             }

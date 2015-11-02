@@ -1147,46 +1147,54 @@ namespace TwolipsDating.Business
             Debug.Assert(!String.IsNullOrEmpty(userId));
             Debug.Assert(!String.IsNullOrEmpty(userId2));
 
-            var messagesBetweenUsers = from messages in db.Messages
-                                       where (messages.SenderApplicationUserId == userId && messages.ReceiverApplicationUserId == userId2)
-                                       || (messages.SenderApplicationUserId == userId2 && messages.ReceiverApplicationUserId == userId)
-                                       where messages.SenderApplicationUser.IsActive
-                                       && messages.ReceiverApplicationUser.IsActive
-                                       orderby messages.DateSent descending
-                                       select new ConversationItemViewModel()
-                                       {
-                                           DateSent = messages.DateSent,
-                                           MostRecentMessageBody = messages.Body,
-                                           MostRecentMessageSenderUserId = messages.SenderApplicationUserId,
-                                           MostRecentMessageStatusId = messages.MessageStatusId,
-                                           TargetUserId = messages.ReceiverApplicationUserId,
-                                           TargetProfileId = messages.ReceiverApplicationUser.Profile.Id,
-                                           TargetName = messages.ReceiverApplicationUser.UserName,
-                                           TargetProfileImagePath = messages.ReceiverApplicationUser.Profile.UserImage != null
-                                            ? messages.ReceiverApplicationUser.Profile.UserImage.FileName
-                                            : String.Empty
-                                       };
+            var query = from messages in db.Messages
+                        where (messages.SenderApplicationUserId == userId && messages.ReceiverApplicationUserId == userId2)
+                        || (messages.SenderApplicationUserId == userId2 && messages.ReceiverApplicationUserId == userId)
+                        where messages.SenderApplicationUser.IsActive
+                        && messages.ReceiverApplicationUser.IsActive
+                        orderby messages.DateSent descending
+                        select messages;
 
-
-            var results = await messagesBetweenUsers.ToListAsync();
+            // the user is reading messages from this person, let's set the messages as read
+            await SetMessagesToReadStatus(userId, query);
+            
+            // now we want to query for only what the caller cares about
+            var results = await query.Select(message => new ConversationItemViewModel()
+            {
+                DateSent = message.DateSent,
+                MostRecentMessageBody = message.Body,
+                MostRecentMessageSenderUserId = message.SenderApplicationUserId,
+                MostRecentMessageStatusId = message.MessageStatusId,
+                TargetUserId = message.ReceiverApplicationUserId,
+                TargetProfileId = message.ReceiverApplicationUser.Profile.Id,
+                TargetName = message.ReceiverApplicationUser.UserName,
+                TargetProfileImagePath = message.ReceiverApplicationUser.Profile.UserImage != null
+                                                ? message.ReceiverApplicationUser.Profile.UserImage.FileName
+                                                : String.Empty
+            }).ToListAsync();
 
             foreach (var result in results)
             {
                 result.TargetProfileImagePath = ProfileExtensions.GetThumbnailImagePath(result.TargetProfileImagePath);
             }
 
-            //// all messages that this user has received in this collection should be marked as read
-            //foreach (var message in results)
-            //{
-            //    if (message.TargetUserId == userId)
-            //    {
-            //        message.MostRecentMessageStatusId = (int)MessageStatusValue.Read;
-            //    }
-            //}
-
-            //int changes = await db.SaveChangesAsync();
-
             return results.AsReadOnly();
+        }
+
+        private async Task SetMessagesToReadStatus(string userId, IOrderedQueryable<Message> query)
+        {
+            var messageResults = await query.ToListAsync();
+
+            // all messages that this user has received in this collection should be marked as read
+            foreach (var message in messageResults)
+            {
+                if (message.ReceiverApplicationUserId == userId)
+                {
+                    message.MessageStatusId = (int)MessageStatusValue.Read;
+                }
+            }
+
+            int changes = await db.SaveChangesAsync();
         }
 
         /// <summary>
@@ -1613,7 +1621,7 @@ namespace TwolipsDating.Business
             Debug.Assert(targetProfileId > 0);
 
             // don't do anything if the user is viewing their own profile
-            if(viewerUserId == targetUserId)
+            if (viewerUserId == targetUserId)
             {
                 return 0;
             }
@@ -2064,13 +2072,13 @@ order by count(t.profileid) desc";
             {
                 // does the user already have the new milestone in their showcase? if so, don't allow changes
                 var existingMilestone = await db.MilestoneAchievements.FindAsync(newMilestoneId, userId);
-                if(existingMilestone != null && existingMilestone.ShowInAchievementShowcase == true)
+                if (existingMilestone != null && existingMilestone.ShowInAchievementShowcase == true)
                 {
                     return SetAchievementOnShowcaseServiceResult.Failed(ErrorMessages.AchievementAlreadyInShowcase);
                 }
 
                 int achievementsInShowcaseCount = await db.MilestoneAchievements.CountAsync(x => x.UserId == userId && x.ShowInAchievementShowcase);
-                if(achievementsInShowcaseCount == 6)
+                if (achievementsInShowcaseCount == 6)
                 {
                     return SetAchievementOnShowcaseServiceResult.Failed(ErrorMessages.AchievementShowcaseIsFull);
                 }
