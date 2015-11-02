@@ -1,0 +1,44 @@
+﻿@model TwolipsDating.ViewModels.AchievementShowcaseViewModel
+@using Microsoft.AspNet.Identity;
+
+@if (User.Identity.GetUserId() != Model.ProfileUserId && Model.Items.Count > 0)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                Achievement Showcase
+            </h4>
+        </div>
+        <div class="panel-body">
+            @foreach (var item in Model.Items)
+            {
+                @Html.Partial("_AchievementShowcaseItemPartial", item)
+            }
+        </div>
+    </div>
+}
+else if (User.Identity.GetUserId() == Model.ProfileUserId)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                Achievement Showcase
+            </h4>
+        </div>
+        <div class="panel-body">
+            @foreach (var item in Model.Items)
+            {
+                @Html.Partial("_AchievementShowcaseItemPartial", item)
+            }
+            @{
+                int countUnused = 6 - Model.Items.Count;
+                for (int i = 0; i < countUnused; i++)
+                {
+                    var unusedItem = new TwolipsDating.ViewModels.AchievementShowcaseItemViewModel();
+                    unusedItem.ProfileUserId = Model.ProfileUserId;
+                    @Html.Partial("_AchievementShowcaseItemPartial", unusedItem)
+                }
+            }
+        </div>
+    </div>
+                }

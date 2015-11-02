@@ -141,5 +141,9 @@ namespace TwolipsDating.Business
         Task<IReadOnlyCollection<GiftTransactionLog>> GetGiftsSentToUsersFromUserAsync(string userId, IEnumerable<string> userIds, TimeSpan duration);
 
         Task<IReadOnlyCollection<GiftTransactionLog>> GetGiftsSentToUserAsync(string userId, TimeSpan timeSpan);
+
+        IReadOnlyCollection<AchievementShowcaseItemViewModel> GetAchievementShowcaseItems(string userId);
+
+        Task<SetAchievementOnShowcaseServiceResult> SetAchievementOnShowcaseAsync(string userId, int newMilestoneId, int? currentMilestoneId);
     }
 }

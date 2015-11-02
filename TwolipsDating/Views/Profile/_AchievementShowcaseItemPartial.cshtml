@@ -1,0 +1,32 @@
+﻿@model TwolipsDating.ViewModels.AchievementShowcaseItemViewModel
+@using Microsoft.AspNet.Identity;
+
+<div class="col-xs-4 col-sm-2">
+    <div style="margin-bottom: 0; border: 0">
+        @{
+            string itemId = Guid.NewGuid().ToString();
+
+            if (!String.IsNullOrEmpty(Model.AchievementImagePath))
+            {
+                <img id="@String.Format("achievement-showcase-item-{0}", itemId)"
+                     class="img-responsive center-block custom-tooltip" title="@Model.AchievementName" src="@Model.AchievementImagePath" />
+            }
+            else
+            {
+                <img id="@String.Format("achievement-showcase-item-{0}", itemId)"
+                     class="img-responsive center-block custom-tooltip" title="@Model.AchievementName" src="http://placehold.it/256x256" />
+            }
+            if (User.Identity.GetUserId() == Model.ProfileUserId)
+            {
+                <a id="@String.Format("select-achievement-showcase-item-{0}", itemId)"
+                   class="btn btn-default btn-xs" href="#" style="position: absolute; right: 10px; top: 5px;"
+                   data-toggle="modal" data-target="#modalSelectAchievementForShowcase" data-keyboard="true" data-item-id="@itemId"
+                   data-user-id="@Model.ProfileUserId" data-milestone-id="@( Model.MilestoneId.HasValue ? Model.MilestoneId.Value.ToString() : String.Empty )">
+                    <small>
+                        <i class="fa fa-pencil fa-lg"></i>
+                    </small>
+                </a>
+            }
+        }
+    </div>
+</div>

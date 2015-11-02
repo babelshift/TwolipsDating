@@ -8,7 +8,13 @@ namespace TwolipsDating
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            
+
+            routes.MapRoute(
+                name: "AchievementShowcase",
+                url: "profile/achievementshowcase/{userId}",
+                defaults: new { controller = "Profile", action = "AchievementShowcase" }
+            );
+
             routes.MapRoute(
                 name: "SearchQuizByTag",
                 url: "search/quiz/{tag}",

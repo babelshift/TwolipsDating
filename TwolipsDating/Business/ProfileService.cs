@@ -771,7 +771,7 @@ namespace TwolipsDating.Business
                           };
 
             var result = await profile.FirstOrDefaultAsync();
-            
+
             SetProfileImagePaths(result);
 
             return result;
@@ -2021,6 +2021,88 @@ order by count(t.profileid) desc";
                                select giftTransactions).ToListAsync();
 
             return gifts;
+        }
+
+        public IReadOnlyCollection<AchievementShowcaseItemViewModel> GetAchievementShowcaseItems(string userId)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(userId));
+
+            var milestoneAchievements = from milestoneAchievement in db.MilestoneAchievements
+                                        where milestoneAchievement.UserId == userId
+                                        where milestoneAchievement.ShowInAchievementShowcase == true
+                                        select new AchievementShowcaseItemViewModel()
+                                        {
+                                            MilestoneId = milestoneAchievement.MilestoneId,
+                                            AchievementImagePath = milestoneAchievement.Milestone.IconFileName,
+                                            AchievementName = milestoneAchievement.Milestone.MilestoneType.Name,
+                                            ProfileUserId = userId
+                                        };
+
+            var results = milestoneAchievements.ToList();
+
+            foreach (var result in results)
+            {
+                result.AchievementImagePath = MilestoneExtensions.GetImagePath(result.AchievementImagePath);
+            }
+
+            return results;
+        }
+
+        public async Task<SetAchievementOnShowcaseServiceResult> SetAchievementOnShowcaseAsync(string userId, int newMilestoneId, int? currentMilestoneId)
+        {
+            Debug.Assert(newMilestoneId > 0);
+
+            bool success = false;
+
+            try
+            {
+                // does the user already have the new milestone in their showcase? if so, don't allow changes
+                var existingMilestone = await db.MilestoneAchievements.FindAsync(newMilestoneId, userId);
+                if(existingMilestone != null && existingMilestone.ShowInAchievementShowcase == true)
+                {
+                    return SetAchievementOnShowcaseServiceResult.Failed(ErrorMessages.AchievementAlreadyInShowcase);
+                }
+
+                int achievementsInShowcaseCount = await db.MilestoneAchievements.CountAsync(x => x.ShowInAchievementShowcase);
+                if(achievementsInShowcaseCount == 6)
+                {
+                    return SetAchievementOnShowcaseServiceResult.Failed(ErrorMessages.AchievementShowcaseIsFull);
+                }
+
+                // we are replacing an achievement on the showcase, so remove the current one
+                if (currentMilestoneId.HasValue)
+                {
+                    var currentMilestone = await db.MilestoneAchievements.FindAsync(currentMilestoneId.Value, userId);
+                    if (currentMilestone != null)
+                    {
+                        currentMilestone.ShowInAchievementShowcase = false;
+                    }
+                }
+
+                var newMilestone = await db.MilestoneAchievements.FindAsync(newMilestoneId, userId);
+                if (newMilestone != null)
+                {
+                    newMilestone.ShowInAchievementShowcase = true;
+                }
+
+                success = (await db.SaveChangesAsync() > 0);
+
+                var newAchievementOnShowcase = new AchievementShowcaseItemViewModel()
+                {
+                    ProfileUserId = userId,
+                    AchievementName = newMilestone.Milestone.MilestoneType.Name,
+                    AchievementImagePath = MilestoneExtensions.GetImagePath(newMilestone.Milestone.IconFileName)
+                };
+
+                return SetAchievementOnShowcaseServiceResult.Success(newAchievementOnShowcase);
+            }
+            catch (DbUpdateException ex)
+            {
+                Log.Error("ProfileService.SetAchievementOnShowcaseAsync", ex, new { userId, newMilestoneId, currentMilestoneId });
+                ValidationDictionary.AddError(Guid.NewGuid().ToString(), ErrorMessages.AchievementShowcaseItemNotUpdated);
+
+                return SetAchievementOnShowcaseServiceResult.Failed(ErrorMessages.AchievementShowcaseItemNotUpdated);
+            }
         }
     }
 }

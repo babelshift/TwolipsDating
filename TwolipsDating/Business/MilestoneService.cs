@@ -275,7 +275,7 @@ namespace TwolipsDating.Business
             db.MilestoneAchievements.Add(achievement);
         }
 
-        private async Task<IReadOnlyDictionary<int, int>> GetUserProgressTowardsAchievements(string userId, IEnumerable<int> milestoneTypeIds)
+        private async Task<IReadOnlyDictionary<int, int>> GetUserProgressTowardsAchievementsAsync(string userId, IEnumerable<int> milestoneTypeIds)
         {
             Dictionary<int, int> achievementProgress = new Dictionary<int, int>();
             foreach (int milestoneTypeId in milestoneTypeIds)
@@ -352,23 +352,23 @@ namespace TwolipsDating.Business
                 }
                 else if (milestoneTypeId == (int)MilestoneTypeValues.Trekkie)
                 {
-                    count = await HasUserAchievedSoloMilestone(userId, (int)MilestoneValues.Trekkie);
+                    count = await HasUserAchievedSoloMilestoneAsync(userId, (int)MilestoneValues.Trekkie);
                 }
                 else if (milestoneTypeId == (int)MilestoneTypeValues.RebelAlliance)
                 {
-                    count = await HasUserAchievedSoloMilestone(userId, (int)MilestoneValues.RebelAlliance);
+                    count = await HasUserAchievedSoloMilestoneAsync(userId, (int)MilestoneValues.RebelAlliance);
                 }
                 else if (milestoneTypeId == (int)MilestoneTypeValues.HighWarlord)
                 {
-                    count = await HasUserAchievedSoloMilestone(userId, (int)MilestoneValues.HighWarlord);
+                    count = await HasUserAchievedSoloMilestoneAsync(userId, (int)MilestoneValues.HighWarlord);
                 }
                 else if (milestoneTypeId == (int)MilestoneTypeValues.GoldMedalist)
                 {
-                    count = await HasUserAchievedSoloMilestone(userId, (int)MilestoneValues.GoldMedalist);
+                    count = await HasUserAchievedSoloMilestoneAsync(userId, (int)MilestoneValues.GoldMedalist);
                 }
                 else if (milestoneTypeId == (int)MilestoneTypeValues.HighFive)
                 {
-                    count = await HasUserAchievedSoloMilestone(userId, (int)MilestoneValues.HighFive);
+                    count = await HasUserAchievedSoloMilestoneAsync(userId, (int)MilestoneValues.HighFive);
                 }
 
                 achievementProgress.Add(milestoneTypeId, count);
@@ -377,7 +377,7 @@ namespace TwolipsDating.Business
             return new ReadOnlyDictionary<int, int>(achievementProgress);
         }
 
-        private async Task<int> HasUserAchievedSoloMilestone(string userId, int milestoneId)
+        private async Task<int> HasUserAchievedSoloMilestoneAsync(string userId, int milestoneId)
         {
             bool achieved = await (from milestoneAchievement in db.MilestoneAchievements
                                    where milestoneAchievement.UserId == userId
@@ -494,7 +494,7 @@ namespace TwolipsDating.Business
                 .Select(x => x.MilestoneTypeId)
                 .Distinct()
                 .ToList();
-            var achievementProgress = await GetUserProgressTowardsAchievements(userId, collectionMilestoneTypeIds);
+            var achievementProgress = await GetUserProgressTowardsAchievementsAsync(userId, collectionMilestoneTypeIds);
 
             int currentMilestoneTypeId = 0;
             int previousMilestoneTypeId = 0;
@@ -541,7 +541,7 @@ namespace TwolipsDating.Business
             return achievementOverviews;
         }
 
-        public async Task<int> GetCompletedAchievementCount(string userId)
+        public async Task<int> GetCompletedAchievementCountAsync(string userId)
         {
             int completedCount = await (from achievements in db.MilestoneAchievements
                                         where achievements.UserId == userId
@@ -550,7 +550,7 @@ namespace TwolipsDating.Business
             return completedCount;
         }
 
-        public async Task<int> GetPossibleAchievementCount()
+        public async Task<int> GetPossibleAchievementCountAsync()
         {
             int possibleCount = await (from achievements in db.Milestones
                                        select achievements).CountAsync();
@@ -609,6 +609,28 @@ namespace TwolipsDating.Business
             }
 
             return result.AsReadOnly();
+        }
+
+        public async Task<IReadOnlyCollection<AchievementCompletedViewModel>> GetCompletedAchievementsAsync(string userId)
+        {
+            var completedAchievements = from achievements in db.MilestoneAchievements
+                                        where achievements.UserId == userId
+                                        where achievements.ShowInAchievementShowcase == false
+                                        select new AchievementCompletedViewModel()
+                                        {
+                                            MilestoneId = achievements.MilestoneId,
+                                            MilestoneImagePath = achievements.Milestone.IconFileName,
+                                            MilestoneName = achievements.Milestone.MilestoneType.Name
+                                        };
+
+            var results = await completedAchievements.ToListAsync();
+
+            foreach(var result in results)
+            {
+                result.MilestoneImagePath = MilestoneExtensions.GetImagePath(result.MilestoneImagePath);
+            }
+
+            return results;
         }
     }
 }

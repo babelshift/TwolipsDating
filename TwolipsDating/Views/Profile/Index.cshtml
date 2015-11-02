@@ -356,9 +356,6 @@
                         <i id="selected-title-image" class="fa fa-user fa-lg"></i>
                     }
                 </div>
-                <div class="col-xs-12 hidden-sm hidden-md hidden-lg">
-                    <hr style="margin: 5px 0;" />
-                </div>
                 <div class="col-xs-12 col-sm-2 text-center profile-follow-stats" style="line-height: 17px;">
                     <div class="col-xs-3 col-xs-offset-3 col-sm-6 col-sm-offset-0">
                         <a id="button-show-followers" href="#" data-toggle="modal" data-target="#modalFollowers" data-keyboard="true">
@@ -378,9 +375,6 @@
                             </div>
                         </a>
                     </div>
-                </div>
-                <div class="col-xs-12 hidden-sm hidden-md hidden-lg">
-                    <hr style="margin: 5px 0;" />
                 </div>
                 <div class="col-xs-12 col-sm-5 text-right text-center-xs">
                     @if (Model.ProfileUserId != User.Identity.GetUserId())
@@ -1291,6 +1285,10 @@
                 </div>
             </div>
         </div>
+    }
+    @if (User.Identity.GetUserId() == Model.ProfileUserId)
+    {
+        @Html.Partial("_AchievementShowcaseModalPartial");
     }
 }
 @section Scripts {

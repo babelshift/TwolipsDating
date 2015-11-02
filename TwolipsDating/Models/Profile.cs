@@ -47,5 +47,6 @@ namespace TwolipsDating.Models
         public virtual ICollection<TagAward> TagAwards { get; set; }
         public virtual ICollection<ProfileViewLog> VisitedBy { get; set; }
         public virtual ICollection<Language> Languages { get; set; }
+
     }
 }

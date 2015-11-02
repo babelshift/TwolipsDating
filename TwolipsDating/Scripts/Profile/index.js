@@ -42,7 +42,99 @@ $(document).ready(function () {
 
     setupProfileSetupPanel();
 
-    $('.send-gift-to-following-button').on('click', function(e) {
+    setupSendGiftToFollower();
+
+    setupSelectAchievementForShowcase();
+});
+
+// setup the behavior of the modal popup which contains the selection ability for different items to appear on the achievement showcase
+function setupSelectAchievementForShowcase() {
+    $('#modalSelectAchievementForShowcase').on('show.bs.modal', function (event) {
+
+        var button = $(event.relatedTarget);
+        var currentMilestoneId = button.data('milestone-id'); // if the user is selecting an existing milestone being displayed on the showcase, this will be its id
+        var selectedItemId = button.data('item-id');
+
+        $('#alert-select-achievement-showcase-item').addClass('hidden');            // hide the error alerts by default
+        $('#select-achievement-for-showcase-loading-icon').removeClass('hidden');   // show the loading icon by default
+        $('#select-achievement-body').html('');                                     // clear out any contents in the body so we can refresh it
+
+        var userId = button.data('user-id');
+        var jsonObject = { "profileUserId": userId };
+        var json = JSON.stringify(jsonObject);
+
+        // get all the user's completed achievements so they can select them to add to the showcase
+        postJson('/profile/getCompletedAchievements', json, function (data) {
+            // we are done loading, hide the loading icon
+            $('#select-achievement-for-showcase-loading-icon').addClass('hidden');
+
+            // if there were any completed achievements in the results, iterate and display their markup
+            if (data.result != null && data.result.length > 0) {
+                completedAchievements = data.result;
+                var html = '';
+                $.each(completedAchievements, function (index, value) {
+                    $('#select-achievement-body').append(
+                        '<div class="col-sm-2" style="margin-bottom: 5px">' +
+                            '<a href="#" class="select-achievement" data-new-milestone-id="' + value.MilestoneId + '">' +
+                                '<img class="img-responsive center-block custom-tooltip-late" title="' + value.MilestoneName + '" src="' + value.MilestoneImagePath + '" />' +
+                            '</a>' +
+                        '</div>'
+                    );
+                });
+
+                setupSelectAchievementClick(selectedItemId, currentMilestoneId);
+            }
+
+            $('.custom-tooltip-late').tooltip();
+        });
+    });
+}
+
+// when an achievement is selected to be shown on the showcase, do this
+function setupSelectAchievementClick(selectedItemId, currentMilestoneId) {
+    $('.select-achievement').off('click');
+    $('.select-achievement').on('click', function (e) {
+        e.preventDefault();
+
+        var newMilestoneId = $(this).data('new-milestone-id');
+
+        var jsonObject = {
+            "newMilestoneId": newMilestoneId,
+            "currentMilestoneId": currentMilestoneId
+        };
+
+        var json = JSON.stringify(jsonObject);
+
+        // send the request to the server to update the showcase items, we will be replacing a slot with a new selected achievement
+        postJson('/profile/setAchievementOnShowcase', json, function (data) {
+            if (data.success) {
+                // if we are successful, replace the showcase slot with the correct image and tooltip
+                var currentAchievementImage = $('#achievement-showcase-item-' + selectedItemId);
+                currentAchievementImage.attr('src', data.newAchievementImagePath);
+                currentAchievementImage.attr('title', data.newAchievementName);
+
+                // if we are successful, replace the showcase slot button with references to the new ID so that next clicks will replace properly
+                var currentAchievementEditButton = $('#select-achievement-showcase-item-' + selectedItemId);
+                currentAchievementEditButton.data('milestone-id', newMilestoneId);
+
+                // hide the modal so the user can see the updated showcase
+                $('#modalSelectAchievementForShowcase').modal('hide');
+
+            } else {
+                $('#alert-select-achievement-showcase-item').removeClass('hidden');
+
+                var errors = '';
+                $.each(data.errors, function (index, value) {
+                    errors += data.errors;
+                });
+                $('#alert-select-achievement-showcase-item-text').text(errors);
+            }
+        });
+    });
+}
+
+function setupSendGiftToFollower() {
+    $('.send-gift-to-following-button').on('click', function (e) {
         e.preventDefault();
 
         var button = $(this);
@@ -88,7 +180,7 @@ $(document).ready(function () {
         $('#selected-gift-id-to-following').val(giftId);
         $('#selected-inventory-item-id-to-following').val(inventoryItemId);
     });
-});
+}
 
 function setupProfileSetupPanel() {
     // check a cookie to see if we need to show the user the profile setup panel

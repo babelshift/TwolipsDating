@@ -1,6 +1,7 @@
 ﻿@model TwolipsDating.ViewModels.ProfileViewModel
 @using Microsoft.AspNet.Identity;
 
+@Html.Action("AchievementShowcase", new { userId = Model.ProfileUserId })
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="col-sm-8">
@@ -56,7 +57,7 @@
         </div>
         <div class="col-sm-4" id="div-community-info">
             <div class="col-xs-12">
-                <h4 style="margin-top: 5px; font-weight: 400">
+                <h4 style="margin-top: 5px;">
                     What I'm looking for
                     @if (User.Identity.GetUserId() == Model.ProfileUserId)
                     {
@@ -97,7 +98,7 @@
                 </table>
             </div>
             <div class="col-xs-12">
-                <h4 style="font-weight: 400">
+                <h4>
                     My details
                     @if (User.Identity.GetUserId() == Model.ProfileUserId)
                     {
@@ -131,7 +132,7 @@
             @if (Model.SimilarUsers != null && Model.SimilarUsers.Count > 0)
             {
                 <div class="col-xs-12">
-                    <h4 style="font-weight: 400; margin-bottom: 0">
+                    <h4 style="margin-bottom: 0">
                         Similar people
                     </h4>
                     <hr style="margin: 5px 0" />

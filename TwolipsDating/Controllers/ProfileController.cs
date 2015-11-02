@@ -776,8 +776,8 @@ namespace TwolipsDating.Controllers
             viewModel.PictureCount = await ProfileService.GetImagesUploadedCountByUserAsync(viewModel.ProfileUserId);
             viewModel.TagCount = await ProfileService.GetTagCountAsync(viewModel.ProfileUserId);
             viewModel.InventoryCount = await ProfileService.GetInventoryCountAsync(viewModel.ProfileUserId);
-            viewModel.CompletedAchievementCount = await MilestoneService.GetCompletedAchievementCount(viewModel.ProfileUserId);
-            viewModel.PossibleAchievementCount = await MilestoneService.GetPossibleAchievementCount();
+            viewModel.CompletedAchievementCount = await MilestoneService.GetCompletedAchievementCountAsync(viewModel.ProfileUserId);
+            viewModel.PossibleAchievementCount = await MilestoneService.GetPossibleAchievementCountAsync();
             viewModel.SimilarUsers = await ProfileService.GetSimilarProfilesAsync(viewModel.ProfileId);
 
             viewModel.Followers = await ProfileService.GetFollowersAsync(viewModel.ProfileId, currentUserId);
@@ -1320,5 +1320,45 @@ namespace TwolipsDating.Controllers
         }
 
         #endregion
+
+        public ActionResult AchievementShowcase(string userId)
+        {
+            AchievementShowcaseViewModel viewModel = new AchievementShowcaseViewModel();
+
+            viewModel.ProfileUserId = userId;
+            viewModel.Items = ProfileService.GetAchievementShowcaseItems(userId);
+
+            return PartialView("_AchievementShowcasePartial", viewModel);
+        }
+
+        public async Task<JsonResult> GetCompletedAchievements(string profileUserId)
+        {
+            var completedAchievements = await MilestoneService.GetCompletedAchievementsAsync(profileUserId);
+
+            return Json(new { result = completedAchievements }, JsonRequestBehavior.AllowGet);
+        }
+
+        public async Task<JsonResult> SetAchievementOnShowcase(int newMilestoneId, int? currentMilestoneId)
+        {
+            string currentUserId = User.Identity.GetUserId();
+
+            var result = await ProfileService.SetAchievementOnShowcaseAsync(currentUserId, newMilestoneId, currentMilestoneId);
+
+            if(result.Succeeded)
+            {
+                return Json(
+                    new
+                    {
+                        success = true,
+                        newAchievementImagePath = result.NewAchievementOnShowcase.AchievementImagePath,
+                        newAchievementName = result.NewAchievementOnShowcase.AchievementName
+                    }
+                );
+            }
+            else
+            {
+                return Json(new { success = false, errors = result.Errors });
+            }
+        }
     }
 }
