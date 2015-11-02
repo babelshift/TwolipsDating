@@ -2069,7 +2069,7 @@ order by count(t.profileid) desc";
                     return SetAchievementOnShowcaseServiceResult.Failed(ErrorMessages.AchievementAlreadyInShowcase);
                 }
 
-                int achievementsInShowcaseCount = await db.MilestoneAchievements.CountAsync(x => x.ShowInAchievementShowcase);
+                int achievementsInShowcaseCount = await db.MilestoneAchievements.CountAsync(x => x.UserId == userId && x.ShowInAchievementShowcase);
                 if(achievementsInShowcaseCount == 6)
                 {
                     return SetAchievementOnShowcaseServiceResult.Failed(ErrorMessages.AchievementShowcaseIsFull);
