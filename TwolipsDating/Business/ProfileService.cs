@@ -1612,6 +1612,12 @@ namespace TwolipsDating.Business
             Debug.Assert(!String.IsNullOrEmpty(viewerUserId));
             Debug.Assert(targetProfileId > 0);
 
+            // don't do anything if the user is viewing their own profile
+            if(viewerUserId == targetUserId)
+            {
+                return 0;
+            }
+
             ProfileViewLog newView = new ProfileViewLog()
             {
                 ViewerUserId = viewerUserId,
