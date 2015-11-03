@@ -6,7 +6,7 @@ namespace TwolipsDating.Utilities
     {
         public static bool AreAdsEnabled(this HttpContext context)
         {
-            return false;
+            return true;
         }
     }
 }
