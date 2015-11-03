@@ -225,6 +225,9 @@ namespace TwolipsDating.Controllers
         /// <returns></returns>
         protected async Task SetNotificationsAsync()
         {
+            ViewBag.ShowNewTriviaText = false;
+            ViewBag.ShowStoreSaleText = false;
+
             // notifications are only useful for logged in users
             if (User.Identity.IsAuthenticated)
             {
@@ -241,10 +244,6 @@ namespace TwolipsDating.Controllers
                 {
                     ViewBag.ShowNewTriviaText = true;
                 }
-                else
-                {
-                    ViewBag.ShowNewTriviaText = false;
-                }
 
                 // are there any active sales
                 // if so, show "Sale" on the store button
@@ -252,10 +251,6 @@ namespace TwolipsDating.Controllers
                 if (isActiveSale)
                 {
                     ViewBag.ShowStoreSaleText = true;
-                }
-                else
-                {
-                    ViewBag.ShowStoreSaleText = false;
                 }
             }
         }
