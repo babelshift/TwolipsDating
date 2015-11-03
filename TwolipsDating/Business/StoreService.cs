@@ -339,5 +339,16 @@ namespace TwolipsDating.Business
 
             return recentBuyers.AsReadOnly();
         }
+
+        public async Task<bool> IsActiveSaleAsync()
+        {
+            DateTime now = DateTime.Now;
+
+            int count = await (from sales in db.StoreSales
+                                     where now >= sales.DateStart && now <= sales.DateEnd
+                                     select sales).CountAsync();
+
+            return count > 0;
+        }
     }
 }

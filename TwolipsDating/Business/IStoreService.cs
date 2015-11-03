@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TwolipsDating.ViewModels;
 namespace TwolipsDating.Business
 {
@@ -14,5 +15,6 @@ namespace TwolipsDating.Business
         System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<TwolipsDating.Models.StoreItem>> GetStoreItemsAsync();
 
         System.Threading.Tasks.Task<IReadOnlyCollection<RecentBuyerViewModel>> GetRecentBuyersAsync(string userId);
+        Task<bool> IsActiveSaleAsync();
     }
 }

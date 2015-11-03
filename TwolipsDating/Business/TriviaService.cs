@@ -287,6 +287,21 @@ namespace TwolipsDating.Business
             return results.AsReadOnly();
         }
 
+        public async Task<int> GetUnfinishedQuizCountForUserAsync(string userId)
+        {
+            // get completed for user
+            var completedQuizIds = from completedQuiz in db.CompletedQuizzes
+                                   where completedQuiz.UserId == userId
+                                   select completedQuiz.QuizId;
+
+            // get from quizzes where not completed by user
+            var count = await (from quiz in db.Quizzes
+                           where !completedQuizIds.Contains(quiz.Id)
+                           select quiz).CountAsync();
+
+            return count;
+        }
+
         public async Task<IReadOnlyCollection<Question>> GetQuizQuestionsAsync(int quizId)
         {
             Debug.Assert(quizId > 0);
@@ -819,7 +834,7 @@ namespace TwolipsDating.Business
 
             var bothResults = await bothQuery.ToDictionaryAsync(x => x.QuizId, x => x);
 
-            #endregion
+            #endregion User's Results on Completed Quizzes
 
             #region Possible Results on All Quizzes
 
@@ -854,7 +869,7 @@ namespace TwolipsDating.Business
 
             var bothTotalResults = await bothTotalQuery.ToDictionaryAsync(x => x.QuizId, x => x);
 
-            #endregion
+            #endregion Possible Results on All Quizzes
 
             var quizDetails = await (from quiz in db.Quizzes
                                      where completedQuizIds.Contains(quiz.Id)

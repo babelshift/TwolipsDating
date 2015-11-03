@@ -232,17 +232,31 @@ namespace TwolipsDating.Controllers
                 var currentUser = await UserManager.FindByIdAsync(currentUserId);
                 ViewBag.MessageNotificationCount = await NotificationService.GetMessageNotificationCountAsync(currentUserId);
                 ViewBag.PointsCount = currentUser.CurrentPoints;
-
-                //var announcements = await NotificationService.GetAnnouncementNotificationsAsync();
-                //ViewBag.Announcements = announcements;
-                //ViewBag.AnnouncementNotificationCount = announcements.Count;
-
-                //var gifts = await ProfileService.GetUnreviewedGiftTransactionsAsync(currentUserId);
-                //var giftsViewModels = Mapper.Map<IReadOnlyCollection<GiftTransactionLog>, IReadOnlyCollection<GiftTransactionViewModel>>(gifts);
-                //ViewBag.GiftsReceived = giftsViewModels;
-                //ViewBag.GiftNotificationCount = giftsViewModels != null ? giftsViewModels.Count : 0;
-
                 ViewBag.NotificationCount = currentUser.NotificationCount;
+
+                // are there any unplayed quizzes by the user
+                // if so, show "New" on the trivia button
+                int unfinishedQuizCount = await TriviaService.GetUnfinishedQuizCountForUserAsync(currentUserId);
+                if(unfinishedQuizCount > 0)
+                {
+                    ViewBag.ShowNewTriviaText = true;
+                }
+                else
+                {
+                    ViewBag.ShowNewTriviaText = false;
+                }
+
+                // are there any active sales
+                // if so, show "Sale" on the store button
+                bool isActiveSale = await StoreService.IsActiveSaleAsync();
+                if (isActiveSale)
+                {
+                    ViewBag.ShowStoreSaleText = true;
+                }
+                else
+                {
+                    ViewBag.ShowStoreSaleText = false;
+                }
             }
         }
 

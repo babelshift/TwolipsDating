@@ -58,6 +58,9 @@ namespace TwolipsDating
                 .ForMember(dest => dest.BannerPositionY, opts => opts.MapFrom(source => source.BannerPositionY))
                 .ForMember(dest => dest.CurrentPoints, opts => opts.MapFrom(source => source.ApplicationUser.CurrentPoints))
                 .ForMember(dest => dest.LifeTimePoints, opts => opts.MapFrom(source => source.ApplicationUser.LifetimePoints))
+                .ForMember(dest => dest.CityName, opts => opts.MapFrom(source => source.GeoCity.Name))
+                .ForMember(dest => dest.StateAbbreviation, opts => opts.MapFrom(source => source.GeoCity.GeoState.Abbreviation))
+                .ForMember(dest => dest.CountryName, opts => opts.MapFrom(source => source.GeoCity.GeoState.GeoCountry.Name))
                 .ForMember(dest => dest.Languages, opts => opts.MapFrom(source => source.Languages.Select(a => a.Name).ToList()));
 
             Mapper.CreateMap<Review, ReviewViewModel>()

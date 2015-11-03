@@ -84,12 +84,26 @@
                     </li>
                     <li>
                         <a href="@Url.Action("index", "trivia")" data-placement="bottom" data-container="body" class="custom-tooltip" title="Earn points and achievements">
-                            <i class="fa fa-mortar-board fa-lg fa-fw"></i> <span class="hidden-sm">Trivia</span>
+                            <i class="fa fa-mortar-board fa-lg fa-fw"></i>
+                            <span class="hidden-sm">Trivia</span>
+                            @if (ViewBag.ShowNewTriviaText)
+                            {
+                                <div class="fa-overlay-top-left-small">
+                                    New
+                                </div>
+                            }
                         </a>
                     </li>
                     <li>
                         <a href="@Url.Action("index", "store")" data-placement="bottom" data-container="body" class="custom-tooltip" title="Spend your points">
-                            <i class="fa fa-shopping-cart fa-lg fa-fw"></i> <span class="hidden-sm">Store</span>
+                            <i class="fa fa-shopping-cart fa-lg fa-fw"></i>
+                            <span class="hidden-sm">Store</span>
+                            @if (ViewBag.ShowStoreSaleText)
+                            {
+                                <div class="fa-overlay-top-left-small">
+                                    Sale
+                                </div>
+                            }
                         </a>
                     </li>
                     <li>
@@ -118,7 +132,7 @@
                                     <span class="hidden-sm hidden-md hidden-lg">Conversations</span>
                                     @if (ViewBag.MessageNotificationCount > 0)
                                     {
-                                        <div class="fa-overlay-bottom-right">
+                                        <div class="fa-overlay-top-right">
                                             @ViewBag.MessageNotificationCount
                                         </div>
                                     }
@@ -134,7 +148,7 @@
                                     <span class="hidden-sm hidden-md hidden-lg">Notifications</span>
                                     @if (ViewBag.NotificationCount > 0)
                                     {
-                                        <div class="fa-overlay-bottom-right">
+                                        <div class="fa-overlay-top-right">
                                             <span id="span-gift-notification-count">@ViewBag.NotificationCount</span>
                                         </div>
                                     }

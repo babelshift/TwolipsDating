@@ -1090,7 +1090,7 @@ input[readonly] {
     top: -5px;
 }
 
-.fa-overlay-bottom-right {
+.fa-overlay-top-right {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -1100,6 +1100,20 @@ input[readonly] {
     margin: 0;
     padding: 0 6px;
     font-size: 12px;
+    line-height: 18px;
+    border-radius: 10px;
+}
+
+.fa-overlay-top-left-small {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    color: #fff;
+    background-color: #f04124;
+    border: 1px solid #d32a0e;
+    margin: 0;
+    padding: 0 6px;
+    font-size: 11px;
     line-height: 18px;
     border-radius: 10px;
 }

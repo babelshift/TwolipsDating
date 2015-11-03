@@ -32,6 +32,7 @@ namespace TwolipsDating.Business
         Task<IReadOnlyCollection<TrendingQuizViewModel>> GetTrendingQuizzesAsync();
         Task<IReadOnlyCollection<MostPopularQuizViewModel>> GetPopularQuizzesAsync();
         Task<IReadOnlyCollection<QuizOverviewViewModel>> GetUnfinishedQuizzesAsync(string userId);
+        Task<int> GetUnfinishedQuizCountForUserAsync(string userId);
         Task<IReadOnlyCollection<QuizOverviewViewModel>> GetSimilarQuizzesAsync(int quizId, int quizCategoryId);
 
         Task<IReadOnlyCollection<Quiz>> GetQuizzesInCategoryAsync(int id);
