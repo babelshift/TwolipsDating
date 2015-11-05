@@ -86,7 +86,7 @@
                         <a href="@Url.Action("index", "trivia")" data-placement="bottom" data-container="body" class="custom-tooltip" title="Earn points and achievements">
                             <i class="fa fa-mortar-board fa-lg fa-fw"></i>
                             <span class="hidden-sm">Trivia</span>
-                            @if (ViewBag.ShowNewTriviaText)
+                            @if (ViewBag.ShowNewTriviaText != null && ViewBag.ShowNewTriviaText)
                             {
                                 <div class="fa-overlay-top-left-small">
                                     New
@@ -98,7 +98,7 @@
                         <a href="@Url.Action("index", "store")" data-placement="bottom" data-container="body" class="custom-tooltip" title="Spend your points">
                             <i class="fa fa-shopping-cart fa-lg fa-fw"></i>
                             <span class="hidden-sm">Store</span>
-                            @if (ViewBag.ShowStoreSaleText)
+                            @if (ViewBag.ShowStoreSaleText != null && ViewBag.ShowStoreSaleText)
                             {
                                 <div class="fa-overlay-top-left-small">
                                     Sale
