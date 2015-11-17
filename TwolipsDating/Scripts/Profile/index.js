@@ -936,7 +936,7 @@ function onDeleteImage(e, obj, userImageId, fileName, profileUserId) {
         "profileUserId": profileUserId
     };
 
-    json = JSON.stringify(jsonObject);
+    var json = JSON.stringify(jsonObject);
 
     postJson('/profile/deleteImage', json, function (data) {
         if (data.success) {

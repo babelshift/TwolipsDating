@@ -43,7 +43,7 @@
                         var $el = $('#BirthDayOfMonth');
                         $el.empty();
                         $.each(data.days, function (value, key) {
-                            $el.append($('<option></option')
+                            $el.append($('<option></option>')
                                 .attr("value", value).text(key));
                         });
                         $el.trigger("chosen:updated");

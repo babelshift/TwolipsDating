@@ -1,0 +1,13 @@
+insert into dbo.minefieldquestions(minefieldquestionid, content, points) values(61, 'Which of these titles was written by William Shakespeare?', 3)
+
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(61, 'Taming of the Shrew', 1)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(61, 'King Lear', 1)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(61, 'Macbeth', 1)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(61, 'Hamlet', 1)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(61, 'A Midsummer Night''s Dream', 1)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(61, 'Much Ado About Nothing', 1)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(61, 'The Castle of Perseverance', 0)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(61, 'Chambers of Rhetoric', 0)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(61, 'Mummers', 0)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(61, 'Last Supper', 0)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(61, 'Feast of Fools', 0)

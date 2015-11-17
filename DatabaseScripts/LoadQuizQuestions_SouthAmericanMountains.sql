@@ -1,0 +1,10 @@
+insert into dbo.minefieldquestions(minefieldquestionid, content, points) values(56, 'Can you name the tallest 5 mountain peaks in South America?', 4)
+
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(56, 'Aconcagua', 1)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(56, 'Ojos del Salado', 1)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(56, 'Huascaran', 1)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(56, 'Nevado Sajama', 1)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(56, 'Chimborazo', 1)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(56, 'Alpamayo', 0)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(56, 'Cotopaxi', 0)
+insert into dbo.minefieldanswers(minefieldquestionid, content, iscorrect) values(56, 'Antisana', 0)

@@ -30,11 +30,11 @@
     <meta name="google-site-verification" content="4eyILTchd7WANbxkEX7K1ZVlHy6WgoXrerg26xS8XHM" />
     <meta name="msvalidate.01" content="105176AFED07C91A3091AF935701BF27" />
     <meta name="p:domain_verify" content="5c0be6da418d5ec3880d7b54266e0b6d" />
-    <meta name="twitter:card" content="@(ViewBag.TwitterCardType != null ? ViewBag.TwitterCardType : (!String.IsNullOrEmpty(ViewBag.ImageUrl) ? "summary_large_image" : "summary"))">
-    <meta name="twitter:site" content="&#64;twolipsdating">
-    <meta name="twitter:title" content="@ViewBag.Title">
-    <meta name="twitter:description" content="@ViewBag.Description">
-    <meta name="twitter:image" content="@(!String.IsNullOrEmpty(ViewBag.ImageUrl) ? Url.Content(ViewBag.ImageUrl) : Request.Url.Scheme + "://" + Request.Url.Authority + Url.Content("~/Content/twolipsicon-white-200x200.png"))">
+    <meta name="twitter:card" content="@(ViewBag.TwitterCardType != null ? ViewBag.TwitterCardType : (!String.IsNullOrEmpty(ViewBag.ImageUrl) ? "summary_large_image" : "summary"))" />
+    <meta name="twitter:site" content="&#64;twolipsdating" />
+    <meta name="twitter:title" content="@ViewBag.Title" />
+    <meta name="twitter:description" content="@ViewBag.Description" />
+    <meta name="twitter:image" content="@(!String.IsNullOrEmpty(ViewBag.ImageUrl) ? Url.Content(ViewBag.ImageUrl) : Request.Url.Scheme + "://" + Request.Url.Authority + Url.Content("~/Content/twolipsicon-white-200x200.png"))" />
     @Styles.Render("~/Content/bootstrap-yeti.min.css")
     @RenderSection("styles", required: false)
     @Styles.Render("~/Content/font-awesome")
