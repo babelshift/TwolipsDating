@@ -1165,11 +1165,11 @@ namespace TwolipsDating.Business
                 MostRecentMessageBody = message.Body,
                 MostRecentMessageSenderUserId = message.SenderApplicationUserId,
                 MostRecentMessageStatusId = message.MessageStatusId,
-                TargetUserId = message.ReceiverApplicationUserId,
-                TargetProfileId = message.ReceiverApplicationUser.Profile.Id,
-                TargetName = message.ReceiverApplicationUser.UserName,
-                TargetProfileImagePath = message.ReceiverApplicationUser.Profile.UserImage != null
-                                                ? message.ReceiverApplicationUser.Profile.UserImage.FileName
+                TargetUserId = message.SenderApplicationUserId,
+                TargetProfileId = message.SenderApplicationUser.Profile.Id,
+                TargetName = message.SenderApplicationUser.UserName,
+                TargetProfileImagePath = message.SenderApplicationUser.Profile.UserImage != null
+                                                ? message.SenderApplicationUser.Profile.UserImage.FileName
                                                 : String.Empty
             }).ToListAsync();
 

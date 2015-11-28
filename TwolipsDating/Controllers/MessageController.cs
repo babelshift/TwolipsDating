@@ -146,6 +146,11 @@ namespace TwolipsDating.Controllers
 
             if (message.ReceiverApplicationUserId == currentUserId)
             {
+                //conversationItem.SenderUserId = message.ReceiverApplicationUserId;
+                //conversationItem.SenderName = message.ReceiverName;
+                //conversationItem.SenderProfileImagePath = message.GetReceiverProfileThumbnailImagePath();
+                //conversationItem.SenderProfileId = message.ReceiverProfileId;
+
                 conversationItem.TargetUserId = message.SenderApplicationUserId;
                 conversationItem.TargetName = message.SenderName;
                 conversationItem.TargetProfileImagePath = message.GetSenderProfileThumbnailImagePath();
@@ -153,6 +158,11 @@ namespace TwolipsDating.Controllers
             }
             else if (message.SenderApplicationUserId == currentUserId)
             {
+                //conversationItem.SenderUserId = message.SenderApplicationUserId;
+                //conversationItem.SenderName = message.SenderName;
+                //conversationItem.SenderProfileImagePath = message.GetSenderProfileThumbnailImagePath();
+                //conversationItem.SenderProfileId = message.SenderProfileId;
+
                 conversationItem.TargetUserId = message.ReceiverApplicationUserId;
                 conversationItem.TargetName = message.ReceiverName;
                 conversationItem.TargetProfileImagePath = message.GetReceiverProfileThumbnailImagePath();
