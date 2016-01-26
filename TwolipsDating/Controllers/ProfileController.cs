@@ -1321,6 +1321,7 @@ namespace TwolipsDating.Controllers
 
         #endregion
 
+        [AllowAnonymous]
         public ActionResult AchievementShowcase(string userId)
         {
             AchievementShowcaseViewModel viewModel = new AchievementShowcaseViewModel();
