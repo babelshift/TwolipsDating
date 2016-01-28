@@ -49,11 +49,22 @@
             </div>
             <div class="store-item-buy hidden">
                 <h4>@storeItem.ItemName</h4>
-                <button type="button" href="#" class="store-item-buy-button btn btn-success btn-block"
-                        data-item-id="@storeItem.ItemId" data-item-type-id="@storeItem.ItemTypeId">
-                    <i class="fa fa-money"></i>
-                    @storeItem.DiscountedPointsCost
-                </button>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <button type="button" href="#" class="store-item-buy-button btn btn-success btn-block"
+                            data-item-id="@storeItem.ItemId" data-item-type-id="@storeItem.ItemTypeId">
+                        <i class="fa fa-money"></i>
+                        @storeItem.DiscountedPointsCost
+                    </button>
+                }
+                else
+                {
+                    <button type="button" href="#" class="btn btn-success btn-block"
+                            data-toggle="modal" data-target="#modalSignUpIncentiveBuy" data-keyboard="true">
+                        <i class="fa fa-money"></i>
+                        @storeItem.DiscountedPointsCost
+                    </button>
+                }
             </div>
         </div>
     </div>

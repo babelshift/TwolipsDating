@@ -208,6 +208,40 @@
         </div>
     }
 }
+@section Modals {
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div class="modal" id="modalSignUpIncentiveFollow" tabindex="-1" role="dialog" aria-labelledby="modalSignUpIncentiveLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modalSignUpIncentiveLabel">Sign up now to follow this pesron</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        @Html.Partial("_ModalSignUpIncentivePartial")
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div class="modal" id="modalSignUpIncentiveBuy" tabindex="-1" role="dialog" aria-labelledby="modalSignUpIncentiveLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modalSignUpIncentiveLabel">Sign up now to obtain this item</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        @Html.Partial("_ModalSignUpIncentivePartial")
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
 @section Scripts {
     @Scripts.Render("~/bundles/store/index")
 
